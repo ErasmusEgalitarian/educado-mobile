@@ -16,6 +16,7 @@ import ShowAlert from '../../components/general/ShowAlert';
 import { getStudentInfo } from '../../services/StorageService';
 import ProfileStatsBox from '../../components/profile/ProfileStatsBox';
 import { useFocusEffect } from '@react-navigation/native';
+import Tooltip from '../../components/onboarding/onboarding.js';
 
 /**
  * Profile screen
@@ -30,6 +31,7 @@ export default function ProfileComponent() {
 	const [studentLevel, setStudentLevel] = useState(0);
 	const [levelProgress, setLevelProgress] = useState(0);
 	const [totalPoints, setTotalPoints] = useState(0);
+	const [isVisible, setIsVisible] = useState(false);
 
 	useEffect(() => {
 		const getInfo = navigation.addListener('focus', () => {
@@ -112,6 +114,7 @@ export default function ProfileComponent() {
 			<View className="flex-1 justify-start pt-[20%] h-screen">
 				<UserInfo firstName={firstName} lastName={lastName} email={email} points={totalPoints} photo={photo}></UserInfo>
 				<ProfileStatsBox studentLevel={studentLevel} levelProgress={levelProgress} />
+				<Tooltip isVisible={isVisible} setIsVisible={setIsVisible} text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} tailSide="left" tailPosition="50%" />
 				<ProfileNavigationButton label='Editar perfil' testId={'editProfileNav'} onPress={() => navigation.navigate('EditProfile')}></ProfileNavigationButton>
 				<ProfileNavigationButton label='Alterar senha' testId={'editPasswordNav'} onPress={() => navigation.navigate('EditPassword')}></ProfileNavigationButton>
 				
