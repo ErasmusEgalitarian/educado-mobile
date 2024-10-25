@@ -111,8 +111,8 @@ export default function ProfileComponent() {
 
 	const position = {
 		top: -300,
-		left: 50,
-		right: 40,
+		left: 70,
+		right: 30,
 		bottom: 24,
 	};
 
@@ -121,7 +121,7 @@ export default function ProfileComponent() {
 			<View className="flex-1 justify-start pt-[20%] h-screen">
 				<UserInfo firstName={firstName} lastName={lastName} email={email} points={totalPoints} photo={photo}></UserInfo>
 				<ProfileStatsBox studentLevel={studentLevel} levelProgress={levelProgress} />
-				<Tooltip isVisible={isVisible} position={position} setIsVisible={setIsVisible} text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} tailSide="right" tailPosition="20%" />
+				<Tooltip isVisible={isVisible} position={position} setIsVisible={setIsVisible} text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar\noutras atividades.'} tailSide="right" tailPosition="10%" />
 				<ProfileNavigationButton label='Editar perfil' testId={'editProfileNav'} onPress={() => navigation.navigate('EditProfile')}></ProfileNavigationButton>
 				<ProfileNavigationButton label='Alterar senha' testId={'editPasswordNav'} onPress={() => navigation.navigate('EditPassword')}></ProfileNavigationButton>
 				
