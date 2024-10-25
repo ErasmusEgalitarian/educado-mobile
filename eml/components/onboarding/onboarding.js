@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom' }) => {
+const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position }) => {
   const tailStyles = getTailStyles(tailSide, tailPosition);
 
   return (
-    <View style={styles.tooltipContainer}>
+    <View style={styles.overlay}>
       <View style={[styles.tooltip, tailStyles.tooltip]}>
         <Text style={styles.tooltipText}>{text}</Text>
         <View style={[styles.tooltipTail, tailStyles.tooltipTail]} />
@@ -92,15 +92,22 @@ const getTailStyles = (side, position) => {
 };
 
 const styles = StyleSheet.create({
-  tooltipContainer: {
-    alignItems: 'center',
+  overlay: {
+    position: 'absolute',
+    top: position.top,
+    left: position.left,
+    right: position.right,
+    bottom: position.bottom,
     justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
   },
   tooltip: {
     backgroundColor: '#166276',
     padding: 10,
     borderRadius: 5,
     position: 'relative',
+    zIndex: 1001,
   },
   tooltipText: {
     color: '#FFFFFF',
@@ -110,6 +117,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 0,
     height: 0,
+    zIndex: 1000,
   },
 });
 
