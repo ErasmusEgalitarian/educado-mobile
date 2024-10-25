@@ -110,10 +110,10 @@ export default function ProfileComponent() {
 	};
 
 	const position = {
-		positionTop: -3000,
-		positionLeft: 50,
-		positionRight: 40,
-		positionBottom: 24,
+		top: -300,
+		left: 50,
+		right: 40,
+		bottom: 24,
 	};
 
 	return (

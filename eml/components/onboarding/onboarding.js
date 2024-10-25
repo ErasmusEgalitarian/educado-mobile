@@ -3,9 +3,15 @@ import { View, Text, StyleSheet } from 'react-native';
 
 const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position }) => {
   const tailStyles = getTailStyles(tailSide, tailPosition);
+  console.log(position.top);
 
   return (
-    <View style={styles.overlay}>
+    <View style={[styles.overlay, { 
+      top: position.top, 
+      left: position.left, 
+      right: position.right, 
+      bottom: position.bottom 
+    }]}>
       <View style={[styles.tooltip, tailStyles.tooltip]}>
         <Text style={styles.tooltipText}>{text}</Text>
         <View style={[styles.tooltipTail, tailStyles.tooltipTail]} />
@@ -94,10 +100,6 @@ const getTailStyles = (side, position) => {
 const styles = StyleSheet.create({
   overlay: {
     position: 'absolute',
-    top: position.top,
-    left: position.left,
-    right: position.right,
-    bottom: position.bottom,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
