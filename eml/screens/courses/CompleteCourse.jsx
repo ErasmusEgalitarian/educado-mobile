@@ -5,6 +5,8 @@ import CompleteCourseSlider from '../../components/courses/completeCourse/Comple
 import Text from '../../components/general/Text.js';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import PropTypes from 'prop-types';
+import { giveFeedback } from '../../api/api';
+
 
 
 /* 
@@ -33,8 +35,16 @@ export default function CompleteCourseScreen() {
 	const handleIndexChange = (index) => {
 		setCurrentSlide(index);
 	};
-	const handleSubmitFeedback = () => {
+	const handleSubmitFeedback = async () => {
 		console.log(feedbackData);
+		try {
+			const response = await giveFeedback(course.courseId, feedbackData);
+			console.log(response);
+		}
+		catch (e) {
+			console.log(e);
+		}
+		
 	};
 
 	const handleNextSlide = () => {

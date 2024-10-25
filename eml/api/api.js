@@ -247,12 +247,12 @@ export const generateCertificate = async (courseId, studentId) => {
 	}
 };
 
-export const giveFeedback = async (courseId, studentId, rating, feedbackString, feedbackOptions) => {
+export const giveFeedback = async (courseId, feedbackData) => {
+	const { rating, feedbackText, feedbackOptions } = feedbackData;
 	try {
 		const response = await axios.post(url + '/api/courses/' + courseId + '/feedback', {
-			studentId: studentId,
 			rating: rating,
-			feedbackString: feedbackString,
+			feedbackText: feedbackText,
 			feedbackOptions: feedbackOptions,
 		});
 		return response.data;
