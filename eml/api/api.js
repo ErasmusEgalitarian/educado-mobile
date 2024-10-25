@@ -250,7 +250,7 @@ export const generateCertificate = async (courseId, studentId) => {
 export const giveFeedback = async (courseId, feedbackData) => {
 	const { rating, feedbackText, feedbackOptions } = feedbackData;
 	try {
-		const response = await axios.post(url + '/api/courses/' + courseId + '/feedback', {
+		const response = await axios.post(url + '/api/feedback/' + courseId, {
 			rating: rating,
 			feedbackText: feedbackText,
 			feedbackOptions: feedbackOptions,
@@ -262,23 +262,9 @@ export const giveFeedback = async (courseId, feedbackData) => {
 	}
 };
 
-export const getFeedback = async (courseId, studentID) => {
-	try {
-		const response = await axios.get(`${url}/api/courses/${courseId}/feedback`, {
-			params: {
-				studentId: studentID,
-			}
-		});
-		return response.data;
-	} catch (error) {
-		console.error('Error getting feedback:', error.response?.data || error.message);
-		throw error;
-	}
-};
-
 export const getAllFeedbackOptions = async () => {
 	try {
-		const response = await axios.get(`${url}/api/feedbackOptions`);
+		const response = await axios.get(`${url}/api/feedback/options`);
 		return response.data;
 	} catch (error) {
 		console.error('Error getting feedback options:', error.response?.data || error.message);
