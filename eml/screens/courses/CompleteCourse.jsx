@@ -5,7 +5,7 @@ import CompleteCourseSlider from '../../components/courses/completeCourse/Comple
 import Text from '../../components/general/Text.js';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import PropTypes from 'prop-types';
-import { setCommentRange } from 'typescript';
+
 
 /* 
 Description: 	This screen is displayed when the student completes a course.
@@ -26,6 +26,9 @@ export default function CompleteCourseScreen() {
 	const navigation = useNavigation();
 	const route = useRoute();
 	const { course } = route.params;
+	const isFeedbackScreen = currentSlide === 3;
+	const rating = feedbackData.rating ? feedbackData.rating : 0;
+	const onFBScreenNoStars = isFeedbackScreen && rating === 0;
 
 	const handleIndexChange = (index) => {
 		setCurrentSlide(index);
@@ -36,7 +39,7 @@ export default function CompleteCourseScreen() {
 
 	const handleNextSlide = () => {
 		if (completeCourseSliderRef.current) {
-			if (currentSlide === 3) {
+			if (isFeedbackScreen) {
 				handleSubmitFeedback();
 				navigation.reset({
 					index: 0,
@@ -62,10 +65,14 @@ export default function CompleteCourseScreen() {
 					</View>
 
 					<View className="px-6 w-screen">
-						<TouchableOpacity className="bg-primary_custom px-10 py-4 rounded-medium"
-							onPress={() => {handleNextSlide();}}
+						<TouchableOpacity 
+							className={`bg-primary_custom px-10 py-4 rounded-medium ${onFBScreenNoStars ? 'opacity-50' : ''}`}
+							onPress={() => {
+								!(onFBScreenNoStars) && handleNextSlide();
+							}}
+							disabled={onFBScreenNoStars}
 						>
-							<Text className="text-center font-sans-bold text-body text-projectWhite">{currentSlide === 3 ? "Meus Cursos" : "Continuar"}</Text>
+							<Text className="text-center font-sans-bold text-body text-projectWhite">{isFeedbackScreen ? 'Meus Cursos' : 'Continuar'}</Text>
 						</TouchableOpacity>
 					</View>
 

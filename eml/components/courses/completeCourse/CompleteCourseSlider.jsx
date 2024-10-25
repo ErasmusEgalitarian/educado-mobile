@@ -32,7 +32,7 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 		<Congratulation key={0}/>,
 		<StatsOverview ref={statsOverviewRef} courseObject={courseObject} key={1}/>,
 		<Certification courseObject={courseObject} key={2}/>,
-		<Feedback courseObject={courseObject} setFeedbackData={setFeedbackData} key={3}/>,
+		<Feedback setFeedbackData={setFeedbackData} key={3}/>,
 	];
 
 	const scrollBy = (number) => {

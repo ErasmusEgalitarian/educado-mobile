@@ -172,5 +172,5 @@ ExerciseScreen.propTypes = {
 	sectionObject: PropTypes.object,
 	courseObject: PropTypes.object,
 	onContinue: PropTypes.func,
-	componentList: PropTypes.object,
+	componentList: PropTypes.array,
 };
