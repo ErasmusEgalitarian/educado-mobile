@@ -1,8 +1,18 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 
-const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position }) => {
+const OnBoarding = ({ text, tailPosition = '50%', tailSide = 'bottom', position }) => {
   const tailStyles = getTailStyles(tailSide, tailPosition);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+  }, [fadeAnim]);
 
   return (
     <View style={[styles.overlay, { 
@@ -11,11 +21,11 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position }) 
       right: position.right, 
       bottom: position.bottom 
     }]}>
-      <View style={[styles.tooltip, tailStyles.tooltip]}>
+      <Animated.View style={[styles.tooltip, tailStyles.tooltip, { opacity: fadeAnim }]}>
         <Text style={styles.unicodeCharacter}>👩‍🏫</Text>
         <Text style={styles.tooltipText}>{text}</Text>
         <View style={[styles.tooltipTail, tailStyles.tooltipTail]} />
-      </View>
+      </Animated.View>
     </View>
     
   );
@@ -135,6 +145,7 @@ const styles = StyleSheet.create({
     left: 5,
     fontSize: 20, // Adjust the font size as needed
   },
+  
 });
 
-export default Tooltip;
+export default OnBoarding;
