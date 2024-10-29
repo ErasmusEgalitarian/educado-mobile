@@ -1,80 +1,70 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStudentInfo } from '../../services/StorageService';
 
 const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, uniqueKey }) => {
   const [points, setPoints] = useState(null);
-const [isVisible, setIsVisible] = useState(false);
-const [refreshTrigger, setRefreshTrigger] = useState(0); // Trigger for re-running useEffect
+  const [isVisible, setIsVisible] = useState(false);
 
-// Dynamically compute storageKey based on uniqueKey
-const storageKey = useMemo(() => `tooltip_shown_${uniqueKey}`, [uniqueKey]);
+  // Dynamically compute storageKey based on uniqueKey
+  const storageKey = useMemo(() => `tooltip_shown_${uniqueKey}`, [uniqueKey]);
 
-// Call this function whenever you want to re-run the useEffect
-const refreshTooltip = () => setRefreshTrigger(prev => prev + 1);
-
-useEffect(() => {
-  const initializeTooltip = async () => {
-    try {
-      console.log('Storage key:', storageKey);
-      const shownTooltip = await AsyncStorage.getItem(storageKey);
-      console.log('Tooltip shown status:', shownTooltip);
-      
-      if (shownTooltip === null) {
-        console.log('Tooltip has not been shown before; initializing to false.');
-        await AsyncStorage.setItem(storageKey, 'false'); // Initialize the value if null
-        setIsVisible(true); // Show tooltip since it hasn't been shown before
-      } else if (shownTooltip === 'false') {
-        console.log('Showing Tooltip');
-        await AsyncStorage.setItem(storageKey, 'true'); // Update the value to indicate it has been shown
-        setIsVisible(true);
-      } else {
-        setIsVisible(false); // Tooltip has been shown already
-        return
-      }
-
-      const studentInfo = await getStudentInfo();
-      const studentPoints = studentInfo?.points || 0;
-      setPoints(studentPoints);
-    } catch (error) {
-      console.error("Error initializing tooltip:", error);
-    }
-  };
-
-  initializeTooltip();
-}, ); // Depend on storageKey and refreshTrigger
-
-
-
-  const tailStyles = useMemo(() => getTailStyles(tailSide, tailPosition), [tailSide, tailPosition]);
-
-  if (!isVisible) {
-    return null;
-  }
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  // Initialize Tooltip visibility and fetch points data
   useEffect(() => {
+    const initializeTooltip = async () => {
+      try {
+        console.log('Storage key:', storageKey);
+        const shownTooltip = await AsyncStorage.getItem(storageKey);
+
+        if (!shownTooltip) {
+          // Show tooltip and mark as shown
+          await AsyncStorage.setItem(storageKey, 'true');
+          setIsVisible(true);
+
+          // Optionally hide tooltip after a delay
+          setTimeout(() => {
+            setIsVisible(false);
+          }, 3000); // Adjust delay as necessary
+        }
+
+        const studentInfo = await getStudentInfo();
+        setPoints(studentInfo?.points || 0);
+      } catch (error) {
+        console.error("Error initializing tooltip:", error);
+      }
+    };
+
+    initializeTooltip();
+  }, [storageKey]); // Only re-run when storageKey changes
+
+  // Start fade-in animation when tooltip becomes visible
+  useEffect(() => {
+    if (isVisible) {
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 1000,
         easing: Easing.linear,
         useNativeDriver: true,
       }).start();
-  }, [fadeAnim]);
+    }
+  }, [fadeAnim, isVisible]);
+
+  const tailStyles = useMemo(() => getTailStyles(tailSide, tailPosition), [tailSide, tailPosition]);
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
-    <View style={[styles.overlay, { 
-      top: position.top, 
-      left: position.left, 
-      right: position.right, 
-      bottom: position.bottom 
-    }]}>
-      <View style={[styles.tooltip, tailStyles.tooltip]}>
+    <View style={[styles.overlay, position]}>
+      <Animated.View style={[styles.tooltip, tailStyles.tooltip, { opacity: fadeAnim }]}>
         <Text style={styles.unicodeCharacter}>👩‍🏫</Text>
         <Text style={styles.tooltipText}>{text}</Text>
         <View style={[styles.tooltipTail, tailStyles.tooltipTail]} />
-      </View>
+      </Animated.View>
     </View>
   );
 };
@@ -174,21 +164,10 @@ const styles = StyleSheet.create({
     height: 0,
     zIndex: 1000,
   },
-  closeButton: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    padding: 4,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    zIndex: 1002,
+  unicodeCharacter: {
+    fontSize: 20,
+    marginBottom: 5,
   },
-  closeButtonText: {
-    color: '#166276',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  
 });
 
 export default Tooltip;

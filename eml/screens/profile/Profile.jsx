@@ -16,7 +16,7 @@ import ShowAlert from '../../components/general/ShowAlert';
 import { getStudentInfo } from '../../services/StorageService';
 import ProfileStatsBox from '../../components/profile/ProfileStatsBox';
 import { useFocusEffect } from '@react-navigation/native';
-import OnBoarding from '../../components/onboarding/onboarding.js';
+import Tooltip from '../../components/onboarding/onboarding.js';
 
 /**
  * Profile screen
