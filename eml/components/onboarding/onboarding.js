@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
+import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStudentInfo } from '../../services/StorageService';
 
@@ -52,23 +52,26 @@ useEffect(() => {
   if (!isVisible) {
     return null;
   }
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+  }, [fadeAnim]);
 
   return (
-    <View
-      style={[
-        styles.overlay,
-        {
-          top: position.top,
-          left: position.left,
-          right: position.right,
-          bottom: position.bottom,
-        },
-      ]}
-    >
+    <View style={[styles.overlay, { 
+      top: position.top, 
+      left: position.left, 
+      right: position.right, 
+      bottom: position.bottom 
+    }]}>
       <View style={[styles.tooltip, tailStyles.tooltip]}>
-        <TouchableOpacity style={styles.closeButton} onPress={() => setIsVisible(false)}>
-          <Text style={styles.closeButtonText}>X</Text>
-        </TouchableOpacity>
+        <Text style={styles.unicodeCharacter}>👩‍🏫</Text>
         <Text style={styles.tooltipText}>{text}</Text>
         <View style={[styles.tooltipTail, tailStyles.tooltipTail]} />
       </View>
@@ -185,6 +188,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
   },
+  
 });
 
 export default Tooltip;
