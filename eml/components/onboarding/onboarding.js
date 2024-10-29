@@ -20,14 +20,12 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
         const shownTooltip = await AsyncStorage.getItem(storageKey);
 
         if (!shownTooltip) {
-          // Show tooltip and mark as shown
           await AsyncStorage.setItem(storageKey, 'true');
           setIsVisible(true);
 
-          // Optionally hide tooltip after a delay
           setTimeout(() => {
             setIsVisible(false);
-          }, 3000); // Adjust delay as necessary
+          }, 3000); 
         }
 
         const studentInfo = await getStudentInfo();
@@ -38,9 +36,8 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
     };
 
     initializeTooltip();
-  }, [storageKey]); // Only re-run when storageKey changes
+  });
 
-  // Start fade-in animation when tooltip becomes visible
   useEffect(() => {
     if (isVisible) {
       Animated.timing(fadeAnim, {
