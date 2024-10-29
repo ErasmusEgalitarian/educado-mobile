@@ -33,6 +33,10 @@ export default function ProfileComponent() {
 	const [totalPoints, setTotalPoints] = useState(0);
 	const [isVisible, setIsVisible] = useState(false);
 
+
+	const [tooltip, setTooltip] = useState(null);
+
+
 	useEffect(() => {
 		const getInfo = navigation.addListener('focus', () => {
 			getProfile();
@@ -68,7 +72,20 @@ export default function ProfileComponent() {
 			ShowAlert(errorSwitch(error));
 		}
 	};
-
+	const renderTooltip = async () => {
+		// Perform any async tasks needed before setting the tooltip
+		setTooltip(
+			<Tooltip 
+				isVisible={isVisible} 
+				position={position} 
+				setIsVisible={setIsVisible} 
+				text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
+				tailSide="right" 
+				tailPosition="20%" 
+				uniqueKey="Profile" 
+			/>
+		);
+	};
 	useFocusEffect(
 		useCallback(() => {
 			console.log('Profile screen focused');
@@ -78,6 +95,7 @@ export default function ProfileComponent() {
 					await getProfile();
 					await fetchStudentProfile();
 					await checkPasswordReset();
+					await renderTooltip();
 				} catch (error) {
 					console.error('Error fetching profile:', error);
 				}
@@ -116,15 +134,16 @@ export default function ProfileComponent() {
 		bottom: 24,
 	};
 
+
+	
 	return (
 		<ScrollView className='flex flex-col'>
 			<View className="flex-1 justify-start pt-[20%] h-screen">
 				<UserInfo firstName={firstName} lastName={lastName} email={email} points={totalPoints} photo={photo}></UserInfo>
 				<ProfileStatsBox studentLevel={studentLevel} levelProgress={levelProgress} />
-				<Tooltip isVisible={isVisible} position={position} setIsVisible={setIsVisible} text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar\noutras atividades.'} tailSide="right" tailPosition="10%" />
+				{tooltip}
 				<ProfileNavigationButton label='Editar perfil' testId={'editProfileNav'} onPress={() => navigation.navigate('EditProfile')}></ProfileNavigationButton>
 				<ProfileNavigationButton label='Alterar senha' testId={'editPasswordNav'} onPress={() => navigation.navigate('EditPassword')}></ProfileNavigationButton>
-				
 				{/* The certificate page is created and works, it is only commented out to get it approved on play store
 					<ProfileNavigationButton label='Certificados' onPress={() => navigation.navigate('CertificateStack')}></ProfileNavigationButton>*/}
 				{/* Download page is not implemented yet. However, download works and can be accessed on home page when offline

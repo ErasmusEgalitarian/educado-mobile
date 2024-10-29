@@ -1,56 +1,110 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState, useMemo } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getStudentInfo } from '../../services/StorageService';
 
-const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position }) => {
-  const tailStyles = getTailStyles(tailSide, tailPosition);
+const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, uniqueKey }) => {
+  const [points, setPoints] = useState(null);
+const [isVisible, setIsVisible] = useState(false);
+const [refreshTrigger, setRefreshTrigger] = useState(0); // Trigger for re-running useEffect
+
+// Dynamically compute storageKey based on uniqueKey
+const storageKey = useMemo(() => `tooltip_shown_${uniqueKey}`, [uniqueKey]);
+
+// Call this function whenever you want to re-run the useEffect
+const refreshTooltip = () => setRefreshTrigger(prev => prev + 1);
+
+useEffect(() => {
+  const initializeTooltip = async () => {
+    try {
+      console.log('Storage key:', storageKey);
+      const shownTooltip = await AsyncStorage.getItem(storageKey);
+      console.log('Tooltip shown status:', shownTooltip);
+      
+      if (shownTooltip === null) {
+        console.log('Tooltip has not been shown before; initializing to false.');
+        await AsyncStorage.setItem(storageKey, 'false'); // Initialize the value if null
+        setIsVisible(true); // Show tooltip since it hasn't been shown before
+      } else if (shownTooltip === 'false') {
+        console.log('Showing Tooltip');
+        await AsyncStorage.setItem(storageKey, 'true'); // Update the value to indicate it has been shown
+        setIsVisible(true);
+      } else {
+        setIsVisible(false); // Tooltip has been shown already
+        return
+      }
+
+      const studentInfo = await getStudentInfo();
+      const studentPoints = studentInfo?.points || 0;
+      setPoints(studentPoints);
+    } catch (error) {
+      console.error("Error initializing tooltip:", error);
+    }
+  };
+
+  initializeTooltip();
+}, ); // Depend on storageKey and refreshTrigger
+
+
+
+  const tailStyles = useMemo(() => getTailStyles(tailSide, tailPosition), [tailSide, tailPosition]);
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
-    <View style={[styles.overlay, { 
-      top: position.top, 
-      left: position.left, 
-      right: position.right, 
-      bottom: position.bottom 
-    }]}>
+    <View
+      style={[
+        styles.overlay,
+        {
+          top: position.top,
+          left: position.left,
+          right: position.right,
+          bottom: position.bottom,
+        },
+      ]}
+    >
       <View style={[styles.tooltip, tailStyles.tooltip]}>
-        <Text style={styles.unicodeCharacter}>👩‍🏫</Text>
+        <TouchableOpacity style={styles.closeButton} onPress={() => setIsVisible(false)}>
+          <Text style={styles.closeButtonText}>X</Text>
+        </TouchableOpacity>
         <Text style={styles.tooltipText}>{text}</Text>
         <View style={[styles.tooltipTail, tailStyles.tooltipTail]} />
       </View>
     </View>
-    
   );
 };
 
 const getTailStyles = (side, position) => {
-  const baseSize = 20; // Base size for the tail
-  const heightSize = 10; // Height size for the tail
-  const offset = -9; // Offset for the tail
+  const baseSize = 20;
+  const heightSize = 10;
+
+  const commonStyles = {
+    borderLeftWidth: baseSize / 2,
+    borderRightWidth: baseSize / 2,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+  };
 
   switch (side) {
     case 'top':
       return {
-        tooltip: {
-          marginBottom: heightSize,
-        },
+        tooltip: { marginBottom: heightSize },
         tooltipTail: {
-          top: offset,
+          ...commonStyles,
+          top: -heightSize,
           left: position,
           borderTopWidth: 0,
           borderBottomWidth: heightSize,
           borderBottomColor: '#166276',
-          borderLeftWidth: baseSize / 2,
-          borderRightWidth: baseSize / 2,
-          borderLeftColor: 'transparent',
-          borderRightColor: 'transparent',
         },
       };
     case 'right':
       return {
-        tooltip: {
-          marginLeft: heightSize,
-        },
+        tooltip: { marginLeft: heightSize },
         tooltipTail: {
-          right: offset,
+          right: -heightSize,
           top: position,
           borderRightWidth: 0,
           borderLeftWidth: heightSize,
@@ -63,11 +117,9 @@ const getTailStyles = (side, position) => {
       };
     case 'left':
       return {
-        tooltip: {
-          marginRight: heightSize,
-        },
+        tooltip: { marginRight: heightSize },
         tooltipTail: {
-          left: -offset,
+          left: -heightSize,
           top: position,
           borderLeftWidth: 0,
           borderRightWidth: heightSize,
@@ -81,19 +133,14 @@ const getTailStyles = (side, position) => {
     case 'bottom':
     default:
       return {
-        tooltip: {
-          marginTop: heightSize,
-        },
+        tooltip: { marginTop: heightSize },
         tooltipTail: {
-          bottom: -offset,
+          ...commonStyles,
+          bottom: -heightSize,
           left: position,
           borderBottomWidth: 0,
           borderTopWidth: heightSize,
           borderTopColor: '#166276',
-          borderLeftWidth: baseSize / 2,
-          borderRightWidth: baseSize / 2,
-          borderLeftColor: 'transparent',
-          borderRightColor: 'transparent',
         },
       };
   }
@@ -105,35 +152,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
-    
   },
   tooltip: {
     backgroundColor: '#166276',
     padding: 10,
-    borderRadius: 8,
+    borderRadius: 5,
     position: 'relative',
     zIndex: 1001,
-    width: 265,
-    height: 155,
   },
   tooltipText: {
     color: '#FFFFFF',
-    font: 'Montserrat', 
-    fontSize: 19,
-    left : 23,
-    right : 22,
+    fontSize: 16,
+    marginTop: 10,
   },
   tooltipTail: {
     position: 'absolute',
-    width: 4,
-    height: 4,
+    width: 0,
+    height: 0,
     zIndex: 1000,
   },
-  unicodeCharacter: {
+  closeButton: {
     position: 'absolute',
     top: 5,
-    left: 5,
-    fontSize: 20, // Adjust the font size as needed
+    right: 5,
+    padding: 4,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    zIndex: 1002,
+  },
+  closeButtonText: {
+    color: '#166276',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
 
