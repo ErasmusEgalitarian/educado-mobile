@@ -3,6 +3,7 @@ import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { MaterialCommunityIcons, } from '@expo/vector-icons';
 import tailwindConfig from '../../../tailwind.config';
 import PropTypes from 'prop-types'; 
+import { getAllFeedbackOptions } from '../../../api/api';
 
 
 /* Check the CompleteCourseSlider file in the screens folder for more info */
@@ -13,34 +14,27 @@ export default function Feedback({ setFeedbackData }) {
 	};
 
 	const [selectedRating, setSelectedRating] = useState(0);
-	const [feedbackOptions, setFeedbackOptions] = useState([]);
+	const [feedbackOptions, setFeedbackOptions] = useState([{name: 'Muito informativo', id: '123'}
+		,{name: 'Muito útil', id: '456'}
+		,{name: 'Muito bem explicado', id: '789'}
+		,{name: 'Muito fácil de entender', id: '101'
+	}]);
 	const [selectedOptions, setSelectedOptions] = useState([]);
 	const [feedbackText, setFeedbackText] = useState('');
-
-	const getFeedbackOptions = () => {
-		// fetch api feedback options when implemented
-		const options = [{text: 'Muito informativo', bgcolor: 'bg-limeGreen'}
-			, {text: 'Muito útil', bgcolor: 'bg-badgesBlue'}, 
-			{text: 'Um pouco confuso2', bgcolor: 'bg-badgesPurple2'},
-			{text: 'Muito difícil2', bgcolor: 'bg-wrongAnswer'},{text: 'Muito informativo2', bgcolor: 'bg-limeGreen'}
-			, {text: 'Muito útil2', bgcolor: 'bg-badgesBlue'}, 
-			{text: 'Um pouco confuso3', bgcolor: 'bg-badgesPurple'},
-			{text: 'Muito difícil3', bgcolor: 'bg-wrongAnswer'},{text: 'Muito informativo3', bgcolor: 'bg-limeGreen'}
-			, {text: 'Muito útil3', bgcolor: 'bg-badgesBlue'}, 
-			{text: 'Um pouco confuso4', bgcolor: 'bg-badgesPurple'},
-			{text: 'Muito difícil4', bgcolor: 'bg-wrongAnswer'},{text: 'Muito informativo4', bgcolor: 'bg-limeGreen'}
-			, {text: 'Muito útil4', bgcolor: 'bg-badgesBlue'} ];
-
-		return options;
-	};
-
+	
+	
 	useEffect(() => {
-		try {
-			setFeedbackOptions(getFeedbackOptions());
+		const fetchFeedbackOptions = async () => {
+			try {
+				const options = await getAllFeedbackOptions();
+				console.log(options);
+				setFeedbackOptions(options);
+			}
+			catch(e) {
+				console.log(e);
+			}
 		}
-		catch(e) {
-			console.log(e);
-		}
+		fetchFeedbackOptions();
 	}, []);
 
 	useEffect(() => {
@@ -95,16 +89,19 @@ export default function Feedback({ setFeedbackData }) {
 				<Text className="font-montserrat-semi-bold text-lg bg">Qual feedback você tem para você?</Text>
 				<ScrollView className="max-h-48 border-2 border-primary_custom rounded-lg my-2 mx-6">
 					<View className="flex-row flex-wrap items-center justify-center p-2">
-						{feedbackOptions.map((option, index) => (
-							<Pressable key={index} onPress={() => handleOptionClick(option.text)}>
-								<View className={`rounded-full px-4 py-2 m-2 ${option.bgcolor}
-                                    ${selectedOptions.includes(option.text) ? 'border-2 border-cyanBlue' : ''}`
-								}
-								>
-									<Text className=" text-projectBlack font-montserrat-semi-bold">{option.text}</Text>
+						{feedbackOptions.map((option, index) => {
+							const id = option._id;
+							const selected = selectedOptions.includes(id)
+							return (
+								<Pressable key={index} onPress={() => handleOptionClick(id)}>
+								<View className={`rounded-full px-4 py-2 m-2 bg-projectWhite  ${selected ?  'bg-bgprimary_custom' : ''}`}>
+									<Text className={`text-projectBlack font-montserrat-semi-bold ${selected ? 'text-projectWhite' : ''}`}  >
+									{option.name}
+									</Text>
 								</View>
-							</Pressable>
-						))}
+								</Pressable>
+							)	
+						})}
 					</View>
 				</ScrollView>
 			</View>
