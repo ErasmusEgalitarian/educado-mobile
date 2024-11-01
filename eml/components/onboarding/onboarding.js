@@ -11,7 +11,8 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
   // Dynamically compute storageKey based on uniqueKey
   const storageKey = useMemo(() => `tooltip_shown_${uniqueKey}`, [uniqueKey]);
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   // Initialize Tooltip visibility and fetch points data
   useEffect(() => {
@@ -20,13 +21,12 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
         console.log('Storage key:', storageKey);
         const shownTooltip = await AsyncStorage.getItem(storageKey);
 
-        if (!shownTooltip) {
+        if (shownTooltip) {
           await AsyncStorage.setItem(storageKey, 'true');
           setTimeout(() => {
             setIsVisible(true);
           }, 1500); 
         } 
-
 
         const studentInfo = await getStudentInfo();
         setPoints(studentInfo?.points || 0);
@@ -40,14 +40,41 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
 
   useEffect(() => {
     if (isVisible) {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }).start();
+      
+        Animated.sequence([
+          Animated.timing(scaleAnim, {
+            toValue: 1.2,
+            duration: 300,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(rotateAnim, {
+            toValue: -20,
+            duration: 100,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(rotateAnim, {
+            toValue: 20,
+            duration: 100,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(rotateAnim, {
+            toValue: 0,
+            duration: 100,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 300,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+        ]).start();
     }
-  }, [fadeAnim, isVisible]);
+  }, [scaleAnim, rotateAnim, isVisible]);
 
   const tailStyles = useMemo(() => getTailStyles(tailSide, tailPosition), [tailSide, tailPosition]);
 
@@ -55,15 +82,26 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
     return null;
   }
 
+  const animatedStyle = {
+    transform: [
+      { scale: scaleAnim },
+      { rotate: rotateAnim.interpolate({
+          inputRange: [-20, 20],
+          outputRange: ['-20deg', '20deg'],
+        })
+      },
+    ],
+  };
+
   return (
     <View style={[styles.overlay, position]}>
-      <Animated.View style={[styles.tooltip, tailStyles.tooltip, { opacity: fadeAnim }]}>
+      <Animated.View style={[styles.tooltip, tailStyles.tooltip, animatedStyle]}>
         <Text style={styles.unicodeCharacter}>👩‍🏫</Text>
         <Text style={styles.tooltipText}>{text}</Text>
         <Button onPress={() => setIsVisible(false)}>
           <Text style={styles.tooltipText}> fechar</Text>
         </Button>
-        <View style={[styles.tooltipTail, tailStyles.tooltipTail]} />
+        <Animated.View style={[styles.tooltipTail, tailStyles.tooltipTail, animatedStyle]} />
       </Animated.View>
     </View>
   );
