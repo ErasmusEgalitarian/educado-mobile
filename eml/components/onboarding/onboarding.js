@@ -4,11 +4,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStudentInfo } from '../../services/StorageService';
 import { Button } from 'react-native-paper';
 
-const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, uniqueKey }) => {
+const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, uniqueKey, uniCodeChar }) => {
   const [points, setPoints] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  
   const storageKey = useMemo(() => `tooltip_shown_${uniqueKey}`, [uniqueKey]);
 
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -21,7 +20,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
         console.log('Storage key:', storageKey);
         const shownTooltip = await AsyncStorage.getItem(storageKey);
 
-        if (shownTooltip) {
+        if (!shownTooltip) {
           await AsyncStorage.setItem(storageKey, 'true');
           setTimeout(() => {
             setIsVisible(true);
@@ -95,7 +94,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
   return (
     <View style={[styles.overlay, position]}>
       <Animated.View style={[styles.tooltip, tailStyles.tooltip, animatedStyle]}>
-        <Text style={styles.unicodeCharacter}>👩‍🏫</Text>
+        <Text style={styles.unicodeCharacter}>{uniCodeChar}</Text>
         <Text style={styles.tooltipText}>{text}</Text>
         <Button onPress={() => setIsVisible(false)} style={styles.tooltipFooter}>
           <Text style={styles.tooltipFooterText}>fechar</Text>

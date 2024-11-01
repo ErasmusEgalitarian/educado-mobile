@@ -83,6 +83,7 @@ export default function ProfileComponent() {
 				tailSide="right" 
 				tailPosition="20%" 
 				uniqueKey="Profile" 
+				uniCodeChar="👩‍🏫"
 			/>
 		);
 	};
