@@ -8,13 +8,13 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
   const [points, setPoints] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Dynamically compute storageKey based on uniqueKey
+  
   const storageKey = useMemo(() => `tooltip_shown_${uniqueKey}`, [uniqueKey]);
 
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
-  // Initialize Tooltip visibility and fetch points data
+  
   useEffect(() => {
     const initializeTooltip = async () => {
       try {
@@ -40,7 +40,6 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
 
   useEffect(() => {
     if (isVisible) {
-      
         Animated.sequence([
           Animated.timing(scaleAnim, {
             toValue: 1.2,
@@ -98,8 +97,8 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
       <Animated.View style={[styles.tooltip, tailStyles.tooltip, animatedStyle]}>
         <Text style={styles.unicodeCharacter}>👩‍🏫</Text>
         <Text style={styles.tooltipText}>{text}</Text>
-        <Button onPress={() => setIsVisible(false)}>
-          <Text style={styles.tooltipText}> fechar</Text>
+        <Button onPress={() => setIsVisible(false)} style={styles.tooltipFooter}>
+          <Text style={styles.tooltipFooterText}>fechar</Text>
         </Button>
         <Animated.View style={[styles.tooltipTail, tailStyles.tooltipTail, animatedStyle]} />
       </Animated.View>
@@ -108,8 +107,8 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
 };
 
 const getTailStyles = (side, position) => {
-  const baseSize = 20;
-  const heightSize = 10;
+  const baseSize = 25;
+  const heightSize = 15;
 
   const commonStyles = {
     borderLeftWidth: baseSize / 2,
@@ -187,14 +186,28 @@ const styles = StyleSheet.create({
   tooltip: {
     backgroundColor: '#166276',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 10,
     position: 'relative',
     zIndex: 1001,
+    width: 265,
+    height: 155,
   },
   tooltipText: {
     color: '#FFFFFF',
+    fontSize: 18,
+    marginBottom: 5,
+    marginTop: 0, 
+    marginLeft: 25, 
+    marginRight: 1, 
+  },
+  tooltipFooter: {
+    position: 'absolute',
+    bottom: 5,
+    right: 10,
+  },
+  tooltipFooterText: {
+    color: '#FFFFFF',
     fontSize: 16,
-    marginTop: 10,
   },
   tooltipTail: {
     position: 'absolute',
@@ -203,8 +216,10 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   unicodeCharacter: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
     fontSize: 20,
-    marginBottom: 5,
   },
 });
 
