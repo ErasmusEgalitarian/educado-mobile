@@ -26,7 +26,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
             setIsVisible(true);
           }, 1500); 
         } 
-
+        
         const studentInfo = await getStudentInfo();
         setPoints(studentInfo?.points || 0);
       } catch (error) {
@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
   tooltipFooterText: {
     color: '#FFFFFF',
     fontSize: 16,
+    textDecorationLine: 'underline',
   },
   tooltipTail: {
     position: 'absolute',
