@@ -13,64 +13,65 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
-  
+
   useEffect(() => {
     const initializeTooltip = async () => {
       try {
         console.log('Storage key:', storageKey);
         const shownTooltip = await AsyncStorage.getItem(storageKey);
+        console.log('Shown tooltip: for' + uniqueKey, shownTooltip);
 
-        if (shownTooltip) {
+        if (!shownTooltip) {
           await AsyncStorage.setItem(storageKey, 'true');
           setTimeout(() => {
             setIsVisible(true);
-          }, 1500); 
-        } 
-        
+          }, 1500);
+        }
+
         const studentInfo = await getStudentInfo();
         setPoints(studentInfo?.points || 0);
       } catch (error) {
         console.error("Error initializing tooltip:", error);
       }
     };
-
+    console.log(storageKey);
     initializeTooltip();
   }, [storageKey, getStudentInfo]);
 
   useEffect(() => {
     if (isVisible) {
-        Animated.sequence([
-          Animated.timing(scaleAnim, {
-            toValue: 1.2,
-            duration: 300,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }),
-          Animated.timing(rotateAnim, {
-            toValue: -20,
-            duration: 100,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }),
-          Animated.timing(rotateAnim, {
-            toValue: 20,
-            duration: 100,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }),
-          Animated.timing(rotateAnim, {
-            toValue: 0,
-            duration: 100,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }),
-          Animated.timing(scaleAnim, {
-            toValue: 1,
-            duration: 300,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }),
-        ]).start();
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.2,
+          duration: 300,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: -20,
+          duration: 100,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: 20,
+          duration: 100,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: 0,
+          duration: 100,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 300,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]).start();
     }
   }, [scaleAnim, rotateAnim, isVisible]);
 
@@ -83,7 +84,8 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
   const animatedStyle = {
     transform: [
       { scale: scaleAnim },
-      { rotate: rotateAnim.interpolate({
+      {
+        rotate: rotateAnim.interpolate({
           inputRange: [-20, 20],
           outputRange: ['-20deg', '20deg'],
         })
@@ -195,9 +197,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
     marginBottom: 5,
-    marginTop: 0, 
-    marginLeft: 25, 
-    marginRight: 1, 
+    marginTop: 0,
+    marginLeft: 25,
+    marginRight: 1,
   },
   tooltipFooter: {
     position: 'absolute',

@@ -32,8 +32,6 @@ export default function Explore() {
 	const [isVisible, setIsVisible] = useState(false);
 
 
-	const [tooltip, setTooltip] = useState(null);
-
 	/**
   * Asynchronous function that loads the subscribed courses from storage and updates the state.
   * @returns {void}
@@ -66,24 +64,6 @@ export default function Explore() {
 		}
 	}
 
-	const renderTooltip = async () => {
-		// Perform any async tasks needed before setting the tooltip
-		setTooltip(
-			<Tooltip 
-				isVisible={isVisible} 
-				position={{top: -300,
-					left: 70,
-					right: 30,
-					bottom: 24,}} 
-				setIsVisible={setIsVisible} 
-				text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
-				tailSide="right" 
-				tailPosition="20%" 
-				uniqueKey="Profile" 
-				uniCodeChar="👩‍🏫"
-			/>
-		);
-	};
 
 	// When refreshing the loadCourse and load subscription function is called
 	const onRefresh = () => {
@@ -94,13 +74,11 @@ export default function Explore() {
 	};
 
 	useEffect(() => {
-
 		// this makes sure loadcourses is called when the screen is focused
 		const update = navigation.addListener('focus', async () => {
 			console.log('Explore screen focused');
 			loadCourses();
 			loadSubscriptions();
-			await renderTooltip();
 		});
 		return update;
 
@@ -149,9 +127,19 @@ export default function Explore() {
 				title={'Explorar cursos'}
 				description={'Inscreva-se nos cursos do seu interesse e comece sua jornada'}
 			/>
+			<Tooltip 
+				position={{top: -300,
+					left: 60,
+					right: 30,
+					bottom: 24,}} 
+				text={'hey123'} 
+				tailSide="right" 
+				tailPosition="20%" 
+				uniqueKey="Explore" 
+				uniCodeChar="👩‍🏫"
+			/>	
 			{!isOnline ?
 				<View>
-					{tooltip}	
 					<View className="justify-center px-1 pt-6">
 						<MaterialCommunityIcons name="wifi-off" size={160} color="black" style={{ alignSelf: 'center' }} />
 						<Text className="text-center font-montserrat-semi-bold text-[24px]">

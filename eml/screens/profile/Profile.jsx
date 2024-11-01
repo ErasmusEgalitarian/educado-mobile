@@ -16,7 +16,7 @@ import ShowAlert from '../../components/general/ShowAlert';
 import { getStudentInfo } from '../../services/StorageService';
 import ProfileStatsBox from '../../components/profile/ProfileStatsBox';
 import { useFocusEffect } from '@react-navigation/native';
-import Tooltip from '../../components/onboarding/onboarding.js';
+import Tooltip from '../../components/onboarding/onboarding';
 
 /**
  * Profile screen
@@ -33,8 +33,6 @@ export default function ProfileComponent() {
 	const [totalPoints, setTotalPoints] = useState(0);
 	const [isVisible, setIsVisible] = useState(false);
 
-
-	const [tooltip, setTooltip] = useState(null);
 
 
 	useEffect(() => {
@@ -72,21 +70,7 @@ export default function ProfileComponent() {
 			ShowAlert(errorSwitch(error));
 		}
 	};
-	const renderTooltip = async () => {
-		// Perform any async tasks needed before setting the tooltip
-		setTooltip(
-			<Tooltip 
-				isVisible={isVisible} 
-				position={position} 
-				setIsVisible={setIsVisible} 
-				text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
-				tailSide="right" 
-				tailPosition="20%" 
-				uniqueKey="Profile" 
-				uniCodeChar="👩‍🏫"
-			/>
-		);
-	};
+	
 	useFocusEffect(
 		useCallback(() => {
 			console.log('Profile screen focused');
@@ -96,7 +80,6 @@ export default function ProfileComponent() {
 					await getProfile();
 					await fetchStudentProfile();
 					await checkPasswordReset();
-					await renderTooltip();
 				} catch (error) {
 					console.error('Error fetching profile:', error);
 				}
@@ -142,7 +125,16 @@ export default function ProfileComponent() {
 			<View className="flex-1 justify-start pt-[20%] h-screen">
 				<UserInfo firstName={firstName} lastName={lastName} email={email} points={totalPoints} photo={photo}></UserInfo>
 				<ProfileStatsBox studentLevel={studentLevel} levelProgress={levelProgress} />
-				{tooltip}
+				<Tooltip 
+				isVisible={isVisible} 
+				position={position} 
+				setIsVisible={setIsVisible} 
+				text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
+				tailSide="right" 
+				tailPosition="20%" 
+				uniqueKey="Profile" 
+				uniCodeChar="👩‍🏫"
+			/>
 				<ProfileNavigationButton label='Editar perfil' testId={'editProfileNav'} onPress={() => navigation.navigate('EditProfile')}></ProfileNavigationButton>
 				<ProfileNavigationButton label='Alterar senha' testId={'editPasswordNav'} onPress={() => navigation.navigate('EditPassword')}></ProfileNavigationButton>
 				{/* The certificate page is created and works, it is only commented out to get it approved on play store
