@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStudentInfo } from '../../services/StorageService';
+import { Button } from 'react-native-paper';
 
 const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, uniqueKey }) => {
   const [points, setPoints] = useState(null);
@@ -21,12 +22,11 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
 
         if (!shownTooltip) {
           await AsyncStorage.setItem(storageKey, 'true');
-          setIsVisible(true);
-
           setTimeout(() => {
-            setIsVisible(false);
-          }, 3000); 
-        }
+            setIsVisible(true);
+          }, 1500); 
+        } 
+
 
         const studentInfo = await getStudentInfo();
         setPoints(studentInfo?.points || 0);
@@ -36,7 +36,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
     };
 
     initializeTooltip();
-  });
+  }, [storageKey, getStudentInfo]);
 
   useEffect(() => {
     if (isVisible) {
@@ -60,6 +60,9 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
       <Animated.View style={[styles.tooltip, tailStyles.tooltip, { opacity: fadeAnim }]}>
         <Text style={styles.unicodeCharacter}>👩‍🏫</Text>
         <Text style={styles.tooltipText}>{text}</Text>
+        <Button onPress={() => setIsVisible(false)}>
+          <Text style={styles.tooltipText}> fechar</Text>
+        </Button>
         <View style={[styles.tooltipTail, tailStyles.tooltipTail]} />
       </Animated.View>
     </View>
