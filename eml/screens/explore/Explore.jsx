@@ -128,15 +128,15 @@ export default function Explore() {
 				description={'Inscreva-se nos cursos do seu interesse e comece sua jornada'}
 			/>
 			<Tooltip 
-				position={{top: -300,
-					left: 60,
+				position={{top: -360,
+					left: 50,
 					right: 30,
 					bottom: 24,}} 
-				text={'hey123'} 
-				tailSide="right" 
-				tailPosition="20%" 
+				text={'Aqui, você encontrará todos os cursos disponíveis e poderá conhecer e se inscrever facilmente.'} 
+				tailSide="top" 
+				tailPosition="10%" 
 				uniqueKey="Explore" 
-				uniCodeChar="👩‍🏫"
+				uniCodeChar="🔍"
 			/>	
 			{!isOnline ?
 				<View>
