@@ -62,33 +62,31 @@ export default function CompleteCourseScreen() {
 	};
 
 	return (
-		<BgLinearGradient>
-			<SafeAreaView >
-				<View className="justify-around items-center flex flex-col h-full w-full">
-					<View className="flex w-screen h-5/6 justify-center items-center">
-						<CompleteCourseSlider
-							setFeedbackData={setFeedbackData} 
-							onIndexChanged={handleIndexChange}
-							ref={completeCourseSliderRef}  
-							courseObject={course}
-						/>
-					</View>
-
-					<View className="px-6 w-screen">
-						<TouchableOpacity 
-							className={`bg-primary_custom px-10 py-4 rounded-medium ${onFBScreenNoStars ? 'opacity-50' : ''}`}
-							onPress={() => {
-								!(onFBScreenNoStars) && handleNextSlide();
-							}}
-							disabled={onFBScreenNoStars}
-						>
-							<Text className="text-center font-sans-bold text-body text-projectWhite">{isFeedbackScreen ? 'Meus Cursos' : 'Continuar'}</Text>
-						</TouchableOpacity>
-					</View>
-
+		<SafeAreaView className="bg-secondary" >
+			<View className="justify-around items-center flex flex-col h-full w-full">
+				<View className="flex w-screen h-5/6 justify-center items-center">
+					<CompleteCourseSlider
+						setFeedbackData={setFeedbackData} 
+						onIndexChanged={handleIndexChange}
+						ref={completeCourseSliderRef}  
+						courseObject={course}
+					/>
 				</View>
-			</SafeAreaView>
-		</BgLinearGradient>
+
+				<View className="px-6 w-screen">
+					<TouchableOpacity 
+						className={`bg-primary_custom px-10 py-4 rounded-medium ${onFBScreenNoStars ? 'opacity-50' : ''}`}
+						onPress={() => {
+							!(onFBScreenNoStars) && handleNextSlide();
+						}}
+						disabled={onFBScreenNoStars}
+					>
+						<Text className="text-center font-sans-bold text-body text-projectWhite">{isFeedbackScreen ? 'Meus Cursos' : 'Continuar'}</Text>
+					</TouchableOpacity>
+				</View>
+
+			</View>
+		</SafeAreaView>
 	);
 }
 

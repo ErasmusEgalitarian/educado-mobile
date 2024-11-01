@@ -37,6 +37,8 @@ module.exports = {
       badgesGreen: '#8CC43B',
       badgesPurple: '#C383F7',
       badgesBlue: '#54ADF1',
+      unselectedStar: '#CBCAB8',
+
     },
     fontFamily: {
       montserrat: ['Montserrat-Regular'],
@@ -51,7 +53,9 @@ module.exports = {
       fontSize: {
         heading: 32,
         subheading: 24,
+        'body-large': 18,
         body: 16,
+        'body-small': 14,
         'caption-medium': 12,
         'caption-small': 10,
       },
@@ -69,6 +73,15 @@ module.exports = {
     aspectRatio: false,
   },
 
-  plugins: [require('@tailwindcss/aspect-ratio')],
+  plugins: [
+    require('@tailwindcss/aspect-ratio'),
+    function ({ addUtilities }) {
+      addUtilities({
+        '.text-top': {
+          textAlignVertical: 'top',
+        },
+      });
+    }
+  ],
 };
 
