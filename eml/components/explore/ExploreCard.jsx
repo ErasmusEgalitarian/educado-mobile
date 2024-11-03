@@ -66,6 +66,20 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 							</View>
 							<View className='h-1.25 opacity-50' />
 							<CustomRating rating={course.rating} />
+							{course.topFeedbackOptions && course.topFeedbackOptions.length > 0 && (
+                                <View className='flex-row flex-wrap mt-2'>
+                                    {course.topFeedbackOptions.map((option, index) => (
+                                        <View
+                                            key={index}
+                                            className='bg-[#E4F2F5] rounded-full px-3 py-1 mr-2 mb-2'
+                                        >
+                                            <Text className='text-projectBlack text-xs'>
+                                                {option}
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            )}
 							<View className='w-full justify-end flex-row'>
 								<Pressable onPress={() => setModalVisible(true)}>
 									<View className='flex-row items-center border-b border-profileCircle'>

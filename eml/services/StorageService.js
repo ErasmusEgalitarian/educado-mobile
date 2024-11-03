@@ -215,6 +215,9 @@ const refreshCourseList = async (courseList) => {
 					published: course.published,
 					status: course.status,
 					rating: course.rating,
+					feedbackOptions: course.feedbackOptions,
+					topFeedbackOptions: course.topFeedbackOptions,
+
 				});
 			}
 		}
