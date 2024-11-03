@@ -12,6 +12,7 @@ import NetworkStatusObserver from '../../hooks/NetworkStatusObserver';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import errorSwitch from '../../components/general/errorSwitch';
 import ShowAlert from '../../components/general/ShowAlert';
+import Tooltip from '../../components/onboarding/onboarding';
 
 /**
  * Course screen component that displays a list of courses.
@@ -25,6 +26,7 @@ export default function CourseScreen() {
 	const [isOnline, setIsOnline] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const navigation = useNavigation();
+	const [isVisible, setIsVisible] = useState(false);
 
 	/**
     * Asynchronous function that loads the courses from storage and updates the state.
@@ -76,6 +78,13 @@ export default function CourseScreen() {
 		}
 	}, []);
 
+	const position = {
+		top: -150,
+		left: 95,
+		right: 5,
+		bottom: 24,
+	};
+
 	return (
 		loading ? <LoadingScreen /> :
 			<>
@@ -95,9 +104,20 @@ export default function CourseScreen() {
 					</View>
 					:
 					<View className="bg-secondary justify-center items-center ">
+						<Tooltip 
+							isVisible={isVisible} 
+							position={position} 
+							setIsVisible={setIsVisible} 
+							text={'Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito.".'} 
+							tailSide="right" 
+							tailPosition="20%" 
+							uniqueKey="Courses"
+							uniCodeChar="📚"
+						/>
 						<View className="pt-24 pb-16">
 							<Image source={require('../../assets/images/logo.png')} className=" justify-center items-center"/>
 						</View>
+						
 						<View className=" justify-center items-center py-10 gap-10 ">
 							<View className=" justify-center items-center w-full h-auto  px-10">
 								{/* No active courses */}
