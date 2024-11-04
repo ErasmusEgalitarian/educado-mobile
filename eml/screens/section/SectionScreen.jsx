@@ -7,7 +7,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import CustomProgressBar from '../../components/exercise/Progressbar';
-import BaseScreen from '../../components/general/BaseScreen';
 import SubscriptionCancel from '../../components/section/CancelSubscriptionButton';
 import { unsubscribe } from '../../services/StorageService';
 import PropTypes from 'prop-types';
@@ -108,7 +107,7 @@ export default function SectionScreen({ route }) {
 	};
 
 	return (
-		<BaseScreen>
+		<>
 			<View className="flex flex-row flex-wrap items-center justify-between px-6 pt-[20%]">
 				{/* Back Button */}
 				<TouchableOpacity className="pr-3" onPress={() => navigation.navigate('Meus cursos')}>
@@ -137,6 +136,6 @@ export default function SectionScreen({ route }) {
 					</View>
 				)
 			) : null}
-		</BaseScreen>
+		</>
 	);
 }

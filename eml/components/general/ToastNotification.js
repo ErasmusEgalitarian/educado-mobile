@@ -8,6 +8,7 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
  * @param {string} message message to be displayed in the notification
  */
 export default function ToastNotification(status, message) {
+	console.log('grillet toast - ' + status + ' - ' + message);
 	return (
 		<View className='z-100'>
 			{status === 'success' ?

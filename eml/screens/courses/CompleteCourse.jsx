@@ -33,6 +33,23 @@ export default function CompleteCourseScreen() {
 	const rating = feedbackData.rating ? feedbackData.rating : 0;
 	const onFBScreenNoStars = isFeedbackScreen && rating === 0;
 
+	
+	// Generate certificate for the student, Uncomment this when course completion is properly handled or to test certificates
+	/* useEffect(() => {
+		const CreateCertificate = async () => {
+			const student = await getStudentInfo();
+			const user = await getUserInfo();
+			try {
+				await generateCertificate(course.courseId, student, user);
+				
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		CreateCertificate();
+	}, []); */
+
 	const handleIndexChange = (index) => {
 		setCurrentSlide(index);
 	};
@@ -50,16 +67,16 @@ export default function CompleteCourseScreen() {
 	};
 
 	const handleNextSlide =  async () => {
-		if (completeCourseSliderRef.current) {
-			if (isFeedbackScreen) {
-				await handleSubmitFeedback();
-				navigation.reset({
-					index: 0,
-					routes: [{ name: 'HomeStack' }],
-				});
-			} else {
-				completeCourseSliderRef.current.scrollBy(1);
-			}
+		if (!completeCourseSliderRef.current) { return; }
+		
+		if (isFeedbackScreen) {
+			await handleSubmitFeedback();
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'HomeStack' }],
+			});
+		} else {
+			completeCourseSliderRef.current.scrollBy(1);
 		}
 	};
 

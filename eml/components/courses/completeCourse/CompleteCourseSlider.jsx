@@ -3,8 +3,6 @@ import { View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import Slick from 'react-native-slick';
 import Congratulation from './Congratulation';
-import StatsOverview from './StatsOverview';
-import Certification from './Certification';
 import PropTypes from 'prop-types'; 
 import Feedback from './Feedback';
 
@@ -30,9 +28,7 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 
 	const screens = [
 		<Congratulation key={0}/>,
-		<StatsOverview ref={statsOverviewRef} courseObject={courseObject} key={1}/>,
-		<Certification courseObject={courseObject} key={2}/>,
-		<Feedback setFeedbackData={setFeedbackData} key={3}/>,
+		<Feedback setFeedbackData={setFeedbackData} key={1}/>,
 	];
 
 	const scrollBy = (number) => {
