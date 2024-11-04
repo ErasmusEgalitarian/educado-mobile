@@ -127,12 +127,14 @@ export default function Explore() {
 				title={'Explorar cursos'}
 				description={'Inscreva-se nos cursos do seu interesse e comece sua jornada'}
 			/>
-			<Tooltip 
+			<Tooltip
+				isVisible={isVisible}  
 				position={{top: -360,
 					left: 50,
 					right: 30,
 					bottom: 24,}} 
-				text={'Aqui, você encontrará todos os cursos disponíveis e poderá conhecer e se inscrever facilmente.'} 
+				text={'Aqui, você encontrará todos os cursos disponíveis e poderá conhecer e se inscrever facilmente.'}
+				setIsVisible={setIsVisible}  
 				tailSide="top" 
 				tailPosition="10%" 
 				uniqueKey="Explore" 
