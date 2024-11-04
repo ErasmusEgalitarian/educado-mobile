@@ -21,7 +21,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
         const shownTooltip = await AsyncStorage.getItem(storageKey);
         console.log('Shown tooltip: for' + uniqueKey, shownTooltip);
 
-        if (shownTooltip) {
+        if (shownTooltip) { //should be !shownTooltip
           await AsyncStorage.setItem(storageKey, 'true');
           setTimeout(() => {
             setIsVisible(true);

@@ -12,6 +12,7 @@ import { unsubscribe } from '../../services/StorageService';
 import PropTypes from 'prop-types';
 import { checkProgressCourse, checkProgressSection } from '../../services/utilityFunctions';
 import ContinueSection from '../../components/section/ContinueSectionButton';
+import Tooltip from '../../components/onboarding/onboarding';
 
 export default function SectionScreen({ route }) {
 	SectionScreen.propTypes = {
@@ -23,6 +24,7 @@ export default function SectionScreen({ route }) {
 	const [studentProgress, setStudentProgress] = useState(0);
 	const [sectionProgress, setSectionProgress] = useState({});
 	const [currentSection, setCurrentSection] = useState(null);
+	const [isVisible, setIsVisible] = useState(false);
 
 	async function loadSections(id) {
 		const sectionData = await StorageService.getSectionList(id);
@@ -115,11 +117,27 @@ export default function SectionScreen({ route }) {
 				</TouchableOpacity>
 				{/* Course Title */}
 				<Text className="text-[25px] font-bold">{course.title}</Text>
+				
 			</View>
 			{/* Conditionally render the sections if they exist */}
 			{sections ? (
 				sections.length === 0 ? null : (
 					<View className="flex-[1] flex-col my-[10px]">
+						<Tooltip 
+							isVisible={isVisible} 
+							position={{
+								top: -30,
+								left: 70,
+								right: 30,
+								bottom: 24,
+							}} 
+							setIsVisible={setIsVisible} 
+							text={'Essa é a página do seu curso. É aqui que você vai acessar as aulas e acompanhar seu progresso.'} 
+							tailSide="right" 
+							tailPosition="20%" 
+							uniqueKey="Sections" 
+							uniCodeChar="🎓"
+						/>
 						{/* Progress Bar */}
 						<CustomProgressBar width={60} progress={studentProgress} height={3}></CustomProgressBar>
 						{/* Section Cards */}

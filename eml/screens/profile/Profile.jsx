@@ -111,14 +111,6 @@ export default function ProfileComponent() {
 		}
 	};
 
-	const position = {
-		top: -300,
-		left: 70,
-		right: 30,
-		bottom: 24,
-	};
-
-
 	
 	return (
 		<ScrollView className='flex flex-col'>
@@ -127,7 +119,12 @@ export default function ProfileComponent() {
 				<ProfileStatsBox studentLevel={studentLevel} levelProgress={levelProgress} />
 				<Tooltip 
 				isVisible={isVisible} 
-				position={position} 
+				position={{
+					top: -300,
+					left: 70,
+					right: 30,
+					bottom: 24,
+				}} 
 				setIsVisible={setIsVisible} 
 				text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
 				tailSide="right" 
