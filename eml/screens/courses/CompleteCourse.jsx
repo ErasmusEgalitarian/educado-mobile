@@ -81,7 +81,7 @@ export default function CompleteCourseScreen() {
 						}}
 						disabled={onFBScreenNoStars}
 					>
-						<Text className="text-center font-sans-bold text-body text-projectWhite">{isFeedbackScreen ? 'Meus Cursos' : 'Continuar'}</Text>
+						<Text className="text-center font-sans-bold text-body text-projectWhite">{'Continuar'}</Text>
 					</TouchableOpacity>
 				</View>
 
