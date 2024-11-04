@@ -7,7 +7,14 @@ import {
   getUpdatedDate,
   formatHours,
   convertMsToTime,
+  resetOnboarding
 } from '../../services/utilityFunctions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+jest.mock('@react-native-async-storage/async-storage', () => ({
+  multiRemove: jest.fn(),
+}));
 
 describe('Utility Functions', () => {
 
@@ -189,6 +196,34 @@ describe('Utility Functions', () => {
 
       expect(result).toBe(expectedOutput);
     });
-  });
 
+    describe('resetOnboarding', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+      it('should remove the correct keys from AsyncStorage', async () => {
+        const uniqueKeys = ['Explore', 'Profile', 'Sections'];
+        const expectedKeys = uniqueKeys.map(key => `tooltip_shown_${key}`);
+  
+        await resetOnboarding(uniqueKeys);
+  
+        expect(AsyncStorage.multiRemove).toHaveBeenCalledWith(expectedKeys);
+        expect(AsyncStorage.multiRemove).toHaveBeenCalledTimes(1);
+      });
+  
+      it('should handle errors correctly', async () => {
+        const uniqueKeys = ['Explore', 'Profile', 'Sections'];
+        const error = new Error('Test error');
+        AsyncStorage.multiRemove.mockRejectedValueOnce(error);
+  
+        console.error = jest.fn();
+  
+        await resetOnboarding(uniqueKeys);
+  
+        expect(AsyncStorage.multiRemove).toHaveBeenCalledWith(uniqueKeys.map(key => `tooltip_shown_${key}`));
+        expect(console.error).toHaveBeenCalledWith('Error removing keys:', error);
+      });
+      
+    });
+  });
 });

@@ -332,6 +332,12 @@ export async function handleLastComponent(comp, course, navigation) {
 	// }
 }
 
-export async function resetOnboarding(){
-	AsyncStorage.multiRemove(['Explore', 'Profile', 'Sections']);
-}
+export async function resetOnboarding(uniqueKeys) {
+	try {
+	  const keysToRemove = uniqueKeys.map(key => `tooltip_shown_${key}`);
+	  await AsyncStorage.multiRemove(keysToRemove);
+	  console.log('Removed keys:', keysToRemove);
+	} catch (error) {
+	  console.error('Error removing keys:', error);
+	}
+  }

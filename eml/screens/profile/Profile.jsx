@@ -127,7 +127,7 @@ export default function ProfileComponent() {
 				}} 
 				setIsVisible={setIsVisible} 
 				text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
-				tailSide="right" 
+				tailSide="right"
 				tailPosition="20%" 
 				uniqueKey="Profile" 
 				uniCodeChar="👩‍🏫"
