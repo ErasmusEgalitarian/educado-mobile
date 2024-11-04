@@ -1,6 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { mockDataAPI } from '../mockData/mockDataAPI';
+import { URL } from '@env';
 
 import {
   getCourse,
@@ -11,6 +12,7 @@ import {
   subscribeToCourse,
   unSubscribeToCourse,
   ifSubscribed,
+  giveFeedback,
 } from '../../api/api';
 
 jest.mock('axios');
@@ -76,7 +78,7 @@ describe('API Functions', () => {
 
       const result = await getAllSections(courseId);
 
-     // expect(axios.get).toHaveBeenCalledWith(`${port}/api/courses/${courseId}/sections`);
+      // expect(axios.get).toHaveBeenCalledWith(`${port}/api/courses/${courseId}/sections`);
       expect(result).toEqual(mockData.sectionsData);
     });
 
@@ -185,5 +187,132 @@ describe('API Functions', () => {
       await expect(unSubscribeToCourse(userId, courseId)).rejects.toThrow(errorMessage);
     });
   });
+  describe('giveFeedback', () => {
+    const courseId = 'course123';
+    const feedbackData = {
+      rating: 5,
+      feedbackText: 'Great course!',
+      feedbackOptions: ['option1', 'option2'],
+    };
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should submit feedback successfully', async () => {
+      const mockResponse = { data: 'OK' };
+      axios.post.mockResolvedValue(mockResponse);
+
+      const result = await giveFeedback(courseId, feedbackData);
+
+      expect(result).toEqual('OK');
+      expect(axios.post).toHaveBeenCalledWith(`${URL}/api/feedback/${courseId}`, feedbackData);
+    });
+
+    it('should rethrow "Feedback must contain a rating" error', async () => {
+      const invalidFeedbackData = {
+        rating: null,
+        feedbackText: 'Great course!',
+        feedbackOptions: ['option1', 'option2'],
+      };
+      const errorMessage = 'Feedback must contain a rating';
+      axios.post.mockImplementation((url, data) => {
+        if (data.rating === null) {
+          return Promise.reject({
+            response: {
+              status: 400,
+              data: { error: errorMessage, code: 'E1303' }
+            }
+          });
+        }
+        return Promise.resolve({ data: 'OK' });
+      });
+      try {
+        await giveFeedback(courseId, invalidFeedbackData);
+      } catch (error) {
+        expect(error.response.status).toBe(400);
+        expect(error.response.data.error).toBe(errorMessage);
+        expect(error.response.data.code).toBe('E1303');
+      }
+      expect(axios.post).toHaveBeenCalledWith(`${URL}/api/feedback/${courseId}`, invalidFeedbackData);
+
+    });
+
+    it('should rethrow "Feedback options must be an array" error', async () => {
+
+      const errorMessage = 'Feedback options must be an array';
+      const invalidFeedbackData = {
+        rating: 5,
+        feedbackText: 'Great course!',
+        feedbackOptions: 'not an array',
+      };
+
+      axios.post.mockImplementation((url, data) => {
+        if (!Array.isArray(data.feedbackOptions)) {
+          return Promise.reject({
+            response: {
+              status: 400,
+              data: { error: errorMessage, code: 'E1304' },
+            },
+          });
+        }
+        return Promise.resolve({ data: 'OK' });
+      });
+
+      try {
+        await giveFeedback(courseId, invalidFeedbackData);
+      } catch (error) {
+        expect(error.response.status).toBe(400);
+        expect(error.response.data.error).toBe(errorMessage);
+        expect(error.response.data.code).toBe('E1304');
+      }
+      expect(axios.post).toHaveBeenCalledWith(`${URL}/api/feedback/${courseId}`, invalidFeedbackData);
+    });
+
+
+    it('should rethrow "Could not save feedback entry" error', async () => {
+      const errorMessage = 'Could not save feedback entry';
+      axios.post.mockImplementation((url, data) => {
+        return Promise.reject({
+          response: {
+            status: 400,
+            data: { error: errorMessage, code: 'E1305' },
+          },
+        });
+      });
+      try {
+        await giveFeedback(courseId, feedbackData);
+      } catch (error) {
+        expect(error.response.status).toBe(400);
+        expect(error.response.data.error).toBe(errorMessage);
+        expect(error.response.data.code).toBe('E1305');
+      }
+      expect(axios.post).toHaveBeenCalledWith(`${URL}/api/feedback/${courseId}`, feedbackData);
+    });
+
+    it('should rethrow "Course not found" error', async () => {
+      const errorMessage = 'Course not found';
+      axios.post.mockImplementation((url, data) => {
+        return Promise.reject({
+          response: {
+            status: 404,
+            data: { error: errorMessage, code: 'E0006' },
+          },
+        });
+      });
+
+      try {
+        await giveFeedback(courseId, feedbackData);
+      } catch (error) {
+        expect(error.response.status).toBe(404);
+        expect(error.response.data.error).toBe(errorMessage)
+        expect(error.response.data.code).toBe('E0006');
+      }
+
+      expect(axios.post).toHaveBeenCalledWith(`${URL}/api/feedback/${courseId}`, feedbackData);
+    });
+  });
+
+
 
 });

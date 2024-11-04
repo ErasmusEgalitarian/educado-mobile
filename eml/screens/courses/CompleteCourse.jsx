@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { BgLinearGradient } from '../../constants/BgLinearGradient';
 import CompleteCourseSlider from '../../components/courses/completeCourse/CompleteCourseSlider';
 import Text from '../../components/general/Text.js';
@@ -23,6 +23,7 @@ export default function CompleteCourseScreen() {
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const completeCourseSliderRef = useRef(null);
 	const [feedbackData, setFeedbackData] = useState({});
+	const [feedbackError, setFeedbackError] = useState(false);
 	
 
 	const navigation = useNavigation();
@@ -36,21 +37,22 @@ export default function CompleteCourseScreen() {
 		setCurrentSlide(index);
 	};
 	const handleSubmitFeedback = async () => {
-		console.log(feedbackData);
 		try {
 			const response = await giveFeedback(course.courseId, feedbackData);
-			console.log(response);
 		}
 		catch (e) {
-			console.log(e);
+			if (e.response.status === 404) {
+				setFeedbackError(true);
+				
+
+			}
 		}
-		
 	};
 
-	const handleNextSlide = () => {
+	const handleNextSlide =  async () => {
 		if (completeCourseSliderRef.current) {
 			if (isFeedbackScreen) {
-				handleSubmitFeedback();
+				await handleSubmitFeedback();
 				navigation.reset({
 					index: 0,
 					routes: [{ name: 'HomeStack' }],
@@ -63,6 +65,7 @@ export default function CompleteCourseScreen() {
 
 	return (
 		<SafeAreaView className="bg-secondary" >
+			{feedbackError && Alert.alert('Não foi possível encontrar o curso sobre o qual você deu feedback.')}
 			<View className="justify-around items-center flex flex-col h-full w-full">
 				<View className="flex w-screen h-5/6 justify-center items-center">
 					<CompleteCourseSlider
