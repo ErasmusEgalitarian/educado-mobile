@@ -267,7 +267,7 @@ export const getAllFeedbackOptions = async () => {
 		const response = await axios.get(`${url}/api/feedback/options`);
 		return response.data;
 	} catch (error) {
-		console.error('Error getting feedback options:', error.response?.data || error.message);
+		console.error('Error getting feedback options:', error.response?.data.error || error.message);
 		throw error;
 	}
 };

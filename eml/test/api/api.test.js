@@ -13,6 +13,7 @@ import {
   unSubscribeToCourse,
   ifSubscribed,
   giveFeedback,
+  getAllFeedbackOptions,
 } from '../../api/api';
 
 jest.mock('axios');
@@ -314,5 +315,55 @@ describe('API Functions', () => {
   });
 
 
+  describe('getAllFeedbackOptions', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
 
+    it('should retrieve all feedback options successfully', async () => {
+      const mockFeedbackOptions = [
+        { option: 'Option 1' },
+        { option: 'Option 2' },
+      ];
+      axios.get.mockResolvedValue({ data: mockFeedbackOptions });
+
+      const result = await getAllFeedbackOptions();
+
+      expect(result).toEqual(mockFeedbackOptions);
+      expect(axios.get).toHaveBeenCalledWith(`${URL}/api/feedback/options`);
+    });
+
+    it('should rethrow "no feedback options found" error', async () => {
+      const errorMessage = 'No feedback options found';
+      axios.get.mockRejectedValue({
+        response: {
+          status: 400,
+          data: { error: errorMessage },
+        },
+      });
+
+      try {
+        await getAllFeedbackOptions();
+      } catch (error) {
+        expect(error.response).toBeDefined();
+        expect(error.response.status).toBe(400);
+        expect(error.response.data.error).toBe(errorMessage);
+      }
+
+      expect(axios.get).toHaveBeenCalledWith(`${URL}/api/feedback/options`);
+    });
+
+    it('should throw network error', async () => {
+      const errorMessage = 'Network Error';
+      axios.get.mockRejectedValue(new Error(errorMessage));
+
+      try {
+        await getAllFeedbackOptions();
+      } catch (error) {
+        expect(error.message).toBe(errorMessage);
+      }
+
+      expect(axios.get).toHaveBeenCalledWith(`${URL}/api/feedback/options`);
+    });
+  });
 });
