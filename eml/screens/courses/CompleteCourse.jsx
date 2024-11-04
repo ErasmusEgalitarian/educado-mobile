@@ -29,7 +29,7 @@ export default function CompleteCourseScreen() {
 	const navigation = useNavigation();
 	const route = useRoute();
 	const { course } = route.params;
-	const isFeedbackScreen = currentSlide === 3;
+	const isFeedbackScreen = currentSlide === 1;
 	const rating = feedbackData.rating ? feedbackData.rating : 0;
 	const onFBScreenNoStars = isFeedbackScreen && rating === 0;
 
@@ -68,7 +68,7 @@ export default function CompleteCourseScreen() {
 
 	const handleNextSlide =  async () => {
 		if (!completeCourseSliderRef.current) { return; }
-		
+
 		if (isFeedbackScreen) {
 			await handleSubmitFeedback();
 			navigation.reset({
