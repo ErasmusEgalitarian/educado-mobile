@@ -3,6 +3,7 @@ import * as StorageService from '../services/StorageService.js';
 import * as userApi from '../api/userApi.js';
 import 'intl';
 import 'intl/locale-data/jsonp/en-GB'; // Import the locale you need
+import AsyncStorage from '@react-native-async-storage/async-storage';
 /**
  * Converts a numeric difficulty level to a human-readable label.
  * @param {number} lvl - The difficulty level of the course.
@@ -329,4 +330,8 @@ export async function handleLastComponent(comp, course, navigation) {
 	// } else {
 	//   console.log('Section not complete - navigate to retry exercises TBD');
 	// }
+}
+
+export async function resetOnboarding(){
+	AsyncStorage.multiRemove(['Explore', 'Profile', 'Sections']);
 }
