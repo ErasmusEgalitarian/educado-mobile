@@ -24,7 +24,6 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 	const slick = useRef(null);
 	const tailwindConfig = require('../../../tailwind.config.js');
 	const projectColors = tailwindConfig.theme.colors;
-	const statsOverviewRef = useRef(null);
 
 	const screens = [
 		<Congratulation key={0}/>,
@@ -55,9 +54,6 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 			showsButtons={true}
 			onIndexChanged={(index) => {
 				onIndexChanged(index);
-				if (index === 1) {
-					statsOverviewRef.current.startAnimation();
-				}
 			}}
 			autoplayTimeout={10}
 			autoplay={true}
