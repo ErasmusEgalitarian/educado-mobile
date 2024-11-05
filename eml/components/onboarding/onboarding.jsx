@@ -127,59 +127,59 @@ const getTailStyles = (side, position) => {
 	};
 
 	switch (side) {
-		case 'top':
-			return {
-				tooltip: { marginBottom: heightSize },
-				tooltipTail: {
-					...commonStyles,
-					top: -heightSize,
-					left: position,
-					borderTopWidth: 0,
-					borderBottomWidth: heightSize,
-					borderBottomColor: '#166276',
-				},
-			};
-		case 'right':
-			return {
-				tooltip: { marginLeft: heightSize },
-				tooltipTail: {
-					right: -heightSize,
-					top: position,
-					borderRightWidth: 0,
-					borderLeftWidth: heightSize,
-					borderLeftColor: '#166276',
-					borderTopWidth: baseSize / 2,
-					borderBottomWidth: baseSize / 2,
-					borderTopColor: 'transparent',
-					borderBottomColor: 'transparent',
-				},
-			};
-		case 'left':
-			return {
-				tooltip: { marginRight: heightSize },
-				tooltipTail: {
-					left: -heightSize,
-					top: position,
-					borderLeftWidth: 0,
-					borderRightWidth: heightSize,
-					borderRightColor: '#166276',
-					borderTopWidth: baseSize / 2,
-					borderBottomWidth: baseSize / 2,
-					borderTopColor: 'transparent',
-					borderBottomColor: 'transparent',
-				},
-			};
-		case 'bottom':
-		default:
-			return {
-				tooltip: { marginTop: heightSize },
-				tooltipTail: {
-					...commonStyles,
-					bottom: -heightSize,
-					left: position,
-					borderBottomWidth: 0,
-					borderTopWidth: heightSize,
-					borderTopColor: '#166276',
+	case 'top':
+		return {
+			tooltip: { marginBottom: heightSize },
+			tooltipTail: {
+				...commonStyles,
+				top: -heightSize,
+				left: position,
+				borderTopWidth: 0,
+				borderBottomWidth: heightSize,
+				borderBottomColor: '#166276',
+			},
+		};
+	case 'right':
+		return {
+			tooltip: { marginLeft: heightSize },
+			tooltipTail: {
+				right: -heightSize,
+				top: position,
+				borderRightWidth: 0,
+				borderLeftWidth: heightSize,
+				borderLeftColor: '#166276',
+				borderTopWidth: baseSize / 2,
+				borderBottomWidth: baseSize / 2,
+				borderTopColor: 'transparent',
+				borderBottomColor: 'transparent',
+			},
+		};
+	case 'left':
+		return {
+			tooltip: { marginRight: heightSize },
+			tooltipTail: {
+				left: -heightSize,
+				top: position,
+				borderLeftWidth: 0,
+				borderRightWidth: heightSize,
+				borderRightColor: '#166276',
+				borderTopWidth: baseSize / 2,
+				borderBottomWidth: baseSize / 2,
+				borderTopColor: 'transparent',
+				borderBottomColor: 'transparent',
+			},
+		};
+	case 'bottom':
+	default:
+		return {
+			tooltip: { marginTop: heightSize },
+			tooltipTail: {
+				...commonStyles,
+				bottom: -heightSize,
+				left: position,
+				borderBottomWidth: 0,
+				borderTopWidth: heightSize,
+				borderTopColor: '#166276',
 				},
 			};
 	}
