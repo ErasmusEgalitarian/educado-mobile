@@ -180,8 +180,8 @@ const getTailStyles = (side, position) => {
 				borderBottomWidth: 0,
 				borderTopWidth: heightSize,
 				borderTopColor: '#166276',
-				},
-			};
+			},
+		};
 	}
 };
 
