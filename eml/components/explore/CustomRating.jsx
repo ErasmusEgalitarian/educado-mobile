@@ -43,11 +43,12 @@ const CustomRating = ({ rating = 0 }) => {
 				<Text className="pl-1 text-sm text-projectGray">ainda sem avaliações</Text>
 			</View>
 		) :
-			<View className="flex-row items-start justify-start">
+			<View className="flex-row items-center justify-start">
 				{ratingIcons.map((icon, index) => (
-					<MaterialCommunityIcons key={index} name={icon.icon} size={14} color={icon.color} />
+					<MaterialCommunityIcons key={index} name={icon.icon} size={14} color={icon.color} /> 
 				))}
-			</View>
+				<Text className="pl-2 text-sm text-projectGray" style={{color: tailwindConfig.theme.colors.yellow }}>{parseFloat(rating).toFixed(1)}</Text>
+			</View> 
 	);
 };
 
