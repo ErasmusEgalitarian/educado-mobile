@@ -1,5 +1,5 @@
 import React, { useRef, forwardRef, useImperativeHandle } from 'react';
-import { KeyboardAvoidingView, View, Dimensions } from 'react-native';
+import { KeyboardAvoidingView, View, ScrollView } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import Slick from 'react-native-slick';
 import Congratulation from './Congratulation';
@@ -22,10 +22,6 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 	CompleteCourseSlider.displayName = 'CompleteCourseSlider';
 
 	const slick = useRef(null);
-	
-	//Calculate how high the slich should be(85% of screen height)
-	const { height: screenHeight } = Dimensions.get('window');
-    const slickHeight = screenHeight * 0.85;
 
 	const tailwindConfig = require('../../../tailwind.config.js');
 	const projectColors = tailwindConfig.theme.colors;
@@ -46,7 +42,6 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 	}));
 
 	return (
-		<KeyboardAvoidingView style={{ flex: 1 }}>
 			<Slick
 				ref={slick}
 				scrollEnabled={true}
@@ -56,7 +51,7 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 				dotStyle={{ width: 10, height: 10 }}
 				activeDotColor={projectColors.primary_custom}
 				activeDotStyle={{ width: 10, height: 10 }}
-				height={slickHeight}
+				height={700}
 				showsButtons={true}
 				paginationStyle={{bottom: -15}}
 				onIndexChanged={(index) => {
@@ -81,13 +76,21 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 					</Svg>
 				}
 			>
+
 				{screens.map((screen, _index) => (
+							<KeyboardAvoidingView 
+							style={{ flex: 1 }}
+							behavior='height'
+							keyboardVerticalOffset={80}
+						>
+						<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 						<View style={{ flex: 1 }}>
 							{screen}
 						</View>
+						</ScrollView>
+						</KeyboardAvoidingView>
 				))}
 			</Slick>
-		</KeyboardAvoidingView>
 	);
 });
 

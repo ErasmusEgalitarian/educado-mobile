@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Pressable, ScrollView, Text, TextInput, View, Keyboard } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { MaterialCommunityIcons, } from '@expo/vector-icons';
 import tailwindConfig from '../../../tailwind.config';
 import PropTypes from 'prop-types'; 
@@ -88,7 +88,7 @@ export default function Feedback({ setFeedbackData }) {
 	}));
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
 			<View className='flex w-full items-center px-6'>
 				<Text className="text-center font-sans-bold text-3xl text-primary_custom p-4 mt-11">Conte o que achou sobre o curso!</Text>               
 				<View className="flex items-center w-full border-b-[1px] border-lightGray py-4">
@@ -141,6 +141,6 @@ export default function Feedback({ setFeedbackData }) {
 					</View>
 				</View>
 			</View>
-		</ScrollView>
+			</TouchableWithoutFeedback>
 	);
 }
