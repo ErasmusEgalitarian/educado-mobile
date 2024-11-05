@@ -78,13 +78,6 @@ export default function CourseScreen() {
 		}
 	}, []);
 
-	const position = {
-		top: -150,
-		left: 95,
-		right: 5,
-		bottom: 24,
-	};
-
 	return (
 		loading ? <LoadingScreen /> :
 			<>
@@ -106,7 +99,12 @@ export default function CourseScreen() {
 					<View className="bg-secondary justify-center items-center ">
 						<Tooltip 
 							isVisible={isVisible} 
-							position={position} 
+							position={{
+								top: -150,
+								left: 95,
+								right: 5,
+								bottom: 24,
+							}} 
 							setIsVisible={setIsVisible} 
 							text={'Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito.".'} 
 							tailSide="right" 
