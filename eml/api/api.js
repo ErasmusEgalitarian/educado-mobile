@@ -273,20 +273,20 @@ with our new video streaming service in go.
 export const getVideoStreamUrl = (fileName, resolution) => {
 	let resolutionPostfix;
 	switch (resolution) {
-		case '360':
-			resolutionPostfix = '_360x640';
-			break;
-		case '480':
-			resolutionPostfix = '_480x854';
-			break;
-		case '720':
-			resolutionPostfix = '_720x1280';
-			break;
-		case '1080':
-			resolutionPostfix = '_1080x1920';
-			break;
-		default:
-			resolutionPostfix = '_360x640';
+	case '360':
+		resolutionPostfix = '_360x640';
+		break;
+	case '480':
+		resolutionPostfix = '_480x854';
+		break;
+	case '720':
+		resolutionPostfix = '_720x1280';
+		break;
+	case '1080':
+		resolutionPostfix = '_1080x1920';
+		break;
+	default:
+		resolutionPostfix = '_360x640';
 	}
 
 	return `${url}/api/bucket/stream/${fileName}${resolutionPostfix}.mp4`;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Pressable, ScrollView, Text, TextInput, View, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View, Keyboard } from 'react-native';
 import { MaterialCommunityIcons, } from '@expo/vector-icons';
 import tailwindConfig from '../../../tailwind.config';
 import PropTypes from 'prop-types'; 
@@ -19,7 +19,7 @@ export default function Feedback({ setFeedbackData }) {
 		,{name: 'Muito útil', id: '456'}
 		,{name: 'Muito bem explicado', id: '789'}
 		,{name: 'Muito fácil de entender', id: '101'
-	}]);
+		}]);
 	const [selectedOptions, setSelectedOptions] = useState([]);
 	const [feedbackText, setFeedbackText] = useState('');
 	
@@ -34,7 +34,7 @@ export default function Feedback({ setFeedbackData }) {
 			catch(e) {
 				console.log(e);
 			}
-		}
+		};
 		fetchFeedbackOptions();
 	}, []);
 
@@ -50,18 +50,18 @@ export default function Feedback({ setFeedbackData }) {
 
 	const ratingText = () => {
 		switch (selectedRating) {
-			case 1:
-				return 'Muito Ruim';
-			case 2:
-				return 'Ruim';
-			case 3:
-				return 'Neutro';
-			case 4:
-				return 'Bom!';
-			case 5:
-				return 'Muito Bom!';
-			default:
-				return '';
+		case 1:
+			return 'Muito Ruim';
+		case 2:
+			return 'Ruim';
+		case 3:
+			return 'Neutro';
+		case 4:
+			return 'Bom!';
+		case 5:
+			return 'Muito Bom!';
+		default:
+			return '';
 		}
 	};
 
@@ -88,11 +88,11 @@ export default function Feedback({ setFeedbackData }) {
 	}));
 
 	return (
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
 			<View className='flex w-full items-center px-6'>
 				<Text className="text-center font-sans-bold text-3xl text-primary_custom p-4 mt-11">Conte o que achou sobre o curso!</Text>               
 				<View className="flex items-center w-full border-b-[1px] border-lightGray py-4">
-				<Text className="font-montserrat-bold text-body-large">Como você avalia este curso?</Text>
+					<Text className="font-montserrat-bold text-body-large">Como você avalia este curso?</Text>
 					<View className="flex flex-row items-center">
 						<Text className="text-sm font-montserrat">Escolha de 1 a 5 estrelas para classificar</Text>
 						<Text className="text-error ml-1 pt-2 text-body text-center">*</Text>
@@ -113,16 +113,16 @@ export default function Feedback({ setFeedbackData }) {
 						<View className="flex-row flex-wrap items-center justify-around p-2">
 							{feedbackOptions.map((option, index) => {
 								const id = option._id;
-								const selected = selectedOptions.includes(id)
+								const selected = selectedOptions.includes(id);
 								return (
 									<Pressable key={index} onPress={() => handleOptionClick(id)}>
-									<View className={`rounded-lg border-[1px] px-2 py-2 my-[5px] border-cyanBlue  ${selected ?  'bg-bgprimary_custom' : ''}`}>
-										<Text className={`text-cyanBlue font-montserrat ${selected ? 'text-projectWhite' : ''}`}  >
-										{option.name}
-										</Text>
-									</View>
+										<View className={`rounded-lg border-[1px] px-2 py-2 my-[5px] border-cyanBlue  ${selected ?  'bg-bgprimary_custom' : ''}`}>
+											<Text className={`text-cyanBlue font-montserrat ${selected ? 'text-projectWhite' : ''}`}  >
+												{option.name}
+											</Text>
+										</View>
 									</Pressable>
-								)	
+								);	
 							})}
 						</View>
 					</ScrollView>
@@ -141,6 +141,6 @@ export default function Feedback({ setFeedbackData }) {
 					</View>
 				</View>
 			</View>
-			</TouchableWithoutFeedback>
+		</TouchableWithoutFeedback>
 	);
 }

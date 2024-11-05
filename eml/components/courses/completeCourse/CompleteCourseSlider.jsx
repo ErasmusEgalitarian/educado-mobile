@@ -11,7 +11,7 @@ props: 			onIndexChanged: function that is called when the index of which slide 
 				courseObject: the course object
 */
 
-const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeedbackData }, ref) => {
+const CompleteCourseSlider = forwardRef(({ onIndexChanged, _courseObject, setFeedbackData }, ref) => {
 
 	CompleteCourseSlider.propTypes = {
 		courseObject: PropTypes.object.isRequired,
@@ -42,55 +42,55 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, courseObject, setFeed
 	}));
 
 	return (
-			<Slick
-				ref={slick}
-				scrollEnabled={true}
-				loop={false}
-				index={0}
-				dotColor={projectColors.projectWhite}
-				dotStyle={{ width: 10, height: 10 }}
-				activeDotColor={projectColors.primary_custom}
-				activeDotStyle={{ width: 10, height: 10 }}
-				height={700}
-				showsButtons={true}
-				paginationStyle={{bottom: -15}}
-				onIndexChanged={(index) => {
-					onIndexChanged(index);
-				}}
-				autoplayTimeout={10}
-				autoplay={true}
-				nextButton={
-					<Svg className="h-[25px] w-[25px] mr-4">
-						<Path
-							d="M8.59003 17.1239L13.17 12.5439L8.59003 7.95385L10 6.54385L16 12.5439L10 18.5439L8.59003 17.1239Z"
-							fill={projectColors.projectBlack}
-						/>
-					</Svg>
-				}
-				prevButton={
-					<Svg className="h-[25px] w-[25px] ml-4">
-						<Path
-							d="M15.41 17.1239L10.83 12.5439L15.41 7.95385L14 6.54385L8 12.5439L14 18.5439L15.41 17.1239Z"
-							fill={projectColors.projectBlack}
-						/>
-					</Svg>
-				}
-			>
+		<Slick
+			ref={slick}
+			scrollEnabled={true}
+			loop={false}
+			index={0}
+			dotColor={projectColors.projectWhite}
+			dotStyle={{ width: 10, height: 10 }}
+			activeDotColor={projectColors.primary_custom}
+			activeDotStyle={{ width: 10, height: 10 }}
+			height={700}
+			showsButtons={true}
+			paginationStyle={{bottom: -15}}
+			onIndexChanged={(index) => {
+				onIndexChanged(index);
+			}}
+			autoplayTimeout={10}
+			autoplay={true}
+			nextButton={
+				<Svg className="h-[25px] w-[25px] mr-4">
+					<Path
+						d="M8.59003 17.1239L13.17 12.5439L8.59003 7.95385L10 6.54385L16 12.5439L10 18.5439L8.59003 17.1239Z"
+						fill={projectColors.projectBlack}
+					/>
+				</Svg>
+			}
+			prevButton={
+				<Svg className="h-[25px] w-[25px] ml-4">
+					<Path
+						d="M15.41 17.1239L10.83 12.5439L15.41 7.95385L14 6.54385L8 12.5439L14 18.5439L15.41 17.1239Z"
+						fill={projectColors.projectBlack}
+					/>
+				</Svg>
+			}
+		>
 
-				{screens.map((screen, _index) => (
-							<KeyboardAvoidingView 
-							style={{ flex: 1 }}
-							behavior='height'
-							keyboardVerticalOffset={80}
-						>
-						<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+			{screens.map((screen, _index) => (
+				<KeyboardAvoidingView 
+					style={{ flex: 1 }}
+					behavior='height'
+					keyboardVerticalOffset={80}
+				>
+					<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 						<View style={{ flex: 1 }}>
 							{screen}
 						</View>
-						</ScrollView>
-						</KeyboardAvoidingView>
-				))}
-			</Slick>
+					</ScrollView>
+				</KeyboardAvoidingView>
+			))}
+		</Slick>
 	);
 });
 

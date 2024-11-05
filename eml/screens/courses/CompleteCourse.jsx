@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { View, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
-import { BgLinearGradient } from '../../constants/BgLinearGradient';
 import CompleteCourseSlider from '../../components/courses/completeCourse/CompleteCourseSlider';
 import Text from '../../components/general/Text.js';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -55,7 +54,7 @@ export default function CompleteCourseScreen() {
 	};
 	const handleSubmitFeedback = async () => {
 		try {
-			const response = await giveFeedback(course.courseId, feedbackData);
+			await giveFeedback(course.courseId, feedbackData);
 		}
 		catch (e) {
 			if (e.response.status === 404) {
