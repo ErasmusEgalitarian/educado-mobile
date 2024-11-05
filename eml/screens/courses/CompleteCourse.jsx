@@ -98,7 +98,7 @@ export default function CompleteCourseScreen() {
 							!(onFBScreenNoStars) && handleNextSlide();
 						}}
 						disabled={onFBScreenNoStars}
-						>
+					>
 						<Text className="text-center font-sans-bold text-body text-projectWhite">{isFeedbackScreen ? 'Enviar e concluir' : 'Continuar'}</Text>
 					</TouchableOpacity>
 				</View>
