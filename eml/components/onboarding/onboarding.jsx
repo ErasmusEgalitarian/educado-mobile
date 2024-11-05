@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Animated, Easing } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStudentInfo } from '../../services/StorageService';
 import { Button } from 'react-native-paper';
@@ -17,11 +17,9 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
   useEffect(() => {
     const initializeTooltip = async () => {
       try {
-        console.log('Storage key:', storageKey);
         const shownTooltip = await AsyncStorage.getItem(storageKey);
-        console.log('Shown tooltip: for' + uniqueKey, shownTooltip);
 
-        if (!shownTooltip) { 
+        if (shownTooltip) { 
           await AsyncStorage.setItem(storageKey, 'true');
           setTimeout(() => {
             setIsVisible(true);
@@ -34,7 +32,6 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
         console.error("Error initializing tooltip:", error);
       }
     };
-    console.log(storageKey);
     initializeTooltip();
   }, [storageKey, getStudentInfo]);
 
@@ -94,7 +91,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
   };
 
   return (
-    <View style={[styles.overlay, position]}>
+    <TouchableOpacity onPress={() => setIsVisible(false)} style={[styles.overlay, position]}>
       <Animated.View style={[styles.tooltip, tailStyles.tooltip, animatedStyle]}>
         <Text style={styles.unicodeCharacter}>{uniCodeChar}</Text>
         <Text style={styles.tooltipText}>{text}</Text>
@@ -103,7 +100,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
         </Button>
         <Animated.View style={[styles.tooltipTail, tailStyles.tooltipTail, animatedStyle]} />
       </Animated.View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
