@@ -11,7 +11,7 @@ props: 			onIndexChanged: function that is called when the index of which slide 
 				courseObject: the course object
 */
 
-const CompleteCourseSlider = forwardRef(({ onIndexChanged, _courseObject, setFeedbackData }, ref) => {
+const CompleteCourseSlider = forwardRef(({ onIndexChanged, setFeedbackData }, ref) => {
 
 	CompleteCourseSlider.propTypes = {
 		courseObject: PropTypes.object.isRequired,
@@ -77,11 +77,12 @@ const CompleteCourseSlider = forwardRef(({ onIndexChanged, _courseObject, setFee
 			}
 		>
 
-			{screens.map((screen, _index) => (
+			{screens.map((screen, index) => (
 				<KeyboardAvoidingView 
 					style={{ flex: 1 }}
 					behavior='height'
 					keyboardVerticalOffset={80}
+					key={index}
 				>
 					<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 						<View style={{ flex: 1 }}>
