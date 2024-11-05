@@ -87,7 +87,7 @@ export default function Feedback({ setFeedbackData }) {
 	}));
 
 	return (
-		<View className='flex w-full items-center px-6'>
+		<View className='flex w-full items-center px-6 justify-center' >
 			<Text className="text-center font-sans-bold text-3xl text-primary_custom p-4 mt-11">Conte o que achou sobre o curso!</Text>               
 			<View className="flex items-center w-full border-b-[1px] border-lightGray py-4">
 			<Text className="font-montserrat-bold text-body-large">Como você avalia este curso?</Text>
