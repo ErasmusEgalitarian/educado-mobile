@@ -19,7 +19,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
       try {
         const shownTooltip = await AsyncStorage.getItem(storageKey);
 
-        if (shownTooltip) { 
+        if (!shownTooltip) { 
           await AsyncStorage.setItem(storageKey, 'true');
           setTimeout(() => {
             setIsVisible(true);
