@@ -118,20 +118,20 @@ export default function ProfileComponent() {
 				<UserInfo firstName={firstName} lastName={lastName} email={email} points={totalPoints} photo={photo}></UserInfo>
 				<ProfileStatsBox studentLevel={studentLevel} levelProgress={levelProgress} />
 				<Tooltip 
-				isVisible={isVisible} 
-				position={{
-					top: -300,
-					left: 70,
-					right: 30,
-					bottom: 24,
-				}} 
-				setIsVisible={setIsVisible} 
-				text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
-				tailSide="right"
-				tailPosition="20%" 
-				uniqueKey="Profile" 
-				uniCodeChar="👩‍🏫"
-			/>
+					isVisible={isVisible} 
+					position={{
+						top: -300,
+						left: 70,
+						right: 30,
+						bottom: 24,
+					}} 
+					setIsVisible={setIsVisible} 
+					text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
+					tailSide="right"
+					tailPosition="20%" 
+					uniqueKey="Profile" 
+					uniCodeChar="👩‍🏫"
+				/>
 				<ProfileNavigationButton label='Editar perfil' testId={'editProfileNav'} onPress={() => navigation.navigate('EditProfile')}></ProfileNavigationButton>
 				<ProfileNavigationButton label='Alterar senha' testId={'editPasswordNav'} onPress={() => navigation.navigate('EditPassword')}></ProfileNavigationButton>
 
