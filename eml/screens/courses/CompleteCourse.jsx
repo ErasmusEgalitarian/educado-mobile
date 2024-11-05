@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { View, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
+import { View, TouchableOpacity, SafeAreaView, Alert, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { BgLinearGradient } from '../../constants/BgLinearGradient';
 import CompleteCourseSlider from '../../components/courses/completeCourse/CompleteCourseSlider';
 import Text from '../../components/general/Text.js';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import { giveFeedback } from '../../api/api';
+// import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 
 
@@ -43,8 +44,6 @@ export default function CompleteCourseScreen() {
 		catch (e) {
 			if (e.response.status === 404) {
 				setFeedbackError(true);
-				
-
 			}
 		}
 	};
@@ -63,7 +62,7 @@ export default function CompleteCourseScreen() {
 		}
 	};
 
-	return (
+	return (	
 		<SafeAreaView className="bg-secondary" >
 			{feedbackError && Alert.alert('Não foi possível encontrar o curso sobre o qual você deu feedback.')}
 			<View className="justify-around items-center flex flex-col h-full w-full">
@@ -83,13 +82,12 @@ export default function CompleteCourseScreen() {
 							!(onFBScreenNoStars) && handleNextSlide();
 						}}
 						disabled={onFBScreenNoStars}
-					>
-						<Text className="text-center font-sans-bold text-body text-projectWhite">{'Continuar'}</Text>
+						>
+						<Text className="text-center font-sans-bold text-body text-projectWhite">{isFeedbackScreen ? 'Enviar e concluir' : 'Continuar'}</Text>
 					</TouchableOpacity>
 				</View>
-
 			</View>
-		</SafeAreaView>
+		</SafeAreaView>		
 	);
 }
 
