@@ -205,41 +205,34 @@ export const fetchCertificates = async (userId) => {
  * @param {string} studentId - The ID of the student.
  * @returns {Promise<Object>} - The response from the server.
  */
-export const generateCertificate = async (courseId, studentId) => {
+export const generateCertificate = async (courseId, studentData, userData) => {
+
+	if (!courseId) {
+		throw new Error('Course ID is required');
+	}
+	if (!studentData) {
+		throw new Error('Student data is required');
+	}
+	if (!userData) {
+		throw new Error('User data is required');
+	}
+	// Fetch course data
+	const courseData = await getCourse(courseId);
+
+	// Call the endpoint to generate the certificate
+
 	try {
-		// Fetch course data
-		console.log("url: ", url);
-		const courseResponse = await axios.get(url + `/api/courses/${courseId}`);
-		const courseData = courseResponse.data;
-
-		// Fetch student data and user data concurrently
-		const [studentResponse, userResponse] = await Promise.all([
-			axios.get(url + `/api/students/${studentId}/info`),
-			axios.get(url + `/api/users/${studentId}`)
-		]);
-
-		const studentData = studentResponse.data;
-		const userData = userResponse.data;
-
-		// Ensure data is loaded
-		if (!courseData || !studentData || !userData) {
-			throw new Error('Course, student, or user data not loaded');
-		}
-
-		// Call the endpoint to generate the certificate
 		const response = await axios.put(certificateUrl + '/api/student-certificates', {
-			courseName: courseData.name,
+			courseName: courseData.title,
 			courseId: courseData._id,
 			studentId: studentData._id,
 			studentFirstName: userData.firstName,
 			studentLastName: userData.lastName,
 			courseCreator: courseData.creator,
-			estimatedCourseDuration: courseData.estimatedDuration,
+			estimatedCourseDuration: courseData.estimatedDuration || 0,
 			dateOfCompletion: new Date().toISOString().split('T')[0], // current date
 			courseCategory: courseData.category,
 		});
-
-		console.log('Certificate generated:', response.data);
 		return response.data;
 	} catch (error) {
 		console.error('Error generating certificate:', error.response?.data || error.message);
@@ -278,23 +271,22 @@ with our new video streaming service in go.
 */
 
 export const getVideoStreamUrl = (fileName, resolution) => {
-
 	let resolutionPostfix;
 	switch (resolution) {
-		case '360':
-			resolutionPostfix = '_360x640';
-			break;
-		case '480':
-			resolutionPostfix = '_480x854';
-			break;
-		case '720':
-			resolutionPostfix = '_720x1280';
-			break;
-		case '1080':
-			resolutionPostfix = '_1080x1920';
-			break;
-		default:
-			resolutionPostfix = '_360x640';
+	case '360':
+		resolutionPostfix = '_360x640';
+		break;
+	case '480':
+		resolutionPostfix = '_480x854';
+		break;
+	case '720':
+		resolutionPostfix = '_720x1280';
+		break;
+	case '1080':
+		resolutionPostfix = '_1080x1920';
+		break;
+	default:
+		resolutionPostfix = '_360x640';
 	}
 
 	return `${url}/api/bucket/stream/${fileName}${resolutionPostfix}.mp4`;

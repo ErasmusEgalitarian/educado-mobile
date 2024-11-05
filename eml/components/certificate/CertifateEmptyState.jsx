@@ -25,7 +25,7 @@ export default function CertificateEmptyState() {
 						source={noCertificateImage}
 						alt="No Certificates"
 					/>
-					<Text className='text-2xl text-center font-montserrat-semi-bold mt-4'>Nenhum certificado disponível :(</Text>
+					<Text className='text-2xl text-center font-montserrat-semi-bold mt-4'>Nenhum certificado disponível :</Text>
 					<Text className='text-center text-lg my-4 leading-[22px]'>Você ainda não finalizou um curso. Acesse a página de cursos e continue seus estudos para emitir certificados.</Text>
 					<Pressable
 						onPress={() => navigation.navigate('Meus cursos')}

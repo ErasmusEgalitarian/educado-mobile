@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, TouchableOpacity, SafeAreaView, Alert, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { BgLinearGradient } from '../../constants/BgLinearGradient';
+import { View, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import CompleteCourseSlider from '../../components/courses/completeCourse/CompleteCourseSlider';
 import Text from '../../components/general/Text.js';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -30,16 +29,33 @@ export default function CompleteCourseScreen() {
 	const navigation = useNavigation();
 	const route = useRoute();
 	const { course } = route.params;
-	const isFeedbackScreen = currentSlide === 3;
+	const isFeedbackScreen = currentSlide === 1;
 	const rating = feedbackData.rating ? feedbackData.rating : 0;
 	const onFBScreenNoStars = isFeedbackScreen && rating === 0;
+
+	
+	// Generate certificate for the student, Uncomment this when course completion is properly handled or to test certificates
+	/* useEffect(() => {
+		const CreateCertificate = async () => {
+			const student = await getStudentInfo();
+			const user = await getUserInfo();
+			try {
+				await generateCertificate(course.courseId, student, user);
+				
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		CreateCertificate();
+	}, []); */
 
 	const handleIndexChange = (index) => {
 		setCurrentSlide(index);
 	};
 	const handleSubmitFeedback = async () => {
 		try {
-			const response = await giveFeedback(course.courseId, feedbackData);
+			await giveFeedback(course.courseId, feedbackData);
 		}
 		catch (e) {
 			if (e.response.status === 404) {
@@ -49,16 +65,16 @@ export default function CompleteCourseScreen() {
 	};
 
 	const handleNextSlide =  async () => {
-		if (completeCourseSliderRef.current) {
-			if (isFeedbackScreen) {
-				await handleSubmitFeedback();
-				navigation.reset({
-					index: 0,
-					routes: [{ name: 'HomeStack' }],
-				});
-			} else {
-				completeCourseSliderRef.current.scrollBy(1);
-			}
+		if (!completeCourseSliderRef.current) { return; }
+
+		if (isFeedbackScreen) {
+			await handleSubmitFeedback();
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'HomeStack' }],
+			});
+		} else {
+			completeCourseSliderRef.current.scrollBy(1);
 		}
 	};
 

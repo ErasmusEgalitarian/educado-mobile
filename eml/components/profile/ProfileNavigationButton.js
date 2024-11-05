@@ -22,6 +22,7 @@ export default function ProfileNavigationButton(props) {
 	ProfileNavigationButton.propTypes = {
 		label: PropTypes.string,
 		onPress: PropTypes.func,
+		onClose: PropTypes.func,
 	};
 
 	return (

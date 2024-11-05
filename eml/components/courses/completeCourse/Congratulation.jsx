@@ -35,7 +35,7 @@ export default function Congratulation() {
 
 			<View>
 				<Text className="text-center text-lg text-projectBlack px-5 mt-12">
-          Bom trabalho, {name}! Você pode ver suas estatísticas, placar educado e certificação antes de continuar.
+					Bom trabalho, {name}! Você pode ver suas estatísticas, placar educado e certificação antes de continuar.
 				</Text>
 			</View>
 		</View>

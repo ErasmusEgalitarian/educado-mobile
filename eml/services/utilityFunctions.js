@@ -1,6 +1,7 @@
 /** Utility functions used in Explore and Course screens **/
 import * as StorageService from '../services/StorageService.js';
 import * as userApi from '../api/userApi.js';
+import * as api from '../api/api.js';
 import 'intl';
 import 'intl/locale-data/jsonp/en-GB'; // Import the locale you need
 /**
@@ -310,18 +311,43 @@ export async function handleLastComponent(comp, course, navigation) {
 	// const student = await StorageService.getStudentInfo();
 	// const isComplete = isSectionCompleted(student, comp.parentSection);
 
-	navigation.reset({
-		index: 0,
-		routes: [
-			{
-				name: 'CompleteSection',
-				params: {
-					parsedCourse: course,
-					sectionId: comp.parentSection
-				}
-			},
-		],
-	});
+	// get the full course from DB, to check what section we are in
+	const getCurrentCourse = await api.getCourse(course.courseId);
+
+	// If the section is the last one, the course is completed
+	const getLastSection = getCurrentCourse.sections[getCurrentCourse.sections.length - 1];
+
+	// Check if the section is the last one
+	const isThisTheLastSection = getLastSection === comp.parentSection;
+	
+	if (isThisTheLastSection) {
+		// If the course is completed, navigate to the complete course screen
+		navigation.reset({
+			index: 0,
+			routes: [
+				{ 
+					name: 'CompleteCourse',
+					params: { 
+						course: course 
+					}
+				},
+			],
+		});
+		
+	} else {
+		navigation.reset({
+			index: 0,
+			routes: [
+				{
+					name: 'CompleteSection',
+					params: {
+						parsedCourse: course,
+						sectionId: comp.parentSection
+					}
+				},
+			],
+		});
+	}
 
 	// For future reference
 	// if (isComplete) { 

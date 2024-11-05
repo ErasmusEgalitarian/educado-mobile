@@ -12,7 +12,7 @@ import CertificateCard from '../../components/certificate/CertificateCard';
 import CertificateEmptyState from '../../components/certificate/CertifateEmptyState';
 import { determineCategory } from '../../services/utilityFunctions';
 import { fetchCertificates } from '../../api/api';
-import { getUserInfo } from '../../services/StorageService';
+import { getStudentInfo } from '../../services/StorageService';
 
 
 /**
@@ -29,13 +29,13 @@ export default function CertificateScreen() {
 
 	const getProfile = async () => {
 		try {
-			const fetchedProfile = await getUserInfo();
+			const fetchedProfile = await getStudentInfo();
 			if (fetchedProfile !== null) {
-				const fetchedCertificates = await fetchCertificates(fetchedProfile.id);
+				const fetchedCertificates = await fetchCertificates(fetchedProfile._id);
 				setCertificates(fetchedCertificates);
 			}
 		} catch (e) {
-			console.log(e);
+			console.log('error', e);
 		}
 	};
 
@@ -94,10 +94,7 @@ export default function CertificateScreen() {
 				<ScrollView showsVerticalScrollIndicator={true}>
 					<View className="flex flex-col justify-between items-center mx-4">
 						{!noCertificate && filteredCertificates.map((certificate, index) => (
-							<CertificateCard
-								key={index}
-								certificate={certificate}
-							></CertificateCard>
+							<CertificateCard key={index} certificate={certificate}/>
 						))}
 					</View>
 				</ScrollView>

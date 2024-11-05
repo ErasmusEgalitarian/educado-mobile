@@ -63,7 +63,7 @@ export default function ExerciseScreen({ componentList, exerciseObject, sectionO
 			// Check if it is the last component in the section
 			const currentLastComponent = componentList[componentList.length - 1];
 			const isLastComponent = currentLastComponent.component._id === exerciseObject._id;   
-			
+
 			// If the answer is correct and it is the last component in the section, handleLastComponent is called
 			if (isAnswerCorrect && isLastComponent) {  
 				try {
@@ -112,7 +112,14 @@ export default function ExerciseScreen({ componentList, exerciseObject, sectionO
 								</View> 
 
 								<View>
-									<TouchableOpacity disabled={buttonText === 'Continuar'}>
+									<TouchableOpacity 
+										disabled={buttonText === 'Continuar'}
+										value={index}
+										status={
+											selectedAnswer === index ? 'checked' : 'unchecked'
+										}
+										onPress={() => handleReviewAnswer(exerciseObject.answers[selectedAnswer]?.correct, index)}
+									>
 										<Text className='pt-2 pb-1 w-72 font-montserrat text-body text-projectBlack'>{answer.text}</Text>
 									</TouchableOpacity>
 
