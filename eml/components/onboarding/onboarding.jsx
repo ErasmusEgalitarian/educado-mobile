@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Animated, Easing } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getStudentInfo } from '../../services/StorageService';
 import { Button } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
