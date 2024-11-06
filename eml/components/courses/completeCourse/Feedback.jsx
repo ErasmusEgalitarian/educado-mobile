@@ -15,11 +15,7 @@ export default function Feedback({ setFeedbackData }) {
 	};
 
 	const [selectedRating, setSelectedRating] = useState(0);
-	const [feedbackOptions, setFeedbackOptions] = useState([{name: 'Muito informativo', id: '123'}
-		,{name: 'Muito útil', id: '456'}
-		,{name: 'Muito bem explicado', id: '789'}
-		,{name: 'Muito fácil de entender', id: '101'
-		}]);
+	const [feedbackOptions, setFeedbackOptions] = useState([]);
 	const [selectedOptions, setSelectedOptions] = useState([]);
 	const [feedbackText, setFeedbackText] = useState('');
 	
