@@ -31,7 +31,7 @@ export default function Feedback({ setFeedbackData }) {
 				setFeedbackOptions(options);
 			}
 			catch(e) {
-				console.log(e);
+				console.error(e);
 			}
 		};
 		fetchFeedbackOptions();
