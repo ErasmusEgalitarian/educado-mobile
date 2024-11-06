@@ -28,7 +28,6 @@ export default function Feedback({ setFeedbackData }) {
 		const fetchFeedbackOptions = async () => {
 			try {
 				const options = await getAllFeedbackOptions();
-				console.log(options);
 				setFeedbackOptions(options);
 			}
 			catch(e) {
