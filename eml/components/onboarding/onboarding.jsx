@@ -21,7 +21,7 @@ const Tooltip = ({ text, tailPosition = '50%', tailSide = 'bottom', position, un
 					await AsyncStorage.setItem(storageKey, 'true');
 					setTimeout(() => {
 						setIsVisible(true);
-					}, 1500);
+					}, 0);
 				}
 
 			} catch (error) {
