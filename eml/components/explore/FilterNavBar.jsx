@@ -35,9 +35,7 @@ function FilterNavBar({ onChangeText, onCategoryChange, searchPlaceholder }) {
 				<ScrollView horizontal showsHorizontalScrollIndicator={false}>
 					<View className="flex items-center p-2 ">
 						<View className="flex-row overflow-x-auto">
-							{categories
-								.filter((category) => category.label.toLowerCase().includes(searchText.toLowerCase()))
-								.map((category) => (
+							{categories.map((category) => (
 									<Pressable
 										key={category.label}
 										onPress={() => handleCategorySelect(category.label)}
