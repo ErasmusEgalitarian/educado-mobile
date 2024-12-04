@@ -6,7 +6,7 @@
 
 import React from 'react';
 import renderer from 'react-test-renderer';
-import SectionScreen from '../../../screens/courses/CourseOverviewScreen';
+import SectionScreen from '../../../screens/section/SectionScreen';
 import SectionCard from '../../../components/section/SectionCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';

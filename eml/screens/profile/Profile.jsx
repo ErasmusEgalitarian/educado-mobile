@@ -1,35 +1,39 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import ToastNotification from '../../components/general/ToastNotification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View } from 'react-native';
+import {
+	View,
+	ScrollView,
+} from 'react-native';
 import LogOutButton from '../../components/profile/LogOutButton';
 import ProfileNavigationButton from '../../components/profile/ProfileNavigationButton.js';
+
 import UserInfo from '../../components/profile/UserInfo';
 import { useNavigation } from '@react-navigation/native';
-import NetworkStatusObserver from '../../hooks/NetworkStatusObserver';
-import { getUserInfo, getStudentInfo } from '../../services/StorageService';
+import { getUserInfo } from '../../services/StorageService';
 import errorSwitch from '../../components/general/errorSwitch';
 import ShowAlert from '../../components/general/ShowAlert';
+import { getStudentInfo } from '../../services/StorageService';
 import ProfileStatsBox from '../../components/profile/ProfileStatsBox';
 import { useFocusEffect } from '@react-navigation/native';
 import Tooltip from '../../components/onboarding/onboarding';
-import OfflineScreen from '../offline/OfflineScreen';
+
 /**
  * Profile screen
  * @returns {React.Element} Component for the profile screen
  */
 export default function ProfileComponent() {
-	const [isOnline, setIsOnline] = useState(false);
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [email, setEmail] = useState('');
 	const [photo, setPhoto] = useState('');
 	const navigation = useNavigation();
 	const [studentLevel, setStudentLevel] = useState(0);
+	const [levelProgress, setLevelProgress] = useState(0);
 	const [totalPoints, setTotalPoints] = useState(0);
-	const [studyStreak, setStudyStreak] = useState(0);	// Number of days in a row with study activity
-	const [leaderboardPosition, setLeaderboardPosition] = useState(0);
 	const [isVisible, setIsVisible] = useState(false);
+
+
 
 	useEffect(() => {
 		const getInfo = navigation.addListener('focus', () => {
@@ -38,7 +42,13 @@ export default function ProfileComponent() {
 		return getInfo;
 	}, [navigation]);
 
-	
+	const getLevelProgress = (student) => {
+		const pointsForPreviousLevel = (student.level - 1) * 100;
+		const pointsForNextLevel = student.level * 100;
+
+		return ((student.points - pointsForPreviousLevel) / (pointsForNextLevel - pointsForPreviousLevel)) * 100;
+	};
+
 	/**
   * Fetches the user's profile from local storage
   */
@@ -46,24 +56,17 @@ export default function ProfileComponent() {
 		try {
 			const fetchedProfile = await getUserInfo();
 			const fetchedStudent = await getStudentInfo();
-			
 			if (fetchedProfile !== null) {
 				setFirstName(fetchedProfile.firstName);
 				setLastName(fetchedProfile.lastName);
 				setEmail(fetchedProfile.email);
-				
-				if (fetchedStudent !== null) 
-					setPhoto(fetchedStudent.photo);
-			} 
-			
-			if (fetchedStudent !== null) {
+				if (fetchedStudent !== null) setPhoto(fetchedStudent.photo);
+			} else if (fetchedStudent !== null) {
 				setStudentLevel(fetchedStudent.level);
 				setTotalPoints(fetchedStudent.points);
-				setStudyStreak(fetchedStudent.studyStreak);
-				setLeaderboardPosition(0);	// 0 is a placeholder for now
+				setLevelProgress(getLevelProgress(fetchedStudent));
 			}
-		} 
-		catch (error) {
+		} catch (error) {
 			ShowAlert(errorSwitch(error));
 		}
 	};
@@ -75,6 +78,7 @@ export default function ProfileComponent() {
 				try {
 					// Load profile data and check for password reset status
 					await getProfile();
+					await fetchStudentProfile();
 					await checkPasswordReset();
 				} catch (error) {
 					console.error('Error fetching profile:', error);
@@ -85,6 +89,14 @@ export default function ProfileComponent() {
 			runAsyncFunction();
 		}, [])
 	);
+
+
+	const fetchStudentProfile = async () => {
+		const studentInfo = await getStudentInfo();
+		setStudentLevel(studentInfo.level);
+		setTotalPoints(studentInfo.points);
+		setLevelProgress(getLevelProgress(studentInfo));
+	};
 
 	const checkPasswordReset = async () => {
 		try {
@@ -101,46 +113,37 @@ export default function ProfileComponent() {
 
 	
 	return (
-		<>
-			<NetworkStatusObserver setIsOnline={setIsOnline} />
-			{!isOnline ? 
-				<OfflineScreen />
-				: 
-				<View className='flex flex-col pt-[20%] px-[5%] pb-[5%] bg-secondary'>
-					<UserInfo firstName={firstName} lastName={lastName} email={email} photo={photo}></UserInfo>
-					<ProfileStatsBox 
-						studyStreak={studyStreak || 0}
-						points={totalPoints || 0} 
-						leaderboardPosition={leaderboardPosition || 0}
-						level={studentLevel || 0} 
-						drawProgressBarOnly={false} 
-					/>
-					<Tooltip 
-						isVisible={isVisible} 
-						position={{
-							top: -300,
-							left: 70,
-							right: 30,
-							bottom: 24,
-						}} 
-						setIsVisible={setIsVisible} 
-						text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
-						tailSide="right"
-						tailPosition="20%" 
-						uniqueKey="Profile" 
-						uniCodeChar="👩‍🏫"
-					/>
-					
-					<ProfileNavigationButton label='Editar perfil' testId={'editProfileNav'} onPress={() => navigation.navigate('EditProfile')}></ProfileNavigationButton>
-					<ProfileNavigationButton label='Tabela de classificação' onPress={() => navigation.navigate('LeaderboardStack')}></ProfileNavigationButton>
-					<ProfileNavigationButton label='Certificados' onPress={() => navigation.navigate('Certificate')}></ProfileNavigationButton>
+		<ScrollView className='flex flex-col'>
+			<View className="flex-1 justify-start pt-[20%] h-screen">
+				<UserInfo firstName={firstName} lastName={lastName} email={email} points={totalPoints} photo={photo}></UserInfo>
+				<ProfileStatsBox studentLevel={studentLevel} levelProgress={levelProgress} />
+				<Tooltip 
+					isVisible={isVisible} 
+					position={{
+						top: -300,
+						left: 70,
+						right: 30,
+						bottom: 24,
+					}} 
+					setIsVisible={setIsVisible} 
+					text={'Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.'} 
+					tailSide="right"
+					tailPosition="20%" 
+					uniqueKey="Profile" 
+					uniCodeChar="👩‍🏫"
+				/>
+				<ProfileNavigationButton label='Editar perfil' testId={'editProfileNav'} onPress={() => navigation.navigate('EditProfile')}></ProfileNavigationButton>
+				<ProfileNavigationButton label='Alterar senha' testId={'editPasswordNav'} onPress={() => navigation.navigate('EditPassword')}></ProfileNavigationButton>
 
-					{/* Download page is not implemented yet. However, download works and can be accessed on home page when offline */}
-					<ProfileNavigationButton label='Download'  onPress={() => navigation.navigate('Download')}></ProfileNavigationButton>
-					<ProfileNavigationButton label='Alterar senha' testId={'editPasswordNav'} onPress={() => navigation.navigate('EditPassword')}></ProfileNavigationButton>
+				<ProfileNavigationButton label='Certificados' onPress={() => navigation.navigate('Certificate')}></ProfileNavigationButton>
+				{/* // The certificate page is created and works, it is only commented out to get it approved on play store */}
+
+				{/* Download page is not implemented yet. However, download works and can be accessed on home page when offline
+				<ProfileNavigationButton label='Download'></ProfileNavigationButton>*/}
+				<View className='flex flex-row pb-4'>
 					<LogOutButton testID='logoutBtn'></LogOutButton>
 				</View>
-			}
-		</>
+			</View>
+		</ScrollView>
 	);
 }

@@ -2,9 +2,10 @@ import { View, Image, Pressable } from 'react-native';
 import React from 'react';
 import { useFonts, VarelaRound_400Regular } from '@expo-google-fonts/dev';
 import { useNavigation } from '@react-navigation/native';
-import * as SplashScreen from 'expo-splash-screen';
+import { AppLoading } from 'expo-app-loading';
 import Text from '../general/Text';
 import PropTypes from 'prop-types';
+
 
 export default function ActiveExploreCard({ title, courseId, iconPath }) {
 	const navigation = useNavigation();
@@ -12,19 +13,8 @@ export default function ActiveExploreCard({ title, courseId, iconPath }) {
 		VarelaRound_400Regular
 	});
 
-	React.useEffect(() => {
-		async function prepare() {
-			if (!fontsLoaded) {
-				await SplashScreen.preventAutoHideAsync();
-			} else {
-				await SplashScreen.hideAsync();
-			}
-		}
-		prepare();
-	}, [fontsLoaded]);
-
 	if (!fontsLoaded) {
-		return null;
+		return AppLoading;
 	} else {
 		return (
 			<Pressable

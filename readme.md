@@ -53,11 +53,13 @@ expo start
 - Find the "Path" variable under system variables and click edit, then add "C:\Users\<your_username_here>\AppData\Local\Android\Sdk\platform-tools"
 - Clone the educado-mobile repo from github
 - Make sure the educado-backend is running, to use functionalities (eg. logging in)
-- Add .env file in the **eml** folder with the following secrets: URL, CERTIFICATE_URL (values can be found on discord)
-- For local testing the env values should be your ipv4 adress followed by the port, so something like this:
-  - URL = 'http://192.168.0.102:8888'
-  - CERTIFICATE_URL = 'http://192.168.0.102:8080'
+- in `eml/api/userApi.js` and `eml/api/api.js` remember to change the urls to your local IP when testing. eg:
+```javascript
 
+const url = 'http://172.30.245.212:8888'; // change to lcd ip when testing
+const certificateUrl = 'http://172.30.245.212:8080';
+
+```
 - Open the directory eml in terminal
 - Write and run the following in the terminal:
   ```

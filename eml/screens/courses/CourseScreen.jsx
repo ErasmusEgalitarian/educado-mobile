@@ -13,9 +13,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import errorSwitch from '../../components/general/errorSwitch';
 import ShowAlert from '../../components/general/ShowAlert';
 import Tooltip from '../../components/onboarding/onboarding';
-import { getStudentInfo } from '../../services/StorageService';
-import ProfileStatsBox from '../../components/profile/ProfileStatsBox';
-import OfflineScreen from '../offline/OfflineScreen';
 
 /**
  * Course screen component that displays a list of courses.
@@ -28,8 +25,6 @@ export default function CourseScreen() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [isOnline, setIsOnline] = useState(false);
 	const [loading, setLoading] = useState(true);
-	const [studentLevel, setStudentLevel] = useState(0);
-	const [studentPoints, setStudentPoints] = useState(0);
 	const navigation = useNavigation();
 	const [isVisible, setIsVisible] = useState(false);
 
@@ -59,27 +54,10 @@ export default function CourseScreen() {
 		setRefreshing(false);
 	};
 
-	
-	// Retrieve student points and level from local storage 
-	const fetchStudentData = async () => {
-		try {
-			const fetchedStudent = await getStudentInfo();
-
-			if (fetchedStudent !== null) {
-				setStudentLevel(fetchedStudent.level);
-				setStudentPoints(fetchedStudent.points);
-			}
-		} 
-		catch (error) {
-			ShowAlert(errorSwitch(error));
-		}
-	};
-	
 	useEffect(() => {
 		// this makes sure loadCourses is called when the screen is focused
 		return navigation.addListener('focus', () => {
 			loadCourses();
-			fetchStudentData();
 		});
 	}, [navigation]);
 
@@ -101,94 +79,63 @@ export default function CourseScreen() {
 	}, []);
 
 	return (
-		loading ? (
-			<LoadingScreen />
-		) : (
+		loading ? <LoadingScreen /> :
 			<>
-				<NetworkStatusObserver setIsOnline={setIsOnline} />
-				{!isOnline ? (
-					<OfflineScreen />
-				) : courseLoaded ? (
+				<NetworkStatusObserver setIsOnline={setIsOnline}/>
+				{courseLoaded ?
 					<View height="100%">
 						<IconHeader
-							title="Bem Vindo!"
-							description="Aqui você encontra todos os cursos em que você está inscrito!"
-						/>
-						
-						{/* Render stats box with level and progress bar only */}
-						<View className="px-5">
-							<ProfileStatsBox 
-								level={studentLevel || 0} 
-								points={studentPoints || 0} 
-								drawProgressBarOnly={true} 
-							/>
-						</View>
-	
-						<ScrollView
-							showsVerticalScrollIndicator={false}
-							refreshControl={
-								<RefreshControl 
-									refreshing={refreshing} 
-									onRefresh={onRefresh} 
-								/>
-							}>
+							title={'Bem Vindo!'}
+							description={'Aqui você encontra todos os cursos em que você está inscrito!'}/>
+						<ScrollView showsVerticalScrollIndicator={false}
+							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
 							{courses.map((course, index) => (
-								<CourseCard 
-									key={index} 
-									course={course} 
-									isOnline={isOnline} 
-								/>
-							))}
+								<CourseCard key={index} course={course} isOnline={isOnline}></CourseCard>
+							)
+							)}
 						</ScrollView>
 					</View>
-				) : (
-					<View className="bg-secondary justify-center items-center">
-						<Tooltip
-							isVisible={isVisible}
+					:
+					<View className="bg-secondary justify-center items-center ">
+						<Tooltip 
+							isVisible={isVisible} 
 							position={{
 								top: -150,
 								left: 95,
 								right: 5,
 								bottom: 24,
-							}}
-							setIsVisible={setIsVisible}
-							text="Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito."
-							tailSide="right"
-							tailPosition="20%"
+							}} 
+							setIsVisible={setIsVisible} 
+							text={'Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito.".'} 
+							tailSide="right" 
+							tailPosition="20%" 
 							uniqueKey="Courses"
 							uniCodeChar="📚"
 						/>
 						<View className="pt-24 pb-16">
-							<Image
-								source={require('../../assets/images/logo.png')}
-								className="justify-center items-center"
-							/>
+							<Image source={require('../../assets/images/logo.png')} className=" justify-center items-center"/>
 						</View>
-
-						<View className="justify-center items-center py-10 gap-10">
-							<View className="justify-center items-center w-full h-auto px-10">
-								<Image source={require('../../assets/images/no-courses.png')} />
-								<Text className="leading-[29.26] text-projectBlack pb-4 pt-4 font-sans-bold text-subheading text-center">
-									Comece agora
-								</Text>
-								<Text className="text-projectBlack font-montserrat text-center text-body">
-									Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.
-								</Text>
+						
+						<View className=" justify-center items-center py-10 gap-10 ">
+							<View className=" justify-center items-center w-full h-auto  px-10">
+								{/* No active courses */}
+								<Image source={require('../../assets/images/no-courses.png')}/>
+								<Text
+									className=" leading-[29.26] text-projectBlack pb-4 pt-4 font-sans-bold text-subheading text-center ">Comece agora</Text>
+								<Text className=" text-projectBlack font-montserrat text-center text-body "> Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu intresse.</Text>
+								{/*You haven't signed up for any course yet. Access the Explore page and use the search to find courses that interest you.*/}
 							</View>
 							<View>
 								<Pressable
-									testID="exploreButton"
-									className="rounded-r-8 rounded-md bg-primary_custom justify-center items-center py-4 w-full h-auto px-20"
+									testID={'exploreButton'}
+									className=" rounded-r-8 rounded-md bg-primary_custom justify-center items-center py-4 w-full h-auto px-20 "
 									onPress={() => navigation.navigate('Explorar')}>
-									<Text className="text-projectWhite font-sans-bold text-center text-body">
-										Explorar cursos
-									</Text>
+									{/* Click to explore courses */}
+									<Text className=" text-projectWhite font-sans-bold text-center text-body "> Explorar cursos</Text>
 								</Pressable>
 							</View>
 						</View>
-					</View>
-				)}
+					</View>}
 			</>
-		)
 	);
-}	
+}

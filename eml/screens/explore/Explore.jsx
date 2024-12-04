@@ -1,15 +1,16 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { View, ScrollView, RefreshControl } from 'react-native';
+import { View, ScrollView, RefreshControl, Pressable } from 'react-native';
 import FilterNavBar from '../../components/explore/FilterNavBar';
 import ExploreCard from '../../components/explore/ExploreCard';
 import * as StorageService from '../../services/StorageService';
 import { useNavigation } from '@react-navigation/native';
 import IconHeader from '../../components/general/IconHeader';
 import { shouldUpdate, determineCategory } from '../../services/utilityFunctions';
+import Text from '../../components/general/Text';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NetworkStatusObserver from '../../hooks/NetworkStatusObserver';
 import Tooltip from '../../components/onboarding/onboarding';
-import OfflineScreen from '../offline/OfflineScreen';
 
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.
@@ -122,46 +123,75 @@ export default function Explore() {
 	return (
 		<>
 			<NetworkStatusObserver setIsOnline={setIsOnline} />
+			<IconHeader
+				title={'Explorar cursos'}
+				description={'Inscreva-se nos cursos do seu interesse e comece sua jornada'}
+			/>
+			<Tooltip
+				isVisible={isVisible}  
+				position={{top: -360,
+					left: 50,
+					right: 30,
+					bottom: 24,}} 
+				text={'Aqui, você encontrará todos os cursos disponíveis e poderá conhecer e se inscrever facilmente.'}
+				setIsVisible={setIsVisible}  
+				tailSide="top" 
+				tailPosition="10%" 
+				uniqueKey="Explore" 
+				uniCodeChar="🔍"
+			/>	
 			{!isOnline ?
-				<OfflineScreen />
-				:
-				<>
-					<IconHeader
-						title={'Explorar cursos'}
-						description={'Inscreva-se nos cursos do seu interesse e comece sua jornada'}
-					/>
-					<Tooltip
-						isVisible={isVisible}  
-						position={{top: -360,
-							left: 50,
-							right: 30,
-							bottom: 24,}} 
-						text={'Aqui, você encontrará todos os cursos disponíveis e poderá conhecer e se inscrever facilmente.'}
-						setIsVisible={setIsVisible}  
-						tailSide="top" 
-						tailPosition="10%" 
-						uniqueKey="Explore" 
-						uniCodeChar="🔍"
-					/>	
-					<View height="77%">
-						<FilterNavBar
-							onChangeText={(text) => handleFilter(text)}
-							onCategoryChange={handleCategoryFilter}
-						/>
-						<ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-							<View className="overflow-y-auto">
-								{courses && filteredCourses && filteredCourses.map((course, index) => (
-									<ExploreCard
-										key={index}
-										isPublished={course.status === 'published'}
-										subscribed={/*isSubscribed[index]*/checkIfSubscribed(course, subCourses)}
-										course={course}
-									></ExploreCard>
-								))}
+				<View>
+					<View className="justify-center px-1 pt-6">
+						<MaterialCommunityIcons name="wifi-off" size={160} color="black" style={{ alignSelf: 'center' }} />
+						<Text className="text-center font-montserrat-semi-bold text-[24px]">
+							{'\n'}Sem conexão com internet.
+						</Text>
+						<View className="flex-row flex-wrap justify-center">
+							<Text className="text-center text-body">
+								{/* You are offline. Connect to the internet to explore the courses. */}
+								{'\n'}Você está sem acesso a internet. Vá para
+							</Text>
+							<View className="flex-row flex-wrap justify-center">
+								<Text className="text-center text-body font-montserrat-bold">
+				meus cursos
+								</Text>
+								<Text className="text-center text-body">
+				e acesse os cursos baixados.{'\n'}
+								</Text>
 							</View>
-						</ScrollView>
+						</View>
+						<View className="items-center pt-6">
+							<Pressable
+								testID={'offlineExploreButton'}
+								className="rounded-r-8 rounded-md bg-primary_custom justify-center items-center p-2 h-14 w-80"
+								onPress={() => navigation.navigate('Meus cursos')}>
+								{/* Click to explore courses */}
+								<Text className="text-projectWhite font-sans-bold text-center text-body" >Ir para Meus cursos</Text>
+							</Pressable>
+						</View>
 					</View>
-				</>
+				</View>
+				:
+				<View height="77%">
+					<FilterNavBar
+						onChangeText={(text) => handleFilter(text)}
+						onCategoryChange={handleCategoryFilter}
+					/>
+					<ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+						<View className="overflow-y-auto">
+							{courses && filteredCourses && filteredCourses.map((course, index) => (
+								<ExploreCard
+									key={index}
+									isPublished={course.status === 'published'}
+									subscribed={/*isSubscribed[index]*/checkIfSubscribed(course, subCourses)}
+									course={course}
+								></ExploreCard>
+							))}
+						</View>
+					</ScrollView>
+				
+				</View>
 			}
 		</>
 	);

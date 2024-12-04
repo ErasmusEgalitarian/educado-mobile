@@ -1,180 +1,137 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {
-	Image,
-	View,
-	Text,
-	Modal,
-	TouchableOpacity,
-	TouchableWithoutFeedback,
-} from 'react-native';
-import * as StorageService from '../../../services/StorageService';
+import React, { useEffect, useRef, useState } from 'react';
+import LottieView from 'lottie-react-native';
+import {Alert, TouchableWithoutFeedback} from 'react-native';
+import animationAsset from '../../../assets/animations/downloadAnimation.json';
 import PropTypes from 'prop-types';
-import { checkCourseStoredLocally } from '../../../services/StorageService';
-import trashCanOutline from '../../../assets/images/trash-can-outline.png';
-import fileDownload from '../../../assets/images/file_download.png';
-import { IconContext } from '../../../services/DownloadService';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as StorageService from '../../../services/StorageService';
 
-const DownloadCourseButton = ({ course, disabled }) => {
-	const [isDownloaded, setIsDownloaded] = useState(false);
-	const [modalVisible, setModalVisible] = useState(false);
-	const { iconState, updateIcon } = useContext(IconContext);
+const ANIMATION_STATES = {
+	INITIAL: 'initial',
+	DOWNLOADING: 'downloading',
+	FINISHING: 'finishing',
+	COMPLETED: 'completed',
+	DELETE: 'delete',
+};
 
+/**
+ * DownloadCourseButton component displays a button that downloads a course
+ * @param {object} props - Props containing the course the button is on
+ * @returns {JSX.Element} - The DownloadCourseButton component
+ */
+export default function DownloadCourseButton(props) {
+	const {course, disabled = false} = props;
+	const animationRef = useRef(null);
+	const [animationState, setAnimationState] = useState(ANIMATION_STATES.INITIAL);
+
+	const storageCheck = async () => {
+		if (animationState === ANIMATION_STATES.INITIAL || animationState === ANIMATION_STATES.COMPLETED) {
+			let result = await StorageService.checkCourseStoredLocally(course.courseId);
+			setAnimationState(result ? ANIMATION_STATES.COMPLETED : ANIMATION_STATES.INITIAL);
+		}
+	};
+
+	storageCheck();
+
+	// Play animation based on animation state
+	// Hardcoded frame numbers are based on the animation
+	// https://lottiefiles.com/animations/download-ZdWE0VoaZW
 	useEffect(() => {
-		let isMounted = true;
+		if (animationRef.current) {
+			switch (animationState) {
+			case ANIMATION_STATES.INITIAL:
+				return animationRef.current.play(17, 17);
 
-		const checkIfDownloaded = async () => {
-			try {
-				const result = await checkCourseStoredLocally(course.courseId);
-				if (isMounted) {
-					setIsDownloaded(result);
-					if (
-						iconState[course.courseId] !==
-						(result ? trashCanOutline : fileDownload)
-					) {
-						updateIcon(
-							course.courseId,
-							result ? trashCanOutline : fileDownload
-						);
-					}
-				}
-			} catch (error) {
-				console.error('Error checking if course is downloaded:', error);
+			case ANIMATION_STATES.DOWNLOADING:
+				return animationRef.current.play(18, 77);
+
+			case ANIMATION_STATES.FINISHING:
+				// 2333ms is the duration of the animation from frame 78 to 148
+				setTimeout(() => setAnimationState(ANIMATION_STATES.COMPLETED), 2333);
+				return animationRef.current.play(78, 148);
+
+			case ANIMATION_STATES.COMPLETED:
+				return animationRef.current.play(149, 149);
+
+			case ANIMATION_STATES.DELETE:
+				// 1066ms is the duration of the animation from frame 110 to 78
+				setTimeout(() => setAnimationState(ANIMATION_STATES.INITIAL), 1066);
+				return animationRef.current.play(110, 78);
+
+			default:
+				break;
 			}
-		};
-
-		checkIfDownloaded();
-		return () => {
-			isMounted = false;
-		};
-	}, [course.courseId, iconState, updateIcon]);
-
-	const handleDownload = async () => {
-		try {
-			const result = await StorageService.storeCourseLocally(
-				course.courseId
-			);
-			if (result) {
-				setIsDownloaded(true);
-				updateIcon(course.courseId, trashCanOutline);
-			} else {
-				alert(
-					'Não foi possível baixar o curso. Certifique-se de estar conectado à Internet.'
-				);
-			}
-		} catch (error) {
-			console.error('Error downloading course:', error);
 		}
-		setModalVisible(false);
-	};
+	}, [animationState]);
 
-	const handleRemove = async () => {
-		try {
-			const result = await StorageService.deleteLocallyStoredCourse(
-				course.courseId
-			);
-			if (result) {
-				setIsDownloaded(false);
-				updateIcon(course.courseId, fileDownload);
-			} else {
-				alert(
-					'Algo deu errado. Não foi possível remover os dados armazenados do curso.'
-				);
-			}
-		} catch (error) {
-			console.error('Error removing downloaded course:', error);
-		}
-		setModalVisible(false);
-	};
+	const downloadConfirmation = () =>
+		Alert.alert('Baixar curso', 'Deseja baixar este curso para acesso offline?', [
+			{
+				text: 'Cancelar',
+				style: 'cancel',
+			},
+			{
+				text: 'Baixar',
+				onPress: async () => {
+					setAnimationState(ANIMATION_STATES.DOWNLOADING);
+					await StorageService.storeCourseLocally(course.courseId).then(result => {
+						if (result){
+							setAnimationState(ANIMATION_STATES.FINISHING);
+						} else {
+							alert('Não foi possível baixar o curso. Certifique-se de estar conectado à Internet.'); //Could not download course. Make sure you are connected to the internet
+							setAnimationState(ANIMATION_STATES.INITIAL);
+						}
+					});
+				},
+			},
+		]);
+
+	const removeDownloadConfirmation = () =>
+		Alert.alert('Remover curso', 'Tem certeza de que deseja remover este curso baixado?', [
+			{
+				text: 'Cancelar',
+				style: 'cancel',
+			},
+			{
+				text: 'Remover',
+				onPress: () => {
+					StorageService.deleteLocallyStoredCourse(course.courseId).then(result => {
+						if(result){
+							setAnimationState(ANIMATION_STATES.DELETE);
+						} else {
+							alert('Algo deu errado. Não foi possível remover os dados armazenados do curso.'); //Something went wrong. Could not remove stored course data.
+							setAnimationState(ANIMATION_STATES.DELETE);
+						}
+					});
+				},
+				style: 'destructive',
+			},
+		]);
 
 	const handlePress = () => {
-		if (disabled) return;
-		setModalVisible(true);
+		if (disabled) {
+			return;
+		}
+		if (animationState === ANIMATION_STATES.INITIAL) {
+			downloadConfirmation();
+		}
+		if (animationState === ANIMATION_STATES.COMPLETED) {
+			removeDownloadConfirmation();
+		}
 	};
 
 	return (
-		<View>
-			<TouchableOpacity onPress={handlePress} disabled={disabled}>
-				<View className='w-8 h-8 items-center justify-center'>
-					{isDownloaded ? (
-						<Image source={trashCanOutline} className='w-6 h-7' />
-					) : (
-						<Image source={fileDownload} className='w-8 h-8' />
-					)}
-				</View>
-			</TouchableOpacity>
-
-			<Modal
-				animationType='fade'
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => setModalVisible(false)}>
-				{/* Outer View with semi-transparent black background */}
-				<TouchableWithoutFeedback
-					onPress={() => setModalVisible(false)}>
-					<View
-						style={{
-							flex: 1,
-							backgroundColor: 'rgba(0, 0, 0, 0.5)',
-							justifyContent: 'center',
-							alignItems: 'center',
-						}}>
-						<TouchableWithoutFeedback>
-							{/* Modal content container */}
-							<View className='w-[90%] bg-projectLightGray rounded-xl p-5'>
-								<View className='flex-row justify-between items-center'>
-									<Text className='text-xl font-bold mb-1 text-projectBlack'>
-										{isDownloaded
-											? 'Excluir download'
-											: 'Baixar download'}
-									</Text>
-									<MaterialCommunityIcons
-										size={24}
-										name='close'
-										color={'gray'}
-										onPress={() =>
-											setModalVisible(false)
-										}></MaterialCommunityIcons>
-								</View>
-								<Text className='text-base text-projectBlack mb-2.5'>
-									Você tem certeza que deseja excluir o
-									download do curso? Você ainda pode
-									assisti-lo com acesso à internet e baixá-lo
-									novamente.
-								</Text>
-								<View className='flex-row justify-between w-100 items-center'>
-									<TouchableOpacity
-										onPress={() => setModalVisible(false)}>
-										<Text className='text-primary_custom text-xl border-b border-primary_custom font-bold'>
-											Cancelar
-										</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										onPress={
-											isDownloaded
-												? handleRemove
-												: handleDownload
-										}
-										className={isDownloaded ? 'bg-error rounded-lg py-4 px-10': 'bg-primary_custom rounded-lg py-4 px-10'}>
-										<Text className='font-bold text-projectWhite text-xl'>
-											{isDownloaded
-												? 'Excluir'
-												: 'Baixar'}
-										</Text>
-									</TouchableOpacity>
-								</View>
-							</View>
-						</TouchableWithoutFeedback>
-					</View>
-				</TouchableWithoutFeedback>
-			</Modal>
-		</View>
+		<TouchableWithoutFeedback onPress={handlePress} disabled={disabled}>
+			<LottieView
+				ref={animationRef}
+				source={animationAsset}
+				height={32}
+				width={24}
+			/>
+		</TouchableWithoutFeedback>
 	);
-};
+}
 
 DownloadCourseButton.propTypes = {
-	course: PropTypes.object.isRequired,
+	course: PropTypes.object,
 	disabled: PropTypes.bool,
 };
-
-export default DownloadCourseButton;

@@ -8,11 +8,12 @@ exports[`LogOutButton render should render correctly 1`] = `
         "alignItems": "center",
       },
       {
-        "display": "flex",
+        "flexBasis": "0%",
+        "flexGrow": 1,
+        "flexShrink": 1,
       },
       {
-        "paddingBottom": "6%",
-        "paddingTop": "6%",
+        "marginTop": "12%",
       },
     ]
   }
@@ -68,10 +69,6 @@ exports[`LogOutButton render should render correctly 1`] = `
               },
               {
                 "textAlign": "center",
-              },
-              {
-                "fontSize": 18,
-                "lineHeight": 28,
               },
               {
                 "textDecorationLine": "underline",

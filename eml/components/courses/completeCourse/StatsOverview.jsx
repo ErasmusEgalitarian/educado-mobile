@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import { View, Dimensions, Image } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import Text from '../../general/Text';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Easing } from 'react-native-reanimated';
@@ -87,38 +87,41 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
 				<Text className="text-center text-lg text-projectBlack pt-10 px-10">Você respondeu {percentage}% correta, bravo!</Text>
 			</View>
 
-		
-			<Text className="text-center font-sans-bold text-lg text-projectBlack mb-3">Placar Educado</Text>
+			{/* ---------------------------- Code for leaderboard goes from here ------------------------------------------------------------------------------------
 
-			<View className="px-6 w-screen">
-				<View className="bg-lightGray h-14 rounded-full flex flex-row justify-between items-center px-2">
-					<View className="flex flex-row items-center">
-						<Image source={require('../../../assets/images/profileEX.jpg')} alt="arrow-right" className="h-10 w-10 rounded-full" />
-						<Text className="text-center font-sans-bold text-lg text-projectWhite ml-3">Hans Zimmer</Text>
-					</View>
-					<Text className="text-center font-sans-bold text-lg text-projectWhite">1099</Text>
-				</View>
-			</View>
+      <Text className="text-center font-sans-bold text-lg text-projectBlack mb-3">Placar Educado</Text>
 
-			<View className="px-6 w-screen z-10 -mt-3">
-				<View className="bg-primary_custom h-14 rounded-full flex flex-row justify-between items-center px-2">
-					<View className="flex flex-row items-center">
-						<Image source={require('../../../assets/images/profileEX.jpg')} alt="arrow-right" className="h-10 w-10 rounded-full" />
-						<Text className="text-center font-sans-bold text-lg text-projectWhite ml-3">Hans Zimmer</Text>
-					</View>
-					<Text className="text-center font-sans-bold text-lg text-projectWhite">1100</Text>
-				</View>
-			</View>
+      <View className="px-6 w-screen">
+        <View className="bg-lightGray h-14 rounded-full flex flex-row justify-between items-center px-2">
+          <View className="flex flex-row items-center">
+            <Image source={require('../../../assets/images/profileEX.jpg')} alt="arrow-right" className="h-10 w-10 rounded-full" />
+            <Text className="text-center font-sans-bold text-lg text-projectWhite ml-3">Hans Zimmer</Text>
+          </View>
+          <Text className="text-center font-sans-bold text-lg text-projectWhite">1099</Text>
+        </View>
+      </View>
 
-			<View className="px-6 w-screen -mt-3">
-				<View className="bg-lightGray h-14 rounded-full flex flex-row justify-between items-center px-2">
-					<View className="flex flex-row items-center">
-						<Image source={require('../../../assets/images/profileEX.jpg')} alt="arrow-right" className="h-10 w-10 rounded-full" />
-						<Text className="text-center font-sans-bold text-lg text-projectWhite ml-3">Hans Zimmer</Text>
-					</View>
-					<Text className="text-center font-sans-bold text-lg text-projectWhite">1101</Text>
-				</View>
-			</View>
+      <View className="px-6 w-screen z-10 -mt-3">
+        <View className="bg-primary_custom h-14 rounded-full flex flex-row justify-between items-center px-2">
+          <View className="flex flex-row items-center">
+            <Image source={require('../../../assets/images/profileEX.jpg')} alt="arrow-right" className="h-10 w-10 rounded-full" />
+            <Text className="text-center font-sans-bold text-lg text-projectWhite ml-3">Hans Zimmer</Text>
+          </View>
+          <Text className="text-center font-sans-bold text-lg text-projectWhite">1100</Text>
+        </View>
+      </View>
+
+      <View className="px-6 w-screen -mt-3">
+        <View className="bg-lightGray h-14 rounded-full flex flex-row justify-between items-center px-2">
+          <View className="flex flex-row items-center">
+            <Image source={require('../../../assets/images/profileEX.jpg')} alt="arrow-right" className="h-10 w-10 rounded-full" />
+            <Text className="text-center font-sans-bold text-lg text-projectWhite ml-3">Hans Zimmer</Text>
+          </View>
+          <Text className="text-center font-sans-bold text-lg text-projectWhite">1101</Text>
+        </View>
+      </View>
+
+      ---------------------------- Code for leaderboard goes to here   ------------------------------------------------------------------------------------ */}
 
 		</View>
 	);

@@ -4,9 +4,7 @@ import * as userApi from '../api/userApi.js';
 import * as api from '../api/api.js';
 import 'intl';
 import 'intl/locale-data/jsonp/en-GB'; // Import the locale you need
-import { generateCertificate } from '../services/CertificateService.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 /**
  * Converts a numeric difficulty level to a human-readable label.
  * @param {number} lvl - The difficulty level of the course.
@@ -104,34 +102,6 @@ export function getUpdatedDate(courseDate) {
 }
 
 /**
- * Calculates the complete difference in days between two dates, ignoring the time of day. 
- * E.g., the difference in days between monday 23:59 and tuesday 00:01 is still 1 day. 
- * @param {Date} startDate - First day to compare.
- * @param {Date} endDate - Second day to compare.
- * @returns {number} - The complete difference in days between the two specified dates.
- * @throws {Error} - Throws an error if specified dates are invalid or not instances of Date.
- */
-export function differenceInDays(startDate, endDate) {
-	// Instance check
-	if (!(startDate instanceof Date) || !(endDate instanceof Date))
-		throw new Error('startDate/endDate is not a Date instance!');
-
-	// Validity check
-	if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()))
-		throw new Error('startDate/endDate is not a valid date!');
-
-	// Get dates without time by setting the time to midnight
-	const startDateMidnight = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-	const endDateMidnight = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-    
-	// Calculate the difference in milliseconds, and convert it to days
-	const differenceInMs = endDateMidnight - startDateMidnight;
-	const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
-
-	return differenceInDays;
-}
-
-/**
 * Determines if the two arrays of courses are different and require an update.
 * @param {Array} courses1 - The first array of courses, typically representing the current state.
 * @param {Array} courses2 - The second array of courses, typically representing the new fetched data.
@@ -217,8 +187,8 @@ export async function completeComponent(comp, courseId, isComplete) {
 	return { points, updatedStudent };
 }
 
-export function isCourseCompleted(student) {
-	return student.courses.some(course => checkProgressCourse(course.Id) === 100);
+export function isCourseCompleted(student, courseId) {
+	return student.courses.some(course => course.courseId == courseId);
 }
 
 export function isSectionCompleted(student, sectionId) {
@@ -345,13 +315,17 @@ export async function handleLastComponent(comp, course, navigation) {
 	const userId = await StorageService.getUserId();
 	generateCertificate(courseId, userId);
 
+	// For future reference 
+	// const student = await StorageService.getStudentInfo();
+	// const isComplete = isSectionCompleted(student, comp.parentSection);
+
 	// get the full course from DB, to check what section we are in
 	const getCurrentCourse = await api.getCourse(course.courseId);
 
 	// If the section is the last one, the course is completed
 	const getLastSection = getCurrentCourse.sections[getCurrentCourse.sections.length - 1];
 
-	//Check if the section is the last one
+	// Check if the section is the last one
 	const isThisTheLastSection = getLastSection === comp.parentSection;
 
 	if (isThisTheLastSection) {
@@ -367,6 +341,7 @@ export async function handleLastComponent(comp, course, navigation) {
 				},
 			],
 		});
+
 	} else {
 		navigation.reset({
 			index: 0,
@@ -381,16 +356,13 @@ export async function handleLastComponent(comp, course, navigation) {
 			],
 		});
 	}
-}
 
-export async function resetOnboarding(uniqueKeys) {
-	try {
-		const keysToRemove = uniqueKeys.map(key => `tooltip_shown_${key}`);
-		await AsyncStorage.multiRemove(keysToRemove);
-		console.log('Removed keys:', keysToRemove);
-	} catch (error) {
-		console.error('Error removing keys:', error);
-	}
+	// For future reference
+	// if (isComplete) { 
+	// Code above with naviagtion
+	// } else {
+	//   console.log('Section not complete - navigate to retry exercises TBD');
+	// }
 }
 
 export async function resetOnboarding(uniqueKeys) {

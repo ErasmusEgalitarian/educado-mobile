@@ -31,8 +31,8 @@ exports[`<CustomProgressBar /> Displays 0% for no progress 1`] = `
     style={
       [
         {
-          "backgroundColor": "#E4E4E4",
-          "borderColor": "#166276",
+          "backgroundColor": "#E4F2F5",
+          "borderColor": "#5ECCDD",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -47,7 +47,7 @@ exports[`<CustomProgressBar /> Displays 0% for no progress 1`] = `
       collapsable={false}
       style={
         {
-          "backgroundColor": "#166276",
+          "backgroundColor": "#5ECCDD",
           "height": 133.4,
           "transform": [
             {
@@ -123,8 +123,8 @@ exports[`<CustomProgressBar /> Displays 25% 1`] = `
     style={
       [
         {
-          "backgroundColor": "#E4E4E4",
-          "borderColor": "#166276",
+          "backgroundColor": "#E4F2F5",
+          "borderColor": "#5ECCDD",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -139,7 +139,7 @@ exports[`<CustomProgressBar /> Displays 25% 1`] = `
       collapsable={false}
       style={
         {
-          "backgroundColor": "#166276",
+          "backgroundColor": "#5ECCDD",
           "height": 133.4,
           "transform": [
             {
@@ -215,8 +215,8 @@ exports[`<CustomProgressBar /> Displays 50% 1`] = `
     style={
       [
         {
-          "backgroundColor": "#E4E4E4",
-          "borderColor": "#166276",
+          "backgroundColor": "#E4F2F5",
+          "borderColor": "#5ECCDD",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -231,7 +231,7 @@ exports[`<CustomProgressBar /> Displays 50% 1`] = `
       collapsable={false}
       style={
         {
-          "backgroundColor": "#166276",
+          "backgroundColor": "#5ECCDD",
           "height": 133.4,
           "transform": [
             {
@@ -307,8 +307,8 @@ exports[`<CustomProgressBar /> Displays 100% for full progress 1`] = `
     style={
       [
         {
-          "backgroundColor": "#E4E4E4",
-          "borderColor": "#166276",
+          "backgroundColor": "#E4F2F5",
+          "borderColor": "#5ECCDD",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -323,7 +323,7 @@ exports[`<CustomProgressBar /> Displays 100% for full progress 1`] = `
       collapsable={false}
       style={
         {
-          "backgroundColor": "#166276",
+          "backgroundColor": "#5ECCDD",
           "height": 133.4,
           "transform": [
             {
@@ -399,8 +399,8 @@ exports[`<CustomProgressBar /> Limits display to 0% for negative progress 1`] = 
     style={
       [
         {
-          "backgroundColor": "#E4E4E4",
-          "borderColor": "#166276",
+          "backgroundColor": "#E4F2F5",
+          "borderColor": "#5ECCDD",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -415,7 +415,7 @@ exports[`<CustomProgressBar /> Limits display to 0% for negative progress 1`] = 
       collapsable={false}
       style={
         {
-          "backgroundColor": "#166276",
+          "backgroundColor": "#5ECCDD",
           "height": 133.4,
           "transform": [
             {
@@ -491,8 +491,8 @@ exports[`<CustomProgressBar /> Limits display to 100% for excess progress 1`] = 
     style={
       [
         {
-          "backgroundColor": "#E4E4E4",
-          "borderColor": "#166276",
+          "backgroundColor": "#E4F2F5",
+          "borderColor": "#5ECCDD",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -507,7 +507,7 @@ exports[`<CustomProgressBar /> Limits display to 100% for excess progress 1`] = 
       collapsable={false}
       style={
         {
-          "backgroundColor": "#166276",
+          "backgroundColor": "#5ECCDD",
           "height": 133.4,
           "transform": [
             {

@@ -8,7 +8,7 @@ const StartNowButton = ({ course }) => {
 	const navigation = useNavigation();
 
 	const handlePress = () => {
-		navigation.navigate('CourseOverview', {
+		navigation.navigate('Section', {
 			course: course
 		});
 	};

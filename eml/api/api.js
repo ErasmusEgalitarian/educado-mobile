@@ -4,13 +4,15 @@ import { URL, CERTIFICATE_URL } from '@env';
 
 const timeoutInMs = 1200;
 
+
 // move these to .env file next sprint
-const url = URL;
+const url = URL; // Change this to your LOCAL IP address when testing.
 export const certificateUrl = CERTIFICATE_URL;
+
 
 /* Commented out for avoiding linting errors :))
  * TODO: move IP address to .env file !!!
-const testUrl = 'http://localhost:8888';In 
+const testUrl = 'http://localhost:8888';
 const testExpo = 'http://172.30.211.57:8888'; 
 const digitalOcean = 'http://207.154.213.68:8888';
 */
@@ -180,6 +182,8 @@ export const unSubscribeToCourse = async (userId, courseId) => {
 	}
 };
 
+
+
 export const giveFeedback = async (courseId, feedbackData) => {
 	const { rating, feedbackText, feedbackOptions } = feedbackData;
 	try {
@@ -250,12 +254,14 @@ export const getLectureById = async (lectureId) => {
 
 };
 
+
 export const getBucketImage = async (fileName) => {
 	try {
 		const res = await axios.get(
 			`${url}/api/bucket/${fileName}`,
 			{
 				responseType: 'arraybuffer',
+				accept: 'image/jpeg',
 			});
 
 		let fileType = fileName.split('.').pop();
@@ -267,7 +273,7 @@ export const getBucketImage = async (fileName) => {
 		}
 
 		// Convert the image to base64
-		const image = `data:image/${fileType};base64,${Buffer.from(res.data, 'base64')}`;
+		const image = `data:image/${fileType};base64,${Buffer.from(res.data, 'binary').toString('base64')}`;
 		return image;
 	} catch (err) {
 		if (err?.response?.data != null) {
@@ -278,123 +284,3 @@ export const getBucketImage = async (fileName) => {
 	}
 };
 
-export const getBucketVideo = async (fileName) => {
-	try {
-		const res = await axios.get(
-			`${url}/api/bucket/${fileName}`,
-			{
-				responseType: 'arraybuffer',
-				accept: 'video/mp4',
-			});
-
-		console.log('res.data', res.data);
-
-		const video = `data:video/mp4;base64,${Buffer.from(res.data, 'binary').toString('base64')}`;
-		return video;
-	} catch (err) {
-		if (err?.response?.data != null) {
-			throw err.response.data;
-		} else {
-			throw err;
-		}
-	}
-};
-
-export const sendMessageToChatbot = async (userMessage, courses) => {
-	try {
-		const response = await axios.post(url + '/api/ai', {
-			userInput: userMessage,
-			courses: courses,
-		});
-	
-		if (response.status === 200) {
-			return response.data;
-		} else {
-			return 'Erro: Tente novamente.';
-		}
-	} catch (error) {
-		if (error.response && error.response.status === 429) {
-			// Handle rate-limiting error
-			return error.response.data.error || 'Acalme-se! Muitas solicitações.';
-		}
-
-		console.warn('Axios error:', error);
-		return 'Erro: Tente novamente.';
-	}
-};
-
-export const sendAudioToChatbot = async (audioUri, courses) => {
-	try {
-		const formData = new FormData();
-		formData.append('audio', {
-			uri: audioUri,
-			name: 'audio.m4a', // You can use a generic name or dynamically extract it
-			type: 'audio/m4a', // Ensure this matches the audio type
-		});
-
-		formData.append('courses', JSON.stringify(courses));
-
-		// Send the formData via Axios
-		const serverResponse = await axios.post(url + '/api/ai/processAudio', formData, {
-			headers: {
-				'Content-Type': 'multipart/form-data',
-			},
-		});
-
-		return serverResponse.data;
-	} catch (error) {
-		console.error('Error sending audio data:', error);
-		throw error;
-	}
-};
-
-export const sendFeedbackToBackend = async (userPrompt, chatbotResponse, feedback) => {
-	try {
-		const response = await fetch(url + '/api/ai/feedback', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				userPrompt,        // The user's original input
-				chatbotResponse,   // The chatbot's response to the user
-				feedback,          // Thumbs-up (true) or thumbs-down (false)
-			}),
-		});
-  
-		const data = await response.json();
-	
-		if (response.ok) {
-			return { success: true, data };
-		} else {
-			console.error('Failed to send feedback:', data.error);
-			return { success: false, error: data.error };
-		}
-	} catch (error) {
-		console.error('Error submitting feedback:', error.message);
-		return { success: false, error: error.message };
-	}
-};
-
-export const getLeaderboardDataAndUserRank = async ({ page, token, timeInterval, limit = 80, userId }) => {
-	try {
-		const res = await axios.post(`${url}/api/students/leaderboard`, {
-			userId, // Include user ID in the request body
-			page,
-			timeInterval,
-			limit
-		}, {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
-		return {
-			leaderboard: res.data.leaderboard,
-			currentUserRank: res.data.currentUserRank
-		};
-	} catch (e) {
-		if (e?.response?.data != null) {
-			throw e.response.data;
-		} else {
-			throw e;
-		}
-	}
-};

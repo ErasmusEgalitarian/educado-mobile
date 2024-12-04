@@ -5,17 +5,20 @@ exports[`ExerciseInfo renders ExerciseInfo correctly 1`] = `
   style={
     [
       {
-        "alignItems": "center",
+        "alignItems": "flex-start",
       },
       {
         "paddingLeft": 24,
         "paddingRight": 24,
       },
       {
-        "zIndex": 10,
+        "position": "absolute",
       },
       {
-        "marginTop": 80,
+        "bottom": 40,
+      },
+      {
+        "zIndex": 10,
       },
     ]
   }
@@ -37,10 +40,10 @@ exports[`ExerciseInfo renders ExerciseInfo correctly 1`] = `
             "fontFamily": "Montserrat-Regular",
           },
           {
-            "color": "#A1ACB2",
+            "fontSize": 10,
           },
           {
-            "textAlign": "center",
+            "color": "#A1ACB2",
           },
         ],
       ]
@@ -65,14 +68,10 @@ exports[`ExerciseInfo renders ExerciseInfo correctly 1`] = `
             "fontFamily": "Montserrat-Bold",
           },
           {
-            "fontSize": 18,
-            "lineHeight": 28,
+            "fontSize": 16,
           },
           {
             "color": "#383838",
-          },
-          {
-            "textAlign": "center",
           },
         ],
       ]

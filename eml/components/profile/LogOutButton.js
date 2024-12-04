@@ -43,7 +43,7 @@ export default function LogOutButton(props) {
 		]);
 
 	return (
-		<View className="items-center flex py-[6%]">
+		<View className="items-center flex-1 mt-[12%]">
 			<TouchableOpacity onPress={logoutAlert}>
 				<View className='items-center flex flex-row'>
 					<MaterialCommunityIcons
@@ -52,7 +52,7 @@ export default function LogOutButton(props) {
 						color={tailwindColors.error}
 						testID={props.testID}
 					/>
-					<Text className="text-error text-center text-lg underline font-sans-bold">Sair</Text>
+					<Text className="text-error text-center underline font-sans-bold">Sair</Text>
 				</View> 
         
 			</TouchableOpacity>

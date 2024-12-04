@@ -4,7 +4,6 @@ import * as StorageService from '../../services/StorageService.js';
 import { mockDataAPI } from '../mockData/mockDataAPI.js';
 import { mockDataAsyncStorage } from '../mockData/mockDataAsyncStorage.js';
 import * as userApi from "../../api/userApi";
-import * as FileSystem from 'expo-file-system';
 
 
 jest.mock('@react-native-async-storage/async-storage');
@@ -12,19 +11,6 @@ jest.mock('@react-native-async-storage/async-storage');
 // Mock the API functions
 jest.mock('../../api/api');
 jest.mock("../../api/userApi");
-
-// Mock FileSystem
-jest.mock('expo-file-system', () => ({
-  documentDirectory: 'file://test-directory/',
-  makeDirectoryAsync: jest.fn(),
-  writeAsStringAsync: jest.fn(),
-  readAsStringAsync: jest.fn(),
-  deleteAsync: jest.fn(),
-  getInfoAsync: jest.fn(),
-  EncodingType: {
-    Base64: 'Base64'
-  }
-}));
 
 const mockData = mockDataAPI();
 const mockDataAsync = mockDataAsyncStorage();
@@ -664,127 +650,6 @@ describe('StorageService Functions', () => {
       expect(AsyncStorage.getItem).toHaveBeenCalledWith(USER_ID);
       expect(api.getSubscriptions).toHaveBeenCalledWith('user_id');
       // Add more assertions based on your actual error-handling logic
-    });
-  });
-
-  /** VIDEO HANDLING **/
-
-  describe('Video Handling Functions', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-
-    describe('getLectureVideo', () => {
-      it('should return filepath when video exists', async () => {
-        // Arrange
-        const videoName = 'test_video';
-        const expectedPath = `${FileSystem.documentDirectory}lectureVideos/${videoName}.mp4`;
-        FileSystem.getInfoAsync.mockResolvedValueOnce({ exists: true });
-
-        // Act
-        const result = await StorageService.getLectureVideo(videoName);
-
-        // Assert
-        expect(result).toBe(expectedPath);
-        expect(FileSystem.getInfoAsync).toHaveBeenCalledWith(expectedPath);
-      });
-
-      it('should return null when video does not exist', async () => {
-        // Arrange
-        const videoName = 'nonexistent_video';
-        FileSystem.getInfoAsync.mockResolvedValueOnce({ exists: false });
-
-        // Act
-        const result = await StorageService.getLectureVideo(videoName);
-
-        // Assert
-        expect(result).toBeNull();
-      });
-
-      it('should return null when FileSystem throws error', async () => {
-        // Arrange
-        const videoName = 'error_video';
-        FileSystem.getInfoAsync.mockRejectedValueOnce(new Error('FileSystem error'));
-
-        // Act
-        const result = await StorageService.getLectureVideo(videoName);
-
-        // Assert
-        expect(result).toBeNull();
-      });
-    });
-
-    describe('storeLectureVideo', () => {
-      it('should store video successfully and return filepath', async () => {
-        // Arrange
-        const videoName = 'test_video';
-        const videoData = 'base64encodeddata';
-        const expectedPath = `${FileSystem.documentDirectory}lectureVideos/${videoName}.mp4`;
-        
-        api.getBucketVideo.mockResolvedValueOnce(videoData);
-        FileSystem.writeAsStringAsync.mockResolvedValueOnce();
-
-        // Act
-        const result = await StorageService.storeLectureVideo(videoName);
-
-        // Assert
-        expect(result).toBe(expectedPath);
-        expect(api.getBucketVideo).toHaveBeenCalledWith(videoName);
-        expect(FileSystem.writeAsStringAsync).toHaveBeenCalledWith(
-          expectedPath,
-          videoData,
-          { encoding: 'Base64' }
-        );
-      });
-
-      // TODO: Once the storeLectureVideo function error handling is uncommented, uncomment the following tests
-      // it('should throw error when no video data is returned from API', async () => {
-      //   // Arrange
-      //   const videoName = 'test_video';
-      //   api.getBucketVideo.mockResolvedValueOnce(null);
-
-      //   // Act & Assert
-      //   await expect(StorageService.storeLectureVideo(videoName))
-      //     .rejects
-      //     .toThrow('Error in storeLectureVideo: Error: No video data');
-      // });
-
-      // it('should handle API errors appropriately', async () => {
-      //   // Arrange
-      //   const videoName = 'test_video';
-      //   api.getBucketVideo.mockRejectedValueOnce(new Error('API error'));
-
-      //   // Act & Assert
-      //   await expect(StorageService.storeLectureVideo(videoName))
-      //     .rejects
-      //     .toThrow('Error in storeLectureVideo: Error: API error');
-      // });
-    });
-
-    describe('deleteLectureVideo', () => {
-      it('should delete video successfully', async () => {
-        // Arrange
-        const videoName = 'test_video';
-        const expectedPath = `${FileSystem.documentDirectory}lectureVideos/${videoName}.mp4`;
-        FileSystem.deleteAsync.mockResolvedValueOnce();
-
-        // Act
-        await StorageService.deleteLectureVideo(videoName);
-
-        // Assert
-        expect(FileSystem.deleteAsync).toHaveBeenCalledWith(expectedPath);
-      });
-
-      it('should handle deletion errors appropriately', async () => {
-        // Arrange
-        const videoName = 'test_video';
-        FileSystem.deleteAsync.mockRejectedValueOnce(new Error('Delete error'));
-
-        // Act & Assert
-        await expect(StorageService.deleteLectureVideo(videoName))
-          .rejects
-          .toThrow('Error in deleteLectureVideo: Error: Delete error');
-      });
     });
   });
 

@@ -43,6 +43,7 @@ describe('<SectionCard />', () => {
 
     // Check if title and description are displayed
     expect(getByText(mockData.section.title)).toBeTruthy();
+    expect(getByText(mockData.section.description)).toBeTruthy();
   });
 
   /*it('Displays correct status based on progress', async () => {
@@ -59,35 +60,32 @@ describe('<SectionCard />', () => {
     expect(await sectionCard.toJSON()).toMatchSnapshot();
   });
 
-  it('should trigger onPress when the card is pressed', () => {
-    // Mock data for testing
-    const mockData = {
-      section: {
-        title: 'Sample Section',
-        components: ['Component 1', 'Component 2', 'Component 3'],
-      },
-      progress: 1, // Example progress value
-    };
+  it('should expand and collapse when clicked', async () => {
+    /**
+         * Represents a sample section.
+         * @typedef {Object} Section
+         * @property {string} title - The title of the section.
+         * @property {string} description - The description of the section.
+         * @property {number} total - The total number of items in the section.
+         */
 
-    // Mock the onPress function
-    const mockOnPress = jest.fn();
+    const { getByTestId } = render(<SectionCard section={mockData.section} />);
 
-    // Render the SectionCard component
-    const { getByText} = render(
-      <SectionCard
-        section={mockData.section}
-        progress={mockData.progress}
-        onPress={mockOnPress}
-      />
-    );
+    const collapsibleButton = getByTestId('collapsible');
 
-    // Locate the TouchableOpacity by the section title text
-    const touchableElement = getByText(mockData.section.title);
+    // Ensure Collapsible content is initially hidden
+    expect(getByTestId('chevron-down')).toBeTruthy();
 
-    // Simulate a press event
-    fireEvent.press(touchableElement);
+    // Click the Collapsible button to expand it
+    fireEvent.press(collapsibleButton);
 
-    // Assert that the onPress function was called
-    expect(mockOnPress).toHaveBeenCalled();
+    // Ensure Collapsible content is now visible
+    expect(getByTestId('chevron-up')).toBeTruthy();
+
+    // Click the Collapsible button to collapse it
+    fireEvent.press(collapsibleButton);
+
+    // Ensure Collapsible content is hidden again
+    expect(getByTestId('chevron-down')).toBeTruthy();
   });
 });

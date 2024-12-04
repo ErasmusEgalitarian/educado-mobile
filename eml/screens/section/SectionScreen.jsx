@@ -1,33 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { Alert, View, TouchableOpacity } from 'react-native';
 import Text from '../../components/general/Text';
 import * as StorageService from '../../services/StorageService';
-import { checkProgressSection } from '../../services/utilityFunctions';
+import SectionCard from '../../components/section/SectionCard';
 import { ScrollView } from 'react-native-gesture-handler';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import CustomProgressBar from '../../components/exercise/Progressbar';
+import SubscriptionCancel from '../../components/section/CancelSubscriptionButton';
+import { unsubscribe } from '../../services/StorageService';
 import PropTypes from 'prop-types';
-
-
-
+import { checkProgressCourse, checkProgressSection } from '../../services/utilityFunctions';
+import ContinueSection from '../../components/section/ContinueSectionButton';
+import Tooltip from '../../components/onboarding/onboarding';
 
 export default function SectionScreen({ route }) {
-	const { course, section } = route.params;
-	const [components, setComponents] = useState(null);
-	const [completedCompAmount, setCompletedCompAmount] = useState(0);
-
+	SectionScreen.propTypes = {
+		route: PropTypes.object,
+	};
+	const { course } = route.params;
 	const navigation = useNavigation();
-	async function loadComponents(id) {
-		const componentsData = await StorageService.getComponentList(id);
-		setComponents(componentsData);
+	const [sections, setSections] = useState(null);
+	const [studentProgress, setStudentProgress] = useState(0);
+	const [sectionProgress, setSectionProgress] = useState({});
+	const [currentSection, setCurrentSection] = useState(null);
+	const [isVisible, setIsVisible] = useState(false);
+
+	async function loadSections(id) {
+		const sectionData = await StorageService.getSectionList(id);
+		setSections(sectionData);
 	}
+
+	const checkProgress = async () => {
+		const progress = await checkProgressCourse(course.courseId);
+		setStudentProgress(progress);
+	};
+
+	const checkProgressInSection = async (sectionId) => {
+		const completed = await checkProgressSection(sectionId);
+		setSectionProgress(prevProgress => ({
+			...prevProgress,
+			[sectionId]: completed,
+		}));
+	};
 
 	useEffect(() => {
 		let componentIsMounted = true;
 
 		async function loadData() {
-			await loadComponents(section.sectionId);
-			setCompletedCompAmount(await checkProgressSection(section.sectionId));
+			await loadSections(course.courseId);
 		}
 
 		if (componentIsMounted) {
@@ -39,95 +60,100 @@ export default function SectionScreen({ route }) {
 		};
 	}, []);
 
-	const getProgressStatus = (compIndex) => {
-		if(compIndex < completedCompAmount) {
-			return 'Concluído';
-		} else if (compIndex == completedCompAmount) {
-			return 'Em progresso';
-		} else {
-			return 'Não iniciado';
+	useEffect(() => {
+		if (sections) {
+			sections.forEach(section => {
+				checkProgressInSection(section.sectionId);
+			});
+		}
+	}, [sections]);
+
+	useEffect(() => {
+		if (sections) {
+			const incompleteSection = sections.find(section => {
+				const completedComponents = sectionProgress[section.sectionId] || 0;
+				return completedComponents < section.components.length;
+			});
+			setCurrentSection(incompleteSection);
+		}
+	}, [sectionProgress, sections]);
+
+	useEffect(() => {
+		const update = navigation.addListener('focus', () => {
+			checkProgress();
+			if (sections) {
+				sections.forEach(section => {
+					checkProgressInSection(section.sectionId);
+				});
+			}
+		});
+		return update;
+	}, [navigation]);
+
+	const unsubAlert = () =>
+		Alert.alert('Cancelar subscrição', 'Tem certeza?', [
+			{
+				text: 'Não',
+				style: 'cancel',
+			},
+			{ text: 'Sim', onPress: () => { unsubscribe(course.courseId); setTimeout(() =>  {navigation.navigate('Meus cursos');}, 300 ); }},
+		]);
+
+	const navigateToCurrentSection = () => {
+		if (currentSection) {
+			navigation.navigate('Components', {
+				section: currentSection,
+				parsedCourse: course,
+			});
 		}
 	};
 
-
-	const navigateBack = () => {
-		navigation.goBack();
-	};
-	const navigateToComponent = (compIndex) => {
-		navigation.navigate('Components', {
-			section: section,
-			parsedCourse: course,
-			parsedComponentIndex: compIndex
-		});
-	};
-
 	return (
-		<ScrollView className="bg-secondary h-full">
-			{/* Back Button */}
-			<TouchableOpacity className="absolute top-10 left-5 pr-3 z-10" onPress={navigateBack}>
-				<MaterialCommunityIcons name="chevron-left" size={25} color="black" />
-			</TouchableOpacity>
-			<View className="flex my-6 mx-[18]  ">
-				<View className="flex-none items-center justify-center py-6">
-					<Text className=" text-[20px] font-montserrat ">{course.title}</Text>
-				</View>
-				<View className="flex-inital py-2">
-					<Text className="text-[28px] font-montserrat-bold ">{section.title}</Text>
-					<Text className="text-[16px] font-montserrat border-b-[1px] border-lightGray">{section.description}</Text>
-				</View>
+		<>
+			<View className="flex flex-row flex-wrap items-center justify-between px-6 pt-[20%]">
+				{/* Back Button */}
+				<TouchableOpacity className="pr-3" onPress={() => navigation.navigate('Meus cursos')}>
+					<MaterialCommunityIcons name="chevron-left" size={25} color="black" />
+				</TouchableOpacity>
+				{/* Course Title */}
+				<Text className="text-[25px] font-bold">{course.title}</Text>
+				
 			</View>
-			{components ? (
-				components.length === 0 ? null : (
-					<View>
-						{components.map((component, i) => {
-							const isDisabled = i > completedCompAmount;
-							return (
-								<TouchableOpacity 
-									key={i}
-									className={`bg-secondary border-[1px] border-lightGray rounded-lg shadow-lg shadow-opacity-[0.3] mb-[15] mx-[18] overflow-hidden elevation-[8] ${isDisabled ? 'opacity-50' : ''}`}
-									onPress={() => { navigateToComponent(i); }}
-									disabled={isDisabled}
-								>
-									<View className="flex-row items-center justify-between px-[25] py-[15]">
-										<View>
-											<Text className="text-[18px] font-montserrat-bold">{component.component.title}</Text>
-											<Text> 
-												{getProgressStatus(i)} 
-												{i < completedCompAmount ?
-													<MaterialCommunityIcons
-														testID={'check-circle'}
-														name={'check-circle'}
-														size={16}
-														color="green"
-													/> : ''
-												}
-											</Text>
-										</View>
-										
-										{component.type === 'exercise' ? (
-											<MaterialCommunityIcons name="book-open-blank-variant" size={30} color="#166276"/>
-										) : component.component.contentType === 'text' ? (
-											<MaterialCommunityIcons name="book-edit" size={30} color="#166276"/>
-										) : (
-											<MaterialCommunityIcons name="play-circle" size={30} color="#166276"/>
-										)}
-										
-									</View>
-								</TouchableOpacity>
-							);
-						})}
+			{/* Conditionally render the sections if they exist */}
+			{sections ? (
+				sections.length === 0 ? null : (
+					<View className="flex-[1] flex-col my-[10px]">
+						<Tooltip 
+							isVisible={isVisible} 
+							position={{
+								top: -30,
+								left: 70,
+								right: 30,
+								bottom: 24,
+							}} 
+							setIsVisible={setIsVisible} 
+							text={'Essa é a página do seu curso. É aqui que você vai acessar as aulas e acompanhar seu progresso.'} 
+							tailSide="right" 
+							tailPosition="20%" 
+							uniqueKey="Sections" 
+							uniCodeChar="🎓"
+						/>
+						{/* Progress Bar */}
+						<CustomProgressBar width={60} progress={studentProgress} height={3}></CustomProgressBar>
+						{/* Section Cards */}
+						<ScrollView className="mt-[5%]" showsVerticalScrollIndicator={false}>
+							{sections.map((section, i) => {
+								const completedComponents = sectionProgress[section.sectionId] || 0;
+								return <SectionCard key={i} section={section} course={course} progress={completedComponents}></SectionCard>;
+							})}
+						</ScrollView>
+						{/* Unsubscribe Button */}
+						<SubscriptionCancel onPress={unsubAlert} />
+						{/* Navigate to Current Section Button */}
+						<ContinueSection onPress={navigateToCurrentSection} />
 					</View>
 				)
 			) : null}
-		</ScrollView>
+		</>
 	);
 }
-
-SectionScreen.propTypes = {
-	route: PropTypes.shape({
-		params: PropTypes.shape({
-			section: PropTypes.object.isRequired,
-			course: PropTypes.object.isRequired,
-		}).isRequired,
-	}).isRequired,
-};

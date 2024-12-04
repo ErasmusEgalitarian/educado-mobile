@@ -1,27 +1,26 @@
-// VideoLectureScreen.js
-
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Pressable, TouchableOpacity, Alert } from 'react-native';
+import { View, Pressable } from 'react-native';
 import Text from '../../components/general/Text';
 import VideoActions from '../../components/lectures/VideoActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CustomExpoVideoPlayer from '../../components/lectures/VideoPlayer';
 import ReactSliderProgress from './ReactSliderProgress';
+import { getVideoStreamUrl } from '../../api/api';
 import PropTypes from 'prop-types';
-import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
+import StandardButton from '../../components/general/StandardButton';
 import { completeComponent, handleLastComponent } from '../../services/utilityFunctions';
-import { getVideoURL } from '../../services/StorageService';
+import {getVideoURL} from '../../services/StorageService';
 
-const VideoLectureScreen = ({ lectureObject, courseObject, isLastSlide, onContinue, handleStudyStreak }) => {
+export default function VideoLectureScreen({ lectureObject, courseObject, isLastSlide }) {
 	const navigation = useNavigation();
+
 	const videoRef = useRef(null);
 	const [isPlaying, setIsPlaying] = useState(true); // Keep track of playback status
 	const [positionMillis, setPositionMillis] = useState(0);
 	const [durationMillis, setDurationMillis] = useState(0);
 	const [isMuted, setIsMuted] = useState(false); // Keep track of mute status
     const [videoFinished, setVideoFinished] = useState(false); // Track if the video has finished
-
 
 	const onStatusUpdate = (status) => {
 		setPositionMillis(status.positionMillis || 0);
@@ -127,40 +126,14 @@ const VideoLectureScreen = ({ lectureObject, courseObject, isLastSlide, onContin
 
 					{/* Lecture information */}
 
-				{/* Overlay Controls */}
-				<View className="absolute w-full h-full p-5">
-					{/* Continue Button */}
-					<View className="w-ful lpx-6 mb-8">
-						<TouchableOpacity
-							className="bg-primary_custom px-10 py-4 rounded-medium flex-row items-center justify-center"
-							onPress={handleContinuePress}
-						>
-							<View className='flex-row items-center'>
-								<Text className="text-center font-sans-bold text-body text-projectWhite">
-                                    Continuar
-								</Text>
-								<Icon
-									name="chevron-right"
-									type="material"
-									size={24}
-									color="white"
-									style={{ marginLeft: 8 }}
-								/>
-							</View>
-						</TouchableOpacity>
-					</View>
+					<View className="w-full flex-col items-start justify-left" >
 
-					{/* Lecture Information */}
-					<View className="w-full flex-col items-start justify-left">
 						<View className="w-full flex-row justify-between items-end">
 							<View className="flex-col">
-								<Text className="text-projectWhite text-base opacity-80">
-                                    Nome do curso: {courseObject.title}
-								</Text>
-								<Text className="text-lg text-projectWhite">
-									{lectureObject.title}
-								</Text>
+								<Text className="text-projectWhite opacity-80">Nome do curso: {courseObject.title}</Text>
+								<Text className="text-xl text-projectWhite" >{lectureObject.title && lectureObject.title}</Text>
 							</View>
+
 							<VideoActions
 								isPlaying={isPlaying}
 								isMuted={isMuted}
@@ -182,33 +155,23 @@ const VideoLectureScreen = ({ lectureObject, courseObject, isLastSlide, onContin
 
 
 
-						{/* Video Progress Bar */}
-						<ReactSliderProgress
-							elapsedMs={positionMillis}
-							totalMs={durationMillis}
-							videoRef={videoRef}
-						/>
 					</View>
+
 				</View>
 
-				{/* Pressable Areas for Play/Pause */}
-				<Pressable
-					className="absolute top-[12%] bottom-[50%] right-0 left-0"
-					onPress={togglePlayPause}
-				/>
-				<Pressable
-					className="absolute top-[24%] bottom-[22%] right-[20%] left-0"
-					onPress={togglePlayPause}
-				/>
+			</View>
 
-				{/* Play/Pause Icon */}
-				{showPlayPauseIcon && (
-					<View
-						className="absolute top-0 left-0 right-0 bottom-0 flex-row justify-center items-center"
-						pointerEvents='none'
-					>
+			<Pressable className="absolute top-[12%] bottom-[50%] right-0 left-0" onPress={handlePress} />
+			<Pressable className="absolute top-[24%] bottom-[22%] right-[20%] left-0" onPress={handlePress} />
+			{/* Fade in out play /pause icon shown for one second */}
+			{/* Fade in/out play/pause icon */}
+
+			{showPlayPauseIcon && (
+				<View className="absolute top-0 left-0 right-0 bottom-0 flex-row justify-center items-center" pointerEvents='none'
+				>
+					<View>
 						<MaterialCommunityIcons
-							name={isPlaying ? 'pause' : 'play'}
+							name={isPlaying ? 'play' : 'pause'}
 							size={50}
 							color="white"
 						/>
@@ -241,14 +204,10 @@ const VideoLectureScreen = ({ lectureObject, courseObject, isLastSlide, onContin
             )}
 		</View>
 	);
-};
+}
 
 VideoLectureScreen.propTypes = {
-	lectureObject: PropTypes.object.isRequired,
-	courseObject: PropTypes.object.isRequired,
-	isLastSlide: PropTypes.bool.isRequired,
-	onContinue: PropTypes.func.isRequired,
-	handleStudyStreak: PropTypes.func.isRequired
+	lectureObject: PropTypes.object,
+	courseObject: PropTypes.object,
+	isLastSlide: PropTypes.bool
 };
-
-export default VideoLectureScreen;
