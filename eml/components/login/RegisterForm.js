@@ -153,13 +153,12 @@ export default function RegisterForm() {
 		//Sanitize names to removes spaces infront and after
 		const sanitizedFirstName = firstName.trim();
 		const sanitizedLastName = lastName.trim();
-		const lowerCaseEmail = email.toLowerCase();
 
 
 		const obj = {
 			firstName: sanitizedFirstName,
 			lastName: sanitizedLastName,
-			email: lowerCaseEmail,
+			email: email,
 			password: password,
 		};
 

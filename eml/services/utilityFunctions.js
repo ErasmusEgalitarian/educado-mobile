@@ -4,7 +4,7 @@ import * as userApi from '../api/userApi.js';
 import * as api from '../api/api.js';
 import 'intl';
 import 'intl/locale-data/jsonp/en-GB'; // Import the locale you need
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { generateCertificate } from '../api/api.js';
 /**
  * Converts a numeric difficulty level to a human-readable label.
  * @param {number} lvl - The difficulty level of the course.
@@ -363,14 +363,4 @@ export async function handleLastComponent(comp, course, navigation) {
 	// } else {
 	//   console.log('Section not complete - navigate to retry exercises TBD');
 	// }
-}
-
-export async function resetOnboarding(uniqueKeys) {
-	try {
-		const keysToRemove = uniqueKeys.map(key => `tooltip_shown_${key}`);
-		await AsyncStorage.multiRemove(keysToRemove);
-		console.log('Removed keys:', keysToRemove);
-	} catch (error) {
-		console.error('Error removing keys:', error);
-	}
 }

@@ -10,7 +10,6 @@ import { shouldUpdate, determineCategory } from '../../services/utilityFunctions
 import Text from '../../components/general/Text';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NetworkStatusObserver from '../../hooks/NetworkStatusObserver';
-import Tooltip from '../../components/onboarding/onboarding';
 
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.
@@ -29,8 +28,6 @@ export default function Explore() {
 	const [isOnline, setIsOnline] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
 	const navigation = useNavigation();
-	const [isVisible, setIsVisible] = useState(false);
-
 
 	/**
   * Asynchronous function that loads the subscribed courses from storage and updates the state.
@@ -64,7 +61,6 @@ export default function Explore() {
 		}
 	}
 
-
 	// When refreshing the loadCourse and load subscription function is called
 	const onRefresh = () => {
 		setRefreshing(true);
@@ -75,8 +71,7 @@ export default function Explore() {
 
 	useEffect(() => {
 		// this makes sure loadcourses is called when the screen is focused
-		const update = navigation.addListener('focus', async () => {
-			console.log('Explore screen focused');
+		const update = navigation.addListener('focus', () => {
 			loadCourses();
 			loadSubscriptions();
 		});
@@ -127,19 +122,6 @@ export default function Explore() {
 				title={'Explorar cursos'}
 				description={'Inscreva-se nos cursos do seu interesse e comece sua jornada'}
 			/>
-			<Tooltip
-				isVisible={isVisible}  
-				position={{top: -360,
-					left: 50,
-					right: 30,
-					bottom: 24,}} 
-				text={'Aqui, você encontrará todos os cursos disponíveis e poderá conhecer e se inscrever facilmente.'}
-				setIsVisible={setIsVisible}  
-				tailSide="top" 
-				tailPosition="10%" 
-				uniqueKey="Explore" 
-				uniCodeChar="🔍"
-			/>	
 			{!isOnline ?
 				<View>
 					<View className="justify-center px-1 pt-6">
@@ -190,7 +172,6 @@ export default function Explore() {
 							))}
 						</View>
 					</ScrollView>
-				
 				</View>
 			}
 		</>
