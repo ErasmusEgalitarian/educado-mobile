@@ -10,9 +10,9 @@ import PropTypes from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
 import StandardButton from '../../components/general/StandardButton';
 import { completeComponent, handleLastComponent } from '../../services/utilityFunctions';
-import {getVideoURL} from '../../services/StorageService';
+// import {getVideoURL} from '../../services/StorageService';
 
-export default function VideoLectureScreen({ lectureObject, courseObject, isLastSlide }) {
+export default function VideoLectureScreen({ lectureObject, courseObject}) {
 	const navigation = useNavigation();
 
 	const videoRef = useRef(null);
@@ -20,14 +20,14 @@ export default function VideoLectureScreen({ lectureObject, courseObject, isLast
 	const [positionMillis, setPositionMillis] = useState(0);
 	const [durationMillis, setDurationMillis] = useState(0);
 	const [isMuted, setIsMuted] = useState(false); // Keep track of mute status
-    const [videoFinished, setVideoFinished] = useState(false); // Track if the video has finished
+	const [videoFinished, setVideoFinished] = useState(false); // Track if the video has finished
 
 	const onStatusUpdate = (status) => {
 		setPositionMillis(status.positionMillis || 0);
 		setDurationMillis(status.durationMillis || 0);
 		if (status.didJustFinish) {
-            setVideoFinished(true);
-        }
+			setVideoFinished(true);
+		}
 	};
 
 	const handleContinue = async () => {
@@ -40,7 +40,7 @@ export default function VideoLectureScreen({ lectureObject, courseObject, isLast
 
 	// The things commented are to be uncommented when transcoding service is updated to handle resolutions
 	useEffect(() => {
-		const fileName = lectureObject._id + "_l";
+		const fileName = lectureObject._id + '_l';
 		// const _videoUrl = getVideoStreamUrl(fileName, '360');
 		const _videoUrl = getVideoStreamUrl(fileName);
 		// console.log(_videoUrl);
@@ -110,8 +110,8 @@ export default function VideoLectureScreen({ lectureObject, courseObject, isLast
 
 			<View className="absolute w-full h-full p-5">
 				<View className="w-full h-full flex-col justify-end items-center bg-opacity-20" >
-                {/* Not needed as there is a continue button at the end of the video */}
-				{/* {isLastSlide ?
+					{/* Not needed as there is a continue button at the end of the video */}
+					{/* {isLastSlide ?
 						<View className="px-6 mb-3 w-screen">
 							<StandardButton
 								props={{
@@ -142,7 +142,7 @@ export default function VideoLectureScreen({ lectureObject, courseObject, isLast
 								// currentResolution={currentResolution}
 								// allResolutions={allResolutions}
 								// onResolutionChange={(newRes) => handleResolutionChange(newRes)}
-								/>
+							/>
 						</View>
 
 						<View className="h-[3vh]" />
@@ -150,7 +150,7 @@ export default function VideoLectureScreen({ lectureObject, courseObject, isLast
 						{/* Video Progress Bar Component */}
 						{/* <VideoProgressBar elapsedMs={positionMillis} totalMs={durationMillis} videoRef={videoRef} /> */}
 						{!videoFinished && ( // When the video is finished, the progress bar is not shown
-    						<ReactSliderProgress elapsedMs={positionMillis} totalMs={durationMillis} videoRef={videoRef} />
+							<ReactSliderProgress elapsedMs={positionMillis} totalMs={durationMillis} videoRef={videoRef} />
 						)}
 
 
@@ -179,29 +179,29 @@ export default function VideoLectureScreen({ lectureObject, courseObject, isLast
 				</View>
 			)}
 			{videoFinished && (
-                    <View className="absolute inset-0 flex justify-center items-center">
-						<StandardButton
+				<View className="absolute inset-0 flex justify-center items-center">
+					<StandardButton
 						props={{
 							buttonText: 'Concluir e continuar',
-								onPress: () => {
+							onPress: () => {
 								handleContinue();
 							}
 						}}
 						style={{  }}
-						/>
-                    <StandardButton
-                        props={{
-                            buttonText: 'Assistir novamente',
-                            onPress: () => {
-                                videoRef.current.replayAsync();
-                                setVideoFinished(false);
-                            }
-                        }}
+					/>
+					<StandardButton
+						props={{
+							buttonText: 'Assistir novamente',
+							onPress: () => {
+								videoRef.current.replayAsync();
+								setVideoFinished(false);
+							}
+						}}
 						style={{ textDecorationLine: 'underline', backgroundColor: 'transparent' }}
 						
-						/>
-                </View>
-            )}
+					/>
+				</View>
+			)}
 		</View>
 	);
 }
