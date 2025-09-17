@@ -40,7 +40,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 				<View className="w-full h-[0.5] pt-2" />
 				<View className="flex-row justify-between w-full items-start">
 					<View className="flex-col items-start justify-between">
-						<View className="flex-row items-center justify-start pb-2 flex-wrap">
+						<View className="flex-column items-start justify-start pb-2 flex-wrap">
 							<CardLabel
 								title={Utility.determineCategory(course.category)}
 								icon={Utility.determineIcon(course.category)}
