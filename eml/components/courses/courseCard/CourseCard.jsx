@@ -22,6 +22,8 @@ export default function CourseCard({ course, isOnline}) {
 	const navigation = useNavigation();
 	const [studentProgress, setStudentProgress] = useState(0);
 	const [coverImage, setCoverImage] = useState(null);
+	const [imageLoading, setImageLoading] = useState(true);
+	const [imageError, setImageError] = useState(false);
 	const prevCourseId = useRef(null);
 
 
@@ -37,23 +39,32 @@ export default function CourseCard({ course, isOnline}) {
 
 	useEffect(() => {
 		const fetchImage = async () => {
+			if (!course?.courseId) return;
+			
+			setImageLoading(true);
+			setImageError(false);
+			
 			try {
 				const image = await getBucketImage(course.courseId + '_c');
-				if (typeof image === 'string') {
+				if (typeof image === 'string' && image.startsWith('data:image/')) {
 					setCoverImage(image);
+					setImageError(false);
 				} else {
-					throw new Error();
+					throw new Error('Invalid image format received');
 				}
 			} catch (error) {
-				console.log(error);
+				console.error('Error fetching cover image:', error);
+				setCoverImage(null);
+				setImageError(true);
+			} finally {
+				setImageLoading(false);
 			}
 		};
 
 		if (course !== null && course.courseId !== prevCourseId.current) {
-			setCoverImage(null); // Reset coverImage state
+			setCoverImage(null);
 			fetchImage();
 			prevCourseId.current = course.courseId;
-
 		}
 	}, [course]);
 
@@ -73,8 +84,45 @@ export default function CourseCard({ course, isOnline}) {
 				}) : null}
 		>
 			<View>
-				<ImageBackground source={{uri: coverImage}}>
-					{coverImage && <View className="rounded-lg" style={{height:110}}/> }
+				<ImageBackground 
+					source={
+						coverImage 
+							? { uri: coverImage }
+							: require('../../../assets/images/sectionThumbnail.png')
+					}
+					style={{ minHeight: coverImage || imageLoading ? 110 : 0 }}
+					resizeMode="cover"
+				>
+					{/* Image loading indicator */}
+					{imageLoading && (
+						<View className="h-[110px] justify-center items-center bg-gray-100">
+							<MaterialCommunityIcons 
+								name="loading" 
+								size={20} 
+								color="gray" 
+							/>
+						</View>
+					)}
+					
+					{/* Image error indicator */}
+					{imageError && !imageLoading && !coverImage && (
+						<View className="h-[110px] justify-center items-center bg-gray-100">
+							<MaterialCommunityIcons 
+								name="image-off" 
+								size={24} 
+								color="gray" 
+							/>
+							<Text className="text-xs text-gray-500 mt-1">
+								Imagem indisponível
+							</Text>
+						</View>
+					)}
+
+					{/* Main content overlay */}
+					{(!imageLoading || coverImage) && (
+						<View className="rounded-lg" style={{ height: 110 }} />
+					)}
+					
 					<View className="relative">
 						<View className="absolute top-0 left-0 right-0 bottom-0 bg-projectWhite opacity-95" />
 						<View className="p-[5%]">
