@@ -22,18 +22,41 @@ export default function CourseCard({ course, isOnline}) {
 	const navigation = useNavigation();
 	const [studentProgress, setStudentProgress] = useState(0);
 	const [coverImage, setCoverImage] = useState(null);
+	const [hasError, setHasError] = useState(false);
 	const prevCourseId = useRef(null);
 
 
-	const checkDownload = async () => {
-		setDownloaded(await checkCourseStoredLocally(course.courseId));
-	};
-	checkDownload();
+	// Check if course is downloaded locally
+	useEffect(() => {
+		const checkDownload = async () => {
+			try {
+				const isDownloaded = await checkCourseStoredLocally(course.courseId);
+				setDownloaded(isDownloaded);
+			} catch (error) {
+				console.error('Error checking download status:', error);
+				setDownloaded(false);
+				setHasError(true);
+			}
+		};
+		checkDownload();
+	}, [course.courseId]);
 
-	const checkProgress = async () => {
-		const progress = await checkProgressCourse(course.courseId);
-		setStudentProgress(progress);
-	}; checkProgress();
+	// Check student progress
+	useEffect(() => {
+		const checkProgress = async () => {
+			try {
+				const progress = await checkProgressCourse(course.courseId);
+				setStudentProgress(progress || 0);
+			} catch (error) {
+				console.error('Error checking progress:', error);
+				setStudentProgress(0);
+				setHasError(true);
+			} finally {
+				setDataLoading(false);
+			}
+		};
+		checkProgress();
+	}, [course.courseId]);
 
 	useEffect(() => {
 		const fetchImage = async () => {
@@ -61,16 +84,42 @@ export default function CourseCard({ course, isOnline}) {
 	const disabledUI = 'opacity-50 bg-projectWhite rounded-lg elevation-[3] m-[3%] mx-[5%] overflow-hidden';
 
 	const layout = downloaded || isOnline ? enabledUI : disabledUI;
+	const isDisabled = layout === disabledUI;
 
-	let isDisabled = layout === disabledUI;
+	// Safe navigation handler
+	const handleNavigation = () => {
+		if (layout === enabledUI && course?.courseId) {
+			try {
+				navigation.navigate('CourseOverview', { course: course });
+			} catch (error) {
+				console.error('Navigation error:', error);
+			}
+		}
+	};
+
+	// Render loading state
+	if (dataLoading) {
+		return (
+			<View className={enabledUI}>
+				<View className="p-[5%] h-[200px] justify-center items-center">
+					<MaterialCommunityIcons 
+						name="loading" 
+						size={24} 
+						color="gray" 
+					/>
+					<Text className="text-gray-500 font-montserrat mt-2">
+						Carregando curso...
+					</Text>
+				</View>
+			</View>
+		);
+	}
 
 	return (
-		<Pressable testID="courseCard"
+		<Pressable 
+			testID="courseCard"
 			className={layout}
-			onPress={() => layout === enabledUI ?
-				navigation.navigate('CourseOverview', {
-					course: course,
-				}) : null}
+			onPress={handleNavigation}
 		>
 			<View>
 				<ImageBackground source={{uri: coverImage}}>
@@ -81,36 +130,76 @@ export default function CourseCard({ course, isOnline}) {
 							<View className="flex flex-col">
 								<View className="flex-row items-start justify-between px-[1%] py-[1%]">
 									<Text className="text-[18px] text-projectBlack flex-1 self-center font-montserrat-semi-bold">
-										{course.title ? course.title : 'Título do curso'}
+										{course?.title || 'Título do curso'}
 									</Text>
 									<View className="flex-row items-center">
-										<DownloadCourseButton course={course} disabled={isDisabled}/>
+										<DownloadCourseButton 
+											course={course} 
+											disabled={isDisabled}
+										/>
 									</View>
 								</View>
 							</View>
+							
 							<View className="h-[1] bg-disable m-[2%]" />
+							
 							<View className="flex-row flex-wrap items-center justify-start">
 								<View className="flex-row items-center">
-									<MaterialCommunityIcons size={18} name={determineIcon(course.category)} color={'gray'}></MaterialCommunityIcons>
-									<Text className="mx-[2.5%] my-[3%]">{determineCategory(course.category)}</Text>
+									<MaterialCommunityIcons 
+										size={18} 
+										name={determineIcon(course?.category)} 
+										color="gray"
+									/>
+									<Text className="mx-[2.5%] my-[3%]">
+										{determineCategory(course?.category)}
+									</Text>
 								</View>
 								<View className="flex-row items-center">
-									<MaterialCommunityIcons size={18} name="clock" color={'gray'}></MaterialCommunityIcons>
-									<Text className="mx-[2.5%] my-[3%]">{course.estimatedHours ? formatHours(course.estimatedHours) : 'duração'}</Text>
+									<MaterialCommunityIcons 
+										size={18} 
+										name="clock" 
+										color="gray"
+									/>
+									<Text className="mx-[2.5%] my-[3%]">
+										{course?.estimatedHours 
+											? formatHours(course.estimatedHours) 
+											: 'Duração não informada'
+										}
+									</Text>
 								</View>
 							</View>
+							
 							<View className="flex-row items-center">
-								<CustomProgressBar width={56} progress={studentProgress} height={1} />
-								<Pressable className="z-[1]"
-									onPress={() => {layout === enabledUI ?
-										navigation.navigate('CourseOverview', {
-											course: course,
-										}) : null;
-									}}
+								<CustomProgressBar 
+									width={56} 
+									progress={studentProgress} 
+									height={1} 
+								/>
+								<Pressable 
+									className="z-[1]"
+									onPress={handleNavigation}
 								>
-									<MaterialCommunityIcons size={28} name="play-circle" color={tailwindConfig.theme.colors.primary_custom}></MaterialCommunityIcons>
+									<MaterialCommunityIcons 
+										size={28} 
+										name="play-circle" 
+										color={tailwindConfig.theme.colors.primary_custom}
+									/>
 								</Pressable>
 							</View>
+							
+							{/* Error indicator */}
+							{hasError && (
+								<View className="mt-2 flex-row items-center">
+									<MaterialCommunityIcons 
+										name="alert-circle-outline" 
+										size={16} 
+										color="orange" 
+									/>
+									<Text className="text-xs text-orange-500 ml-1">
+										Alguns dados podem estar desatualizados
+									</Text>
+								</View>
+							)}
 						</View>
 					</View>
 				</ImageBackground>
@@ -120,10 +209,17 @@ export default function CourseCard({ course, isOnline}) {
 }
 
 CourseCard.propTypes = {
-	course: PropTypes.oneOfType([
-		PropTypes.object,
-		PropTypes.array,
-	]),
+	course: PropTypes.shape({
+		courseId: PropTypes.string.isRequired,
+		title: PropTypes.string,
+		category: PropTypes.string,
+		estimatedHours: PropTypes.number,
+	}),
 	isOnline: PropTypes.bool
+};
+
+CourseCard.defaultProps = {
+	course: null,
+	isOnline: false
 };
 
