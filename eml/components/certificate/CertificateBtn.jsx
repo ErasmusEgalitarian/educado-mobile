@@ -13,7 +13,7 @@ export default function CertificateBtn({ buttonText, onPress }) {
 	return (
 		<View className="">
 			<Pressable onPress={onPress}
-				className="w-full flex items-center justify-center rounded-lg bg-primary_custom p-2"
+				className="w-full flex items-center justify-center rounded-lg bg-primaryCustom p-2"
 			>
 				<Text className="text-projectWhite py-1 font-bold px-2">
 					{buttonText}

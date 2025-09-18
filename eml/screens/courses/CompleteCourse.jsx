@@ -93,7 +93,7 @@ export default function CompleteCourseScreen() {
 
 				<View className="w-full px-6">
 					<TouchableOpacity
-						className={`bg-primary_custom px-10 py-4 rounded-medium flex-row items-center justify-center ${
+						className={`bg-primaryCustom px-10 py-4 rounded-medium flex-row items-center justify-center ${
 							onFBScreenNoStars ? 'opacity-50' : ''
 						}`}
 						onPress={() => {

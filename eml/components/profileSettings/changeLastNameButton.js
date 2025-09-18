@@ -109,7 +109,7 @@ export default function ProfileComponent() {
 								<ActivityIndicator size="large" color="#0000ff" /> // Loading spinner
 							) : (
 								<TouchableOpacity
-									className="bg-primary_custom px-10 py-4 rounded-medium w-full"
+									className="bg-primaryCustom px-10 py-4 rounded-medium w-full"
 									onPress={() => saveLastNameChanges()}
 								>
 									<Text

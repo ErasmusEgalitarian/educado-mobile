@@ -29,7 +29,7 @@ export default function CertificateEmptyState() {
 					<Text className='text-center text-lg my-4 leading-[22px]'>Você ainda não finalizou um curso. Acesse a página de cursos e continue seus estudos para emitir certificados.</Text>
 					<Pressable
 						onPress={() => navigation.navigate('Meus cursos')}
-						className="w-full flex items-center justify-center rounded-lg bg-primary_custom p-4 mt-4"
+						className="w-full flex items-center justify-center rounded-lg bg-primaryCustom p-4 mt-4"
 					>
 						<Text className="text-projectWhite font-bold text-lg">Ir para meus cursos</Text>
 					</Pressable>

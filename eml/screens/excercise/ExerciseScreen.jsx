@@ -108,8 +108,8 @@ const ExerciseScreen = ({ componentList, exerciseObject, sectionObject, courseOb
 									value={index}
 									status={selectedAnswer === index ? 'checked' : 'unchecked'}
 									onPress={() => handleReviewAnswer(answer.correct, index)}
-									color={projectColors.primary_custom}
-									uncheckedColor={projectColors.primary_custom}
+									color={projectColors.primaryCustom}
+									uncheckedColor={projectColors.primaryCustom}
 								/>
 
 								{/* Answer Text and Feedback */}
@@ -159,7 +159,7 @@ const ExerciseScreen = ({ componentList, exerciseObject, sectionObject, courseOb
 			<View className="w-full px-6 mb-8">
 				<TouchableOpacity
 					className={`px-10 py-4 rounded-medium flex-row items-center justify-center ${
-						selectedAnswer === null ? 'bg-primary_custom opacity-60' : 'bg-primary_custom opacity-100'
+						selectedAnswer === null ? 'bg-primaryCustom opacity-60' : 'bg-primaryCustom opacity-100'
 					}`}
 					onPress={() => {
 						if (selectedAnswer !== null) {

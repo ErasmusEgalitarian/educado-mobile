@@ -23,17 +23,11 @@ export default function Login() {
 	const route = useRoute();
 	const previousScreen = route.params?.previousScreen || 'WelcomeStack';
 
-	/**
-   * TODO: Refactor error to use new error handling system
-   * Function for checking if a login token is stored in async local storage (i.e. if the user is already logged in)
-   * If a token is found, the user is redirected to the home screen.
-   * 
-   */
 	const checkLoginToken = async () => {
 		try {
-			const isValid = await StorageService.isLoginTokenValid();
+			const isValid = StorageService.isLoginTokenValid();
 			if (isValid) {
-				StorageService.updateStoredCourses();
+				await StorageService.updateStoredCourses();
 				await AsyncStorage.setItem('loggedIn', 'true');
 				navigation.navigate('HomeStack');
 			} else {
@@ -64,24 +58,8 @@ export default function Login() {
 							</View>
 							<View className="mx-6">
 								{/* Login form */}
-								<View className="my-8">
+								<View className="mt-8">
 									<LoginForm />
-								</View>
-								{/* Register button */}
-								<View className="flex-row justify-center">
-									<Text className="text-lg text-projectBlack mr-1">
-
-										{/* Dont have an account yet? */}
-										Ainda não tem conta?
-									</Text>
-									<Text
-										testId="registerNav"
-										className={'text-lg text-profileCircle underline left-1'}
-										onPress={() => navigation.navigate('Register', { previousScreen: 'Login' })}
-									>
-										{/* Sign up now */}
-										Cadastre-se agora
-									</Text>
 								</View>
 							</View>
 						</View>

@@ -117,7 +117,7 @@ const VideoLectureScreen = ({ lectureObject, courseObject, isLastSlide, onContin
 					{/* Continue Button */}
 					<View className="w-ful lpx-6 mb-8">
 						<TouchableOpacity
-							className="bg-primary_custom px-10 py-4 rounded-medium flex-row items-center justify-center"
+							className="bg-primaryCustom px-10 py-4 rounded-medium flex-row items-center justify-center"
 							onPress={handleContinuePress}
 						>
 							<View className='flex-row items-center'>

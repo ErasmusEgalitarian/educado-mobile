@@ -15,6 +15,7 @@ import DialogNotification from '../general/DialogNotification';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import tailwindConfig from '../../tailwind.config';
 import { setUserInfo, setJWT } from '../../services/StorageService';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Component for registering a new account in the system, used in the register screen
@@ -200,9 +201,10 @@ export default function RegisterForm() {
 			await loginUser(obj).then((response) => {
 				setJWT(response.accessToken);
 				DialogNotification('success', 'Usuário cadastrado! Cantando em...');
-				setTimeout(() => {
-					navigation.navigate('HomeStack');
-				}, 2500);
+				setTimeout(async () => {
+                    await AsyncStorage.setItem('isLoggedIn', 'true');
+                    navigation.navigate('HomeStack');
+                }, 2500);
 			}).catch((error) => {
 				console.log(error);
 			});

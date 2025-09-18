@@ -25,7 +25,7 @@ export default function FormButton(props) {
 
 	// Put this here for possible custom styling
 	const typeStyles = {
-		primary_custom: 'bg-primary_custom',
+		primary_custom: 'bg-primaryCustom',
 		error: 'bg-error',
 		warning: 'bg-yellow',
 	};
@@ -33,14 +33,16 @@ export default function FormButton(props) {
 	return <>
 		<View>
 			<TouchableOpacity
-				className={'px-4 py-4 rounded-medium ' +
+				className={'px-4 py-3 rounded-medium ' +
 					(typeStyles[props.type] ?? typeStyles.primary_custom) +
-					(props.disabled ? ' opacity-50' : '')}
+					(props.disabled ? 'text-[#809CAD]! bg-[#C1CFD7]' : '')}
 				style={props.style ?? null}
 				onPress={props.onPress}
 				disabled={props.disabled}
 			>
-				<Text className="text-center font-sans-bold text-body text-projectWhite">
+				<Text className={"text-center font-sans-bold text-body " +
+					(props.disabled ? "text-[#809CAD]" : "text-projectWhite" )
+				}>
 					{props.children}
 				</Text>
 			</TouchableOpacity>

@@ -128,7 +128,7 @@ export default function CertificateCard({ certificate }) {
 						<TouchableOpacity 
 							onPress={handleDownloadClick}
 							disabled={loading}>
-							<View className='flex flex-row justify-center items-end bg-primary_custom py-4 px-10 rounded-lg'>
+							<View className='flex flex-row justify-center items-end bg-primaryCustom py-4 px-10 rounded-lg'>
 								{loading ? (
 									<ActivityIndicator
 										size="small"

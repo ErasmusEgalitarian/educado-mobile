@@ -70,7 +70,7 @@ export default function OfflineBanner() {
 					<View className='items-center pt-6'>
 						<Pressable
 							testID={'offlineExploreButton'}
-							className='rounded-r-8 rounded-md bg-primary_custom justify-center items-center p-2 h-14 w-80'
+							className='rounded-r-8 rounded-md bg-primaryCustom justify-center items-center p-2 h-14 w-80'
 							onPress={() => {
 								navigation.navigate('Perfil', {
 									screen: 'Download',

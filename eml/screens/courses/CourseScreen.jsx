@@ -178,7 +178,7 @@ export default function CourseScreen() {
 							<View>
 								<Pressable
 									testID="exploreButton"
-									className="rounded-r-8 rounded-md bg-primary_custom justify-center items-center py-4 w-full h-auto px-20"
+									className="rounded-r-8 rounded-md bg-primaryCustom justify-center items-center py-4 w-full h-auto px-20"
 									onPress={() => navigation.navigate('Explorar')}>
 									<Text className="text-projectWhite font-sans-bold text-center text-body">
 										Explorar cursos

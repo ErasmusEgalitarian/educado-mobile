@@ -155,7 +155,7 @@ const DownloadCourseButton = ({ course, disabled }) => {
 												? handleRemove
 												: handleDownload
 										}
-										className={isDownloaded ? 'bg-error rounded-lg py-4 px-10': 'bg-primary_custom rounded-lg py-4 px-10'}>
+										className={isDownloaded ? 'bg-error rounded-lg py-4 px-10': 'bg-primaryCustom rounded-lg py-4 px-10'}>
 										<Text className='font-bold text-projectWhite text-xl'>
 											{isDownloaded
 												? 'Excluir'

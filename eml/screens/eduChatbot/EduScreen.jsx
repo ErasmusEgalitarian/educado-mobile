@@ -245,7 +245,7 @@ export default function Edu() {
 						/>
 						{userMessage.trim() ? (
 							<TouchableOpacity
-								className={`rounded-full w-7 h-7 ml-2 flex items-center justify-center ${loading ? 'bg-gray-400' : 'bg-primary_custom'}`}
+								className={`rounded-full w-7 h-7 ml-2 flex items-center justify-center ${loading ? 'bg-gray-400' : 'bg-primaryCustom'}`}
 								onPress={loading ? null : handleSendMessage}
 								disabled={loading}
 							>

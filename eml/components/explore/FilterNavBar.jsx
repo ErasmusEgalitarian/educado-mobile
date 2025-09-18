@@ -40,7 +40,7 @@ function FilterNavBar({ onChangeText, onCategoryChange, searchPlaceholder }) {
 									key={category.label}
 									onPress={() => handleCategorySelect(category.label)}
 									className={`${selectedCategory === category.label
-										? 'bg-primary_custom'
+										? 'bg-primaryCustom'
 										: 'border-2'
 									} px-2 py-2 rounded-lg border-projectGray border-[1px] mr-2 items-center justify-center`}
 								>

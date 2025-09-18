@@ -32,34 +32,29 @@ export default function WelcomeScreen() {
 						<WelcomeSlider />
 					</View>
 
-					<View className="justify-around">
-
-						<View className="px-6 w-screen">
-							{/* Replace with standard button */}
+					<View className="justify-center">
+						
+						<View className="px-6">
 							<TouchableOpacity
-								className="bg-primary_custom px-10 py-4 rounded-medium"
-								onPress={() => { navigation.navigate('LoginStack', { screen: 'Register' }, {previousScreen: 'Welcome'}); }}
+								className="bg-primaryCustom px-12 py-3 rounded-medium"
+								onPress={() => navigation.navigate('LoginStack', {screen: 'Login'}, { previousScreen: 'Welcome' })}
 							>
-								<Text className="text-center font-sans-bold text-body text-projectWhite">
-									Cadastrer
-								</Text>
+							<Text className="text-center font-sans-bold text-body text-projectWhite">
+								{/* Login */}
+								Entrar
+							</Text>
 							</TouchableOpacity>
 						</View>
 
-						<View className="flex-row justify-center">
-							<Text className="text-base text-projectGray mr-1">
-								{/* Already have an account? */}
-								Já tem uma conta?
-							</Text>
-							<Text
-								testId="loginNav"
-								className={'text-base text-projectBlack underline'}
-								onPress={() => navigation.navigate('LoginStack', { previousScreen: 'Welcome' })}
-							>
-								{/* Login now */}
-								Entrar agora
-							</Text>
+						<View className="mt-[24px] px-6 w-screen">
+                            <Text
+                                className="text-center font-sans-bold underline text-body text-projectBlack"
+                                onPress={() => { navigation.navigate('LoginStack', { screen: 'Register' }, {previousScreen: 'Welcome'}); }}
+                            >
+                                Cadastrer
+                            </Text>
 						</View>
+
 					</View>
 				</View>
 			</SafeAreaView>

@@ -10,7 +10,7 @@ export default function TextIconButton({ text = '360', onClick, pressed = false 
 
 	return (
 		<Pressable onPress={onClick} >
-			< View className={pressed ? 'flex-col rounded-full justify-center active:bg-opacity-50 items-center  w-[10vw] h-[10vw] bg-projectWhite' : 'flex-col rounded-full justify-center active:bg-opacity-50 items-center  w-[10vw] h-[10vw] bg-primary_custom '}>
+			< View className={pressed ? 'flex-col rounded-full justify-center active:bg-opacity-50 items-center  w-[10vw] h-[10vw] bg-projectWhite' : 'flex-col rounded-full justify-center active:bg-opacity-50 items-center  w-[10vw] h-[10vw] bg-primaryCustom '}>
 				<Text className={pressed ? 'text-primary_custom text-sm font-semibold' : 'text-projectWhite text-sm font-semibold'} >{text}p</Text>
 			</View >
 		</Pressable>

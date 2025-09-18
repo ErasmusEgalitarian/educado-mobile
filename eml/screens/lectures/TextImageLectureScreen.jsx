@@ -143,7 +143,7 @@ const TextImageLectureScreen = ({ lectureObject, courseObject, isLastSlide, onCo
 
 			<View className="w-100 px-6 mb-8">
 				<TouchableOpacity
-					className="bg-primary_custom px-10 py-4 rounded-medium flex-row items-center justify-center"
+					className="bg-primaryCustom px-10 py-4 rounded-medium flex-row items-center justify-center"
 					onPress={handleContinue}
 				>
 					<View className='flex-row items-center'>

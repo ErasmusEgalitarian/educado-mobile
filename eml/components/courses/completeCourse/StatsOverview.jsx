@@ -75,7 +75,7 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
 					size={circleSize}
 					width={7.5}
 					rotation={0.25}
-					tintColor= {projectColors.primary_custom}
+					tintColor= {projectColors.primaryCustom}
 					backgroundColor={projectColors.projectWhite}
 				>
 					{() => (
@@ -101,7 +101,7 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
 			</View>
 
 			<View className="px-6 w-screen z-10 -mt-3">
-				<View className="bg-primary_custom h-14 rounded-full flex flex-row justify-between items-center px-2">
+				<View className="bg-primaryCustom h-14 rounded-full flex flex-row justify-between items-center px-2">
 					<View className="flex flex-row items-center">
 						<Image source={require('../../../assets/images/profileEX.jpg')} alt="arrow-right" className="h-10 w-10 rounded-full" />
 						<Text className="text-center font-sans-bold text-lg text-projectWhite ml-3">Hans Zimmer</Text>

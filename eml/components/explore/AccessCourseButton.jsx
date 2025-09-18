@@ -22,7 +22,7 @@ const AccessCourseButton = ({ course }) => {
 		<View className="">
 			<Pressable
 				onPress={handlePress} // Assigning the empty function to the onPress prop
-				className="w-full flex items-center justify-center rounded-lg bg-primary_custom p-2"
+				className="w-full flex items-center justify-center rounded-lg bg-primaryCustom p-2"
 			>
 				<Text className="text-projectWhite p-1 font-bold">
           Acessar curso

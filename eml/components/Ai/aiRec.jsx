@@ -65,7 +65,7 @@ export default function RecButton({ onAudioResponse, onLock, courses }) {
 
 	return (
 		<TouchableOpacity
-			className="rounded-full w-7 h-7 bg-primary_custom ml-2 flex items-center justify-center"
+			className="rounded-full w-7 h-7 bg-primaryCustom ml-2 flex items-center justify-center"
 			onPressIn={startRecording}
 			onPressOut={stopRecording}
 		>
