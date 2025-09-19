@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import Collapsible from 'react-native-collapsible';
+import React from 'react';
+import { View, Text } from 'react-native';
 import UpdateDate from './ExploreUpdate';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CardLabel from './CardLabel';
 import CustomRating from './CustomRating';
 import SubscriptionButton from './SubscriptionButton';
 import AccessCourseButton from './AccessCourseButton';
 import * as Utility from '../../services/utilityFunctions';
 import PropTypes from 'prop-types';
+import { Link } from '@react-navigation/native';
 
 /**
  * This component is used to display a course card.
@@ -18,7 +17,6 @@ import PropTypes from 'prop-types';
  * @returns {JSX.Element|null} - Returns a JSX element. If the course is not published, returns null.
  */
 export default function ExploreCard({ course, isPublished, subscribed }) {
-	const [isCollapsed, setIsCollapsed] = useState(true);
 
 	return isPublished ? (
 		<View
@@ -65,15 +63,8 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 					<Text className="text-projectBlack text-m">{course.description}</Text>
 				</View>
 
-				<View>
-					{
-						subscribed ? (
-							<AccessCourseButton course={course} />
-						) : (
-							<SubscriptionButton course={course} />
-						)
-					}
-					<UpdateDate dateUpdated={Utility.getUpdatedDate(course.dateUpdated)} />
+				<View className="flex-row justify-end">
+					<Text className="text-projectBlack text-m">saiba mais</Text>
 				</View>
 
 
