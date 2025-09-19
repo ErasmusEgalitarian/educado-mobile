@@ -9,17 +9,16 @@ import OfflineBanner from './OfflineBanner';
  * @param {string} title - The title to display next to the icon.
  * @returns {JSX.Element} The IconHeader component.
  */
-export default function IconHeader({ title, description }) {
+export default function IconHeader({ title}) {
 
 	IconHeader.propTypes = {
 		title: PropTypes.string,
-		description: PropTypes.string,
 	};
 
 	return (
 		<>
 			<OfflineBanner />
-			<View className="flex flex-row items-center pl-6 pb-2 pt-[20%]">
+			<View className="flex flex-row items-center pl-6 pb-2 pt-[20%] mb-8">
             
 				<Image
 					source={require('../../assets/images/singleIcon.png')}
@@ -29,7 +28,6 @@ export default function IconHeader({ title, description }) {
 				<Text className="text-xl font-bold">{title}</Text>
             
 			</View>
-			<Text className="text-xs font-montserrat px-6 pl-6 pb-4">{description}</Text>
 		</>
 	);
 }

@@ -122,7 +122,6 @@ export default function Explore() {
 			<BaseScreen>
 				<IconHeader
 					title={'Explorar cursos'}
-					description={'Inscreva-se nos cursos do seu interesse e comece sua jornada'}
 				/>
 				{!isOnline ?
 					<View>

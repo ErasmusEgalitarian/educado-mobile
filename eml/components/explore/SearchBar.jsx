@@ -12,11 +12,11 @@ import PropTypes from 'prop-types';
  */
 function SearchBar({ onSearchChange, placeholder }) {
 	return (
-		<View className="flex-row items-center relative bg-projectWhite border-projectGray rounded-md pr-2.5 mb-2.5 mx-2.5">
+		<View className="flex-row items-center relative bg-projectWhite border border-primary rounded-medium px-4 mb-2.5 mx-2.5">
 			<TextInput
 				placeholder={placeholder}
 				onChangeText={onSearchChange}
-				className="flex-1 px-2.5 py-3 pr-35"
+				className="flex-1 py-1 pr-35 font-semibold text-sm"
 			/>
 			<MaterialCommunityIcons name="magnify" size={20} color="gray" />
 		</View>
