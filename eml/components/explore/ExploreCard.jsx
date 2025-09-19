@@ -21,18 +21,12 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 	const [isCollapsed, setIsCollapsed] = useState(true);
 
 	return isPublished ? (
-		<Pressable
+		<View
 			className="bg-projectWhite rounded-lg shadow-2xl mb-4 mx-4 p-6 overflow-hidden"
-			onPress={() => setIsCollapsed(!isCollapsed)}
 		>
 			<View className="flex-col items-center">
 				<View className="flex-row justify-between w-full items-center">
 					<Text className="text-projectBlack font-medium text-lg">{course.title}</Text>
-					<MaterialCommunityIcons
-						name={isCollapsed ? 'chevron-down' : 'chevron-up'}
-						size={25}
-						color="gray"
-					/>
 				</View>
 
 				<View className="h-1 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
@@ -66,7 +60,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 			</View>
 
 
-			<Collapsible className="w-full" collapsed={isCollapsed}>
+
 				<View className="py-7 flex-row items-center justify-between px-1">
 					<Text className="text-projectBlack text-m">{course.description}</Text>
 				</View>
@@ -82,7 +76,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 					<UpdateDate dateUpdated={Utility.getUpdatedDate(course.dateUpdated)} />
 				</View>
 
-			</Collapsible>
+
 			<View className="items-start absolute">
 				<View className="rotate-[315deg] items-center">
 					{
@@ -94,7 +88,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 					}
 				</View>
 			</View>
-		</Pressable>
+		</View>
 	) : null;
 }
 
