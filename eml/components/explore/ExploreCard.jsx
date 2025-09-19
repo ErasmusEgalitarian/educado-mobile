@@ -1,13 +1,15 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, {useState} from 'react';
+import {Image, Modal, View, Button, Text, Dimensions, TouchableOpacity} from 'react-native';
 import UpdateDate from './ExploreUpdate';
 import CardLabel from './CardLabel';
 import CustomRating from './CustomRating';
+import BottomDrawer from './BottomDrawer';
 import SubscriptionButton from './SubscriptionButton';
 import AccessCourseButton from './AccessCourseButton';
 import * as Utility from '../../services/utilityFunctions';
 import PropTypes from 'prop-types';
 import { Link } from '@react-navigation/native';
+
 
 /**
  * This component is used to display a course card.
@@ -17,6 +19,14 @@ import { Link } from '@react-navigation/native';
  * @returns {JSX.Element|null} - Returns a JSX element. If the course is not published, returns null.
  */
 export default function ExploreCard({ course, isPublished, subscribed }) {
+
+	const windowHeight = Dimensions.get('window').height;
+
+	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+	const handleToggleBottomSheet = () => {
+	setIsBottomSheetOpen(!isBottomSheetOpen);
+	};
 
 	return isPublished ? (
 		<View
@@ -57,16 +67,32 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 			</View>
 
-
-
 				<View className="py-7 flex-row items-center justify-between px-1">
 					<Text className="text-projectBlack text-m">{course.description}</Text>
 				</View>
 
 				<View className="flex-row justify-end">
-					<Text className="text-projectBlack text-m">saiba mais</Text>
-				</View>
+					<TouchableOpacity onPress={handleToggleBottomSheet}>
+						<Text className="text-projectBlack text-m">saiba mais</Text>
+					</TouchableOpacity>
+					<Modal
+						animationType="slide"
+						transparent={true}
+						visible={isBottomSheetOpen}
+						onRequestClose={handleToggleBottomSheet}>
 
+							<View className="flex-start items-center absolute" 
+								style={{height: windowHeight * 0.6}}>
+									<View className="w-full justify-between flex-row">
+										<Text>title</Text>
+										<TouchableOpacity onPress={handleToggleBottomSheet}>
+											<Text>x</Text>
+										</TouchableOpacity>
+									</View>
+							</View> 
+					</Modal>
+
+				</View>
 
 			<View className="items-start absolute">
 				<View className="rotate-[315deg] items-center">
@@ -80,6 +106,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 				</View>
 			</View>
 		</View>
+	
 	) : null;
 }
 
