@@ -35,25 +35,23 @@ function FilterNavBar({ onChangeText, onCategoryChange}) {
 				<ScrollView horizontal showsHorizontalScrollIndicator={false}>
 					<View className="flex items-center p-2 ">
 						<View className="flex-row overflow-x-auto">
-							{categories
-								.filter((category) => category.label.toLowerCase().includes(searchText.toLowerCase()))
-								.map((category) => (
-									<Pressable
-										key={category.label}
-										onPress={() => handleCategorySelect(category.label)}
+							{categories.map((category) => (
+								<Pressable
+									key={category.label}
+									onPress={() => handleCategorySelect(category.label)}
+									className={`${selectedCategory === category.label
+										? 'bg-darkCyan'
+										: 'border-2'
+									} px-2 py-2 rounded-lg border-grayScale border-[1px] mr-2 items-center justify-center`}
+								>
+									<Text
 										className={`${selectedCategory === category.label
-											? 'bg-primary'
-											: 'border-2'
-										} px-2 py-2 rounded-lg border-projectGray border-[1px] mr-2 items-center justify-center`}
-									>
-										<Text
-											className={`${selectedCategory === category.label
-												? 'text-projectWhite font-bold'
-												: 'text-projectGray'
-											}`}
-										>{category.label}</Text>
-									</Pressable>
-								))}
+											? 'text-projectWhite font-bold'
+											: 'text-projectGray'
+										}`}
+									>{category.label}</Text>
+								</Pressable>
+							))}
 						</View>
 					</View>
 				</ScrollView>
