@@ -32,7 +32,8 @@ export default function CourseCard({ course, isOnline}) {
 		setStudentProgress(progress);
 	}; checkProgress();
 
-	const enabledUI = 'bg-projectWhite m-[3%] rounded-lg shadow-sm shadow-opacity-[0.3] elevation-[8] mx-[5%] p-[5%]';
+	const enabledUI = 'bg-projectWhite m-[3%] rounded-lg elevation-[4] mx-[5%] p-[5%]';
+
 	const disabledUI = 'opacity-50 bg-projectWhite m-[3%] rounded-lg shadow-sm shadow-opacity-[0.3] elevation-[8] mx-[5%] p-[5%]';
 
 	const layout = downloaded || isOnline ? enabledUI : disabledUI;
@@ -40,8 +41,15 @@ export default function CourseCard({ course, isOnline}) {
 	let isDisabled = layout === disabledUI;
 
 	return (
-		<Pressable testID="courseCard"
-			className={layout}
+		<Pressable
+		testID="courseCard"
+		className={layout}
+		style={{
+			backgroundColor: 'white',
+			borderRadius: 8,
+			elevation: 4,
+			shadowColor: '#28363E',
+		}}
 			onPress={() => { layout === enabledUI ?
 				navigation.navigate('Section', {
 					course: course,
