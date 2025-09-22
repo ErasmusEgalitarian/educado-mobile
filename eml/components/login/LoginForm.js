@@ -10,6 +10,7 @@ import { Image } from 'react-native';
 
 // Remove all below. Since they are useless. Except for maybe remove emojis
 import FormTextField from '../general/forms/FormTextField';
+import TokenInputField from '../general/forms/TokenInputField';
 import FormButton from '../general/forms/FormButton';
 import PasswordEye from '../general/forms/PasswordEye';
 import ResetPassword from './ResetPassword';
@@ -35,6 +36,45 @@ export default function LoginForm() {
 	const [emailAlert, setEmailAlert] = useState('');
 	// State variable to track password visibility
 	const [showPassword, setShowPassword] = useState(false);
+
+    // state variable to track if user successfully submitted phone number
+    const [submittedPhoneNumber, setSubmittedPhoneNumber] = useState(false);
+
+    // phone number state variables
+	const [phoneAlert, setPhoneAlert] = useState('');
+	const [phoneNumber, setPhoneNumber] = useState('');
+
+	// input token
+	const [token, setToken] = useState('');
+
+    // allow + symbol at start, then digits only (5 - 25 minmax length)
+    const validatePhoneNumber = (phone) => /^\+?\d{5,25}$/.test(phone);
+
+    const handlePhoneChange = (inputPhone) => {
+        setPhoneNumber(inputPhone);
+
+        // if typing
+        if (inputPhone.length > 0) {
+            validatePhoneNumber(inputPhone) ? setPhoneAlert('') : setPhoneAlert('Número de Teléfono Inválido');
+        } else {
+            setPhoneAlert('');
+        }
+    };
+
+    const submitPhoneNumber = () => {
+        //TODO: call backend and get a real res;
+
+        const res = { success: Math.random() > 0.5 }; // coin-toss
+
+        if(res.success){
+            setSubmittedPhoneNumber(true);
+        } else {
+            setSubmittedPhoneNumber(false);
+            //TODO: render error here
+        }
+
+    }
+
 
 	/**
    * Logs user in with the entered credentials 
@@ -102,28 +142,70 @@ export default function LoginForm() {
 					</Text>
 				</View>
 				
-				<Text className="font-montserrat text-lg w-48 leading-5 text-center mb-6">
-					Por favor, insira o seu número de telefone
+				<Text className="font-montserrat text-lg leading-5 text-center mb-6">
+					{ submittedPhoneNumber ? "Agora, insira o código enviado para você" : "Por favor, insira o seu número de telefone"}
 				</Text>
 			</View>
 
-			<View className="mb-6">
-			<FormTextField
-				testId="passwordInput"
-				placeholder="(XX) XXXXX-XXXX " // Type your password
-				bordered
-				value={password}
-				onChangeText={(inputPassword) => {
-					setPassword(removeEmojis(inputPassword, password));
-				}}
-			/>
-			</View>
+            {/* Step 1: input Phone number */}
+            {!submittedPhoneNumber ? (
+                <>
+                    <View className="mb-6">
+                        <FormTextField
+                            testId="passwordInput"
+                            placeholder="(XX) XXXXX-XXXX " // Type your password
+                            bordered={true}
+                            value={password}
+                            onChangeText={(inputPassword) => {
+                                handlePhoneChange(inputPassword);
+                                setPassword(removeEmojis(inputPassword, password));
+                            }}
+                            error={phoneAlert ? true : false}
+                        />
+                    </View>
+
+                    {/* render alert */}
+                    {phoneAlert ? (
+                        <View className="mb-4">
+                            <Text className="font-montserrat text-sm text-center color-error">
+                                {phoneAlert}
+                            </Text>
+                        </View>
+                    ) : null}
+
+                    <FormButton
+                        onPress={submitPhoneNumber}
+                    >
+                        Enviar Código
+                    </FormButton>
+                </>
+            ) : (
+                <>
+                    {/* Step 2: input Token */}
+                     <View className="mb-6">
+                        <TokenInputField
+                            onChange={(tokenValue) => setToken(tokenValue)}
+                        />
+                    </View>
+
+                    {/* render alert */}
+                    {phoneAlert ? (
+                        <View className="mb-4">
+                            <Text className="font-montserrat text-sm text-center color-error">
+                                {phoneAlert}
+                            </Text>
+                        </View>
+                    ) : null}
 
 
-			{/* TODO: ADD ONPRESS TO BUTTON */}
-			<FormButton>
-				Enviar Código
-			</FormButton>
+                    <FormButton
+                        onPress={submitPhoneNumber}
+                        disabled={token.length < 6}
+                    >
+                        Accesor Conta
+                    </FormButton>
+                </>
+            )}
 
 		</View>
 	);
