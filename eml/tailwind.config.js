@@ -1,3 +1,5 @@
+const { white } = require('react-native-paper/lib/typescript/styles/colors');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -7,6 +9,18 @@ module.exports = {
   ],
   theme: {
     colors: {
+      // Primary colors
+      primary: ' #35A1B1',
+      secondary: '#246670',
+      white: '#FAFEFF',
+      black: '#000000',
+
+
+      // Custom colors aligned with Figma design system
+
+
+
+      // Old colors (to be removed slowly later by refactoring components and adding new colors from figma)
       bgprimary_custom: '#166276',
       bgPrimary: '#C9E5EC',
       primary_custom: '#166276',
