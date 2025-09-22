@@ -1,5 +1,3 @@
-const { white } = require('react-native-paper/lib/typescript/styles/colors');
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
