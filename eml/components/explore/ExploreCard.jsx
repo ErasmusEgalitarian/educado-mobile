@@ -24,7 +24,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 		<View
 			className="bg-projectWhite rounded-lg shadow-2xl mb-4 mx-4 p-6 overflow-hidden"
 		>
-			<View className="flex-col items-center">
+			<View className="flex-col items-center shadow-2xl">
 				<View className="flex-row justify-between w-full items-center">
 					<Text className="text-projectBlack font-medium text-lg">{course.title}</Text>
 				</View>

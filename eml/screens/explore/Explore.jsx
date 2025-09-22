@@ -169,7 +169,8 @@ export default function Explore() {
 										key={index}
 										isPublished={course.status === 'published'}
 										subscribed={/*isSubscribed[index]*/checkIfSubscribed(course, subCourses)}
-										course={course}
+										course={course} 
+										class="shadow-xl"
 									></ExploreCard>
 								))}
 							</View>
