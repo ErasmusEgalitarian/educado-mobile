@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     colors: {
       bgPrimary: '#C9E5EC',
-      primary: '#5ECCE9',
+      primary: '#246670',
       secondary: '#F1F9FB',
       projectWhite: '#FFFFFF',
       projectBlack: '#383838',
@@ -36,6 +36,7 @@ module.exports = {
       badgesGreen: '#8CC43B',
       badgesPurple: '#C383F7',
       badgesBlue: '#54ADF1',
+      emptyProgressBar: '#D8EFF3',
     },
     fontFamily: {
       montserrat: ['Montserrat-Regular'],

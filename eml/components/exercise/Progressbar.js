@@ -36,8 +36,8 @@ const CustomProgressBar = ({ progress, width, height, displayLabel = true }) => 
 				progress={progress / 100}
 				width={ScreenWidth * (width / 100)}
 				height={ScreenHeight * (height / 100)}
-				color={projectColors.progressBar}
-				unfilledColor={projectColors.progressBarUnFilled}
+				color={tailwindConfig.theme.colors.primary}
+				unfilledColor={tailwindConfig.theme.colors.emptyProgressBar}
 				borderWidth={0}
 				borderRadius={8}
 			></Progress.Bar>

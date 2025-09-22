@@ -77,7 +77,10 @@ export default function CourseCard({ course, isOnline}) {
 							}) : null;
 						}}
 					>
-						<MaterialCommunityIcons size={28} name="play-circle" color={tailwindConfig.theme.colors.primary}></MaterialCommunityIcons>
+						<MaterialCommunityIcons
+  							name="chevron-right"
+  							size={18}
+  							color={tailwindConfig.theme.colors.primary}/>
 					</Pressable>
 				</View>
 			</View>
