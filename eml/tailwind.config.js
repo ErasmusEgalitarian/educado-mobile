@@ -9,11 +9,11 @@ module.exports = {
     colors: {
       bgPrimary: '#C9E5EC',
       primary: '#246670',
-      secondary: '#F1F9FB',
+      secondary: '#FAFEFF',
       projectWhite: '#FFFFFF',
       projectBlack: '#383838',
       projectGray: '#A1ACB2',
-      lightGray: '#E5E5E5',
+      lightGray: '#f505b9ff',
       error: '#FF4949',
       success: '#4AA04A',
       disable: '#DDD',

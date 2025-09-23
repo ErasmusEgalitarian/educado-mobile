@@ -53,9 +53,7 @@ export default function CourseCard({ course, isOnline}) {
 					<Text className="text-[18px] text-projectBlack flex-1 self-center font-montserrat-semi-bold">
 						{course.title ? course.title : 'Título do curso'}
 					</Text>
-					<View className="flex-2 pr-6">
-						<DownloadCourseButton course={course} disabled={isDisabled}/>
-					</View>
+				
 				</View>
 				<View className="h-[1] bg-disable m-[2%]" />
 				<View className="flex-row flex-wrap items-center justify-start">
