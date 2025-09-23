@@ -122,7 +122,6 @@ export default function Explore() {
 			<BaseScreen>
 				<IconHeader
 					title={'Explorar cursos'}
-					description={'Inscreva-se nos cursos do seu interesse e comece sua jornada'}
 				/>
 				{!isOnline ?
 					<View>
@@ -164,7 +163,7 @@ export default function Explore() {
 						/>
 						<ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 							<View className="overflow-y-auto">
-								{courses && filteredCourses && filteredCourses.map((course, index) => (
+								{courses && filteredCourses && filteredCourses.reverse().map((course, index) => (
 									<ExploreCard
 										key={index}
 										isPublished={course.status === 'published'}
