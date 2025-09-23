@@ -38,6 +38,7 @@ module.exports = {
       badgesBlue: '#54ADF1',
       darkCyan: '#246670',
       grayScale: '#628397',
+      tealButton: '#35A1B1'
     },
     fontFamily: {
       montserrat: ['Montserrat-Regular'],

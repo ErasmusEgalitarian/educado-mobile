@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Image, Modal, View, Button, Text, Dimensions, TouchableOpacity} from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import UpdateDate from './ExploreUpdate';
 import CardLabel from './CardLabel';
 import CustomRating from './CustomRating';
@@ -73,17 +74,17 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 				</View>
 
 				<View className="flex-row justify-end">
-					<TouchableOpacity onPress={handleToggleBottomSheet}>
-						<Text className="text-projectBlack text-m">saiba mais</Text>
+					<TouchableOpacity onPress={handleToggleBottomSheet} className="flex-row border-b border-tealButton items-center px-1 py-0.5">
+						<Text className="text-tealButton text-xs font-semibold mr-1">saiba mais</Text> 
+						<MaterialCommunityIcons name="chevron-double-right" color='#35A1B1' size={12} />
 					</TouchableOpacity>
 					<Modal
 						animationType="slide"
 						transparent={true}
 						visible={isBottomSheetOpen}
 						onRequestClose={handleToggleBottomSheet}>
-							
-							<View className="flex-1"
-								style={{ backgroundColor: 'rgba(255,255,255,0.5)'}}/>
+
+							<View className="flex-1" style={{ backgroundColor: 'rgba(255,255,255,0.5)'}}/>
 
 							<View className="flex-start items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
 							style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
