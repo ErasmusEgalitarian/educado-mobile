@@ -21,6 +21,7 @@ import { Link } from '@react-navigation/native';
 export default function ExploreCard({ course, isPublished, subscribed }) {
 
 	const windowHeight = Dimensions.get('window').height;
+	const windowWidth = Dimensions.get('window').width;
 
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
@@ -81,10 +82,10 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 						visible={isBottomSheetOpen}
 						onRequestClose={handleToggleBottomSheet}>
 
-							<View className="flex-start items-center absolute" 
-								style={{height: windowHeight * 0.6}}>
+							<View className="flex-start items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-lg" 
+            style={{height: windowHeight * 0.8, width: windowWidth * 1}}>
 									<View className="w-full justify-between flex-row">
-										<Text>title</Text>
+										<Text className="text-3xl font-medium">title</Text>
 										<TouchableOpacity onPress={handleToggleBottomSheet}>
 											<Text>x</Text>
 										</TouchableOpacity>
