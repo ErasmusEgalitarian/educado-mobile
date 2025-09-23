@@ -31,7 +31,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 	return isPublished ? (
 		<View
-			className="bg-projectWhite rounded-lg shadow-2xl mb-4 mx-4 p-6 overflow-hidden"
+			className="bg-projectWhite rounded-lg shadow-sm shadow-projectBlack mb-4 mx-4 p-6 overflow-hidden"
 		>
 			<View className="flex-col items-center">
 				<View className="flex-row justify-between w-full items-center">
