@@ -81,6 +81,9 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 						transparent={true}
 						visible={isBottomSheetOpen}
 						onRequestClose={handleToggleBottomSheet}>
+							
+							<View className="flex-1"
+								style={{ backgroundColor: 'rgba(255,255,255,0.5)'}}/>
 
 							<View className="flex-start items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
 							style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
