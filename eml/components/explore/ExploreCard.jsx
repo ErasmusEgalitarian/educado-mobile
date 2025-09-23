@@ -10,6 +10,7 @@ import AccessCourseButton from './AccessCourseButton';
 import * as Utility from '../../services/utilityFunctions';
 import PropTypes from 'prop-types';
 import { Link } from '@react-navigation/native';
+import CourseDetail from './CourseDetail';
 
 
 /**
@@ -93,6 +94,44 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 										<TouchableOpacity onPress={handleToggleBottomSheet}>
 											<Text>x</Text>
 										</TouchableOpacity>
+									</View>
+									<View>
+										<Text>{course.description}</Text>
+									</View>
+									<View>
+										<CourseDetail
+											title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos, exercícios, leituras complementares)`}
+											icon="clock-outline"
+										/>
+										<CourseDetail
+											title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
+											icon="book-multiple-outline"
+										/>
+										<CourseDetail
+											title="Certificado de Conclusão"
+											icon="certificate-outline"
+										/>
+										<CourseDetail
+											title="Início imediato"
+											icon="clock-fast"
+										/>
+										<CourseDetail
+											title="Acesso total por 1 ano"
+											icon="calendar-month-outline"
+										/>
+										<CourseDetail
+											title="Assista onde e quando quiser! "
+											icon="cellphone-link"
+										/>
+									</View>
+									<View>
+										{
+											subscribed ? (
+												<AccessCourseButton course={course} />
+											) : (
+												<SubscriptionButton course={course} />
+											)
+										}
 									</View>
 							</View> 
 					</Modal>
