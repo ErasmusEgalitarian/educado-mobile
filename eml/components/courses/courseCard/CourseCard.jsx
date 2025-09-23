@@ -19,7 +19,7 @@ import { checkCourseStoredLocally } from '../../../services/StorageService';
 export default function CourseCard({ course, isOnline}) {
 	const [downloaded, setDownloaded] = useState(false);
 	const navigation = useNavigation();
-	const [studentProgress, setStudentProgress] = useState(0);
+	const [studentProgress, setStudentProgress] = useState([0,0,0]);
 
 
 	const checkDownload = async () => {
@@ -60,11 +60,11 @@ export default function CourseCard({ course, isOnline}) {
 				<View className="h-[1] bg-disable m-[2%]" />
 				<View className="flex-row flex-wrap items-center justify-start">
 					<View className="flex-row items-center">
-						<MaterialCommunityIcons size={18} name={determineIcon(course.category)} color={'gray'}></MaterialCommunityIcons>
+						<MaterialCommunityIcons size={18} name={determineIcon(course.category)} color={tailwindConfig.theme.colors.graytext}></MaterialCommunityIcons>
 						<Text className="mx-[2.5%] my-[3%]">{determineCategory(course.category)}</Text>
 					</View>
 					<View className="flex-row items-center">
-						<MaterialCommunityIcons size={18} name="clock" color={'gray'}></MaterialCommunityIcons>
+						<MaterialCommunityIcons size={18} name="clock" color={tailwindConfig.theme.colors.graytext}></MaterialCommunityIcons>
 						<Text className="mx-[2.5%] my-[3%]">{course.estimatedHours ? formatHours(course.estimatedHours) : 'duração'}</Text>
 					</View>
 				</View>

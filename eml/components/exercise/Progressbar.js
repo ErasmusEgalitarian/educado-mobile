@@ -10,7 +10,7 @@ const projectColors = tailwindConfig.theme.colors;
 /**
  * A custom progress bar component.
  * @param {Object} props - The props object.
- * @param {number} props.progress - The progress value (0-100).
+ * @param {Array} props.progress - The progress value (0-100), the amount done and the total amount.
  * @param {number} props.width - The width of the progress bar (in percentage).
  * @param {number} props.height - The height of the progress bar (in percentage).
  * @param {boolean} [props.displayLabel=true] - Whether to display the bottom text component.
@@ -18,22 +18,22 @@ const projectColors = tailwindConfig.theme.colors;
  */
 const CustomProgressBar = ({ progress, width, height, displayLabel = true }) => {
 	CustomProgressBar.propTypes = {
-		progress: PropTypes.number.isRequired,
+		progress: PropTypes.arrayOf(PropTypes.number).isRequired,
 		width: PropTypes.number.isRequired,
 		height: PropTypes.number.isRequired,
 		displayLabel: PropTypes.bool,
 	};
 
 	// Ensure progress is between 0 and 100
-	progress = Math.min(100, Math.max(0, progress));
-	if (isNaN(progress)){
+	progress[0] = Math.min(100, Math.max(0, progress[0]));
+	if (isNaN(progress[0])){
 		progress = 0;
 	}
 
 	return (
 		<View className='flex-row items-center justify-around'>
 			<Progress.Bar
-				progress={progress / 100}
+				progress={progress[0] / 100}
 				width={ScreenWidth * (width / 100)}
 				height={ScreenHeight * (height / 100)}
 				color={tailwindConfig.theme.colors.primary}
@@ -42,8 +42,9 @@ const CustomProgressBar = ({ progress, width, height, displayLabel = true }) => 
 				borderRadius={8}
 			></Progress.Bar>
 			{displayLabel && (
-				<Text className='px-5 text-center font-montserrat-bold text-caption-medium text-projectBlack'>
-					{progress}%
+				<Text className='px-5 text-center font-montserrat-bold text-caption-medium text-projectBlack' 
+						style={{ color: tailwindConfig.theme.colors.graytext }}>
+					{progress[1]}/{progress[2]}
 				</Text>
 			)}
 		</View>

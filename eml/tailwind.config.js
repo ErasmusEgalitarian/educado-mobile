@@ -37,6 +37,7 @@ module.exports = {
       badgesPurple: '#C383F7',
       badgesBlue: '#54ADF1',
       emptyProgressBar: '#D8EFF3',
+      graytext: '#628397',
     },
     fontFamily: {
       montserrat: ['Montserrat-Regular'],
