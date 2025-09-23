@@ -11,6 +11,7 @@ import * as Utility from '../../services/utilityFunctions';
 import PropTypes from 'prop-types';
 import { Link } from '@react-navigation/native';
 import CourseDetail from './CourseDetail';
+import { determineIcon, determineCategory, formatHours, checkProgressCourse} from '../../services/utilityFunctions';
 
 
 /**
@@ -89,50 +90,69 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 							<View className="flex-start items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
 							style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
-									<View className="w-full justify-between flex-row">
-										<Text className="text-3xl font-medium">title</Text>
+							
+								<View className="flex-column px-8 py-16 w-full justify-between">
+									
+									<View className="flex-row justify-between"> 
+										<Text className="text-3xl font-medium">{course.title}</Text>
 										<TouchableOpacity onPress={handleToggleBottomSheet}>
-											<Text>x</Text>
-										</TouchableOpacity>
+											<MaterialCommunityIcons name={'chevron-down'} size={25} color="gray"></MaterialCommunityIcons>
+										</TouchableOpacity>	
 									</View>
-									<View>
+										
+										<View className="flex-row items-start">
+											<MaterialCommunityIcons size={12} name={determineIcon(course.category)} color={'gray'}></MaterialCommunityIcons>
+												<Text className="text-xs">{course.category}</Text>	
+											
+											<MaterialCommunityIcons size={12} name="clock" color={'gray'}></MaterialCommunityIcons>
+												<Text className="text-xs">{course.estimatedHours}</Text>
+										</View>
+										
+										<CustomRating rating={course.rating} />
+										
+										<View className="h-2 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
+
+										<View className="py-16">
 										<Text>{course.description}</Text>
-									</View>
-									<View>
-										<CourseDetail
-											title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos, exercícios, leituras complementares)`}
-											icon="clock-outline"
-										/>
-										<CourseDetail
-											title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
-											icon="book-multiple-outline"
-										/>
-										<CourseDetail
-											title="Certificado de Conclusão"
-											icon="certificate-outline"
-										/>
-										<CourseDetail
-											title="Início imediato"
-											icon="clock-fast"
-										/>
-										<CourseDetail
-											title="Acesso total por 1 ano"
-											icon="calendar-month-outline"
-										/>
-										<CourseDetail
-											title="Assista onde e quando quiser! "
-											icon="cellphone-link"
-										/>
-									</View>
-									<View>
-										{
-											subscribed ? (
-												<AccessCourseButton course={course} />
-											) : (
-												<SubscriptionButton course={course} />
-											)
-										}
-									</View>
+										</View>
+										<View>
+											<CourseDetail
+												title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos, exercícios, leituras complementares)`}
+												icon="clock-outline"
+											/>
+											<CourseDetail
+												title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
+												icon="book-multiple-outline"
+											/>
+											<CourseDetail
+												title="Certificado de Conclusão"
+												icon="certificate-outline"
+											/>
+											<CourseDetail
+												title="Início imediato"
+												icon="clock-fast"
+											/>
+											<CourseDetail
+												title="Acesso total por 1 ano"
+												icon="calendar-month-outline"
+											/>
+											<CourseDetail
+												title="Assista onde e quando quiser! "
+												icon="cellphone-link"
+											/>
+										</View>
+										<View>
+											{
+												subscribed ? (
+													<AccessCourseButton course={course} />
+												) : (
+													<SubscriptionButton course={course} />
+												)
+											}
+										</View>
+								</View>
+								
+									
 							</View> 
 					</Modal>
 
