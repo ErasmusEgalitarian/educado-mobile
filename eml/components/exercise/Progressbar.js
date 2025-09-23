@@ -27,7 +27,7 @@ const CustomProgressBar = ({ progress, width, height, displayLabel = true }) => 
 	// Ensure progress is between 0 and 100
 	progress[0] = Math.min(100, Math.max(0, progress[0]));
 	if (isNaN(progress[0])){
-		progress = 0;
+		progress[0] = 0;
 	}
 
 	return (
