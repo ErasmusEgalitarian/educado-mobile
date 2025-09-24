@@ -88,31 +88,31 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 							<View className="flex-1" style={{ backgroundColor: 'rgba(255,255,255,0.5)'}}/>
 
-							<View className="flex-start items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
+							<View className="flex-start px-8 py-10 w-full h-full items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
 							style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
 							
-								<View className="flex-column px-8 py-16 w-full justify-between">
+								<View className="flex-column w-full">
 									
-									<View className="flex-row justify-between"> 
+									<View className="flex-row justify-between items-center mb-4"> 
 										<Text className="text-3xl font-medium">{course.title}</Text>
 										<TouchableOpacity onPress={handleToggleBottomSheet}>
-											<MaterialCommunityIcons name={'chevron-down'} size={25} color="gray"></MaterialCommunityIcons>
+											<MaterialCommunityIcons name={'chevron-down'} size={25} color="#383838"></MaterialCommunityIcons>
 										</TouchableOpacity>	
 									</View>
 										
-										<View className="flex-row items-start">
-											<MaterialCommunityIcons size={12} name={determineIcon(course.category)} color={'gray'}></MaterialCommunityIcons>
-												<Text className="text-xs">{course.category}</Text>	
-											
-											<MaterialCommunityIcons size={12} name="clock" color={'gray'}></MaterialCommunityIcons>
-												<Text className="text-xs">{course.estimatedHours}</Text>
-										</View>
+									<View className="flex-row items-center mb-4">
+										<MaterialCommunityIcons size={12} name={determineIcon(course.category)} color={'#628397'}/>
+										<Text className="text-xs text-grayScale ml-1 mr-2">{determineCategory(course.category)}</Text>
 										
-										<CustomRating rating={course.rating} />
-										
-										<View className="h-2 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
-
-										<View className="py-16">
+										<MaterialCommunityIcons size={12} name="clock" color={'#628397'}/>
+										<Text className="text-xs text-grayScale ml-1">{course.estimatedHours} horas</Text>
+									</View>
+									
+									<CustomRating rating={course.rating} />									
+								</View>
+								<View className="h-2 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
+								<View>
+									<View className="py-16">
 										<Text>{course.description}</Text>
 										</View>
 										<View>
