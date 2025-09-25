@@ -88,7 +88,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 							<View className="flex-1" style={{ backgroundColor: 'rgba(255,255,255,0.5)'}}/>
 
-							<View className="flex-start px-8 py-10 w-full h-full items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
+							<View className="flex-start px-8 py-10 w-full h-full justify-between items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
 							style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
 							
 								<View className="flex-column w-full">
@@ -108,54 +108,51 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 										<Text className="text-xs text-grayScale ml-1">{course.estimatedHours} horas</Text>
 									</View>
 									
-									<CustomRating rating={course.rating} />									
+									<CustomRating rating={course.rating} />	
+
+									<View className="h-2 border-b-[1px] w-full border-projectGray opacity-50 mt-4"></View>								
 								</View>
-								<View className="h-2 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
-								<View>
-									<View className="py-16">
-										<Text>{course.description}</Text>
-										</View>
-										<View>
-											<CourseDetail
-												title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos, exercícios, leituras complementares)`}
-												icon="clock-outline"
-											/>
-											<CourseDetail
-												title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
-												icon="book-multiple-outline"
-											/>
-											<CourseDetail
-												title="Certificado de Conclusão"
-												icon="certificate-outline"
-											/>
-											<CourseDetail
-												title="Início imediato"
-												icon="clock-fast"
-											/>
-											<CourseDetail
-												title="Acesso total por 1 ano"
-												icon="calendar-month-outline"
-											/>
-											<CourseDetail
-												title="Assista onde e quando quiser! "
-												icon="cellphone-link"
-											/>
-										</View>
-										<View>
-											{
-												subscribed ? (
-													<AccessCourseButton course={course} />
-												) : (
-													<SubscriptionButton course={course} />
-												)
-											}
-										</View>
+
+								<Text className="w-full text-lg py-16">{course.description}</Text>
+
+								<View className="w-full">
+									<CourseDetail
+										title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos, exercícios, leituras complementares)`}
+										icon="clock-outline"
+									/>
+									<CourseDetail
+										title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
+										icon="book-multiple-outline"
+									/>
+									<CourseDetail
+										title="Certificado de Conclusão"
+										icon="certificate-outline"
+									/>
+									<CourseDetail
+										title="Início imediato"
+										icon="clock-fast"
+									/>
+									<CourseDetail
+										title="Acesso total por 1 ano"
+										icon="calendar-month-outline"
+									/>
+									<CourseDetail
+										title="Assista onde e quando quiser! "
+										icon="cellphone-link"
+									/>
 								</View>
-								
-									
+
+								<View className="w-full">
+									{
+										subscribed ? (
+											<AccessCourseButton course={course} />
+										) : (
+											<SubscriptionButton course={course} />
+										)
+									}
+								</View>
 							</View> 
 					</Modal>
-
 				</View>
 
 			<View className="items-start absolute">

@@ -13,8 +13,8 @@ const CourseDetail = ({ title, icon }) => {
 
     return (
         <View className="flex-row items-center justify-start">
-            <MaterialCommunityIcons name={icon} size={13} color="#628397" />
-            <Text className="pl-1 text-xs text-projectBlack" >{title}</Text>
+            <MaterialCommunityIcons name={icon} size={24} color="#628397" />
+            <Text className="pl-1 text-s text-projectBlack" >{title}</Text>
         </View>
     );
 };
