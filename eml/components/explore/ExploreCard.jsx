@@ -37,8 +37,15 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 			className="bg-projectWhite rounded-lg shadow-sm shadow-projectBlack mb-4 mx-4 p-6 overflow-hidden"
 		>
 			<View className="flex-col items-center">
-				<View className="flex-row justify-between w-full items-center">
-					<Text className="text-projectBlack font-medium text-lg">{course.title}</Text>
+				<View className="flex-row justify-normal w-full items-center">
+
+					<Image
+						source={require('../../assets/images/courseIcon.png')}
+						alt="Icon"
+						className="w-5 h-5 mr-3"
+					/>
+
+					<Text className="text-projectBlack font-bold text-lg">{course.title}</Text>
 				</View>
 
 				<View className="h-1 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
@@ -54,12 +61,12 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 							<View className="w-2.5" />
 							<CardLabel
 								title={Utility.formatHours(course.estimatedHours)}
-								icon={'clock-outline'}
+								icon={'clock'}
 							/>
 							<View className="w-2.5" />
 							<CardLabel
 								title={Utility.getDifficultyLabel(course.difficulty)}
-								icon={'book-multiple-outline'}
+								icon={'equalizer'}
 							/>
 						</View>
 						<View className="h-1.25 opacity-50" />
