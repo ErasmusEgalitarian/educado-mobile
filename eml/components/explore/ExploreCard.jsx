@@ -143,9 +143,9 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 									<Text className="w-full text-m flex-start">{course.description}</Text>
 								</ScrollView>
 
-								<View className="flex-col w-full border border-solid border-grayScale rounded-2xl p-4">
+								<View className="flex-col w-full border border-solid border-grayScale rounded-2xl px-4 py-1">
 									<CourseDetail
-										title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos, exercícios, leituras complementares)`}
+										title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos,\n exercícios, leituras complementares)`}
 										icon="clock-outline"
 									/>
 									<CourseDetail
