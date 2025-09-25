@@ -26,7 +26,7 @@ const CustomRating = ({ rating = 0 }) => {
 				else if (index === fullStars && halfStar) {
 					return { icon: 'star-half-full', color: tailwindConfig.theme.colors.yellow };
 				} else {
-					return { icon: 'star-outline', color: tailwindConfig.theme.colors.projectGray };
+					return { icon: 'star-outline', color: tailwindConfig.theme.colors.yellow };
 				}
 			});
 
