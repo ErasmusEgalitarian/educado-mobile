@@ -117,11 +117,6 @@ export default function CourseCard({ course, isOnline}) {
 							</Text>
 						</View>
 					)}
-
-					{/* Main content overlay */}
-					{(!imageLoading || coverImage) && (
-						<View className="rounded-lg" style={{ height: 110 }} />
-					)}
 					
 					<View className="relative">
 						<View className="absolute top-0 left-0 right-0 bottom-0 bg-projectWhite opacity-95" />
