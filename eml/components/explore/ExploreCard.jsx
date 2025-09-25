@@ -115,7 +115,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 								<Text className="w-full text-lg py-16">{course.description}</Text>
 
-								<View className="w-full">
+								<View className="w-full border border-solid border-grayScale rounded-2xl p-5">
 									<CourseDetail
 										title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos, exercícios, leituras complementares)`}
 										icon="clock-outline"
