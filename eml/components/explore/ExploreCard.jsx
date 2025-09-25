@@ -111,12 +111,26 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 										</TouchableOpacity>	
 									</View>
 										
-									<View className="flex-row items-center mb-4">
-										<MaterialCommunityIcons size={12} name={determineIcon(course.category)} color={'#628397'}/>
-										<Text className="text-xs text-grayScale ml-1 mr-2">{determineCategory(course.category)}</Text>
-										
-										<MaterialCommunityIcons size={12} name="clock" color={'#628397'}/>
-										<Text className="text-xs text-grayScale ml-1">{course.estimatedHours} horas</Text>
+									<View className="flex-column mb-4">
+										<View className="flex-column items-start justify-start pb-2 flex-wrap">
+											<CardLabel
+												title={Utility.determineCategory(course.category)}
+												icon={Utility.determineIcon(course.category)}
+												color="#628397"
+											/>
+											<View className="w-2.5" />
+											<CardLabel
+												title={Utility.formatHours(course.estimatedHours)}
+												icon={'clock'}
+												color="#628397"
+											/>
+											<View className="w-2.5" />
+											<CardLabel
+												title={Utility.getDifficultyLabel(course.difficulty)}
+												icon={'equalizer'}
+												color="#628397"
+											/>
+										</View>
 									</View>
 									
 									<CustomRating rating={course.rating} />	
