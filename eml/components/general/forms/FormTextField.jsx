@@ -37,20 +37,18 @@ export default function FormTextField(props) {
 			<View className=''>
 				{/* Various properties for text input fields */}
 				<TextInput
-				className={
-                  `text-base w-full py-4 pl-[10px] bg-projectWhite rounded-lg ${
-                    props.bordered && !props.error ? 'border border-projectGray' : ''
-                  } ${
-                    props.error ? 'border border-error' : ''
-                  }`
-                }
-				placeholder={props.placeholder ?? ''} // Placeholder text to be displayed
-				keyboardType={props.keyboardType ?? 'default'} // Keyboard type (e.g. numeric, email-address, etc.)
-				autoComplete={props.autoComplete ?? 'off'} // Whether to enable auto-completion
-				secureTextEntry={props.secureTextEntry ?? false} // Whether to mask the input (for passwords, etc.)
-				passwordGuidelines={props.passwordGuidelines ?? false} // Whether to display password guidelines
-				onChangeText={props.onChangeText ? value => props.onChangeText(value) : null} // Callback function to be called when the text changes
-				value={props.value} // Value of the input
+					className={
+						`text-base w-full py-4 pl-[10px] bg-projectWhite rounded-lg ${props.bordered && !props.error ? 'border border-projectGray' : ''
+						} ${props.error ? 'border border-error bg-errorBox' : ''
+						}`
+					}
+					placeholder={props.placeholder ?? ''} // Placeholder text to be displayed
+					keyboardType={props.keyboardType ?? 'default'} // Keyboard type (e.g. numeric, email-address, etc.)
+					autoComplete={props.autoComplete ?? 'off'} // Whether to enable auto-completion
+					secureTextEntry={props.secureTextEntry ?? false} // Whether to mask the input (for passwords, etc.)
+					passwordGuidelines={props.passwordGuidelines ?? false} // Whether to display password guidelines
+					onChangeText={props.onChangeText ? value => props.onChangeText(value) : null} // Callback function to be called when the text changes
+					value={props.value} // Value of the input
 				/>
 			</View>
 		</View>
