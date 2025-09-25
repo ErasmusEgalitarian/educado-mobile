@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import { Link } from '@react-navigation/native';
 import CourseDetail from './CourseDetail';
 import { determineIcon, determineCategory, formatHours, checkProgressCourse} from '../../services/utilityFunctions';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 /**
@@ -124,9 +125,11 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 									<View className="h-2 border-b-[1px] w-full border-projectGray opacity-50 mt-4"></View>								
 								</View>
 
-								<Text className="w-full text-lg py-16">{course.description}</Text>
+								<ScrollView className="w-full max-h-48 py-4 inner-shadow">
+									<Text className="w-full text-m flex-start">{course.description}</Text>
+								</ScrollView>
 
-								<View className="w-full border border-solid border-grayScale rounded-2xl p-5">
+								<View className="flex-col w-full border border-solid border-grayScale rounded-2xl p-4">
 									<CourseDetail
 										title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos, exercícios, leituras complementares)`}
 										icon="clock-outline"
@@ -150,6 +153,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 									<CourseDetail
 										title="Assista onde e quando quiser! "
 										icon="cellphone-link"
+										className="mb-0"
 									/>
 								</View>
 

@@ -12,9 +12,9 @@ import PropTypes from 'prop-types';
 const CourseDetail = ({ title, icon }) => {
 
     return (
-        <View className="flex-row items-center justify-start mb-4">
-            <MaterialCommunityIcons name={icon} size={24} color="#628397" />
-            <Text className="pl-2 text-s text-projectBlack font-montserrat" >{title}</Text>
+        <View className="flex-row items-center justify-start">
+            <MaterialCommunityIcons name={icon} size={20} color="#628397" />
+            <Text className="pl-2 text-s text-projectBlack font-sans" >{title}</Text>
         </View>
     );
 };
