@@ -6,42 +6,27 @@
     const [values, setValues] = useState(Array(length).fill("")); // ["", "", "", "", "", ""]
     const inputs = useRef([]);
 
-    /* TODO: Want proper backspace handling????? -->
-        onChangeText cannot detect keyboard events, and onKeyPress
-        has limited android support, 3rd party library is needed
-    */
-
-    /*
-    const handleChange = (value, id) => {
-        if (!/^[0-9a-zA-Z]?$/.test(value)) return; // allow only a-z 0-9
-        // Id is index
-        const newValues = [...values];  
-        newValues[id] = value;
-        setValues(newValues);
-        onChange?.(newValues.join(""));
-
-        if(value && id < length - 1){
-            inputs.current[id + 1].focus();
-        }
-
-        // hide keyboard when last input is filled
-        if (value && id === length - 1) {
-            Keyboard.dismiss();
-        }
-    };
-    */
-
     const keyPress = (key, id) => {
         const newValues = [...values];  
-        console.log(id);
-        if(key === "Backspace" && id !== 0){
-            inputs.current[id - 1].focus();
+        if(key === "Backspace" &&  id >= 0){
+            console.log("Backspace id: " + id);
+            if(id === length - 1 && newValues[id] !== ""){
+                newValues[id] = "";
+                setValues(newValues);
+                return;
+            }
+
             newValues[id - 1] = "";
+            inputs.current[id - 1].focus();
             setValues(newValues);
         } else {
+            if(newValues[id] !== "" && id === length - 1) return;
             newValues[id] = key;   
-            if(id !== length - 1) inputs.current[id + 1].focus();
+            if(id !== length - 1){
+            inputs.current[id + 1].focus();
+            }
             setValues(newValues);
+            
         }
     };
 
@@ -54,7 +39,10 @@
                     value={val}
                     maxLength={1}
                     ref={(el) => (inputs.current[id] = el)}
-                    onKeyPress={({nativeEvent}) => keyPress(nativeEvent.key,id)}
+                    onKeyPress={({ nativeEvent }) => {
+                        const idFocused = inputs.current.findIndex((input) => input.isFocused());
+                        keyPress(nativeEvent.key, idFocused);
+                    }}
                     keyboardType="visible-password"
                     textAlign="center"
                 />
@@ -78,3 +66,5 @@ const styles = StyleSheet.create({
         marginHorizontal: 6,
     },
 });
+
+
