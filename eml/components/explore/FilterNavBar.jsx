@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SearchBar from './SearchBar';
-import { View, Text, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
+import Text from '../general/Text';
 import { ScrollView } from 'react-native-gesture-handler';
 import { categories } from './Categories';
 import PropTypes from 'prop-types';
@@ -46,9 +47,9 @@ function FilterNavBar({ onChangeText, onCategoryChange}) {
 								>
 									<Text
 										className={`${selectedCategory === category.label
-											? 'text-projectWhite font-bold'
-											: 'text-projectGray'
-										}`}
+											? 'text-projectWhite font-sans-bold'
+											: 'text-grayScale'
+										} text-sm font-sans-bold`}
 									>{category.label}</Text>
 								</Pressable>
 							))}

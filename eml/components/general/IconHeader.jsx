@@ -23,9 +23,9 @@ export default function IconHeader({ title}) {
 				<Image
 					source={require('../../assets/images/singleIcon.png')}
 					alt="Icon"
-					className="w-8 h-8 mr-2"
+					className="w-6 h-6 mr-4"
 				/>
-				<Text className="text-xl font-bold">{title}</Text>
+				<Text className="text-2xl font-sans-bold">{title}</Text>
             
 			</View>
 		</>

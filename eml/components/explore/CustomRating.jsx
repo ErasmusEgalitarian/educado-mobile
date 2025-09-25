@@ -47,7 +47,7 @@ const CustomRating = ({ rating = 0 }) => {
 				{ratingIcons.map((icon, index) => (
 					<MaterialCommunityIcons key={index} name={icon.icon} size={14} color={icon.color} />
 				))}
-				<Text className="pl-1 text-xs text-yellow font-bold">{rating.toFixed(1)} </Text>
+				<Text className="pl-1 text-xs text-yellow font-sans-bold">{rating.toFixed(1)} </Text>
 			</View>
 	);
 };

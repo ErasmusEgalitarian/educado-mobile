@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {Image, Modal, View, Button, Text, Dimensions, TouchableOpacity} from 'react-native';
+import {Image, Modal, View, Button, Dimensions, TouchableOpacity} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Text from '../general/Text';
 import UpdateDate from './ExploreUpdate';
 import CardLabel from './CardLabel';
 import CustomRating from './CustomRating';
@@ -45,7 +46,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 						className="w-5 h-5 mr-3"
 					/>
 
-					<Text className="text-projectBlack font-bold text-lg">{course.title}</Text>
+					<Text className="text-projectBlack font-sans-bold text-base">{course.title}</Text>
 				</View>
 
 				<View className="h-1 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
@@ -57,16 +58,19 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 							<CardLabel
 								title={Utility.determineCategory(course.category)}
 								icon={Utility.determineIcon(course.category)}
+								color="#628397"
 							/>
 							<View className="w-2.5" />
 							<CardLabel
 								title={Utility.formatHours(course.estimatedHours)}
 								icon={'clock'}
+								color="#628397"
 							/>
 							<View className="w-2.5" />
 							<CardLabel
 								title={Utility.getDifficultyLabel(course.difficulty)}
 								icon={'equalizer'}
+								color="#628397"
 							/>
 						</View>
 						<View className="h-1.25 opacity-50" />
@@ -84,7 +88,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 				<View className="flex-row justify-end">
 					<TouchableOpacity onPress={handleToggleBottomSheet} className="flex-row border-b border-tealButton items-center px-1 py-0.5">
-						<Text className="text-tealButton text-xs font-semibold mr-1">saiba mais</Text> 
+						<Text className="text-tealButton text-xs font-sans-semi-bold mr-1">saiba mais</Text> 
 						<MaterialCommunityIcons name="chevron-double-right" color='#35A1B1' size={12} />
 					</TouchableOpacity>
 					<Modal
@@ -101,7 +105,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 								<View className="flex-column w-full">
 									
 									<View className="flex-row justify-between items-center mb-4"> 
-										<Text className="text-3xl font-medium">{course.title}</Text>
+										<Text className="text-2xl font-sans-semi-bold">{course.title}</Text>
 										<TouchableOpacity onPress={handleToggleBottomSheet}>
 											<MaterialCommunityIcons name={'chevron-down'} size={25} color="#383838"></MaterialCommunityIcons>
 										</TouchableOpacity>	

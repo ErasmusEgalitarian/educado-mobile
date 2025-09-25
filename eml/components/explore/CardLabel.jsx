@@ -16,7 +16,7 @@ const CardLabel = ({ title, icon, color = 'gray' }) => {
 	return (
 		<View className="flex-row items-center justify-start">
 			<MaterialCommunityIcons name={icon} size={13} color={color} />
-			<Text className="pl-1 text-xs font-bold" style={{ color: color }}>{title}</Text>
+			<Text className="pl-1 text-xs font-sans-bold" style={{ color: color }}>{title}</Text>
 		</View>
 	);
 };
