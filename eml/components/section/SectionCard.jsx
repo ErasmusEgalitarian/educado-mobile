@@ -22,27 +22,27 @@ export default function SectionCard({ numOfEntries, title, progress, onPress, di
 	const isComplete = progress === numOfEntries ;
 	const inProgress = 0 < progress && progress < numOfEntries;
 	const progressText = isComplete ? 'Concluído' : inProgress ? 'Em progresso' : 'Não iniciado';
-	const progressTextColor = isComplete ? 'text-success' : 'text-projectBlack';
+	const progressTextColor = isComplete ? 'text-success' : 'text-cyanBlue';
 	disabledIcon = disabledIcon ? disabledIcon : 'lock-outline';
 
 
 	return (
 		<View>
 			<TouchableOpacity
-				className={`bg-secondary rounded-lg box-shadow-lg shadow-opacity-[1] mb-[15] mx-[18] overflow-hidden elevation-[8] ${disabled ? 'bg-bgLockedLesson' : ''}`}
+				className={`bg-secondary rounded-lg box-shadow-lg shadow-opacity-[1] mb-[15] mx-[18] overflow-hidden elevation-[8] ${disabled ? 'bg-disabled' : ''}`}
 				onPress={onPress}
 				disabled={disabled}
 			>
 				<View className="flex-row items-center justify-between px-[25] py-[15]">
 					<View>
-						<Text className="text-[16px] font-montserrat-bold text-projectBlack mb-2">
+						<Text className="text-[16px] font-montserrat text-projectBlack mb-2">
 							{title}
 						</Text>
 
 						<View className="flex-row items-center">
 							<Text className={`text-[14px] font-montserrat ${progressTextColor}`}>
-								{ disableProgressNumbers ? '' : progress + '/' +numOfEntries}
-								{' ' + progressText}
+								{ disableProgressNumbers ? '' : progress + '/' +numOfEntries + ' '}
+								{ progressText}
 							</Text>
 						</View>
 					</View>
