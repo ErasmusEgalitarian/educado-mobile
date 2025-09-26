@@ -51,7 +51,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 	return isPublished ? (
 		<View
-			className="bg-projectWhite rounded-lg shadow-sm shadow-projectBlack mb-4 mx-4 p-6 overflow-hidden"
+			className="bg-surfaceSubtleCyan rounded-lg shadow-sm shadow-black mb-4 mx-4 p-6 overflow-hidden"
 		>
 			<View className="flex-col items-center">
 				<View className="flex-row justify-normal w-full items-center">
@@ -62,10 +62,10 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 						className="w-5 h-5 mr-3"
 					/>
 
-					<Text className="text-projectBlack font-sans-bold text-base">{course.title}</Text>
+					<Text className="text-textTitle font-sans-bold text-base">{course.title}</Text>
 				</View>
 
-				<View className="h-1 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
+				<View className="h-1 border-b-[1px] w-full border-surfaceDisabled opacity-50 pt-2"></View>
 
 				<View className="w-full h-[0.5] pt-2" />
 				<View className="flex-row justify-between w-full items-start">
@@ -74,19 +74,19 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 							<CardLabel
 								title={Utility.determineCategory(course.category)}
 								icon={Utility.determineIcon(course.category)}
-								color="#628397"
+								color={tailwindConfig.theme.colors.grayScale}
 							/>
 							<View className="w-2.5 mb-1" />
 							<CardLabel
 								title={Utility.formatHours(course.estimatedHours)}
 								icon={'clock'}
-								color="#628397"
+								color={tailwindConfig.theme.colors.grayScale}
 							/>
 							<View className="w-2.5 mb-1" />
 							<CardLabel
 								title={Utility.getDifficultyLabel(course.difficulty)}
 								icon={'equalizer'}
-								color="#628397"
+								color={tailwindConfig.theme.colors.grayScale}
 							/>
 						</View>
 						<View className="h-1.25 opacity-50" />
@@ -99,13 +99,13 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 			</View>
 
 				<View className="py-7 flex-row items-center justify-between px-1">
-					<Text className="text-projectBlack text-m">{course.description}</Text>
+					<Text className="text-textTitle text-m">{course.description}</Text>
 				</View>
 
 				<View className="flex-row justify-end">
-					<TouchableOpacity onPress={handleToggleBottomSheet} className="flex-row border-b border-tealButton items-center px-1 py-0.5">
-						<Text className="text-tealButton text-xs font-sans-semi-bold mr-1">saiba mais</Text> 
-						<MaterialCommunityIcons name="chevron-double-right" color='#35A1B1' size={12} />
+					<TouchableOpacity onPress={handleToggleBottomSheet} className="flex-row border-b border-surfaceDefaultCyan items-center px-1 py-0.5">
+						<Text className="text-surfaceDefaultCyan text-xs font-sans-semi-bold mr-1">saiba mais</Text> 
+						<MaterialCommunityIcons name="chevron-double-right" color="surfaceDefaultCyan" size={12} />
 					</TouchableOpacity>
 					<Modal
 						animationType="slide"
@@ -113,17 +113,17 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 						visible={isBottomSheetOpen}
 						onRequestClose={handleToggleBottomSheet}>
 
-							<View className="flex-1" style={{ backgroundColor: 'rgba(255,255,255,0.5)'}}/>
+							<View className="flex-1" style={{ backgroundColor: tailwindConfig.theme.colors.surfaceSubtleCyan}}/>
 
-							<View className="flex-start px-8 py-10 w-full h-full justify-between items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
+							<View className="flex-start px-8 py-10 w-full h-full justify-between items-center absolute bottom-0 bg-surfaceSubtleCyan rounded-t-[40px] shadow-2xl shadow-black" 
 							style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
 							
 								<View className="flex-column w-full">
 									
 									<View className="flex-row justify-between items-center mb-4"> 
-										<Text className="text-2xl font-sans-semi-bold">{course.title}</Text>
+										<Text className="text-2xl font-sans-semi-bold text-textTitle">{course.title}</Text>
 										<TouchableOpacity onPress={handleToggleBottomSheet}>
-											<MaterialCommunityIcons name={'chevron-down'} size={25} color="#383838"></MaterialCommunityIcons>
+											<MaterialCommunityIcons name={'chevron-down'} size={25} color="textTitle"></MaterialCommunityIcons>
 										</TouchableOpacity>	
 									</View>
 										
@@ -132,19 +132,19 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 											<CardLabel 
 												title={Utility.determineCategory(course.category)}
 												icon={Utility.determineIcon(course.category)}
-												color="#628397"
+												color={tailwindConfig.theme.colors.grayScale}
 											/>
 											<View className="w-2.5 mb-1" />
 											<CardLabel
 												title={Utility.formatHours(course.estimatedHours)}
 												icon={'clock'}
-												color="#628397"
+												color={tailwindConfig.theme.colors.grayScale}
 											/>
 											<View className="w-2.5 mb-1" />
 											<CardLabel
 												title={Utility.getDifficultyLabel(course.difficulty)}
 												icon={'equalizer'}
-												color="#628397"
+												color={tailwindConfig.theme.colors.grayScale}
 											/>
 											<View className="w-2.5 mb-1" />
 											<View>
@@ -164,7 +164,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
 									</View>
 
-									<View className="border-b-[1px] w-full border-projectGray opacity-50"></View>								
+									<View className="border-b-[1px] w-full border-surfaceDisabled opacity-50"></View>								
 								</View>
 
 								<ScrollView className="w-full max-h-48 py-4 inner-shadow">
@@ -206,13 +206,13 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 												course={course} 
 												onPress={navigateCourse}>
 												<View className="flex-row items-center">
-													<Text className="text-projectWhite py-1 text-lg font-sans-bold mr-3">
+													<Text className="text-surfaceSubtle py-1 text-lg font-sans-bold mr-3">
 														Continuar Curso
 													</Text>
 													<MaterialCommunityIcons
 														name="play-circle-outline"
 														size={20}
-														color={tailwindConfig.theme.colors.projectWhite}
+														color={tailwindConfig.theme.colors.surfaceSubtle}
 													/>
 												</View>
 											</CourseButton> 
@@ -220,7 +220,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 											<CourseButton 
 												course={course} 
 												onPress={subscribeCourse}>
-												<Text className="text-projectWhite p-1 text-lg font-sans-bold">
+												<Text className="text-surfaceSubtle p-1 text-lg font-sans-bold">
 													Inscreva-se agora
 												</Text>
 											</CourseButton>
@@ -235,7 +235,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 				<View className="rotate-[315deg] items-center">
 					{
 						subscribed ? (
-							<Text className="bg-yellow text-xs text-projectWhite font-bold px-8 -left-8 -top-4 drop-shadow-sm">
+							<Text className="bg-surfaceYellow text-xs text-surfaceSubtle font-bold px-8 -left-8 -top-4 drop-shadow-sm">
               Inscrito
 							</Text>
 						) : null

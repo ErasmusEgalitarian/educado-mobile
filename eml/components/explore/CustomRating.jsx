@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
  * @returns {JSX.Element} - Rendered component
  */
 const CustomRating = ({ rating = 0 }) => {
-	const [ratingIcons, setRatingIcons] = useState(Array(5).fill({ icon: 'star-outline', color: tailwindConfig.theme.colors.projectGray }));
+	const [ratingIcons, setRatingIcons] = useState(Array(5).fill({ icon: 'star-outline'}));
 	const [noRating, setNoRating] = useState(false);
 
 	useEffect(() => {
@@ -21,12 +21,12 @@ const CustomRating = ({ rating = 0 }) => {
 		if (rating !== 0) {
 			const newRatingIcons = ratingIcons.map((icon, index) => {
 				if (index < fullStars) {
-					return { icon: 'star', color: tailwindConfig.theme.colors.yellow };
+					return { icon: 'star', color: tailwindConfig.theme.colors.surfaceYellow };
 				}
 				else if (index === fullStars && halfStar) {
-					return { icon: 'star-half-full', color: tailwindConfig.theme.colors.yellow };
+					return { icon: 'star-half-full', color: tailwindConfig.theme.colors.surfaceYellow };
 				} else {
-					return { icon: 'star-outline', color: tailwindConfig.theme.colors.yellow };
+					return { icon: 'star-outline', color: tailwindConfig.theme.colors.surfaceYellow };
 				}
 			});
 
@@ -40,14 +40,14 @@ const CustomRating = ({ rating = 0 }) => {
 	return (
 		noRating ? (
 			<View className="w-full flex-row items-start justify-start">
-				<Text className="pl-1 text-xs text-projectGray">Ainda sem avaliações</Text>
+				<Text className="pl-1 text-xs text-surfaceDisabled">Ainda sem avaliações</Text>
 			</View>
 		) :
 			<View className="w-full flex-row items-start justify-start">
 				{ratingIcons.map((icon, index) => (
 					<MaterialCommunityIcons key={index} name={icon.icon} size={14} color={icon.color} />
 				))}
-				<Text className="pl-1 text-xs text-yellow font-sans-bold">{rating.toFixed(1)} </Text>
+				<Text className="pl-1 text-xs text-surfaceYellow font-sans-bold">{rating.toFixed(1)} </Text>
 			</View>
 	);
 };

@@ -121,7 +121,7 @@ module.exports = {
       // ******************
       // ***** Others *****
       // ******************
-      surfaceYellow: '#FAC12F',
+      surfaceYellow: '#F1CC4F',
       
 
 

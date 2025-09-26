@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
  * @param time - Boolean value to determine to render the time label.
  * @returns {JSX.Element} - Returns a JSX element.
  */
-const CardLabel = ({ title, icon, color = 'gray' }) => {
+const CardLabel = ({ title, icon, color = 'textTitle' }) => {
 
 	return (
 		<View className="flex-row items-center justify-start">

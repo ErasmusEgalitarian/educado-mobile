@@ -18,7 +18,7 @@ const CourseButton = ({ course, onPress, children }) => {
         <View className="">
             <Pressable
                 onPress={() => onPress(course)}
-                className="w-full flex items-center justify-center rounded-2xl bg-tealButton p-2"
+                className="w-full flex items-center justify-center rounded-2xl bg-surfaceDefaultCyan p-2"
             >
                 {children}
             </Pressable>
