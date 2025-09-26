@@ -975,7 +975,7 @@ exports[`Ensure that the RegisterForm component renders correctly 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "backgroundColor": "#5ECCE9",
+            "backgroundColor": "#246670",
             "borderBottomLeftRadius": 8,
             "borderBottomRightRadius": 8,
             "borderTopLeftRadius": 8,

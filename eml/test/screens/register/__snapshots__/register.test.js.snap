@@ -21,7 +21,7 @@ exports[`Register screen Login screen renders 1`] = `
         "justifyContent": "flex-start",
       },
       {
-        "backgroundColor": "#F1F9FB",
+        "backgroundColor": "#FAFEFF",
       },
     ]
   }
@@ -1158,7 +1158,7 @@ exports[`Register screen Login screen renders 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   {
-                    "backgroundColor": "#5ECCE9",
+                    "backgroundColor": "#246670",
                     "borderBottomLeftRadius": 8,
                     "borderBottomRightRadius": 8,
                     "borderTopLeftRadius": 8,
