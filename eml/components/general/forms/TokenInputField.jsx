@@ -2,6 +2,16 @@
     import { View, TextInput, StyleSheet, Keyboard } from "react-native";
     import ShowAlert from "../ShowAlert";
 
+    // TODO: IF TOKEN IS CREATE. ENTER WITHOUT PRESSING BUTTON
+    // TODO: ERROR MESSAGE
+    // TODO: ADD INPUT MASKING THROUGH REACT NATIVE INPUT MASKING
+    // TODO: CREATE JAVA DOCS
+    /**
+     * The 6 input fields for the mobile verification SMS code
+     * @param {*} The  
+     * @returns A stringified token to login form
+     */
+
     export default function TokenInputField({ length = 6, onChange }) {
     const [values, setValues] = useState(Array(length).fill("")); // ["", "", "", "", "", ""]
     const inputs = useRef([]);
@@ -33,11 +43,9 @@
         const backspacePressed = (key === "Backspace");
         const lastField = id < length - 1;
         const currentFieldEmpty = newValues[id] === "";
-
-        if(backspacePressed) return;
-        if(!lastField) return;
-        if(currentFieldEmpty) return;
-
+        const notKeyPress = backspacePressed || !lastField || currentFieldEmpty;
+        if(notKeyPress) return;
+        
         newValues[id + 1] = key.toUpperCase();
         setValues(newValues);
         inputs.current[id + 1].focus();

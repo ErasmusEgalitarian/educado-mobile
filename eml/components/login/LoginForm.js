@@ -138,8 +138,8 @@ export default function LoginForm() {
 					</Text>
 				</View>
 				
-				<Text className="font-montserrat text-lg leading-5 text-center mb-6">
-					{ submittedPhoneNumber ? "Agora, insira o código enviado para você" : "Por favor, insira o seu número de telefone"}
+				<Text className="font-montserrat text-lg leading-5 w-48 text-center mb-6">
+					{ submittedPhoneNumber ? "Insira o código enviado para você" : "Por favor, insira o seu número de telefone"}
 				</Text>
 			</View>
 
@@ -151,7 +151,7 @@ export default function LoginForm() {
                             testId="passwordInput"
                             placeholder="(XX) XXXXX-XXXX " // Type your password
                             bordered={true}
-                            value={password}
+                            keyboardType={"numeric"}
                             onChangeText={(inputPassword) => {
                                 handlePhoneChange(inputPassword);
                                 setPassword(removeEmojis(inputPassword, password));
