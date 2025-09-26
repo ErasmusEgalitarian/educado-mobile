@@ -95,15 +95,7 @@ export default function SectionScreen({ route }) {
 										<View>
 											<Text className="text-[18px] font-montserrat-bold">{component.component.title}</Text>
 											<Text> 
-												{getProgressStatus(i)} 
-												{i < completedCompAmount ?
-													<MaterialCommunityIcons
-														testID={'check-circle'}
-														name={'check-circle'}
-														size={16}
-														color="green"
-													/> : ''
-												}
+												{getProgressStatus(i)}
 											</Text>
 										</View>
 										{ isDisabled ? (

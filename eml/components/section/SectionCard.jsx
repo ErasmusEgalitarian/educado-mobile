@@ -37,19 +37,7 @@ export default function SectionCard({ section, progress, onPress }) {
 							<Text className={`text-[14px] font-montserrat ${progressTextColor}`}>
 								{/* progress */}
 								{progress}/{section.components.length} {progressText}
-								
 							</Text>
-							<View className="ml-2">
-								{(isComplete &&
-									<MaterialCommunityIcons
-										testID={'check-circle'}
-										name={'check-circle'}
-										size={14}
-										color="green"
-										
-									/>
-								)}
-							</View>
 						</View>
 					</View>
 					<MaterialCommunityIcons
