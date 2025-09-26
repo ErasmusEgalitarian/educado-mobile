@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import { ScreenWidth, ScreenHeight } from '@rneui/base';
 import tailwindConfig from '../../tailwind.config';
 
-const projectColors = tailwindConfig.theme.colors;
-
 /**
  * A custom progress bar component.
  * @param {Object} props - The props object.
@@ -43,7 +41,7 @@ const CustomProgressBar = ({ progress, width, height, displayLabel = true }) => 
 			></Progress.Bar>
 			{displayLabel && (
 				<Text className='px-5 text-center font-montserrat-bold text-caption-medium text-projectBlack' 
-						style={{ color: tailwindConfig.theme.colors.graytext }}>
+					style={{ color: tailwindConfig.theme.colors.graytext }}>
 					{progress[1]}/{progress[2]}
 				</Text>
 			)}

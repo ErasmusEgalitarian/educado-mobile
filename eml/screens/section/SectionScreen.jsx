@@ -25,7 +25,7 @@ export default function SectionScreen({ route }) {
 	const { course } = route.params;
 	const navigation = useNavigation();
 	const [sections, setSections] = useState(null);
-    const [studentProgress, setStudentProgress] = useState([0, 0, 0]);
+	const [studentProgress, setStudentProgress] = useState([0, 0, 0]);
 	const [completedComponents, setCompletedComponents] = useState(0);
 
 	/**
@@ -37,14 +37,14 @@ export default function SectionScreen({ route }) {
 		setSections(sectionData);
 	}
 
-    const checkProgress = async () => {
-        const progress = await checkProgressCourse(course.courseId);
-        if (Array.isArray(progress)) {
-            setStudentProgress(progress);
-        } else {
-            setStudentProgress([0, 0, 0]);
-        }
-    };
+	const checkProgress = async () => {
+		const progress = await checkProgressCourse(course.courseId);
+		if (Array.isArray(progress)) {
+			setStudentProgress(progress);
+		} else {
+			setStudentProgress([0, 0, 0]);
+		}
+	};
 
 	const checkProgressInSection = async (sectionId) => {
 		const completed = await checkProgressSection(sectionId);

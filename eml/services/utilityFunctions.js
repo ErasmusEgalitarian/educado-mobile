@@ -208,28 +208,28 @@ function isFirstAttemptExercise(student, compId) {
 
 // Returns the students progress of a course in percentage, and also returns completed and total components
 export async function checkProgressCourse(courseId) {
-    try {
-        const student = await StorageService.getStudentInfo();
-        const sections = await StorageService.getSectionList(courseId);
+	try {
+		const student = await StorageService.getStudentInfo();
+		const sections = await StorageService.getSectionList(courseId);
 
-        let totalComponents = 0;
-        let progress = 0;
+		let totalComponents = 0;
+		let progress = 0;
 
-        for (let i = 0; i < sections.length; i++) {
-            totalComponents += sections[i].components.length;
-            for (let j = 0; j < sections[i].components.length; j++) {
-                if (isComponentCompleted(student, sections[i].components[j].compId)) {
-                    progress++;
-                }
-            }
-        }
+		for (let i = 0; i < sections.length; i++) {
+			totalComponents += sections[i].components.length;
+			for (let j = 0; j < sections[i].components.length; j++) {
+				if (isComponentCompleted(student, sections[i].components[j].compId)) {
+					progress++;
+				}
+			}
+		}
 
-        let progressProcent = (progress / totalComponents) * 100;
-        progressProcent = Math.floor(progressProcent); // Round down to the nearest integer
-        return [progressProcent, progress, totalComponents];
-    } catch (e) {
-        return [0, 0, 0];
-    }
+		let progressProcent = (progress / totalComponents) * 100;
+		progressProcent = Math.floor(progressProcent); // Round down to the nearest integer
+		return [progressProcent, progress, totalComponents];
+	} catch (e) {
+		return [0, 0, 0];
+	}
 }
 
 // Returns the students progress of a section

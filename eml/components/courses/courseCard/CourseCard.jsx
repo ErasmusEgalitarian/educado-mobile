@@ -6,7 +6,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CustomProgressBar from '../../exercise/Progressbar';
 import tailwindConfig from '../../../tailwind.config';
 import { determineIcon, determineCategory, formatHours, checkProgressCourse} from '../../../services/utilityFunctions';
-import DownloadCourseButton from './DownloadCourseButton';
 import PropTypes from 'prop-types';
 import { checkCourseStoredLocally } from '../../../services/StorageService';
 
@@ -38,18 +37,16 @@ export default function CourseCard({ course, isOnline}) {
 
 	const layout = downloaded || isOnline ? enabledUI : disabledUI;
 
-	let isDisabled = layout === disabledUI;
-
 	return (
 		<Pressable
-		testID="courseCard"
-		className={layout}
-		style={{
-			backgroundColor: 'white',
-			borderRadius: 8,
-			elevation: 4,
-			shadowColor: '#28363E',
-		}}
+			testID="courseCard"
+			className={layout}
+			style={{
+				backgroundColor: 'white',
+				borderRadius: 8,
+				elevation: 4,
+				shadowColor: '#28363E',
+			}}
 			onPress={() => { layout === enabledUI ?
 				navigation.navigate('Section', {
 					course: course,
@@ -64,7 +61,7 @@ export default function CourseCard({ course, isOnline}) {
 				
 				</View>
 				<View className="h-[1] bg-disable m-[2%]" />
-				<View className="flex-row flex-wrap items-center justify-start">
+				<View className="flex-col items-start justify-start">
 					<View className="flex-row items-center">
 						<MaterialCommunityIcons size={18} name={determineIcon(course.category)} color={tailwindConfig.theme.colors.graytext}></MaterialCommunityIcons>
 						<Text className="mx-[2.5%] my-[3%]">{determineCategory(course.category)}</Text>
@@ -84,9 +81,9 @@ export default function CourseCard({ course, isOnline}) {
 						}}
 					>
 						<MaterialCommunityIcons
-  							name="chevron-right"
-  							size={18}
-  							color={tailwindConfig.theme.colors.primary}/>
+							name="chevron-right"
+							size={18}
+							color={tailwindConfig.theme.colors.primary}/>
 					</Pressable>
 				</View>
 			</View>

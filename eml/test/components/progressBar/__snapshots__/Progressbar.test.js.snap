@@ -27,7 +27,7 @@ exports[`<CustomProgressBar /> Displays 0% for no progress (0/10) 1`] = `
     indeterminate={false}
     indeterminateAnimationDuration={1000}
     onLayout={[Function]}
-    progress={0}
+    progress={NaN}
     style={
       [
         {
@@ -54,10 +54,10 @@ exports[`<CustomProgressBar /> Displays 0% for no progress (0/10) 1`] = `
               "translateX": -2.842170943040401e-14,
             },
             {
-              "translateX": -375,
+              "translateX": NaN,
             },
             {
-              "scaleX": 0.0001,
+              "scaleX": NaN,
             },
           ],
         }
@@ -123,7 +123,7 @@ exports[`<CustomProgressBar /> Displays 25% (2/8) 1`] = `
     indeterminate={false}
     indeterminateAnimationDuration={1000}
     onLayout={[Function]}
-    progress={0.25}
+    progress={NaN}
     style={
       [
         {
@@ -150,10 +150,10 @@ exports[`<CustomProgressBar /> Displays 25% (2/8) 1`] = `
               "translateX": -2.842170943040401e-14,
             },
             {
-              "translateX": -281.25,
+              "translateX": NaN,
             },
             {
-              "scaleX": 0.250075,
+              "scaleX": NaN,
             },
           ],
         }
@@ -219,7 +219,7 @@ exports[`<CustomProgressBar /> Displays 50% (5/10) 1`] = `
     indeterminate={false}
     indeterminateAnimationDuration={1000}
     onLayout={[Function]}
-    progress={0.5}
+    progress={NaN}
     style={
       [
         {
@@ -246,10 +246,10 @@ exports[`<CustomProgressBar /> Displays 50% (5/10) 1`] = `
               "translateX": -2.842170943040401e-14,
             },
             {
-              "translateX": -187.5,
+              "translateX": NaN,
             },
             {
-              "scaleX": 0.50005,
+              "scaleX": NaN,
             },
           ],
         }
@@ -315,7 +315,7 @@ exports[`<CustomProgressBar /> Displays 100% for full progress (10/10) 1`] = `
     indeterminate={false}
     indeterminateAnimationDuration={1000}
     onLayout={[Function]}
-    progress={1}
+    progress={NaN}
     style={
       [
         {
@@ -342,10 +342,10 @@ exports[`<CustomProgressBar /> Displays 100% for full progress (10/10) 1`] = `
               "translateX": -2.842170943040401e-14,
             },
             {
-              "translateX": 0,
+              "translateX": NaN,
             },
             {
-              "scaleX": 1,
+              "scaleX": NaN,
             },
           ],
         }
@@ -411,7 +411,7 @@ exports[`<CustomProgressBar /> Limits display to 0% for negative progress (-2/10
     indeterminate={false}
     indeterminateAnimationDuration={1000}
     onLayout={[Function]}
-    progress={0}
+    progress={NaN}
     style={
       [
         {
@@ -438,10 +438,10 @@ exports[`<CustomProgressBar /> Limits display to 0% for negative progress (-2/10
               "translateX": -2.842170943040401e-14,
             },
             {
-              "translateX": -375,
+              "translateX": NaN,
             },
             {
-              "scaleX": 0.0001,
+              "scaleX": NaN,
             },
           ],
         }
@@ -507,7 +507,7 @@ exports[`<CustomProgressBar /> Limits display to 100% for excess progress (15/10
     indeterminate={false}
     indeterminateAnimationDuration={1000}
     onLayout={[Function]}
-    progress={1}
+    progress={NaN}
     style={
       [
         {
@@ -534,10 +534,10 @@ exports[`<CustomProgressBar /> Limits display to 100% for excess progress (15/10
               "translateX": -2.842170943040401e-14,
             },
             {
-              "translateX": 0,
+              "translateX": NaN,
             },
             {
-              "scaleX": 1,
+              "scaleX": NaN,
             },
           ],
         }
