@@ -12,7 +12,7 @@
      * @returns A stringified token to login form
      */
 
-    export default function TokenInputField({ length = 6, onChange }) {
+    export default function TokenInputField({ length = 6, onChange, error }) {
     const [values, setValues] = useState(Array(length).fill("")); // ["", "", "", "", "", ""]
     const inputs = useRef([]);
 
@@ -48,16 +48,18 @@
         
         newValues[id + 1] = key.toUpperCase();
         setValues(newValues);
+        onChange?.(newValues.join(""));
         inputs.current[id + 1].focus();
 
     };
 
     return (
-        <View style={styles.container}>
+        <View className="flex-row justify-around">
             {values.map((val, id) => (
                 <TextInput
+                    className="border-2 w-12 h-12 rounded-xl text-lg text-center"
+                    style={{ borderColor: error ? 'red' : "black" }} 
                     key={id}
-                    style={styles.input}
                     value={val}
                     maxLength={1}
                     ref={(el) => (inputs.current[id] = el)}
@@ -70,21 +72,5 @@
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container:{
-        flexDirection: "row",
-        justifyContent: "center",
-    },
-    input: {
-        width: 50,
-        height: 50,
-        borderWidth: 2,
-        borderRadius: 10,
-        fontSize: 20,
-        borderColor: "lightgrey",
-        marginHorizontal: 6,
-    },
-});
 
 
