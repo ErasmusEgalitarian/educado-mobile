@@ -7,7 +7,7 @@ module.exports = {
   ],
   theme: {
     colors: {
-      bgprimary_custom: '#166276',
+      bgprimary_custom: '#35A1B1',
       bgPrimary: '#C9E5EC',
       primary_custom: '#166276',
       secondary: '#F1F9FB',
@@ -32,7 +32,7 @@ module.exports = {
       profileCircle: '#166276',
       pointsText: '#C1A146',
       pointsCoin: '#AD872D',
-      progressBar: '#166276',
+      progressBar: '#35A1B1',
       progressBarUnFilled: '#E4E4E4',  // <- This stands more out from background, but Figma = #E4F2F5
       badgesGreen: '#8CC43B',
       badgesPurple: '#C383F7',
