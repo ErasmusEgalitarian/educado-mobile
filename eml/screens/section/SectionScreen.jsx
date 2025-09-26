@@ -85,7 +85,7 @@ export default function SectionScreen({ route }) {
 							return (
 								<TouchableOpacity 
 									key={i}
-									className={`bg-secondary border-[1px] border-lightGray rounded-lg shadow-lg shadow-opacity-[0.3] mb-[15] mx-[18] overflow-hidden elevation-[8] ${isDisabled ? 'opacity-50' : ''}`}
+									className={`bg-secondary rounded-lg box-shadow-lg shadow-opacity-[1] mb-[15] mx-[18] overflow-hidden elevation-[8] ${isDisabled ? 'bg-bgLockedLesson' : ''}`}
 									onPress={() => { navigateToComponent(i); }}
 									disabled={isDisabled}
 								>

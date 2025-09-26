@@ -38,6 +38,7 @@ module.exports = {
       badgesPurple: '#C383F7',
       badgesBlue: '#54ADF1',
       unselectedStar: '#CBCAB8',
+        bgLockedLesson: '#EBF0F2'
     },
     fontFamily: {
       montserrat: ['Montserrat-Regular'],
