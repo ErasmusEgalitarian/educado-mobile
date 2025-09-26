@@ -175,7 +175,6 @@ export default function CourseOverviewScreen({ route }) {
 									{/* TODO: Points should be implemented */}
 									<Text>?? pontos</Text>
 								</View>
-								<MaterialCommunityIcons name="circle-small" size={30} color="gray"/>
 								<View className="flex flex-row">
 									<MaterialCommunityIcons name="lightning-bolt" size={20} color="orange"/>
 									<Text>{studentProgress}% concluído</Text>
