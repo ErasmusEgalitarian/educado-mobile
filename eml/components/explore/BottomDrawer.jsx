@@ -1,22 +1,20 @@
 import React from 'react';
 import tailwindConfig from '../../tailwind.config';
 import {Modal, View, useWindowDimensions, TouchableOpacity} from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
 import Text from '../general/Text';
 import CardLabel from './CardLabel';
 import CustomRating from './CustomRating';
 import CourseButton from './CourseButton';
 import * as Utility from '../../services/utilityFunctions';
 import CourseDetail from './CourseDetail';
-import { ScrollView } from 'react-native-gesture-handler';
-import { subscribe, addCourseToStudent } from '../../services/StorageService';
-import { useNavigation } from '@react-navigation/native';
-
-
+import {ScrollView} from 'react-native-gesture-handler';
+import {subscribe, addCourseToStudent} from '../../services/StorageService';
+import {useNavigation} from '@react-navigation/native';
 
 
 const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
-    const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+    const {height: windowHeight, width: windowWidth} = useWindowDimensions();
 
     const navigation = useNavigation();
 
@@ -24,12 +22,12 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
         onPress(course);
         subscribe(course.courseId);
         addCourseToStudent(course.courseId);
-        navigation.navigate('Section', { course });
+        navigation.navigate('Section', {course});
     };
     
     const navigateCourse = (course) => {
         onPress(course);
-        navigation.navigate('Section', { course });
+        navigation.navigate('Section', {course});
     }
     
     return (
@@ -39,20 +37,21 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
         visible={drawerState}
         onRequestClose={() => onPress(course)}>
 
-            <View className="flex-1" style={{ backgroundColor: tailwindConfig.theme.colors.surfaceSubtleCyan}}/>
+            <View className="flex-1" style={{backgroundColor: tailwindConfig.theme.colors.surfaceSubtleCyan}}/>
 
-            <View className="flex-start px-8 py-10 w-full h-full justify-between items-center absolute bottom-0 bg-surfaceSubtleCyan rounded-t-[40px] shadow-2xl shadow-black" 
+            <View className="flex-start px-8 py-10 w-full h-full justify-between absolute bottom-0 bg-surfaceSubtleCyan rounded-t-[40px] shadow-2xl shadow-black" 
             style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
             
-                <View className="flex-column w-full">
+                
                     
-                    <View className="flex-row justify-between items-center mb-4"> 
-                        <Text className="text-2xl font-sans-semi-bold text-textTitle">{course.title}</Text>
-                        <TouchableOpacity onPress={() => onPress(course)}>
-                            <MaterialCommunityIcons name={'chevron-down'} size={25} color="textTitle"></MaterialCommunityIcons>
-                        </TouchableOpacity>	
-                    </View>
+                <View className="flex-row justify-between items-center mb-4"> 
+                    <Text className="text-2xl font-sans-semi-bold text-textTitle">{course.title}</Text>
+                    <TouchableOpacity onPress={() => onPress(course)}>
+                        <MaterialCommunityIcons name={'chevron-down'} size={25} color="textTitle"/>
+                    </TouchableOpacity>	
+                </View>
                         
+                    
                     <View className="flex-column mb-4">
                         <View className="flex-column items-start justify-start pb-2 flex-wrap">
                             <CardLabel 
@@ -60,19 +59,19 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
                                 icon={Utility.determineIcon(course.category)}
                                 color={tailwindConfig.theme.colors.grayScale}
                             />
-                            <View className="w-2.5 mb-1" />
+                            <View className="w-2.5 mb-1"/>
                             <CardLabel
                                 title={Utility.formatHours(course.estimatedHours)}
                                 icon={'clock'}
                                 color={tailwindConfig.theme.colors.grayScale}
                             />
-                            <View className="w-2.5 mb-1" />
+                            <View className="w-2.5 mb-1"/>
                             <CardLabel
                                 title={Utility.getDifficultyLabel(course.difficulty)}
                                 icon={'equalizer'}
                                 color={tailwindConfig.theme.colors.grayScale}
                             />
-                            <View className="w-2.5 mb-1" />
+                            <View className="w-2.5 mb-1"/>
                             <View>
                             {
                                 subscribed ? (
@@ -84,16 +83,18 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
                                 ) : null
                             }												
                             </View>	
-                            <CustomRating rating={course.rating} />
+                            <CustomRating rating={course.rating}/>
                         </View>
                         
 
                     </View>
 
-                    <View className="border-b-[1px] w-full border-surfaceDisabled opacity-50"></View>								
-                </View>
 
-                <ScrollView className="w-full max-h-48 py-4 inner-shadow">
+
+                <View className="border-b-[1px] w-full border-surfaceDisabled opacity-50"/>								
+                
+
+                <ScrollView className="w-full max-h-24 my-4 inner-shadow">
                     <Text className="w-full text-m flex-start">{course.description}</Text>
                 </ScrollView>
 
@@ -156,10 +157,6 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
             </View> 
     </Modal>
 
-
-        
-
-        
     )
 }
 
