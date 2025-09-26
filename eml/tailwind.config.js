@@ -11,22 +11,22 @@ module.exports = {
       // ***** Gray Scale *****
       // **********************
       // Surface
-      surfaceSubtle: '#FDFEFF',
-      surfaceDefault: '#EBF0F2',
-      surfaceDisabled: '#C1CFD7',
+      surfaceSubtleGrayscale: '#FDFEFF',
+      surfaceDefaultGrayscale: '#EBF0F2',
+      surfaceDisabledGrayscale: '#C1CFD7',
 
       // Border
-      borderDefault: '#809CAD',
-      borderDisabled: '#9FB4C1',
-      borderDarker: '#3A4E5A',
+      borderDefaultGrayscale: '#809CAD',
+      borderDisabledGrayscale: '#9FB4C1',
+      borderDarkerGrayscale: '#3A4E5A',
 
       // Text
-      textTitle: '#141B1F',
-      textBody: '#28363E',
-      textSubtitle: '#28363E',
-      textCaption: '#28363E',
-      textNegative: '#28363E',
-      textDisabled: '#28363E',
+      textTitleGrayscale: '#141B1F',
+      textBodyGrayscale: '#28363E',
+      textSubtitleGrayscale: '#28363E',
+      textCaptionGrayscale: '#28363E',
+      textNegativeGrayscale: '#28363E',
+      textDisabledGrayscale: '#28363E',
 
       // ******************
       // ***** Cyan *******
