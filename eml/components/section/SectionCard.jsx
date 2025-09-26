@@ -18,18 +18,18 @@ import PropTypes from 'prop-types';
  * @returns {JSX.Element} - The SectionCard component.
  */
 export default function SectionCard({ numOfEntries, title, progress, onPress, disabled, icon, disabledIcon, disableProgressNumbers }) {
-	disableProgressNumbers = disableProgressNumbers === undefined ? false : disableProgressNumbers;
+	disabledIcon ??= 'lock-outline';
+	disabled ??= false;
+	disableProgressNumbers ??= false;
 	const isComplete = progress === numOfEntries ;
 	const inProgress = 0 < progress && progress < numOfEntries;
 	const progressText = isComplete ? 'Concluído' : inProgress ? 'Em progresso' : 'Não iniciado';
 	const progressTextColor = isComplete ? 'text-success' : 'text-cyanBlue';
-	disabledIcon ??= 'lock-outline';
-	disabled ??= false;
 
 	return (
 		<View>
 			<TouchableOpacity
-				className={`bg-secondary rounded-lg box-shadow-lg shadow-opacity-[1] mb-[15] mx-[18] overflow-hidden elevation-[8] ${disabled ? 'bg-disabled' : ''}`}
+				className={`rounded-lg box-shadow-lg shadow-opacity-[1] mb-[15] mx-[18] overflow-hidden elevation-[8] ${disabled ? 'bg-disabled' : 'bg-secondary'}`}
 				onPress={onPress}
 				disabled={disabled}
 			>
