@@ -6,8 +6,12 @@
     const [values, setValues] = useState(Array(length).fill("")); // ["", "", "", "", "", ""]
     const inputs = useRef([]);
 
+    // Handles backspace logic
     const handleChange = (value, id) => {
-        if (!/^[0-9a-zA-Z]?$/.test(value)) return; // allow only a-z 0-9
+
+        // There can only be 0-1 and A-z so return on anything that is not these values
+        if (!/^[0-9a-zA-Z]?$/.test(value)) return;
+
         const newValues = [...values];
         newValues[id] = value.toUpperCase();
         setValues(newValues);
@@ -17,19 +21,27 @@
             inputs.current[id - 1].focus();
         }
 
-        if (value && id === length - 1) {
-            Keyboard.dismiss();
-        }
+        // TODO: ASK PO IF THEY WANT KEYBOARD TO BE DISMISSED AFTER TYPING AND FIX CODE IF NECESSARY
+        // if (id === length - 1) {
+        //     Keyboard.dismiss();
+        // }
     };
 
+    // Handles typing logic
     const keyPress = (key, id) => {
         const newValues = [...values];
+        const backspacePressed = (key === "Backspace");
+        const lastField = id < length - 1;
+        const currentFieldEmpty = newValues[id] === "";
 
-        if(newValues[id] !== "" && key !== "Backspace" && id < length - 1){
-            newValues[id + 1] = key.toUpperCase();
-            setValues(newValues);
-            inputs.current[id + 1].focus();
-        }
+        if(backspacePressed) return;
+        if(!lastField) return;
+        if(currentFieldEmpty) return;
+
+        newValues[id + 1] = key.toUpperCase();
+        setValues(newValues);
+        inputs.current[id + 1].focus();
+
     };
 
     return (
