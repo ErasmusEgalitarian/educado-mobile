@@ -211,7 +211,12 @@ export default function CourseOverviewScreen({ route }) {
 							<View>
 								{sections.map((section, i) => {
 									const completedComponents = sectionProgress[section.sectionId] || 0;
-									return <SectionCard key={i} section={section} progress={completedComponents} onPress={() => navigateToSpecifiedSection(section)}></SectionCard>;
+									return <SectionCard
+										numOfEntries={section.components.length}
+										title={section.title}
+										icon="chevron-right" key={i} 
+										progress={completedComponents} 
+										onPress={() => navigateToSpecifiedSection(section)}></SectionCard>;
 								})}
 							</View>
 						</View>

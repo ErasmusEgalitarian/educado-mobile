@@ -7,6 +7,7 @@ import * as StorageService from '../../services/StorageService';
 import { checkProgressSection } from '../../services/utilityFunctions';
 import { ScrollView } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
+import SectionCard from '../../components/section/SectionCard';
 
 
 
@@ -42,11 +43,11 @@ export default function SectionScreen({ route }) {
 
 	const getProgressStatus = (compIndex) => {
 		if(compIndex < completedCompAmount) {
-			return 'Concluído';
+			return [2,2];
 		} else if (compIndex == completedCompAmount) {
-			return 'Em progresso';
+			return [1,2];
 		} else {
-			return 'Não iniciado';
+			return [0,2];
 		}
 	};
 
@@ -60,6 +61,13 @@ export default function SectionScreen({ route }) {
 			parsedCourse: course,
 			parsedComponentIndex: compIndex
 		});
+	};
+	const getIcon = (component) => {
+		return component.type === 'exercise' ? (
+			'book-open-blank-variant'
+		) : component.component.contentType === 'text' ? (
+			'book-edit'
+		) : 'play-circle';
 	};
 
 	return (
@@ -84,32 +92,19 @@ export default function SectionScreen({ route }) {
 					<View>
 						{components.map((component, i) => {
 							const isDisabled = i > completedCompAmount;
+							const [progress, amount] = getProgressStatus(i);
 							return (
-								<TouchableOpacity 
+								<SectionCard
+									disableProgressNumbers={true}
+									numOfEntries={amount}
+									progress={progress}
+									title={component.component.title}
+									icon={getIcon(component)}
+									disabledIcon="lock-outline"
 									key={i}
-									className={`bg-secondary rounded-lg box-shadow-lg shadow-opacity-[1] mb-[15] mx-[18] overflow-hidden elevation-[8] ${isDisabled ? 'bg-bgLockedLesson' : ''}`}
-									onPress={() => { navigateToComponent(i); }}
+									onPress={() => navigateToComponent(i)}
 									disabled={isDisabled}
-								>
-									<View className="flex-row items-center justify-between px-[25] py-[15]">
-										<View>
-											<Text className="text-[18px] font-montserrat-bold">{component.component.title}</Text>
-											<Text> 
-												{getProgressStatus(i)}
-											</Text>
-										</View>
-										{ isDisabled ? (
-											<MaterialCommunityIcons name="lock-outline" size={30} color="#166276"/>
-										) : component.type === 'exercise' ? (
-											<MaterialCommunityIcons name="book-open-blank-variant" size={30} color="#166276"/>
-										) : component.component.contentType === 'text' ? (
-											<MaterialCommunityIcons name="book-edit" size={30} color="#166276"/>
-										) : (
-											<MaterialCommunityIcons name="play-circle" size={30} color="#166276"/>
-										)}
-										
-									</View>
-								</TouchableOpacity>
+								/>
 							);
 						})}
 					</View>
