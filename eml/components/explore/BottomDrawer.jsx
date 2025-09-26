@@ -34,127 +34,132 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
     
     return (
         <Modal
-            animationType="slide"
-            transparent={true}
-            visible={drawerState}
-            onRequestClose={() => onPress(course)}>
+        animationType="slide"
+        transparent={true}
+        visible={drawerState}
+        onRequestClose={() => onPress(course)}>
 
-                <View className="flex-1" style={{ backgroundColor: 'rgba(255,255,255,0.5)'}}/>
+            <View className="flex-1" style={{ backgroundColor: tailwindConfig.theme.colors.surfaceSubtleCyan}}/>
 
-                <View className="flex-start px-8 py-10 w-full h-full justify-between items-center absolute bottom-0 bg-projectWhite rounded-t-[40px] shadow-2xl shadow-projectBlack" 
-                style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
-                
-                    <View className="flex-column w-full">
+            <View className="flex-start px-8 py-10 w-full h-full justify-between items-center absolute bottom-0 bg-surfaceSubtleCyan rounded-t-[40px] shadow-2xl shadow-black" 
+            style={{height: windowHeight * 0.87, width: windowWidth * 1}}>
+            
+                <View className="flex-column w-full">
+                    
+                    <View className="flex-row justify-between items-center mb-4"> 
+                        <Text className="text-2xl font-sans-semi-bold text-textTitle">{course.title}</Text>
+                        <TouchableOpacity onPress={() => onPress(course)}>
+                            <MaterialCommunityIcons name={'chevron-down'} size={25} color="textTitle"></MaterialCommunityIcons>
+                        </TouchableOpacity>	
+                    </View>
                         
-                        <View className="flex-row justify-between items-center mb-4"> 
-                            <Text className="text-2xl font-sans-semi-bold">{course.title}</Text>
-                            <TouchableOpacity onPress={() => onPress(course)}>
-                                <MaterialCommunityIcons name={'chevron-down'} size={25} color="#383838"></MaterialCommunityIcons>
-                            </TouchableOpacity>	
-                        </View>
-                            
-                        <View className="flex-column mb-4">
-                            <View className="flex-column items-start justify-start pb-2 flex-wrap">
-                                <CardLabel 
-                                    title={Utility.determineCategory(course.category)}
-                                    icon={Utility.determineIcon(course.category)}
-                                    color="#628397"
-                                />
-                                <View className="w-2.5 mb-1" />
-                                <CardLabel
-                                    title={Utility.formatHours(course.estimatedHours)}
-                                    icon={'clock'}
-                                    color="#628397"
-                                />
-                                <View className="w-2.5 mb-1" />
-                                <CardLabel
-                                    title={Utility.getDifficultyLabel(course.difficulty)}
-                                    icon={'equalizer'}
-                                    color="#628397"
-                                />
-                                <View className="w-2.5 mb-1" />
-                                <View>
-                                {
-                                    subscribed ? (
-                                        <View className="w-full flex-row mb-1">
-                                            <MaterialCommunityIcons name="check-circle" size={13} color={tailwindConfig.theme.colors.surfaceDefaultGreen}/>
-                                            <Text className="pl-1 text-xs font-sans-bold flex-start text-surfaceDefaultGreen">Inscrição realizada</Text>
-                                        </View>
-                                        
-                                    ) : null
-                                }												
-                                </View>	
-                                <CustomRating rating={course.rating} />
-                            </View>
-                            
-
-                        </View>
-
-                        <View className="border-b-[1px] w-full border-projectGray opacity-50"></View>								
-                    </View>
-
-                    <ScrollView className="w-full max-h-48 py-4 inner-shadow">
-                        <Text className="w-full text-m flex-start">{course.description}</Text>
-                    </ScrollView>
-
-                    <View className="flex-col w-full border border-solid border-grayScale rounded-2xl px-4 py-1">
-                        <CourseDetail
-                            title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos,\n exercícios, leituras complementares)`}
-                            icon="clock-outline"
-                        />
-                        <CourseDetail
-                            title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
-                            icon="book-multiple-outline"
-                        />
-                        <CourseDetail
-                            title="Certificado de Conclusão"
-                            icon="certificate-outline"
-                        />
-                        <CourseDetail
-                            title="Início imediato"
-                            icon="clock-fast"
-                        />
-                        <CourseDetail
-                            title="Acesso total por 1 ano"
-                            icon="calendar-month-outline"
-                        />
-                        <CourseDetail
-                            title="Assista onde e quando quiser! "
-                            icon="cellphone-link"
-                            className="mb-0"
-                        />
-                    </View>
-
-                    <View className="w-full">
-                        {
-                            subscribed ? (
-                                <CourseButton 
-                                    course={course} 
-                                    onPress={navigateCourse}>
-                                    <View className="flex-row items-center">
-                                        <Text className="text-projectWhite py-1 text-lg font-sans-bold mr-3">
-                                            Continuar Curso
-                                        </Text>
-                                        <MaterialCommunityIcons
-                                            name="play-circle-outline"
-                                            size={20}
-                                            color={tailwindConfig.theme.colors.projectWhite}
-                                        />
+                    <View className="flex-column mb-4">
+                        <View className="flex-column items-start justify-start pb-2 flex-wrap">
+                            <CardLabel 
+                                title={Utility.determineCategory(course.category)}
+                                icon={Utility.determineIcon(course.category)}
+                                color={tailwindConfig.theme.colors.grayScale}
+                            />
+                            <View className="w-2.5 mb-1" />
+                            <CardLabel
+                                title={Utility.formatHours(course.estimatedHours)}
+                                icon={'clock'}
+                                color={tailwindConfig.theme.colors.grayScale}
+                            />
+                            <View className="w-2.5 mb-1" />
+                            <CardLabel
+                                title={Utility.getDifficultyLabel(course.difficulty)}
+                                icon={'equalizer'}
+                                color={tailwindConfig.theme.colors.grayScale}
+                            />
+                            <View className="w-2.5 mb-1" />
+                            <View>
+                            {
+                                subscribed ? (
+                                    <View className="w-full flex-row mb-1">
+                                        <MaterialCommunityIcons name="check-circle" size={13} color={tailwindConfig.theme.colors.surfaceDefaultGreen}/>
+                                        <Text className="pl-1 text-xs font-sans-bold flex-start text-surfaceDefaultGreen">Inscrição realizada</Text>
                                     </View>
-                                </CourseButton> 
-                            ) : (
-                                <CourseButton 
-                                    course={course} 
-                                    onPress={subscribeCourse}>
-                                    <Text className="text-projectWhite p-1 text-lg font-sans-bold">
-                                        Inscreva-se agora
-                                    </Text>
-                                </CourseButton>
-                            )
-                        }
+                                    
+                                ) : null
+                            }												
+                            </View>	
+                            <CustomRating rating={course.rating} />
+                        </View>
+                        
+
                     </View>
-                </View> 
-        </Modal>
+
+                    <View className="border-b-[1px] w-full border-surfaceDisabled opacity-50"></View>								
+                </View>
+
+                <ScrollView className="w-full max-h-48 py-4 inner-shadow">
+                    <Text className="w-full text-m flex-start">{course.description}</Text>
+                </ScrollView>
+
+                <View className="flex-col w-full border border-solid border-grayScale rounded-2xl px-4 py-1">
+                    <CourseDetail
+                        title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos,\n exercícios, leituras complementares)`}
+                        icon="clock-outline"
+                    />
+                    <CourseDetail
+                        title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
+                        icon="book-multiple-outline"
+                    />
+                    <CourseDetail
+                        title="Certificado de Conclusão"
+                        icon="certificate-outline"
+                    />
+                    <CourseDetail
+                        title="Início imediato"
+                        icon="clock-fast"
+                    />
+                    <CourseDetail
+                        title="Acesso total por 1 ano"
+                        icon="calendar-month-outline"
+                    />
+                    <CourseDetail
+                        title="Assista onde e quando quiser! "
+                        icon="cellphone-link"
+                        className="mb-0"
+                    />
+                </View>
+
+                <View className="w-full">
+                    {
+                        subscribed ? (
+                            <CourseButton 
+                                course={course} 
+                                onPress={navigateCourse}>
+                                <View className="flex-row items-center">
+                                    <Text className="text-surfaceSubtle py-1 text-lg font-sans-bold mr-3">
+                                        Continuar Curso
+                                    </Text>
+                                    <MaterialCommunityIcons
+                                        name="play-circle-outline"
+                                        size={20}
+                                        color={tailwindConfig.theme.colors.surfaceSubtle}
+                                    />
+                                </View>
+                            </CourseButton> 
+                        ) : (
+                            <CourseButton 
+                                course={course} 
+                                onPress={subscribeCourse}>
+                                <Text className="text-surfaceSubtle p-1 text-lg font-sans-bold">
+                                    Inscreva-se agora
+                                </Text>
+                            </CourseButton>
+                        )
+                    }
+                </View>
+            </View> 
+    </Modal>
+
+
+        
+
+        
     )
 }
 

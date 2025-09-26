@@ -81,7 +81,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 				<View className="flex-row justify-end">
 					<TouchableOpacity onPress={handleToggleBottomSheet} className="flex-row border-b border-surfaceDefaultCyan items-center px-1 py-0.5">
 						<Text className="text-surfaceDefaultCyan text-xs font-sans-semi-bold mr-1">saiba mais</Text> 
-						<MaterialCommunityIcons name="chevron-double-right" color="surfaceDefaultCyan" size={12} />
+						<MaterialCommunityIcons name="chevron-double-right" color={tailwindConfig.theme.colors.surfaceDefaultCyan} size={12} />
 					</TouchableOpacity>
 					<BottomDrawer 
 						onPress={handleToggleBottomSheet} 
