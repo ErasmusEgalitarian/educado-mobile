@@ -6,27 +6,29 @@
     const [values, setValues] = useState(Array(length).fill("")); // ["", "", "", "", "", ""]
     const inputs = useRef([]);
 
-    const keyPress = (key, id) => {
-        const newValues = [...values];  
-        if(key === "Backspace" &&  id >= 0){
-            console.log("Backspace id: " + id);
-            if(id === length - 1 && newValues[id] !== ""){
-                newValues[id] = "";
-                setValues(newValues);
-                return;
-            }
-
-            newValues[id - 1] = "";
+    const handleChange = (value, id) => {
+        if (!/^[0-9a-zA-Z]?$/.test(value)) return; // allow only a-z 0-9
+        const newValues = [...values];
+        newValues[id] = value.toUpperCase();
+        setValues(newValues);
+        onChange?.(newValues.join(""));
+        
+        if(value === "" && id !== 0){
             inputs.current[id - 1].focus();
+        }
+
+        if (value && id === length - 1) {
+            Keyboard.dismiss();
+        }
+    };
+
+    const keyPress = (key, id) => {
+        const newValues = [...values];
+
+        if(newValues[id] !== "" && key !== "Backspace" && id < length - 1){
+            newValues[id + 1] = key.toUpperCase();
             setValues(newValues);
-        } else {
-            if(newValues[id] !== "" && id === length - 1) return;
-            newValues[id] = key;   
-            if(id !== length - 1){
             inputs.current[id + 1].focus();
-            }
-            setValues(newValues);
-            
         }
     };
 
@@ -39,10 +41,8 @@
                     value={val}
                     maxLength={1}
                     ref={(el) => (inputs.current[id] = el)}
-                    onKeyPress={({ nativeEvent }) => {
-                        const idFocused = inputs.current.findIndex((input) => input.isFocused());
-                        keyPress(nativeEvent.key, idFocused);
-                    }}
+                    onKeyPress={({ nativeEvent }) => {keyPress(nativeEvent.key, id)}}
+                    onChangeText={(text) => handleChange(text, id)}
                     keyboardType="visible-password"
                     textAlign="center"
                 />
