@@ -40,7 +40,7 @@ const CustomRating = ({ rating = 0 }) => {
 	return (
 		noRating ? (
 			<View className="w-full flex-row items-start justify-start">
-				<Text className="pl-1 text-xs text-projectGray">ainda sem avaliações</Text>
+				<Text className="pl-1 text-xs text-projectGray">Ainda sem avaliações</Text>
 			</View>
 		) :
 			<View className="w-full flex-row items-start justify-start">

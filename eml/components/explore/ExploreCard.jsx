@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import tailwindConfig from '../../tailwind.config';
 import {Image, Modal, View, Button, Dimensions, TouchableOpacity} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Text from '../general/Text';
@@ -14,7 +15,6 @@ import { Link } from '@react-navigation/native';
 import CourseDetail from './CourseDetail';
 import { determineIcon, determineCategory, formatHours, checkProgressCourse} from '../../services/utilityFunctions';
 import { ScrollView } from 'react-native-gesture-handler';
-
 
 /**
  * This component is used to display a course card.
@@ -61,13 +61,13 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 								icon={Utility.determineIcon(course.category)}
 								color="#628397"
 							/>
-							<View className="w-2.5" />
+							<View className="w-2.5 mb-1" />
 							<CardLabel
 								title={Utility.formatHours(course.estimatedHours)}
 								icon={'clock'}
 								color="#628397"
 							/>
-							<View className="w-2.5" />
+							<View className="w-2.5 mb-1" />
 							<CardLabel
 								title={Utility.getDifficultyLabel(course.difficulty)}
 								icon={'equalizer'}
@@ -114,29 +114,42 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 										
 									<View className="flex-column mb-4">
 										<View className="flex-column items-start justify-start pb-2 flex-wrap">
-											<CardLabel
+											<CardLabel 
 												title={Utility.determineCategory(course.category)}
 												icon={Utility.determineIcon(course.category)}
 												color="#628397"
 											/>
-											<View className="w-2.5" />
+											<View className="w-2.5 mb-1" />
 											<CardLabel
 												title={Utility.formatHours(course.estimatedHours)}
 												icon={'clock'}
 												color="#628397"
 											/>
-											<View className="w-2.5" />
+											<View className="w-2.5 mb-1" />
 											<CardLabel
 												title={Utility.getDifficultyLabel(course.difficulty)}
 												icon={'equalizer'}
 												color="#628397"
 											/>
+											<View className="w-2.5 mb-1" />
+											<View>
+											{
+												subscribed ? (
+													<View className="w-full flex-row mb-1">
+														<MaterialCommunityIcons name="check-circle" size={13} color={tailwindConfig.theme.colors.surfaceDefaultGreen}/>
+														<Text className="pl-1 text-xs font-sans-bold flex-start text-surfaceDefaultGreen">Inscrição realizada</Text>
+													</View>
+													
+												) : null
+											}												
+											</View>	
+											<CustomRating rating={course.rating} />
 										</View>
-									</View>
-									
-									<CustomRating rating={course.rating} />	
+										
 
-									<View className="h-2 border-b-[1px] w-full border-projectGray opacity-50 mt-4"></View>								
+									</View>
+
+									<View className="border-b-[1px] w-full border-projectGray opacity-50"></View>								
 								</View>
 
 								<ScrollView className="w-full max-h-48 py-4 inner-shadow">
