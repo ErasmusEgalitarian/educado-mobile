@@ -104,8 +104,9 @@ export default function SectionScreen({ route }) {
 												}
 											</Text>
 										</View>
-										
-										{component.type === 'exercise' ? (
+										{ isDisabled ? (
+											<MaterialCommunityIcons name="lock-outline" size={30} color="#166276"/>
+										) : component.type === 'exercise' ? (
 											<MaterialCommunityIcons name="book-open-blank-variant" size={30} color="#166276"/>
 										) : component.component.contentType === 'text' ? (
 											<MaterialCommunityIcons name="book-edit" size={30} color="#166276"/>
