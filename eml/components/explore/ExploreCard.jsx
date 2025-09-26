@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import tailwindConfig from '../../tailwind.config';
 import {Image, Modal, View, Button, Dimensions, TouchableOpacity} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Text from '../general/Text';
@@ -6,14 +7,15 @@ import UpdateDate from './ExploreUpdate';
 import CardLabel from './CardLabel';
 import CustomRating from './CustomRating';
 import BottomDrawer from './BottomDrawer';
-import SubscriptionButton from './SubscriptionButton';
-import AccessCourseButton from './AccessCourseButton';
+import CourseButton from './CourseButton';
 import * as Utility from '../../services/utilityFunctions';
 import PropTypes from 'prop-types';
 import { Link } from '@react-navigation/native';
 import CourseDetail from './CourseDetail';
 import { determineIcon, determineCategory, formatHours, checkProgressCourse} from '../../services/utilityFunctions';
 import { ScrollView } from 'react-native-gesture-handler';
+import { subscribe, addCourseToStudent } from '../../services/StorageService';
+import { useNavigation } from '@react-navigation/native';
 
 
 /**
@@ -33,6 +35,20 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 	const handleToggleBottomSheet = () => {
 	setIsBottomSheetOpen(!isBottomSheetOpen);
 	};
+
+	const subscribeCourse = (course) => {
+		setIsBottomSheetOpen(false)
+		subscribe(course.courseId);
+		addCourseToStudent(course.courseId);
+		navigation.navigate('Section', { course });
+  	};
+
+	const navigateCourse = (course) => {
+		setIsBottomSheetOpen(false)
+		navigation.navigate('Section', { course });
+	}
+
+	const navigation = useNavigation();
 
 	return isPublished ? (
 		<View
@@ -174,9 +190,28 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 								<View className="w-full">
 									{
 										subscribed ? (
-											<AccessCourseButton course={course} />
+											<CourseButton 
+												course={course} 
+												onPress={navigateCourse}>
+												<View className="flex-row items-center">
+													<Text className="text-projectWhite py-1 text-lg font-sans-bold mr-3">
+														Continuar Curso
+													</Text>
+													<MaterialCommunityIcons
+														name="play-circle-outline"
+														size={20}
+														color={tailwindConfig.theme.colors.projectWhite}
+													/>
+												</View>
+											</CourseButton> 
 										) : (
-											<SubscriptionButton course={course} />
+											<CourseButton 
+												course={course} 
+												onPress={subscribeCourse}>
+												<Text className="text-projectWhite p-1 text-lg font-sans-bold">
+													Inscreva-se agora
+												</Text>
+											</CourseButton>
 										)
 									}
 								</View>
