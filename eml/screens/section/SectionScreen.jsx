@@ -9,10 +9,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import SectionCard from '../../components/section/SectionCard';
 
-
-
-
-
 export default function SectionScreen({ route }) {
 	const { course, section } = route.params;
 	const [components, setComponents] = useState(null);
@@ -40,17 +36,6 @@ export default function SectionScreen({ route }) {
 			componentIsMounted = false;
 		};
 	}, []);
-
-	const getProgressStatus = (compIndex) => {
-		if(compIndex < completedCompAmount) {
-			return [2,2];
-		} else if (compIndex == completedCompAmount) {
-			return [1,2];
-		} else {
-			return [0,2];
-		}
-	};
-
 
 	const navigateBack = () => {
 		navigation.goBack();
@@ -92,12 +77,12 @@ export default function SectionScreen({ route }) {
 					<View>
 						{components.map((component, i) => {
 							const isDisabled = i > completedCompAmount;
-							const [progress, amount] = getProgressStatus(i);
+							const isCompleted = i < completedCompAmount;
 							return (
 								<SectionCard
 									disableProgressNumbers={true}
-									numOfEntries={amount}
-									progress={progress}
+									numOfEntries={1}
+									progress={isCompleted ? 1 : 0}
 									title={component.component.title}
 									icon={getIcon(component)}
 									disabledIcon="lock-outline"
