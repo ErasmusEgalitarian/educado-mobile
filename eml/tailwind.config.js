@@ -15,7 +15,7 @@ module.exports = {
       projectBlack: '#383838',
       projectGray: '#A1ACB2',
       lightGray: '#E4E4E4',   // Now aligned with Figma, but used to be #E5E5E5
-      error: '#FF4949',
+      error: '#D62B25',
       success: '#4AA04A',
       disable: '#DDD',
       disabled: '#E4F2F5',
