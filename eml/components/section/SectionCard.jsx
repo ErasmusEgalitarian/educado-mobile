@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 /**
  * A component that displays a section card with collapsible content.
  * @param {Number} progress - The progress containing the student's progress.
- * @param {Number} numOfEntries - How many total entries are there
+ * @param {Number} numOfEntries - How many total entries there are
  * @param {string} title - Title of the card
  * @param {Function} onPress - The callback function to navigate
  * @param {boolean} disabled - Is the card disabled
@@ -23,8 +23,8 @@ export default function SectionCard({ numOfEntries, title, progress, onPress, di
 	const inProgress = 0 < progress && progress < numOfEntries;
 	const progressText = isComplete ? 'Concluído' : inProgress ? 'Em progresso' : 'Não iniciado';
 	const progressTextColor = isComplete ? 'text-success' : 'text-cyanBlue';
-	disabledIcon = disabledIcon ? disabledIcon : 'lock-outline';
-
+	disabledIcon ??= 'lock-outline';
+	disabled ??= false;
 
 	return (
 		<View>
@@ -46,22 +46,12 @@ export default function SectionCard({ numOfEntries, title, progress, onPress, di
 							</Text>
 						</View>
 					</View>
-					{ disabled ? (
-						<MaterialCommunityIcons
-							testID="chevron-right"
-							name={disabledIcon}
-							size={25}
-							color="gray"
-						/>
-					) : (
-						<MaterialCommunityIcons
-							testID="chevron-right"
-							name={icon}
-							size={25}
-							color="gray"
-						/>
-					)
-					}
+					<MaterialCommunityIcons
+						testID="chevron-right"
+						name={disabled ? disabledIcon : icon}
+						size={25}
+						color="gray"
+					/>
 				</View>
 			</TouchableOpacity>
 			
