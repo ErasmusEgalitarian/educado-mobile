@@ -32,13 +32,13 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 			<View className="flex-col items-center">
 				<View className="flex-row justify-normal w-full items-center">
 
-					<Image
-						source={require('../../assets/images/courseIcon.png')}
-						alt="Icon"
-						className="w-5 h-5 mr-3"
+					<MaterialCommunityIcons
+						name="chart-bar-stacked"
+						size={24}
+						color={tailwindConfig.theme.colors.textTitle}
 					/>
 
-					<Text className="text-projectBlack font-sans-bold text-base">{course.title}</Text>
+					<Text className="text-projectBlack font-sans-bold text-base ml-2">{course.title}</Text>
 				</View>
 
 				<View className="h-1 border-b-[1px] w-full border-projectGray opacity-50 pt-2"></View>
