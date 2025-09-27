@@ -20,13 +20,13 @@ export default function SectionScreen({ route }) {
 		setComponents(componentsData);
 	}
 
+	async function loadData() {
+		await loadComponents(section.sectionId);
+		setCompletedCompAmount(await checkProgressSection(section.sectionId));
+	}
+
 	useEffect(() => {
 		let componentIsMounted = true;
-
-		async function loadData() {
-			await loadComponents(section.sectionId);
-			setCompletedCompAmount(await checkProgressSection(section.sectionId));
-		}
 
 		if (componentIsMounted) {
 			loadData();
@@ -35,7 +35,15 @@ export default function SectionScreen({ route }) {
 		return () => {
 			componentIsMounted = false;
 		};
-	}, []);
+	}, [section.sectionId]);
+
+	useEffect(() => {
+		const update = navigation.addListener('focus', () => {
+			loadData();
+		});
+
+		return update;
+	}, [navigation, section.sectionId]);
 
 	const navigateBack = () => {
 		navigation.goBack();

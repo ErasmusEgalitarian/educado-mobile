@@ -83,13 +83,9 @@ export default function CourseOverviewScreen({ route }) {
 	}, [sectionProgress, sections]);
 
 	useEffect(() => {
-		const update = navigation.addListener('focus', () => {
-			checkProgress();
-			if (sections) {
-				sections.forEach(section => {
-					checkProgressInSection(section.sectionId);
-				});
-			}
+		const update = navigation.addListener('focus', async () => {
+			await checkProgress();
+			await loadSections(course.courseId);
 		});
 		return update;
 	}, [navigation]);
