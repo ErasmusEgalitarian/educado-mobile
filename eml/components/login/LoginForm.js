@@ -46,7 +46,7 @@ export default function LoginForm() {
 	const [token, setToken] = useState('');
 
     // allow + symbol at start, then digits only (5 - 25 minmax length)
-    const validatePhoneNumber = (phone) => /^\+?\d{5,25}$/.test(phone);
+    const validatePhoneNumber = (phone) => /^\+?[\d\s]{5,25}$/.test(phone);
 
     const handlePhoneChange = (inputPhone) => {
         setPhoneNumber(inputPhone);
