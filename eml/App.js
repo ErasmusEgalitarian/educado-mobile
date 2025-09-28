@@ -15,11 +15,8 @@ import LoadingScreen from './components/loading/Loading';
 import WelcomeScreen from './screens/welcome/Welcome';
 import CompleteSectionScreen from './screens/section/CompleteSection';
 import NavBar from './components/navBar/NavBar';
-import CompSwipeScreen from './screens/lectures/CompSwipeScreen';
-import ErrorScreen from './screens/errors/ErrorScreen';
 import CourseScreen from './screens/courses/CourseScreen';
 import EditProfileScreen from './screens/profile/EditProfile';
-import EditPasswordScreen from './screens/profile/EditPassword';
 import DownloadScreen from './screens/download/DownloadScreen';
 import CertificateScreen from './screens/certificate/CertificateScreen';
 import CompleteCourseScreen from './screens/courses/CompleteCourse';
@@ -30,6 +27,8 @@ import SubscribedToCourseScreen from './screens/courses/SubscribedToCourseScreen
 import { DownloadProvider } from './services/DownloadService';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import Explore from './screens/explore/Explore';
+import Edu from './screens/eduChatbot/EduScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +45,6 @@ function LeaderboardStack() {
 		</Stack.Navigator>
 	);
 }
-
 
 function WelcomeStack() {
 	return (
@@ -82,67 +80,34 @@ function LoginStack() {
 		</Stack.Navigator>
 	);
 }
-function CertificateStack() {
+
+const TabInnerStack = createNativeStackNavigator();
+
+const ProfileStackScreen = () => {
 	return (
-		<Stack.Navigator initialRouteName={'Certificate'}>
-			<Stack.Screen
-				name="Certificate"
-				component={CertificateScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-		</Stack.Navigator>
+		<TabInnerStack.Navigator initialRouteName="ProfileHome">
+			{/*<TabInnerStack.Screen name="ProfileHome" component={ProfileComponent} options={{ headerShown: false }} />*/}
+			<TabInnerStack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="Certificate" component={CertificateScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="Download" component={DownloadScreen} options={{ headerShown: false }} />
+		</TabInnerStack.Navigator>
 	);
-}
+};
 
-function CourseStack() {
+const CoursesStackScreen = () => {
 	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="Course"
-				component={CourseScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Stack.Screen
-				name="CompleteSection"
-				component={CompleteSectionScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Stack.Screen
-				name="Exercise"
-				component={ExerciseScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Stack.Screen
-				name="CourseOverview"
-				component={CourseOverviewScreen}
-				initialParams={{ course_id: '' }}
-				options={{ headerShown: false }}
-			/>
-			<Stack.Screen
-				name="Section"
-				component={SectionScreen}
-				options={{ headerShown: false }}
-			/>
-			<Stack.Screen
-				name="ErrorScreen"
-				component={ErrorScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-		</Stack.Navigator>
+		<TabInnerStack.Navigator initialRouteName="CoursesHome">
+			<TabInnerStack.Screen name="CoursesHome" component={CourseScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="CourseOverview" component={CourseOverviewScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="Section" component={SectionScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="Exercise" component={ExerciseScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="CompleteSection" component={CompleteSectionScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="CompleteCourse" component={CompleteCourseScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="Subscribed" component={SubscribedToCourseScreen} options={{ headerShown: false }} />
+			<TabInnerStack.Screen name="Camera" component={CameraScreen} options={{ headerShown: false }} />
+		</TabInnerStack.Navigator>
 	);
-}
-
-
+};
 
 export function useWelcomeScreenLogic(loadingTime, onResult) {
 
@@ -171,8 +136,6 @@ export function useWelcomeScreenLogic(loadingTime, onResult) {
 	}, loadingTime);
 
 }
-
-
 
 export default function App() {
 	const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -246,75 +209,15 @@ export default function App() {
 								/>
 								<Stack.Screen
 									name="HomeStack"
-									component={NavBar}
 									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name={'CourseStack'}
-									component={CourseStack}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name={'CourseOverview'}
-									component={CourseOverviewScreen}
-									initialParams={{ course_id: '' }}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name={'Section'}
-									component={SectionScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name={'CompleteSection'}
-									component={CompleteSectionScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name={'Download'}
-									component={DownloadScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name="EditProfile"
-									component={EditProfileScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name="EditPassword"
-									component={EditPasswordScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name="Exercise"
-									component={ExerciseScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name="Components"
-									component={CompSwipeScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name="CertificateStack"
-									component={CertificateStack}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name="CompleteCourse"
-									component={CompleteCourseScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name="Camera"
-									component={CameraScreen}
-									options={{ headerShown: false }}
-								/>
-								<Stack.Screen
-									name="Subscribed"
-									component={SubscribedToCourseScreen}
-									initialParams={{course_id: ''}}
-									options={{headerShown: false}}
+									children={() => (
+										<NavBar
+											CoursesStackComponent={CoursesStackScreen}
+											ProfileStackComponent={ProfileStackScreen}
+											ExploreComponent={Explore}
+											EduComponent={Edu}
+										/>
+									)}
 								/>
 							</Stack.Navigator>
 						</NavigationContainer>
