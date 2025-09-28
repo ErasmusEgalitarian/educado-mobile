@@ -45,6 +45,7 @@ export default function LoginForm() {
 	const [error, setError] = useState('');
 	const [token, setToken] = useState('');
 
+
     // allow + symbol at start, then digits only (5 - 25 minmax length)
     const validatePhoneNumber = (phone) => /^\+?[\d\s]{5,25}$/.test(phone);
 
@@ -52,7 +53,7 @@ export default function LoginForm() {
         setPhoneNumber(inputPhone);
 
         if (inputPhone.length > 0) {
-            validatePhoneNumber(inputPhone) ? setError('') : setError('Número de Teléfono Inválido');
+            validatePhoneNumber(inputPhone) ? setError('') : setError('NÚMERO DE TELÉFONO INVÁLIDO');
         } else {
             setError('');
         }
@@ -86,7 +87,7 @@ export default function LoginForm() {
             await AsyncStorage.setItem('isLoggedIn', 'true');
 			navigation.navigate('HomeStack');
         } else {
-            setError("por favor, insira um token válido");
+            setError("CÓDIGO INVÁLIDO");
         }
 
 		// //The Object must be hashed before it is sent to backend (before loginUser() is called)
@@ -130,7 +131,7 @@ export default function LoginForm() {
 
     const updateToken = (token) => {
         setToken(token)
-        setError("");  
+        setError("");
     } 
 
 	return (
