@@ -56,8 +56,8 @@
         <View className="flex-row justify-around">
             {values.map((val, id) => (
                 <TextInput
-                    className="border-2 w-12 h-12 rounded-xl text-lg text-center"
-                    style={{ borderColor: error ? 'red' : "black" }} 
+                    className="border-[1px] w-[55px] h-[55px] rounded-xl text-lg text-center"
+                    style={{ borderColor: error ? 'red' : "gray", backgroundColor: error ? "rgba(255, 0, 0, 0.25)" : "transparent" }}
                     key={id}
                     value={val}
                     maxLength={1}

@@ -187,7 +187,7 @@ export default function LoginForm() {
             {/* submit phone number / submit token */}
             <FormButton
                 onPress={submittedPhoneNumber ? () => login(token) : () => submitPhoneNumber(phoneNumber)}
-                disabled={token.length !== 6}
+                disabled={submittedPhoneNumber && token.length !== 6}
             >
                 {submittedPhoneNumber ? "Accesor Conta" : "Enviar Código"}
             </FormButton>
