@@ -37,7 +37,7 @@
     };
 
     // Handles typing logic
-    const keyPress = (key, id) => {
+    const handleKeyPress = (key, id) => {
         const newValues = [...values];
         const backspacePressed = (key === "Backspace");
         const lastField = id < length - 1;
