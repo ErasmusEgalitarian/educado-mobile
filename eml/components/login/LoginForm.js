@@ -156,7 +156,7 @@ export default function LoginForm() {
             {/* step 1: phone number input.
                 step 2: token input */}
             <View className="mb-6">
-                {!submittedPhoneNumber ? (
+                {!phoneSubmitted ? (
                     <FormTextField
                         testId="passwordInput"
                         placeholder="(XX) XXXXX-XXXX "
