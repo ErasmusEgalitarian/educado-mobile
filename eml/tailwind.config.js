@@ -10,7 +10,7 @@ module.exports = {
       bgprimary_custom: '#35A1B1',
       bgPrimary: '#C9E5EC',
       primary_custom: '#166276',
-      secondary: '#F1F9FB',
+      secondary: '#ffffffff',
       projectWhite: '#FFFFFF',
       projectBlack: '#383838',
       projectGray: '#A1ACB2',

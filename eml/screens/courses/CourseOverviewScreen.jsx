@@ -151,7 +151,10 @@ export default function CourseOverviewScreen({ route }) {
 								<Image class="h-full max-w-full" source={ImageNotFound}/>
 							}
 						</View>
-						<View className="flex p-[14px] w-[293px] rounded-xl mt-[-10%] bg-projectWhite">
+						<View className="flex p-[14px] w-[293px] rounded-xl mt-[-10%] bg-projectWhite" style={{
+							shadowRadius: 10,
+							elevation: 10,
+						}}>
 							<View className="flex flex-row justify-between">
 								{/* Course Title */}
 								<Text className="text-[24px] font-montserrat mb-2 line-height-[20px] max-w-[80%]">
