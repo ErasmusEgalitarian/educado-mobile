@@ -63,7 +63,7 @@
                     value={val}
                     maxLength={1}
                     ref={(el) => (inputs.current[id] = el)}
-                    onKeyPress={({ nativeEvent }) => {keyPress(nativeEvent.key, id)}}
+                    onKeyPress={({ nativeEvent }) => {handleKeyPress(nativeEvent.key, id)}}
                     onChangeText={(text) => handleChange(text, id)}
                     keyboardType="visible-password"
                     textAlign="center"
