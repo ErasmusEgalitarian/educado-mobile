@@ -187,14 +187,14 @@ export default function LoginForm() {
 
             {/* submit phone number / submit token */}
             <FormButton
-                onPress={submittedPhoneNumber ? () => login(token) : () => submitPhoneNumber(phoneNumber)}
-                disabled={submittedPhoneNumber && token.length !== 6}
+                onPress={handlePhoneSubmit}
+                disabled={phoneSubmitted && token.length !== 6}
             >
-                {submittedPhoneNumber ? "Accesor Conta" : "Enviar Código"}
+                {phoneSubmitted ? "Accesor Conta" : "Enviar Código"}
             </FormButton>
 
             {/* Register button */}
-            {!submittedPhoneNumber ? (
+            {!phoneSubmitted ? (
                 <View className="flex-row justify-center mt-4 w-full px-8">
                     <Text className="text-xs text-projectBlack mr-1">
                         NÃO POSSUI UMA CONTA? {/* Dont have an account yet? */}
