@@ -39,7 +39,7 @@ export default function LoginForm() {
 	const navigation = useNavigation();
 
     // state variable to track if user successfully submitted phone number
-    const [submittedPhoneNumber, setSubmittedPhoneNumber] = useState(false);
+    const [phoneSubmitted, setPhoneSubmitted] = useState(false);
 
     const [phoneNumber, setPhoneNumber] = useState('');
 	const [error, setError] = useState('');
