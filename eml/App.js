@@ -152,7 +152,7 @@ function LoginNavigationLogic(loadingTime, onResult) {
 				const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
 				let initialRoute = 'WelcomeStack';
 
-				if (value === 'true') {
+				if (isLoggedIn === 'true') {
 					initialRoute = 'LoginStack';
 				}
 
