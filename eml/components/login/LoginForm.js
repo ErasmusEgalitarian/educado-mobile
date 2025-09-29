@@ -149,7 +149,7 @@ export default function LoginForm() {
 				</View>
 				
 				<Text className="font-montserrat text-lg leading-5 w-48 text-center mb-6">
-					{ submittedPhoneNumber ? "Insira o código enviado para você" : "Por favor, insira o seu número de telefone"}
+					{ phoneSubmitted ? "Insira o código enviado para você" : "Por favor, insira o seu número de telefone"}
 				</Text>
 			</View>
 
