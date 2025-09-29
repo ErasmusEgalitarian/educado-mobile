@@ -217,17 +217,12 @@ export default function CourseOverviewScreen({ route }) {
 										progress={completedComponents} 
 										onPress={() => navigateToSpecifiedSection(section)}></SectionCard>;
 								})}
+								<SubscriptionCancel onPress={unsubAlert} />
 							</View>
 						</View>
 					)
 				) : null}
 			</ScrollView>
-			<View className="bg-secondary">
-				{/* Unsubscribe Button */}
-				<SubscriptionCancel onPress={unsubAlert} />
-			</View>
-
-		
 		</>
 	);
 }
