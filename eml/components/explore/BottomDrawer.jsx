@@ -133,13 +133,13 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
                                 course={course} 
                                 onPress={navigateCourse}>
                                 <View className="flex-row items-center">
-                                    <Text className="text-surfaceSubtle py-1 text-lg font-sans-bold mr-3">
+                                    <Text className="text-surfaceSubtleGrayscale py-1 text-lg font-sans-bold mr-3">
                                         Continuar Curso
                                     </Text>
                                     <MaterialCommunityIcons
                                         name="play-circle-outline"
                                         size={20}
-                                        color={tailwindConfig.theme.colors.surfaceSubtle}
+                                        color={tailwindConfig.theme.colors.surfaceSubtleGrayscale}
                                     />
                                 </View>
                             </CourseButton> 
@@ -147,7 +147,7 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
                             <CourseButton 
                                 course={course} 
                                 onPress={subscribeCourse}>
-                                <Text className="text-surfaceSubtle p-1 text-lg font-sans-bold">
+                                <Text className="text-surfaceSubtleGrayscale p-1 text-lg font-sans-bold">
                                     Inscreva-se agora
                                 </Text>
                             </CourseButton>
