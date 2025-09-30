@@ -1,0 +1,65 @@
+name: CI
+on: pull_request
+concurrency:
+  group: ci-${{ github.head_ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set Up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install Dependencies
+        run: npm ci
+      - name: Check Dependencies
+        run: npx expo install --check
+      - name: Run Expo Doctor
+        run: npx expo-doctor
+      #      - name: Get Changed Files
+      #        run: |
+      #          cat $GITHUB_EVENT_PATH
+      #          BASE=$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")
+      #          HEAD=$(jq -r '.pull_request.head.sha' "$GITHUB_EVENT_PATH")
+      #
+      #          git diff --name-only "$BASE" "$HEAD" > changed.txt
+      #
+      #          echo "Changed files:"
+      #          cat changed.txt
+      - name: Run Prettier
+        run: npm run format:check
+      - name: Run ESLint
+        run: npm run lint -- -f json -o eslint-report.json || true
+      - name: Run tsc
+        run: node ./scripts/ci-tsc-report.mjs > tsc-report.json || true
+      #      - name: Report
+      #        run: node ./scripts/ci-filter-reports.mjs changed.txt eslint-report.json tsc-report.json
+      - name: Run Tests
+        if: false
+        run: npx jest --ci --coverage
+#  build:
+#    name: Build
+#    runs-on: ubuntu-latest
+#    needs: ci
+#    env:
+#      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+#    if: ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.fork == false && env.EXPO_TOKEN }}
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v5
+#      - name: Set Up Expo
+#        uses: expo/expo-github-action@v8
+#        with:
+#          token: ${{ env.EXPO_TOKEN }}
+#          packager: npm
+#          expo-version: latest
+#          eas-version: latest
+#      - name: Build Android Preview
+#        run: eas build -p android -e preview --non-interactive --wait
