@@ -29,6 +29,7 @@ export default function CourseOverviewScreen({ route }) {
 	const [currentSection, setCurrentSection] = useState(null);
 	const [isVisible, setIsVisible] = useState(false);
 	const [coverImage, setCoverImage] = useState(null);
+	const [imageError, setImageError] = useState(null);
 
 	async function loadSections(id) {
 		const sectionData = await StorageService.getSectionList(id);
@@ -98,13 +99,10 @@ export default function CourseOverviewScreen({ route }) {
 		if (!coverImage && course) {
 			const fetchImage = async () => {
 				try {
-					const image = await getBucketImage(course.courseId+ '_c');
-					if (typeof image === 'string') {
-						setCoverImage(image);
-					} else {
-						throw new Error();
-					}
+					const image = await getBucketImage(course.courseId + '_c');
+					setCoverImage(image);
 				} catch (error) {
+					setImageError(error);
 					console.error(error);
 				}
 			};
@@ -118,7 +116,7 @@ export default function CourseOverviewScreen({ route }) {
 				text: 'Não',
 				style: 'cancel',
 			},
-			{ text: 'Sim', onPress: () => { unsubscribe(course.courseId); setTimeout(() =>  {navigation.navigate('Meus cursos');}, 300 ); }},
+			{ text: 'Sim', onPress: () => { unsubscribe(course.courseId); setTimeout(() => { navigation.navigate('Meus cursos'); }, 300); } },
 		]);
 
 	const navigateToCurrentSection = () => {
@@ -140,19 +138,19 @@ export default function CourseOverviewScreen({ route }) {
 		<>
 			{/* Back Button */}
 			<TouchableOpacity className="absolute top-10 left-5 pr-3 z-10" onPress={() => navigation.navigate('Meus cursos')}>
-				<MaterialCommunityIcons name="chevron-left" style={{backgroundColor: 'rgba(255,255,255,0.5)', borderRadius: 50}} size={25} color="black"  />
+				<MaterialCommunityIcons name="chevron-left" style={{ backgroundColor: 'rgba(255,255,255,0.5)', borderRadius: 50 }} size={25} color="black" />
 			</TouchableOpacity>
 			<ScrollView className="bg-secondary" showsVerticalScrollIndicator={false}>
 				<View className="flex flex-row flex-wrap justify-between bg-secondary">
 					<View className="flex w-full items-center">
 						<View className="flex items-center w-full justify-between">
-							{coverImage ? 
+							{!imageError && coverImage ?
 								<Image class="h-full max-w-full"
-									source={{uri: coverImage}}
-									style={{width: '100%', height: 296, resizeMode: 'cover'}}
+									source={{ uri: coverImage }}
+									style={{ width: '100%', height: 296, resizeMode: 'cover' }}
 								/>
 								:
-								<Image class="h-full max-w-full" source={ImageNotFound}/>
+								<Image class="h-full max-w-full" source={ImageNotFound} />
 							}
 						</View>
 						<View className="flex p-[14px] w-[293px] rounded-xl mt-[-10%] bg-projectWhite">
@@ -162,7 +160,7 @@ export default function CourseOverviewScreen({ route }) {
 									{course.title}
 								</Text>
 								{/* TODO: Button to download course should be implemented */}
-								<DownloadCourseButton course={course} disabled={true}/>
+								<DownloadCourseButton course={course} disabled={true} />
 							</View>
 							{/* Progress Bar */}
 							<View className="flex justify-center h-6 border-y-[1px] border-lightGray rounded-sm ">
@@ -171,13 +169,13 @@ export default function CourseOverviewScreen({ route }) {
 
 							<View className="flex items-center flex-row w-full justify-between">
 								<View className="flex flex-row">
-									<MaterialCommunityIcons name="crown-circle" size={20} color="orange"/>
+									<MaterialCommunityIcons name="crown-circle" size={20} color="orange" />
 									{/* TODO: Points should be implemented */}
 									<Text>?? pontos</Text>
 								</View>
-								<MaterialCommunityIcons name="circle-small" size={30} color="gray"/>
+								<MaterialCommunityIcons name="circle-small" size={30} color="gray" />
 								<View className="flex flex-row">
-									<MaterialCommunityIcons name="lightning-bolt" size={20} color="orange"/>
+									<MaterialCommunityIcons name="lightning-bolt" size={20} color="orange" />
 									<Text>{studentProgress}% concluído</Text>
 								</View>
 							</View>
@@ -223,8 +221,6 @@ export default function CourseOverviewScreen({ route }) {
 				{/* Unsubscribe Button */}
 				<SubscriptionCancel onPress={unsubAlert} />
 			</View>
-
-		
 		</>
 	);
 }
