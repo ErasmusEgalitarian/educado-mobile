@@ -83,13 +83,9 @@ export default function CourseOverviewScreen({ route }) {
 	}, [sectionProgress, sections]);
 
 	useEffect(() => {
-		const update = navigation.addListener('focus', () => {
-			checkProgress();
-			if (sections) {
-				sections.forEach(section => {
-					checkProgressInSection(section.sectionId);
-				});
-			}
+		const update = navigation.addListener('focus', async () => {
+			await checkProgress();
+			await loadSections(course.courseId);
 		});
 		return update;
 	}, [navigation]);
@@ -155,10 +151,13 @@ export default function CourseOverviewScreen({ route }) {
 								<Image class="h-full max-w-full" source={ImageNotFound}/>
 							}
 						</View>
-						<View className="flex p-[14px] w-[293px] rounded-xl mt-[-10%] bg-projectWhite">
+						<View className="flex p-[14px] w-[293px] rounded-xl mt-[-10%] bg-projectWhite" style={{
+							shadowRadius: 10,
+							elevation: 10,
+						}}>
 							<View className="flex flex-row justify-between">
 								{/* Course Title */}
-								<Text className="text-[24px] font-montserrat-bold line-height-[29px] max-w-[80%]">
+								<Text className="text-[24px] font-montserrat mb-2 line-height-[20px] max-w-[80%]">
 									{course.title}
 								</Text>
 								{/* TODO: Button to download course should be implemented */}
@@ -175,7 +174,6 @@ export default function CourseOverviewScreen({ route }) {
 									{/* TODO: Points should be implemented */}
 									<Text>?? pontos</Text>
 								</View>
-								<MaterialCommunityIcons name="circle-small" size={30} color="gray"/>
 								<View className="flex flex-row">
 									<MaterialCommunityIcons name="lightning-bolt" size={20} color="orange"/>
 									<Text>{studentProgress}% concluído</Text>
@@ -212,19 +210,19 @@ export default function CourseOverviewScreen({ route }) {
 							<View>
 								{sections.map((section, i) => {
 									const completedComponents = sectionProgress[section.sectionId] || 0;
-									return <SectionCard key={i} section={section} progress={completedComponents} onPress={() => navigateToSpecifiedSection(section)}></SectionCard>;
+									return <SectionCard
+										numOfEntries={section.components.length}
+										title={section.title}
+										icon="chevron-right" key={i} 
+										progress={completedComponents} 
+										onPress={() => navigateToSpecifiedSection(section)}></SectionCard>;
 								})}
+								<SubscriptionCancel onPress={unsubAlert} />
 							</View>
 						</View>
 					)
 				) : null}
 			</ScrollView>
-			<View className="bg-secondary">
-				{/* Unsubscribe Button */}
-				<SubscriptionCancel onPress={unsubAlert} />
-			</View>
-
-		
 		</>
 	);
 }

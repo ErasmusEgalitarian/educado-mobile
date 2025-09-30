@@ -1,55 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import CourseScreen from '../../screens/courses/CourseScreen';
-import DownloadScreen from '../../screens/download/DownloadScreen';
-import Explore from '../../screens/explore/Explore';
-import Edu from '../../screens/eduChatbot/EduScreen';
-import ProfileComponent from '../../screens/profile/Profile';
-import EditProfile from '../../screens/profile/EditProfile';
-import CertificateScreen from '../../screens/certificate/CertificateScreen';
 import { Icon } from '@rneui/themed';
 import { Platform, Keyboard} from 'react-native';
 import tailwindConfig from '../../tailwind.config';
 
 const Tab = createBottomTabNavigator();
-
-const ProfileStack = createNativeStackNavigator();
-
-function ProfileStackScreen() {
-	return (
-		<ProfileStack.Navigator initialRouteName='ProfileHome'>
-			<ProfileStack.Screen
-				name='ProfileHome'
-				component={ProfileComponent}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<ProfileStack.Screen
-				name='EditProfile'
-				component={EditProfile}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<ProfileStack.Screen
-				name='Certificate'
-				component={CertificateScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<ProfileStack.Screen
-				name='Download'
-				component={DownloadScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-		</ProfileStack.Navigator>
-	);
-}
 
 /**
  * This component is used to display the navigation bar at the bottom of the screen.
@@ -57,7 +12,12 @@ function ProfileStackScreen() {
  *
  *
  */
-export default function NavBar() {
+export default function NavBar({
+	CoursesStackComponent,
+	ProfileStackComponent,
+	ExploreComponent,
+	EduComponent,
+}) {
 	const [keyboardStatus, setKeyboardStatus] = useState(0);
 
 	useEffect(() => {
@@ -122,7 +82,7 @@ export default function NavBar() {
 		>
 			<Tab.Screen
 				name="Meus cursos"
-				component={CourseScreen}
+				component={CoursesStackComponent}
 				options={{
 					tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
 					headerShown: false,
@@ -140,7 +100,7 @@ export default function NavBar() {
 			/>
 			<Tab.Screen
 				name="Explorar"
-				component={Explore}
+				component={ExploreComponent}
 				options={{
 					tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
 					headerShown: false,
@@ -158,7 +118,7 @@ export default function NavBar() {
 			/>
 			<Tab.Screen
 				name="Edu"
-				component={Edu}
+				component={EduComponent}
 				options={{
 					tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
 					headerShown: false,
@@ -176,7 +136,7 @@ export default function NavBar() {
 			/>
 			<Tab.Screen
 				name="Perfil"
-				component={ProfileStackScreen}
+				component={ProfileStackComponent}
 				options={{
 					tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
 					headerShown: false,

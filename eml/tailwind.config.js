@@ -7,18 +7,18 @@ module.exports = {
   ],
   theme: {
     colors: {
-      bgprimary_custom: '#166276',
+      bgprimary_custom: '#35A1B1',
       bgPrimary: '#C9E5EC',
       primary_custom: '#166276',
-      secondary: '#F1F9FB',
+      secondary: '#ffffffff',
       projectWhite: '#FFFFFF',
       projectBlack: '#383838',
       projectGray: '#A1ACB2',
       lightGray: '#E4E4E4',   // Now aligned with Figma, but used to be #E5E5E5
-      error: '#FF4949',
+      error: '#D62B25',
       success: '#4AA04A',
       disable: '#DDD',
-      disabled: '#E4F2F5',
+      disabled: '#EBF0F2',
       projectRed: '#FFE4E4',
       projectGreen: '#E4F1E4',
       projectLightGray: '#F1F9FB',
@@ -32,7 +32,7 @@ module.exports = {
       profileCircle: '#166276',
       pointsText: '#C1A146',
       pointsCoin: '#AD872D',
-      progressBar: '#166276',
+      progressBar: '#35A1B1',
       progressBarUnFilled: '#E4E4E4',  // <- This stands more out from background, but Figma = #E4F2F5
       badgesGreen: '#8CC43B',
       badgesPurple: '#C383F7',
