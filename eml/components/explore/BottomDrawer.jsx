@@ -7,26 +7,26 @@ import CardLabel from './CardLabel';
 import CustomRating from './CustomRating';
 import CourseButton from './CourseButton';
 import * as Utility from '../../services/utilityFunctions';
-import CourseDetail from './CourseDetail';
 import {ScrollView} from 'react-native-gesture-handler';
 import {subscribe, addCourseToStudent} from '../../services/StorageService';
 import {useNavigation} from '@react-navigation/native';
+import InfoBox from './InfoBox';
 
 
-const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
+const BottomDrawer = ({toggleModal, course, drawerState, subscribed}) => {
     const {height: windowHeight, width: windowWidth} = useWindowDimensions();
 
     const navigation = useNavigation();
 
     const subscribeCourse = (course) => {
-        onPress(course);
+        toggleModal();
         subscribe(course.courseId);
         addCourseToStudent(course.courseId);
         navigation.navigate('Section', {course});
     };
     
     const navigateCourse = (course) => {
-        onPress(course);
+        toggleModal();
         navigation.navigate('Section', {course});
     }
     
@@ -35,7 +35,7 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
         animationType="slide"
         transparent={true}
         visible={drawerState}
-        onRequestClose={() => onPress(course)}>
+        onRequestClose={() => toggleModal()}>
 
             <View className="flex-1" style={{backgroundColor: tailwindConfig.theme.colors.surfaceSubtleCyan}}/>
 
@@ -46,9 +46,9 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
                     
                 <View className="flex-row justify-between items-center mb-4"> 
                     <Text className="text-2xl font-sans-semi-bold text-textTitle">{course.title}</Text>
-                    <TouchableOpacity onPress={() => onPress(course)}>
+                    <TouchableOpacity onPress={() => toggleModal()}>
                         <MaterialCommunityIcons name={'chevron-down'} size={25} color="textTitle"/>
-                    </TouchableOpacity>	
+                    </TouchableOpacity>
                 </View>
                         
                     
@@ -98,33 +98,7 @@ const BottomDrawer = ({onPress, course, drawerState, subscribed}) => {
                     <Text className="w-full text-m flex-start">{course.description}</Text>
                 </ScrollView>
 
-                <View className="flex-col w-full border border-solid border-grayScale rounded-2xl px-4 py-1">
-                    <CourseDetail
-                        title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos,\n exercícios, leituras complementares)`}
-                        icon="clock-outline"
-                    />
-                    <CourseDetail
-                        title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
-                        icon="book-multiple-outline"
-                    />
-                    <CourseDetail
-                        title="Certificado de Conclusão"
-                        icon="certificate-outline"
-                    />
-                    <CourseDetail
-                        title="Início imediato"
-                        icon="clock-fast"
-                    />
-                    <CourseDetail
-                        title="Acesso total por 1 ano"
-                        icon="calendar-month-outline"
-                    />
-                    <CourseDetail
-                        title="Assista onde e quando quiser! "
-                        icon="cellphone-link"
-                        className="mb-0"
-                    />
-                </View>
+                <InfoBox course={course} />
 
                 <View className="w-full">
                     {

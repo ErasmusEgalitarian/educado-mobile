@@ -10,7 +10,7 @@ import tailwindConfig from '../../tailwind.config';
  * @param icon - The icon of the label.
  * @returns {JSX.Element} - Returns a JSX element.
  */
-const CourseDetail = ({ title, icon }) => {
+const InfoBoxItem = ({ title, icon }) => {
 
     return (
         <View className="flex-row items-center justify-start py-2">
@@ -20,9 +20,9 @@ const CourseDetail = ({ title, icon }) => {
     );
 };
 
-CourseDetail.propTypes = {
+InfoBoxItem.propTypes = {
     title: PropTypes.string,
     icon: PropTypes.string,
 };
 
-export default CourseDetail;
+export default InfoBoxItem;

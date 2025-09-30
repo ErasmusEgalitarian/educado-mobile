@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import tailwindConfig from '../../tailwind.config';
-import {Image, View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Text from '../general/Text';
 import CardLabel from './CardLabel';
@@ -84,7 +84,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 						<MaterialCommunityIcons name="chevron-double-right" color={tailwindConfig.theme.colors.surfaceDefaultCyan} size={12} />
 					</TouchableOpacity>
 					<BottomDrawer 
-						onPress={handleToggleBottomSheet} 
+						toggleModal={handleToggleBottomSheet} 
 						course={course}
 						drawerState={isBottomSheetOpen} 
 						subscribed={subscribed}/>
