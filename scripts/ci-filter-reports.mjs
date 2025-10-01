@@ -1,88 +1,94 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const [, , changedPath, eslintPath, tsDiagPath] = process.argv;
+const [, , filesChangedJsonPath, eslintReportJsonPath, tscReportJsonPath] =
+  process.argv;
 
-const root = path.resolve(process.cwd(), "..");
 const appRoot = process.cwd();
 
-const toRel = (p) => {
-  if (!p) {
+const convertToRelativePath = (absolutePath) => {
+  if (!absolutePath) {
     return null;
   }
 
-  const abs = path.isAbsolute(p) ? p : path.resolve(appRoot, p);
+  const abs = path.isAbsolute(absolutePath)
+    ? absolutePath
+    : path.resolve(appRoot, absolutePath);
 
-  return path.relative(root, abs).split(path.sep).join("/");
+  return path.relative(appRoot, abs).split(path.sep).join("/");
 };
 
-const changed = new Set(
-  fs
-    .readFileSync(changedPath, "utf8")
-    .split("\n")
-    .map((s) => s.trim())
-    .filter(Boolean),
+const changedFiles = new Set(
+  JSON.parse(fs.readFileSync(filesChangedJsonPath, "utf8")),
 );
 
-let eslintErrs = [];
+let allEslintProblems = [];
 
 try {
-  const eslintJson = JSON.parse(fs.readFileSync(eslintPath, "utf8"));
+  const eslintReportJson = JSON.parse(
+    fs.readFileSync(eslintReportJsonPath, "utf8"),
+  );
 
-  for (const file of eslintJson) {
-    const fileRel = toRel(file.filePath);
+  for (const file of eslintReportJson) {
+    const relativeFilePath = convertToRelativePath(file.filePath);
 
-    for (const m of file.messages || []) {
-      if (m.severity >= 2) {
-        eslintErrs.push({ file: fileRel, rule: m.ruleId, message: m.message });
-      }
+    for (const problem of file.messages || []) {
+      allEslintProblems.push({
+        file: relativeFilePath,
+        line: problem.line,
+        rule: problem.ruleId,
+        message: problem.message,
+      });
     }
   }
 } catch {
   // ignore
 }
 
-let tsErrs = [];
+let allTscProblems = [];
 
 try {
-  const tsJson = JSON.parse(fs.readFileSync(tsDiagPath, "utf8"));
+  const tscReportJson = JSON.parse(fs.readFileSync(tscReportJsonPath, "utf8"));
 
-  for (const d of tsJson) {
-    if (d.category === "Error" && d.file) {
-      tsErrs.push({ file: d.file, code: d.code, message: d.message });
-    }
+  for (const problem of tscReportJson) {
+    allTscProblems.push({
+      file: problem.file,
+      line: problem.line,
+      code: problem.code,
+      message: problem.message,
+    });
   }
 } catch {
   // ignore
 }
 
-const eslintChanged = eslintErrs.filter((e) => changed.has(e.file));
-const tscChanged = tsErrs.filter((e) => changed.has(e.file));
+const eslintProblemsChanged = allEslintProblems.filter((e) =>
+  changedFiles.has(e.file),
+);
+
+const tscProblemsChanged = allTscProblems.filter((e) =>
+  changedFiles.has(e.file),
+);
 
 const summarize = (list, label) => {
   if (list.length) {
-    console.error(`\n${label} errors in CHANGED files:\n`);
+    console.error(`\n${label} found problems in CHANGED files:\n`);
 
-    for (const e of list.slice(0, 50)) {
+    for (const problem of list) {
       console.error(
-        `- ${e.file}: ${e.rule ? e.rule : e.code} – ${e.message.replace(/\n/g, " ")}`,
+        `${problem.file}: Line ${problem.line} - ${problem.rule ? problem.rule : problem.code} – ${problem.message.replace(/\n/g, " ")}`,
       );
-    }
-
-    if (list.length > 50) {
-      console.error(`... and ${list.length - 50} more`);
     }
   }
 };
 
-summarize(eslintChanged, "ESLint");
-summarize(tscChanged, "TypeScript");
+summarize(eslintProblemsChanged, "ESLint");
+summarize(tscProblemsChanged, "tsc");
 
-if (eslintChanged.length || tscChanged.length) {
-  console.error("\nCI gate failed: changed files contain errors.\n");
+if (eslintProblemsChanged.length || tscProblemsChanged.length) {
+  console.error("\nCI failed: Changed files contain errors.\n");
+
   process.exit(1);
-} else {
-  console.log(
-    "CI gate passed: errors exist only in untouched files (permissive mode).",
-  );
 }
+
+console.log("CI Passed: errors exist only in untouched files.");

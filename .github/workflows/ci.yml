@@ -1,5 +1,7 @@
 name: CI
-on: pull_request
+on:
+  pull_request:
+  merge_group:
 concurrency:
   group: ci-${{ github.head_ref }}
   cancel-in-progress: true
@@ -23,25 +25,54 @@ jobs:
         run: npx expo install --check
       - name: Run Expo Doctor
         run: npx expo-doctor
-      #      - name: Get Changed Files
-      #        run: |
-      #          cat $GITHUB_EVENT_PATH
-      #          BASE=$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")
-      #          HEAD=$(jq -r '.pull_request.head.sha' "$GITHUB_EVENT_PATH")
-      #
-      #          git diff --name-only "$BASE" "$HEAD" > changed.txt
-      #
-      #          echo "Changed files:"
-      #          cat changed.txt
       - name: Run Prettier
         run: npm run format:check
+      - name: Get Files Changed (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require("node:fs/promises");
+            const nodePath = require("node:path");
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            const paths = files.map(file => file.filename);
+
+            const outPath = nodePath.join(process.env.GITHUB_WORKSPACE, "files-changed.json");
+            fs.writeFile(outPath, JSON.stringify(paths, null, 2));
+
+            core.exportVariable("FILES_CHANGED_JSON", outPath);
+      - name: Get Files Changed (Merge Group)
+        if: ${{ github.event_name == 'merge_group' }}
+        run: |
+          base_ref="${{ github.event.merge_group.base_ref }}"
+          base_sha="${{ github.event.merge_group.base_sha }}"
+          head_sha="${{ github.sha }}"
+
+          echo "Base ref: $base_ref"
+          echo "Base SHA: $base_sha"
+          echo "Head SHA: $head_sha"
+
+          git fetch --no-tags --prune --depth=200 origin "$base_ref"
+
+          git diff --name-only --diff-filter=ACMRT "$base_sha" "$head_sha" |
+            jq -Rsc 'split("\n")[:-1]' >files-changed.json
+
+          echo "FILES_CHANGED_JSON=$PWD/files-changed.json" >>"$GITHUB_ENV"
       - name: Run ESLint
         run: npm run lint -- -f json -o eslint-report.json || true
       - name: Run tsc
         run: node ./scripts/ci-tsc-report.mjs > tsc-report.json || true
-      #      - name: Report
-      #        run: node ./scripts/ci-filter-reports.mjs changed.txt eslint-report.json tsc-report.json
+      - name: Report
+        run: |
+          node ./scripts/ci-filter-reports.mjs "$FILES_CHANGED_JSON" eslint-report.json tsc-report.json
       - name: Run Tests
+        # TODO: enable
         if: false
         run: npx jest --ci --coverage
 #  build:

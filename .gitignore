@@ -37,6 +37,6 @@ yarn-error.*
 ### Added by the devlopers
 /coverage/
 android/
-changed.txt
+files-changed.json
 eslint-report.json
 tsc-report.json
