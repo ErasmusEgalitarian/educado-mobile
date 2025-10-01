@@ -154,7 +154,7 @@ export default function CourseScreen() {
             uniqueKey="Courses"
             uniCodeChar="📚"
           />
-          <View className="pt-24 pb-16">
+          <View className="pb-16 pt-24">
             <Image
               source={require("../../assets/images/logo.png")}
               className="items-center justify-center"
@@ -175,7 +175,7 @@ export default function CourseScreen() {
             <View>
               <Pressable
                 testID="exploreButton"
-                className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom py-4 px-20"
+                className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
                 onPress={() => navigation.navigate("Explorar")}
               >
                 <Text className="text-center font-sans-bold text-body text-projectWhite">

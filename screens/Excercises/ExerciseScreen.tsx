@@ -131,7 +131,7 @@ const ExerciseScreen = ({
                     onPress={() => handleReviewAnswer(answer.correct, index)}
                     className="flex-1"
                   >
-                    <Text className="pt-2 pb-1 font-montserrat text-body text-projectBlack">
+                    <Text className="pb-1 pt-2 font-montserrat text-body text-projectBlack">
                       {answer.text}
                     </Text>
                   </TouchableOpacity>
@@ -156,7 +156,7 @@ const ExerciseScreen = ({
                         />
                       </View>
                       <Text
-                        className={`pl-1 pt-2 pr-2 text-caption-medium ${
+                        className={`pl-1 pr-2 pt-2 text-caption-medium ${
                           answer.correct ? "text-success" : "text-error"
                         }`}
                       >

@@ -61,12 +61,12 @@ export default function SectionScreen({ route }) {
     <ScrollView className="h-full bg-secondary">
       {/* Back Button */}
       <TouchableOpacity
-        className="absolute top-10 left-5 z-10 pr-3"
+        className="absolute left-5 top-10 z-10 pr-3"
         onPress={navigateBack}
       >
         <MaterialCommunityIcons name="chevron-left" size={25} color="black" />
       </TouchableOpacity>
-      <View className="my-6 mx-[18] flex">
+      <View className="mx-[18] my-6 flex">
         <View className="flex-none items-center justify-center py-6">
           <Text className="font-montserrat text-[20px]">{course.title}</Text>
         </View>

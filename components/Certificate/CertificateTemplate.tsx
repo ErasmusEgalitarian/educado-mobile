@@ -25,7 +25,7 @@ const CertificateTemplate = ({
           >
             <Text
               className={
-                "mt-5 mb-2 text-base font-semibold text-primary_custom"
+                "mb-2 mt-5 text-base font-semibold text-primary_custom"
               } /* style={styles.title} */
             >
               CERTIFICADO DE CONCLUSÃO

@@ -88,7 +88,7 @@ export default function CourseCard({ course, isOnline }) {
             <View className="rounded-lg" style={{ height: 110 }} />
           )}
           <View className="relative">
-            <View className="absolute top-0 left-0 right-0 bottom-0 bg-projectWhite opacity-95" />
+            <View className="absolute bottom-0 left-0 right-0 top-0 bg-projectWhite opacity-95" />
             <View className="p-[5%]">
               <View className="flex flex-col">
                 <View className="flex-row items-start justify-between px-[1%] py-[1%]">

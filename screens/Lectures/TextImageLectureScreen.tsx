@@ -113,7 +113,7 @@ const TextImageLectureScreen = ({
       </View>
 
       <View className="w-full flex-1">
-        <ScrollView className="max-h-128 mt-2 mb-4 flex-grow px-4">
+        <ScrollView className="max-h-128 mb-4 mt-2 flex-grow px-4">
           {htmlContent ? (
             <RenderHtml
               contentWidth={Dimensions.get("window").width}

@@ -107,7 +107,7 @@ const CameraScreen = () => {
   if (capturedImage) {
     return (
       <View className="bg-black flex-1">
-        <View className="absolute top-12 left-4">
+        <View className="absolute left-4 top-12">
           <BackButton onPress={() => navigation.navigate("EditProfile")} />
         </View>
         <View className="flex-1 items-center justify-center">
@@ -141,7 +141,7 @@ const CameraScreen = () => {
   return (
     <View className="flex-1 bg-projectGray">
       <Camera className="flex-1" type={type} ref={cameraRef}>
-        <View className="mx-4 mt-12 mb-6">
+        <View className="mx-4 mb-6 mt-12">
           <BackButton onPress={() => navigation.navigate("EditProfile")} />
         </View>
         <View className="bg-transparent flex-1 items-center justify-end pb-10">

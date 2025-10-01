@@ -173,18 +173,18 @@ const VideoLectureScreen = ({
 
         {/* Pressable Areas for Play/Pause */}
         <Pressable
-          className="absolute top-[12%] bottom-[50%] right-0 left-0"
+          className="absolute bottom-[50%] left-0 right-0 top-[12%]"
           onPress={togglePlayPause}
         />
         <Pressable
-          className="absolute top-[24%] bottom-[22%] right-[20%] left-0"
+          className="absolute bottom-[22%] left-0 right-[20%] top-[24%]"
           onPress={togglePlayPause}
         />
 
         {/* Play/Pause Icon */}
         {showPlayPauseIcon && (
           <View
-            className="absolute top-0 left-0 right-0 bottom-0 flex-row items-center justify-center"
+            className="absolute bottom-0 left-0 right-0 top-0 flex-row items-center justify-center"
             pointerEvents="none"
           >
             <MaterialCommunityIcons

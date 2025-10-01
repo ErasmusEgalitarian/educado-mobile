@@ -14,7 +14,7 @@ export default function CertificateButton({ buttonText, onPress }) {
         onPress={onPress}
         className="flex w-full items-center justify-center rounded-lg bg-primary_custom p-2"
       >
-        <Text className="py-1 px-2 font-bold text-projectWhite">
+        <Text className="px-2 py-1 font-bold text-projectWhite">
           {buttonText}
         </Text>
       </Pressable>

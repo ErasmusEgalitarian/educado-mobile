@@ -39,7 +39,7 @@ function FilterNavigationBar({
         />
       </View>
 
-      <View className="z-10 pl-2 pr-2 pb-4">
+      <View className="z-10 pb-4 pl-2 pr-2">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View className="flex items-center p-2">
             <View className="flex-row overflow-x-auto">

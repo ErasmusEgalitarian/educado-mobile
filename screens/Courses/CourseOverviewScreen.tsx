@@ -151,7 +151,7 @@ export default function CourseOverviewScreen({ route }) {
     <>
       {/* Back Button */}
       <TouchableOpacity
-        className="absolute top-10 left-5 z-10 pr-3"
+        className="absolute left-5 top-10 z-10 pr-3"
         onPress={() => navigation.navigate("Meus cursos")}
       >
         <MaterialCommunityIcons

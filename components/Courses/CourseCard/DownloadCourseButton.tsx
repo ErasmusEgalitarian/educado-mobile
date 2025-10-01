@@ -147,8 +147,8 @@ const DownloadCourseButton = ({ course, disabled }) => {
                     onPress={isDownloaded ? handleRemove : handleDownload}
                     className={
                       isDownloaded
-                        ? "rounded-lg bg-error py-4 px-10"
-                        : "rounded-lg bg-primary_custom py-4 px-10"
+                        ? "rounded-lg bg-error px-10 py-4"
+                        : "rounded-lg bg-primary_custom px-10 py-4"
                     }
                   >
                     <Text className="text-xl font-bold text-projectWhite">

@@ -7,7 +7,7 @@ const LoadingScreen = () => {
   const logo = require("../../assets/images/logo.png");
 
   return (
-    <SafeAreaView className="flex-1 items-center justify-center gap-10 bg-secondary py-10 px-6">
+    <SafeAreaView className="flex-1 items-center justify-center gap-10 bg-secondary px-6 py-10">
       <Image source={logo} />
       <Text className="text-center text-body text-projectBlack">
         Transformando conhecimento em liberdade

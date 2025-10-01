@@ -215,7 +215,7 @@ export default function EditProfileScreen() {
     <SafeAreaView className="bg-secondary">
       <View className="h-full">
         <View>
-          <View className="relative mx-4 mt-12 mb-6">
+          <View className="relative mx-4 mb-6 mt-12">
             {/* Back button */}
             <BackButton onPress={() => navigation.navigate("ProfileHome")} />
 

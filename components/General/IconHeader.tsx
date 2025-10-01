@@ -14,7 +14,7 @@ export default function IconHeader({ title, description }) {
   };
   return (
     <>
-      <View className="flex flex-row items-center pl-6 pb-2 pt-[20%]">
+      <View className="flex flex-row items-center pb-2 pl-6 pt-[20%]">
         <Image
           source={require("../../assets/images/singleIcon.png")}
           alt="Icon"
@@ -22,7 +22,7 @@ export default function IconHeader({ title, description }) {
         />
         <Text className="text-xl font-bold">{title}</Text>
       </View>
-      <Text className="px-6 pl-6 pb-4 font-montserrat text-sm">
+      <Text className="px-6 pb-4 pl-6 font-montserrat text-sm">
         {description}
       </Text>
     </>

@@ -8,7 +8,7 @@ export default function CertificateEmptyState() {
   return (
     <SafeAreaView className="bg-secondary">
       <View className="flex h-full items-center justify-center">
-        <View className="absolute top-0 left-0 right-0 mx-4 mt-12 mb-6">
+        <View className="absolute left-0 right-0 top-0 mx-4 mb-6 mt-12">
           <BackButton onPress={() => navigation.navigate("ProfileHome")} />
 
           <Text className="w-full text-center font-sans-bold text-xl">

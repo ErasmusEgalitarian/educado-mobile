@@ -102,7 +102,7 @@ export default function ProfileComponent() {
       {!isOnline ? (
         <OfflineScreen />
       ) : (
-        <View className="flex flex-col bg-secondary px-[5%] pt-[20%] pb-[5%]">
+        <View className="flex flex-col bg-secondary px-[5%] pb-[5%] pt-[20%]">
           <UserInfo
             firstName={firstName}
             lastName={lastName}

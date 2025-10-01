@@ -195,7 +195,7 @@ export default function ResetPassword(props) {
                   />
                   <FormFieldAlert testId="tokenAlert" label={tokenAlert} />
                   {/* Continue button */}
-                  <View className="mt-[40px] mb-[24px]">
+                  <View className="mb-[24px] mt-[40px]">
                     <FormButton
                       // Continue
                       label={

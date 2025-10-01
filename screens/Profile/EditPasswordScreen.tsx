@@ -137,7 +137,7 @@ export default function EditPasswordScreen() {
     <SafeAreaView className="bg-secondary">
       <View className="z-10 mx-4 flex flex-col">
         <View>
-          <View className="relative mt-12 mb-6">
+          <View className="relative mb-6 mt-12">
             {/* Back button */}
             <BackButton onPress={() => navigation.navigate("Perfil")} />
 
