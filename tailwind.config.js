@@ -1,9 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./App.{js,jsx,ts,tsx}",
-    "./screens/**/*.{js,jsx,ts,tsx}",
+    "./App.tsx",
     "./components/**/*.{js,jsx,ts,tsx}",
+    "./screens/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     colors: {
@@ -65,15 +65,10 @@ module.exports = {
       },
     },
   },
-  exports: {
-    tailwind: "./tailwind.config.js",
-  },
   corePlugins: {
     aspectRatio: false,
   },
-
   plugins: [
-    require("@tailwindcss/aspect-ratio"),
     function ({ addUtilities }) {
       addUtilities({
         ".text-top": {

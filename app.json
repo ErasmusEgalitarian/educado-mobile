@@ -40,7 +40,13 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ]
     ],
     "extra": {
       "JWT_SECRET": "test",
