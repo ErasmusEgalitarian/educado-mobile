@@ -35,8 +35,11 @@ yarn-error.*
 *.tsbuildinfo
 
 ### Added by the devlopers
-/coverage/
+coverage/
 android/
 files-changed.json
 eslint-report.json
 tsc-report.json
+.idea/caches/deviceStreaming.xml
+.idea/deviceManager.xml
+.idea/codeStyles/Project.xml

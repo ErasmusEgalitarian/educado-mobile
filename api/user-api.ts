@@ -1,16 +1,7 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import * as FileSystem from "expo-file-system";
-import { URL } from "@env";
 
-/* Commented out to avoid linting errors 
- * TODO: move IP address to .env file !!!
-const prod = 'http://educado.somethingnew.dk';
-const test = 'http://172.30.211.110:8888'; // Change this to your LOCAL IP address when testing.
-const local = 'http://localhost:8888';
-const digitalOcean = 'http://207.154.213.68:8888';
-*/
-
-const url = URL; // Change this to your LOCAL IP address when testing.
+const url = process.env.EXPO_PUBLIC_BACK_END_HOST;
 
 /**
  * This is the client that will be used to make requests to the backend.
@@ -30,7 +21,12 @@ export const client = axios.create({
  * - email
  * - password
  */
-export const registerUser = async (obj) => {
+export const registerUser = async (obj: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password?: string;
+}) => {
   console.log(`User trying to register:
     firstName: ${obj.firstName ?? "undefined"}
     lastName: ${obj.lastName ?? "undefined"}
@@ -40,12 +36,11 @@ export const registerUser = async (obj) => {
     const res = await client.post("/api/auth/signup", obj);
     console.log("User successfully registered");
     return res.data;
-  } catch (e) {
-    console.log(e.message);
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
@@ -56,64 +51,68 @@ export const registerUser = async (obj) => {
  * - email
  * - password
  */
-export const loginUser = async (obj) => {
+export const loginUser = async (obj: { email: string; password: string }) => {
   try {
     const res = await client.post("/api/auth/login", obj);
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
-export const deleteUser = async (user_id, token) => {
+export const deleteUser = async (userId: string, token: string | null) => {
   try {
-    const res = await client.delete("/api/users/" + user_id, {
+    const res = await client.delete(`/api/users/${userId}`, {
       headers: {
         "Content-Type": "application/json",
         token: token, // Include the token in the headers
       },
     });
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
-export const updateUserFields = async (user_id, obj, token) => {
+export const updateUserFields = async (
+  userId: string,
+  obj: { email?: string; firstName?: string; lastName?: string },
+  token: string | null,
+) => {
   try {
-    const res = await client.patch(`/api/users/${user_id}`, obj, {
+    const res = await client.patch(`/api/users/${userId}`, obj, {
       headers: {
         "Content-Type": "application/json",
         token: token, // Include the token in the headers
       },
     });
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
 export const updateUserPassword = async (
-  user_id,
-  oldPassword,
-  newPassword,
-  token,
+  userId: any,
+  oldPassword: string,
+  newPassword: string,
+  token: string | null,
 ) => {
   try {
     const res = await axios.patch(
-      url + `/api/users/${user_id}/password`,
+      `${url}/api/users/${userId}/password`,
       {
         oldPassword: oldPassword,
         newPassword: newPassword,
@@ -127,25 +126,25 @@ export const updateUserPassword = async (
     );
 
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
 export const completeComponent = async (
-  user_id,
-  comp,
-  isComplete,
-  points,
-  token,
+  userId: string,
+  comp: any,
+  isComplete: any,
+  points: number,
+  token: string | null,
 ) => {
   try {
     const res = await client.patch(
-      "/api/students/" + user_id + "/complete",
+      `/api/students/${userId}/complete`,
       { comp: comp, isComplete: isComplete, points: points },
       {
         headers: {
@@ -156,32 +155,36 @@ export const completeComponent = async (
     );
 
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
-export const getStudentInfo = async (user_Id) => {
+export const getStudentInfo = async (userId: string | null | undefined) => {
   try {
-    const res = await client.get("/api/students/" + user_Id + "/info");
+    const res = await client.get(`/api/students/${userId}/info`);
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
-export const addCourseToStudent = async (user_Id, course_Id, token) => {
+export const addCourseToStudent = async (
+  userId: string | null,
+  courseId: string,
+  token: string | null,
+) => {
   try {
     const res = await client.patch(
-      "/api/students/" + user_Id + "/courses/" + course_Id + "/enroll",
+      `/api/students/${userId}/courses/${courseId}/enroll`,
       {},
       {
         headers: {
@@ -192,16 +195,20 @@ export const addCourseToStudent = async (user_Id, course_Id, token) => {
     );
 
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
-export const uploadPhoto = async (user_id, photo, token) => {
+export const uploadPhoto = async (
+  userId: string,
+  photo: string,
+  token: string | null,
+) => {
   try {
     const formData = new FormData();
 
@@ -215,33 +222,32 @@ export const uploadPhoto = async (user_id, photo, token) => {
       uri: file.uri, // The URI from expo-file-system
       type: "image/jpeg", // You can adjust this to the actual file type
       name: "photo.jpg", // File name
+    } as unknown as Blob);
+
+    const res = await client.put(`/api/students/${userId}/photo`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        accept: "application/json",
+        token: token,
+      },
     });
 
-    const res = await client.put(
-      "/api/students/" + user_id + "/photo",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          accept: "application/json",
-          token: token,
-        },
-      },
-    );
-
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
-export const deletePhoto = async (user_id, token) => {
+export const deletePhoto = async (
+  userId: string | null,
+  token: string | null,
+) => {
   try {
-    const res = await client.delete("/api/students/" + user_id + "/photo", {
+    const res = await client.delete(`/api/students/${userId}/photo`, {
       headers: {
         "Content-Type": "application/json",
         token: token,
@@ -249,11 +255,11 @@ export const deletePhoto = async (user_id, token) => {
     });
 
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
@@ -262,15 +268,15 @@ export const deletePhoto = async (user_id, token) => {
  * Function to send mail to user with code to reset password
  * @param {Object} email should contain an email, to receive a reset password message
  */
-export const sendResetPasswordEmail = async (email) => {
+export const sendResetPasswordEmail = async (email: { email: any }) => {
   try {
     const res = await client.post("/api/auth/reset-password-request", email);
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
@@ -281,15 +287,18 @@ export const sendResetPasswordEmail = async (email) => {
  * - email
  * - token
  */
-export const validateResetPasswordCode = async (obj) => {
+export const validateResetPasswordCode = async (obj: {
+  email: any;
+  token: any;
+}) => {
   try {
     const res = await client.post("/api/auth/reset-password-code", obj);
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
@@ -301,30 +310,40 @@ export const validateResetPasswordCode = async (obj) => {
  * - token
  * - newPassword
  */
-export const enterNewPassword = async (obj) => {
+export const enterNewPassword = async (obj: {
+  email: any;
+  token: any;
+  newPassword: any;
+}) => {
   try {
     const res = await client.patch("/api/auth/reset-password", obj);
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
 
-// Update student study streak
-export const updateStudyStreak = async (studentId) => {
+/**
+ * Update student study streak
+ */
+export const updateStudyStreak = async (studentId: string) => {
   try {
     const res = await client.patch(
       `/api/students/${studentId}/updateStudyStreak`,
     );
     return res.status;
   } catch (error) {
-    console.error("Error Message: " + error.message);
-    console.error("Error Code: " + error.code);
+    if (isAxiosError(error)) {
+      console.error(`Error Message: ${error.message}`);
+      console.error(`Error Code: ${error.code}`);
 
-    throw error;
+      throw error;
+    } else {
+      throw error;
+    }
   }
 };

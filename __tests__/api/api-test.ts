@@ -1,8 +1,5 @@
-import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { mockDataAPI } from "../mockData/mockDataAPI";
-import { URL } from "@env";
-
 import {
   getCourse,
   getCourses,
@@ -11,113 +8,120 @@ import {
   getSubscriptions,
   subscribeToCourse,
   unSubscribeToCourse,
-  ifSubscribed,
   giveFeedback,
   getAllFeedbackOptions,
 } from "../../api/api";
+import {
+  describe,
+  expect,
+  it,
+  jest,
+  beforeEach,
+  afterEach,
+} from "@jest/globals";
+import { backEndClient } from "../../axios";
 
-jest.mock("axios");
 jest.mock("@react-native-async-storage/async-storage");
 
-const mock = new MockAdapter(axios);
-
-const port = "https://educado-backend-staging-x7rgvjso4a-ew.a.run.app/";
+let mock: MockAdapter;
 
 const mockData = mockDataAPI();
 
 describe("API Functions", () => {
   beforeEach(() => {
-    axios.get.mockReset();
-    axios.post.mockReset();
+    mock = new MockAdapter(backEndClient);
+  });
+
+  afterEach(() => {
+    mock.reset();
+    mock.restore();
   });
 
   describe("getCourse", () => {
     it("should get a specific course", async () => {
       const courseId = mockData.courseData._id;
-      axios.get.mockResolvedValue({ data: mockData.courseData });
+
+      mock.onGet(`/api/courses/${courseId}`).reply(200, mockData.courseData);
 
       const result = await getCourse(courseId);
 
-      //expect(axios.get).toHaveBeenCalledWith(`${port}/api/courses/${courseId}`);
       expect(result).toEqual(mockData.courseData);
     });
 
     it("should handle errors", async () => {
       const courseId = mockData.courseData._id;
-      const errorMessage =
-        "Error getting specific course: " + mockData.errorResponse;
+      const errorData = { message: "Course not found" };
 
-      axios.get.mockRejectedValue(new Error(errorMessage));
+      mock.onGet(`/api/courses/${courseId}`).reply(500, errorData);
 
-      await expect(getCourse(courseId)).rejects.toThrow(errorMessage);
+      await expect(getCourse(courseId)).rejects.toEqual(errorData);
     });
   });
 
   describe("getCourses", () => {
     it("should get all courses", async () => {
-      axios.get.mockResolvedValue({ data: mockData.allCoursesData });
+      mock.onGet("/api/courses").reply(200, mockData.allCoursesData);
 
       const result = await getCourses();
 
-      //expect(axios.get).toHaveBeenCalledWith(`${port}/api/courses`);
       expect(result).toEqual(mockData.allCoursesData);
     });
 
     it("should handle errors", async () => {
-      const errorMessage =
-        "Error getting all courses: " + mockData.errorResponse;
+      const errorData = { message: "Course not found" };
 
-      axios.get.mockRejectedValue(new Error(errorMessage));
+      mock.onGet("/api/courses").reply(500, errorData);
 
-      await expect(getCourses()).rejects.toThrow(errorMessage);
+      await expect(getCourses()).rejects.toEqual(errorData);
     });
   });
 
   describe("getAllSections", () => {
     it("should get all sections for a specific course", async () => {
       const courseId = mockData.courseData._id;
-      axios.get.mockResolvedValue({ data: mockData.sectionsData });
+      mock
+        .onGet(`/api/courses/${courseId}/sections`)
+        .reply(200, mockData.sectionData);
 
       const result = await getAllSections(courseId);
 
-      // expect(axios.get).toHaveBeenCalledWith(`${port}/api/courses/${courseId}/sections`);
-      expect(result).toEqual(mockData.sectionsData);
+      expect(result).toEqual(mockData.sectionData);
     });
 
     it("should handle errors", async () => {
       const courseId = mockData.courseData._id;
-      const errorMessage =
-        "Error getting all sections: " + mockData.errorResponse;
+      const errorData = { message: "Course not found" };
 
-      axios.get.mockRejectedValue(new Error(errorMessage));
+      mock.onGet(`/api/courses/${courseId}/sections`).reply(500, errorData);
 
-      await expect(getAllSections(courseId)).rejects.toThrow(errorMessage);
+      await expect(getAllSections(courseId)).rejects.toEqual(errorData);
     });
   });
 
   describe("getSection", () => {
     it("should get a specific section", async () => {
       const courseId = mockData.courseData._id;
-      const sectionId = mockData.sectionData._id;
-      axios.get.mockResolvedValue({ data: mockData.sectionData });
+      const sectionId = mockData.sectionData[0]._id;
+
+      mock
+        .onGet(`/api/courses/${courseId}/sections/${sectionId}`)
+        .reply(200, mockData.sectionData);
 
       const result = await getSection(courseId, sectionId);
 
-      //expect(axios.get).toHaveBeenCalledWith(`${port}/api/courses/${courseId}/sections/${sectionId}`);
       expect(result).toEqual(mockData.sectionData);
     });
 
     it("should handle errors", async () => {
       const courseId = mockData.courseData._id;
-      const sectionId = mockData.sectionData._id;
-      const errorMessage =
-        "Error getting specific section: " + mockData.errorResponse;
+      const sectionId = mockData.sectionData[0]._id;
+      const errorData = { message: "Course not found" };
 
-      axios.get.mockRejectedValue(new Error(errorMessage));
+      mock
+        .onGet(`/api/courses/${courseId}/sections/${sectionId}`)
+        .reply(500, errorData);
 
-      await expect(getSection(courseId, sectionId)).rejects.toThrow(
-        errorMessage,
-      );
+      await expect(getSection(courseId, sectionId)).rejects.toEqual(errorData);
     });
   });
 
@@ -127,28 +131,20 @@ describe("API Functions", () => {
 
       mock
         .onGet(`/api/students/${userId}/subscriptions`)
-        .reply(200, { data: mockData.subscriptionData });
-
-      axios.get.mockResolvedValue({
-        data: mockData.subscribeData,
-        data: mockData.subscriptionData,
-      });
+        .reply(200, mockData.subscribedCourses);
 
       const result = await getSubscriptions(userId);
 
-      // Check that axios.get was called with the correct URL
-      //expect(axios.get).toHaveBeenCalledWith(`${port}/api/students/${userId}/subscriptions`);
-      expect(result).toEqual(mockData.subscriptionData);
+      expect(result).toEqual(mockData.subscribedCourses);
     });
 
     it("should handle errors", async () => {
       const userId = mockData.userData._id;
-      const errorMessage =
-        "Error getting subscriptions: " + mockData.errorResponse;
+      const errorData = { message: "Course not found" };
 
-      axios.get.mockRejectedValue(new Error(errorMessage));
+      mock.onGet(`/api/students/${userId}/subscriptions`).reply(500, errorData);
 
-      await expect(getSubscriptions(userId)).rejects.toThrow(errorMessage);
+      await expect(getSubscriptions(userId)).rejects.toEqual(errorData);
     });
   });
 
@@ -157,23 +153,29 @@ describe("API Functions", () => {
       const userId = mockData.userData._id;
       const courseId = mockData.courseData._id;
 
+      mock
+        .onPost(`/api/courses/${courseId}/subscribe`, {
+          user_id: userId,
+        })
+        .reply(200);
+
       await subscribeToCourse(userId, courseId);
 
-      /* expect(axios.post).toHaveBeenCalledWith(`${port}/api/courses/${courseId}/subscribe`, {
-        user_id: userId,
-      }); */
+      expect(mock.history.post.length).toBe(1);
+      expect(mock.history.post[0].url).toBe(
+        `/api/courses/${courseId}/subscribe`,
+      );
     });
 
     it("should handle errors", async () => {
       const userId = mockData.userData._id;
       const courseId = mockData.courseData._id;
-      const errorMessage =
-        "Error subscribing to course: " + mockData.errorResponse;
+      const errorData = { message: "Course not found" };
 
-      axios.post.mockRejectedValue(new Error(errorMessage));
+      mock.onPost(`/api/courses/${courseId}/subscribe`).reply(500, errorData);
 
-      await expect(subscribeToCourse(userId, courseId)).rejects.toThrow(
-        errorMessage,
+      await expect(subscribeToCourse(userId, courseId)).rejects.toEqual(
+        errorData,
       );
     });
   });
@@ -183,213 +185,149 @@ describe("API Functions", () => {
       const userId = mockData.userData._id;
       const courseId = mockData.courseData._id;
 
+      mock
+        .onPost(`/api/courses/${courseId}/unsubscribe`, {
+          user_id: userId,
+        })
+        .reply(200);
+
       await unSubscribeToCourse(userId, courseId);
 
-      /* expect(axios.post).toHaveBeenCalledWith(`${port}/api/courses/${courseId}/unsubscribe`, {
-       user_id: userId,
-      }); */
+      expect(mock.history.post.length).toBe(1);
+      expect(mock.history.post[0].url).toBe(
+        `/api/courses/${courseId}/unsubscribe`,
+      );
     });
 
     it("should handle errors", async () => {
       const userId = mockData.userData._id;
       const courseId = mockData.courseData._id;
-      const errorMessage =
-        "Error unsubscribing to course: " + mockData.errorResponse;
+      const errorData = { message: "Course not found" };
 
-      axios.post.mockRejectedValue(new Error(errorMessage));
+      mock.onPost(`/api/courses/${courseId}/unsubscribe`).reply(500, errorData);
 
-      await expect(unSubscribeToCourse(userId, courseId)).rejects.toThrow(
-        errorMessage,
+      await expect(unSubscribeToCourse(userId, courseId)).rejects.toEqual(
+        errorData,
       );
     });
   });
+
   describe("giveFeedback", () => {
     const courseId = "course123";
     const feedbackData = {
       rating: 5,
       feedbackText: "Great course!",
-      feedbackOptions: ["option1", "option2"],
+      feedbackOptions: [{ name: "option1" }, { name: "option2" }],
     };
 
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
     it("should submit feedback successfully", async () => {
-      const mockResponse = { data: "OK" };
-      axios.post.mockResolvedValue(mockResponse);
+      mock.onPost(`/api/feedback/${courseId}`).reply(200, "OK");
 
       const result = await giveFeedback(courseId, feedbackData);
 
       expect(result).toEqual("OK");
-      expect(axios.post).toHaveBeenCalledWith(
-        `${URL}/api/feedback/${courseId}`,
-        feedbackData,
-      );
+      expect(mock.history.post.length).toBe(1);
     });
 
     it('should rethrow "Feedback must contain a rating" error', async () => {
       const invalidFeedbackData = {
         rating: null,
         feedbackText: "Great course!",
-        feedbackOptions: ["option1", "option2"],
+        feedbackOptions: [{ name: "option1" }, { name: "option2" }],
       };
-      const errorMessage = "Feedback must contain a rating";
-      axios.post.mockImplementation((url, data) => {
-        if (data.rating === null) {
-          return Promise.reject({
-            response: {
-              status: 400,
-              data: { error: errorMessage, code: "E1303" },
-            },
-          });
-        }
-        return Promise.resolve({ data: "OK" });
+
+      mock.onPost(`/api/feedback/${courseId}`).reply(400, {
+        error: "Feedback must contain a rating",
+        code: "E1303",
       });
-      try {
-        await giveFeedback(courseId, invalidFeedbackData);
-      } catch (error) {
-        expect(error.response.status).toBe(400);
-        expect(error.response.data.error).toBe(errorMessage);
-        expect(error.response.data.code).toBe("E1303");
-      }
-      expect(axios.post).toHaveBeenCalledWith(
-        `${URL}/api/feedback/${courseId}`,
-        invalidFeedbackData,
-      );
+
+      await expect(
+        // @ts-expect-error TS2345 The rating is supposed to be null for this test...
+        giveFeedback(courseId, invalidFeedbackData),
+      ).rejects.toMatchObject({
+        error: "Feedback must contain a rating",
+        code: "E1303",
+      });
     });
 
     it('should rethrow "Feedback options must be an array" error', async () => {
-      const errorMessage = "Feedback options must be an array";
       const invalidFeedbackData = {
         rating: 5,
         feedbackText: "Great course!",
         feedbackOptions: "not an array",
       };
 
-      axios.post.mockImplementation((url, data) => {
-        if (!Array.isArray(data.feedbackOptions)) {
-          return Promise.reject({
-            response: {
-              status: 400,
-              data: { error: errorMessage, code: "E1304" },
-            },
-          });
-        }
-        return Promise.resolve({ data: "OK" });
+      mock.onPost(`/api/feedback/${courseId}`).reply(400, {
+        error: "Feedback options must be an array",
+        code: "E1304",
       });
 
-      try {
-        await giveFeedback(courseId, invalidFeedbackData);
-      } catch (error) {
-        expect(error.response.status).toBe(400);
-        expect(error.response.data.error).toBe(errorMessage);
-        expect(error.response.data.code).toBe("E1304");
-      }
-      expect(axios.post).toHaveBeenCalledWith(
-        `${URL}/api/feedback/${courseId}`,
-        invalidFeedbackData,
-      );
+      await expect(
+        // @ts-expect-error TS2345 Of course the type is wrong...
+        giveFeedback(courseId, invalidFeedbackData),
+      ).rejects.toMatchObject({
+        error: "Feedback options must be an array",
+        code: "E1304",
+      });
     });
 
     it('should rethrow "Could not save feedback entry" error', async () => {
-      const errorMessage = "Could not save feedback entry";
-      axios.post.mockImplementation((url, data) => {
-        return Promise.reject({
-          response: {
-            status: 400,
-            data: { error: errorMessage, code: "E1305" },
-          },
-        });
+      mock.onPost(`/api/feedback/${courseId}`).reply(400, {
+        error: "Could not save feedback entry",
+        code: "E1305",
       });
-      try {
-        await giveFeedback(courseId, feedbackData);
-      } catch (error) {
-        expect(error.response.status).toBe(400);
-        expect(error.response.data.error).toBe(errorMessage);
-        expect(error.response.data.code).toBe("E1305");
-      }
-      expect(axios.post).toHaveBeenCalledWith(
-        `${URL}/api/feedback/${courseId}`,
-        feedbackData,
-      );
+
+      await expect(giveFeedback(courseId, feedbackData)).rejects.toMatchObject({
+        error: "Could not save feedback entry",
+        code: "E1305",
+      });
     });
 
     it('should rethrow "Course not found" error', async () => {
-      const errorMessage = "Course not found";
-      axios.post.mockImplementation((url, data) => {
-        return Promise.reject({
-          response: {
-            status: 404,
-            data: { error: errorMessage, code: "E0006" },
-          },
-        });
+      mock.onPost(`/api/feedback/${courseId}`).reply(404, {
+        error: "Course not found",
+        code: "E0006",
       });
 
-      try {
-        await giveFeedback(courseId, feedbackData);
-      } catch (error) {
-        expect(error.response.status).toBe(404);
-        expect(error.response.data.error).toBe(errorMessage);
-        expect(error.response.data.code).toBe("E0006");
-      }
-
-      expect(axios.post).toHaveBeenCalledWith(
-        `${URL}/api/feedback/${courseId}`,
-        feedbackData,
-      );
+      await expect(giveFeedback(courseId, feedbackData)).rejects.toMatchObject({
+        error: "Course not found",
+        code: "E0006",
+      });
     });
   });
 
   describe("getAllFeedbackOptions", () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
     it("should retrieve all feedback options successfully", async () => {
       const mockFeedbackOptions = [
         { option: "Option 1" },
         { option: "Option 2" },
       ];
-      axios.get.mockResolvedValue({ data: mockFeedbackOptions });
+
+      mock.onGet("/api/feedback/options").reply(200, mockFeedbackOptions);
 
       const result = await getAllFeedbackOptions();
 
       expect(result).toEqual(mockFeedbackOptions);
-      expect(axios.get).toHaveBeenCalledWith(`${URL}/api/feedback/options`);
     });
 
     it('should rethrow "no feedback options found" error', async () => {
-      const errorMessage = "No feedback options found";
-      axios.get.mockRejectedValue({
-        response: {
-          status: 400,
-          data: { error: errorMessage },
-        },
+      mock.onGet("/api/feedback/options").reply(400, {
+        error: "No feedback options found",
       });
 
-      try {
-        await getAllFeedbackOptions();
-      } catch (error) {
-        expect(error.response).toBeDefined();
-        expect(error.response.status).toBe(400);
-        expect(error.response.data.error).toBe(errorMessage);
-      }
-
-      expect(axios.get).toHaveBeenCalledWith(`${URL}/api/feedback/options`);
+      await expect(getAllFeedbackOptions()).rejects.toMatchObject({
+        error: "No feedback options found",
+      });
     });
 
     it("should throw network error", async () => {
-      const errorMessage = "Network Error";
-      axios.get.mockRejectedValue(new Error(errorMessage));
+      mock.onGet("/api/feedback/options").networkError();
 
       try {
         await getAllFeedbackOptions();
-      } catch (error) {
-        expect(error.message).toBe(errorMessage);
+      } catch (error: any) {
+        expect(error.message).toBe("Network Error");
       }
-
-      expect(axios.get).toHaveBeenCalledWith(`${URL}/api/feedback/options`);
     });
   });
 });

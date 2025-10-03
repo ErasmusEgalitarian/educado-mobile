@@ -1,14 +1,33 @@
-import RN from "react-native";
-import PropTypes from "prop-types";
+import { Text as RNText, TextProps } from "react-native";
+import { ReactNode } from "react";
 
-export default function Text(props) {
-  return (
-    <RN.Text {...props} className="font-sans text-body text-projectBlack">
-      {props.children}
-    </RN.Text>
-  );
+interface CustomTextProps extends TextProps {
+  children?: ReactNode;
 }
 
-Text.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+/**
+ * Custom text component with default styles and props that can be overridden.
+ *
+ * @param children
+ * @param className
+ * @param style
+ * @param props
+ */
+const Text = ({
+  children,
+  className = "",
+  style,
+  ...props
+}: CustomTextProps) => {
+  const mergedClasses = `font-sans text-body text-projectBlack ${className}`;
+
+  return (
+    <RNText {...props} className={mergedClasses} style={style}>
+      {children}
+    </RNText>
+  );
 };
+
+export default Text;
+
+export { Text };

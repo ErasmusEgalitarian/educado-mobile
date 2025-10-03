@@ -1,21 +1,14 @@
 import { useRef, useEffect, useState } from "react";
-import { View } from "react-native";
-import Animated, { EasingNode } from "react-native-reanimated";
-import Text from "../General/Text";
-import PropTypes from "prop-types";
+import { View, Animated, LayoutChangeEvent } from "react-native";
+import { Easing } from "react-native-reanimated";
+import { Text } from "../General/Text";
 
-//inspo from https://www.npmjs.com/package/react-native-animated-numbers?activeTab=code
-
-/* This is basically a package, copied and modified */
-
-// makes an array of numbers from 0 to 9
-const NUMBERS = Array(10)
-  .fill()
-  .map((_, i) => i);
+const NUMBERS = Array.from({ length: 10 }, (_, i) => i);
 
 // custom hook to get the previous number
-const usePrevious = (value) => {
-  const ref = useRef();
+const usePrevious = (value: number) => {
+  const ref = useRef<number>();
+
   useEffect(() => {
     ref.current = value;
   });
@@ -27,12 +20,28 @@ const usePrevious = (value) => {
   return ref.current;
 };
 
+export interface AnimatedNumberProps {
+  animateToNumber: number;
+  fontStyle: string;
+  animationDuration: number;
+  easing?: (value: number) => number;
+}
+
+/**
+ * Inspired by https://www.npmjs.com/package/react-native-animated-numbers?activeTab=code.
+ * This is basically the package copied and modified.
+ *
+ * @param animateToNumber
+ * @param fontStyle
+ * @param animationDuration
+ * @param easing
+ */
 const AnimatedNumber = ({
   animateToNumber,
   fontStyle,
   animationDuration,
   easing,
-}) => {
+}: AnimatedNumberProps) => {
   // the previous number
   const prevNumber = usePrevious(animateToNumber);
 
@@ -64,8 +73,8 @@ const AnimatedNumber = ({
   });
 
   // when the text element is created, the height is set
-  const setButtonLayout = (e) => {
-    setNumberHeight(e.nativeEvent.layout.height);
+  const setButtonLayout = (event: LayoutChangeEvent) => {
+    setNumberHeight(event.nativeEvent.layout.height);
   };
 
   // when the number changes, the animation is triggered
@@ -82,13 +91,14 @@ const AnimatedNumber = ({
         toValue: -1 * (numberHeight * animateToNumbersArr[index]),
         duration: animationDuration || 1400,
         useNativeDriver: true,
-        easing: easing || EasingNode.elastic(1.2),
+        easing: easing || Easing.elastic(1.2),
       }).start();
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animateToNumber, numberHeight]);
 
   // the translateY value for each number, how much it should move in the y axis
-  const getTranslateY = (index) => {
+  const getTranslateY = (index: number) => {
     return animations[index];
   };
 
@@ -99,7 +109,7 @@ const AnimatedNumber = ({
         <View style={{ flexDirection: "row" }}>
           {/* if negative number then - is viewed */}
           {animateToNumber < 0 && (
-            <Text className={`${fontStyle}`} style={{ height: numberHeight }}>
+            <Text className={fontStyle} style={{ height: numberHeight }}>
               {"-"}
             </Text>
           )}
@@ -111,7 +121,7 @@ const AnimatedNumber = ({
               return (
                 <Text
                   key={index}
-                  className={`${fontStyle}`}
+                  className={fontStyle}
                   style={{ height: numberHeight }}
                 >
                   {String(n)}
@@ -142,7 +152,7 @@ const AnimatedNumber = ({
                   {NUMBERS.map((number, i) => (
                     <View key={i} className="w-fit">
                       <Text
-                        className={`${fontStyle}`}
+                        className={fontStyle}
                         style={{ height: numberHeight }}
                       >
                         {String(number)}
@@ -156,7 +166,7 @@ const AnimatedNumber = ({
         </View>
       )}
       <Text
-        className={`${fontStyle}`}
+        className={fontStyle}
         style={{ position: "absolute", top: -999999 }}
         onLayout={setButtonLayout}
       >
@@ -164,13 +174,6 @@ const AnimatedNumber = ({
       </Text>
     </>
   );
-};
-
-AnimatedNumber.propTypes = {
-  animateToNumber: PropTypes.number,
-  fontStyle: PropTypes.string,
-  animationDuration: PropTypes.number,
-  easing: PropTypes.func,
 };
 
 export default AnimatedNumber;

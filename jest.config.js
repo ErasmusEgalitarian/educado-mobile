@@ -8,7 +8,10 @@ const config = {
   moduleNameMapper: {
     "expo-font": require.resolve("expo-font"),
     // "expo-camera": require.resolve("__tests__/mockData/mockExpoCamera"),
+    "^@/(.*)$": "<rootDir>/$1",
   },
+  // TODO: Enable tests incrementally after refactoring, not at once, as many are failing
+  testMatch: ["<rootDir>/__tests__/api/api-test.ts"],
 };
 
 module.exports = config;

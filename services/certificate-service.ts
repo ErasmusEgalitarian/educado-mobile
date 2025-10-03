@@ -1,24 +1,26 @@
-import axios from "axios";
-import { CERTIFICATE_URL } from "@env";
+import axios, { isAxiosError } from "axios";
 import { getCourse } from "../api/api";
 import { getUserInfo } from "./storage-service";
 import { getStudentInfo } from "../api/user-api";
+import { certificateServiceClient } from "../axios";
 
 // Get certificates from student
-export const fetchCertificates = async (userId) => {
+export const fetchCertificates = async (userId: string) => {
   try {
     if (userId == null) {
       throw "User ID is null";
     }
-    const res = await axios.get(
-      CERTIFICATE_URL + "/api/student-certificates/student/" + userId,
+
+    const res = await certificateServiceClient.get(
+      `/api/student-certificates/student/${userId}`,
     );
+
     return res.data;
-  } catch (e) {
-    if (e?.response?.data != null) {
-      throw e.response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
     } else {
-      throw e;
+      throw error;
     }
   }
 };
@@ -28,7 +30,10 @@ export const fetchCertificates = async (userId) => {
  * @param {string} studentId - The ID of the student.
  * @returns {Promise<Object>} - The response from the server.
  */
-export const generateCertificate = async (courseId, userId) => {
+export const generateCertificate = async (
+  courseId: string,
+  userId: string | null | undefined,
+) => {
   try {
     // Fetch course data
     const courseData = await getCourse(courseId);
@@ -57,16 +62,21 @@ export const generateCertificate = async (courseId, userId) => {
     };
 
     // Call the endpoint to generate the certificate
-    const response = await axios.put(
-      CERTIFICATE_URL + "/api/student-certificates",
+    const response = await certificateServiceClient.put(
+      "/api/student-certificates",
       object,
     );
+
     return response.data;
   } catch (error) {
-    console.error(
-      "Error generating certificate:",
-      error.response?.data || error.message,
-    );
-    throw error;
+    if (isAxiosError(error)) {
+      console.error(
+        "Error generating certificate:",
+        error.response?.data || error.message,
+      );
+      throw error;
+    } else {
+      throw error;
+    }
   }
 };
