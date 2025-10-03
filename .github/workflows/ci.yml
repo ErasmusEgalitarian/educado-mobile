@@ -72,9 +72,7 @@ jobs:
         run: |
           node ./scripts/ci-filter-reports.mjs "$FILES_CHANGED_JSON" eslint-report.json tsc-report.json
       - name: Run Tests
-        # TODO: enable
-        if: false
-        run: npx jest --ci --coverage
+        run: npm run test:ci
 #  build:
 #    name: Build
 #    runs-on: ubuntu-latest

@@ -1,19 +1,9 @@
-module.exports = function (api) {
+module.exports = (api) => {
   api.cache(true);
 
   return {
     presets: ["babel-preset-expo"],
-    plugins: [
-      "nativewind/babel",
-      [
-        "module:react-native-dotenv",
-        {
-          moduleName: "@env",
-          path: ".env",
-        },
-      ],
-      "react-native-reanimated/plugin",
-    ],
+    plugins: ["nativewind/babel", "react-native-reanimated/plugin"],
     env: {
       test: {
         plugins: ["@babel/plugin-transform-runtime"],

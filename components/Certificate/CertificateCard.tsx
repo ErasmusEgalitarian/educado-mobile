@@ -16,18 +16,30 @@ import CertificateOverlay from "./CertificateOverlay";
 import CardLabel from "../Explore/CardLabel";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
-import { CERTIFICATE_URL } from "@env";
-import PropTypes from "prop-types";
 
-const certificateUrl = CERTIFICATE_URL;
+export interface Certificate {
+  studentFirstName: string;
+  studentLastName: string;
+  courseCategory: string;
+  courseId: string;
+  studentId: string;
+  estimatedCourseDuration: number;
+  courseName: string;
+  dateOfCompletion: string;
+  courseCreator: string;
+}
+
+export interface CertificateCardProps {
+  certificate: Certificate;
+}
 
 /**
  * This component is used to display a certificate card.
+ *
  * @param certificate - The certificate object to be displayed.
- * @param previewOnPress - The function to be executed when the preview button is pressed.
- * @returns {JSX.Element|null} - Returns a JSX element.
+ * @returns
  */
-export default function CertificateCard({ certificate }) {
+const CertificateCard = ({ certificate }: CertificateCardProps) => {
   const [loading, setLoading] = useState(false);
 
   const [popupVisible, setPopupVisible] = useState(false);
@@ -44,12 +56,7 @@ export default function CertificateCard({ certificate }) {
     try {
       setLoading(true);
       const fileName = "Educado Certificate " + certificate.courseName + ".pdf";
-      const url =
-        certificateUrl +
-        "/api/student-certificates/download?courseId=" +
-        certificate.courseId +
-        "&studentId=" +
-        certificate.studentId;
+      const url = `${process.env.EXPO_PUBLIC_CERTIFICATE_SERVICE_HOST}/api/student-certificates/download?courseId=${certificate.courseId}&studentId=${certificate.studentId}`;
       const fileUri = FileSystem.documentDirectory + fileName;
       const file = await FileSystem.downloadAsync(url, fileUri);
       const uri = file.uri;
@@ -183,18 +190,9 @@ export default function CertificateCard({ certificate }) {
       </CertificatePopup>
     </View>
   );
-}
-
-CertificateCard.propTypes = {
-  certificate: PropTypes.shape({
-    studentFirstName: PropTypes.string.isRequired,
-    studentLastName: PropTypes.string.isRequired,
-    courseCategory: PropTypes.string.isRequired,
-    courseId: PropTypes.string.isRequired,
-    studentId: PropTypes.string.isRequired,
-    estimatedCourseDuration: PropTypes.number.isRequired,
-    courseName: PropTypes.string.isRequired,
-    dateOfCompletion: PropTypes.string.isRequired,
-    courseCreator: PropTypes.string.isRequired,
-  }).isRequired,
 };
+
+export { CertificateCard };
+
+// Legacy fallback export
+export default CertificateCard;
