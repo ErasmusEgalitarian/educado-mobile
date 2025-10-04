@@ -1,7 +1,7 @@
 {
   "name": "educado-mobile",
   "version": "2.1.5",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "expo-router/entry",
   "engines": {
     "node": ">=18 <19"
   },
@@ -48,6 +48,8 @@
     "expo-image-picker": "~14.7.1",
     "expo-jwt": "^1.6.5",
     "expo-linear-gradient": "~12.7.2",
+    "expo-linking": "~6.2.2",
+    "expo-router": "~3.4.10",
     "expo-sharing": "~11.10.0",
     "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
