@@ -9,7 +9,7 @@ import {
   determineIcon,
   formatHours,
 } from "../../../services/utils";
-import tailwindConfig from "../../../tailwind.config.js";
+import colors from "../../../theme/colors";
 import CustomProgressBar from "../../Exercise/CustomProgressBar";
 import Text from "../../General/Text";
 import DownloadCourseButton from "./DownloadCourseButton";
@@ -50,13 +50,18 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, isOnline }) => {
     <Pressable
       testID="courseCard"
       className={layout}
-      onPress={() =>
-        layout === enabledUI
-          ? navigation.navigate("CourseOverview", {
-              course: course,
-            })
-          : null
-      }
+      onPress={() => {
+        if (layout === enabledUI) {
+          navigation.navigate(
+            ...([
+              "CourseOverview",
+              {
+                course: course,
+              },
+            ] as never),
+          );
+        }
+      }}
     >
       <View>
         <View className="relative">
@@ -107,16 +112,21 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, isOnline }) => {
                 className="z-[1]"
                 onPress={() => {
                   if (layout === enabledUI) {
-                    navigation.navigate("CourseOverview", {
-                      course: course,
-                    });
+                    navigation.navigate(
+                      ...([
+                        "CourseOverview",
+                        {
+                          course: course,
+                        },
+                      ] as never),
+                    );
                   }
                 }}
               >
                 <MaterialCommunityIcons
                   size={28}
                   name="play-circle"
-                  color={tailwindConfig?.theme?.colors?.primary_custom}
+                  color={colors?.primary_custom}
                 ></MaterialCommunityIcons>
               </Pressable>
             </View>
