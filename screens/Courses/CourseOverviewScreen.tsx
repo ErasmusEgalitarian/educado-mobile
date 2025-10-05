@@ -9,7 +9,6 @@ import { useNavigation } from "@react-navigation/native";
 import CustomProgressBar from "../../components/Exercise/CustomProgressBar";
 import SubscriptionCancelButton from "../../components/Section/CancelSubscriptionButton";
 import { unsubscribe } from "../../services/storage-service";
-import PropTypes from "prop-types";
 import {
   checkProgressCourse,
   checkProgressSection,
@@ -44,7 +43,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
 }) => {
   const { course } = route.params;
   const navigation = useNavigation();
-  const [sections, setSections] = useState(null);
+  const [sections, setSections] = useState<Section[] | null>(null);
   const [studentProgress, setStudentProgress] = useState(0);
   const [sectionProgress, setSectionProgress] = useState({});
   const [currentSection, setCurrentSection] = useState(null);
@@ -114,7 +113,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
       }
     });
     return update;
-  }, [navigation]);
+  }, [checkProgress, navigation, sections]);
 
   useEffect(() => {
     if (!coverImage && course) {
@@ -129,7 +128,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
       };
       fetchImage();
     }
-  }, [course]);
+  }, [course, coverImage]);
 
   const unsubAlert = () =>
     Alert.alert("Cancelar subscrição", "Tem certeza?", [
@@ -183,12 +182,12 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
             <View className="flex w-full items-center justify-between">
               {!imageError && coverImage ? (
                 <Image
-                  class="h-full max-w-full"
+                  className="h-full max-w-full"
                   source={{ uri: coverImage }}
                   style={{ width: "100%", height: 296, resizeMode: "cover" }}
                 />
               ) : (
-                <Image class="h-full max-w-full" source={ImageNotFound} />
+                <Image className="h-full max-w-full" source={ImageNotFound} />
               )}
             </View>
             <View className="mt-[-10%] flex w-[293px] rounded-xl bg-projectWhite p-[14px]">
