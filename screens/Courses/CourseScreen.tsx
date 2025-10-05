@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -45,13 +45,12 @@ const CourseScreen = () => {
   const [studentLevel, setStudentLevel] = useState(0);
   const [studentPoints, setStudentPoints] = useState(0);
   const navigation = useNavigation();
-  const [isVisible, setIsVisible] = useState(false);
 
   /**
    * Asynchronous function that loads the courses from storage and updates the state.
    * @returns {void}
    */
-  const loadCourses = async () => {
+  const loadCourses = useCallback(async () => {
     const courseData = await StorageService.getSubCourseList();
     if (shouldUpdate(courses, courseData)) {
       if (courseData.length !== 0 && Array.isArray(courseData)) {
@@ -63,7 +62,7 @@ const CourseScreen = () => {
       }
     }
     setLoading(false);
-  };
+  }, [courses]);
 
   // When refreshing the loadCourses function is called
   const onRefresh = () => {
@@ -92,7 +91,7 @@ const CourseScreen = () => {
       loadCourses();
       fetchStudentData();
     });
-  }, [navigation]);
+  }, [loadCourses, navigation]);
 
   useEffect(() => {
     const logged = async () => {
@@ -119,7 +118,7 @@ const CourseScreen = () => {
       {!isOnline ? (
         <OfflineScreen />
       ) : courseLoaded ? (
-        <View height="100%">
+        <View className="h-full">
           <IconHeader
             title="Bem Vindo!"
             description="Aqui você encontra todos os cursos em que você está inscrito!"
@@ -131,6 +130,8 @@ const CourseScreen = () => {
               level={studentLevel || 0}
               points={studentPoints || 0}
               drawProgressBarOnly={true}
+              studyStreak={undefined}
+              leaderboardPosition={undefined}
             />
           </View>
 
@@ -148,14 +149,12 @@ const CourseScreen = () => {
       ) : (
         <View className="items-center justify-center bg-secondary">
           <Tooltip
-            isVisible={isVisible}
             position={{
               top: -150,
               left: 95,
               right: 5,
               bottom: 24,
             }}
-            setIsVisible={setIsVisible}
             text="Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito."
             tailSide="right"
             tailPosition="20%"
@@ -184,7 +183,7 @@ const CourseScreen = () => {
               <Pressable
                 testID="exploreButton"
                 className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
-                onPress={() => navigation.navigate("Explorar")}
+                onPress={() => navigation.navigate("Explorar" as never)}
               >
                 <Text className="text-center font-sans-bold text-body text-projectWhite">
                   Explorar cursos

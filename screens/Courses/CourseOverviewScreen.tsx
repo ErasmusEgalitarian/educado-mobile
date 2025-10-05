@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Alert, View, TouchableOpacity, Image } from "react-native";
 import Text from "../../components/General/Text";
 import * as StorageService from "../../services/storage-service";
@@ -45,29 +45,32 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
   const navigation = useNavigation();
   const [sections, setSections] = useState<Section[] | null>(null);
   const [studentProgress, setStudentProgress] = useState(0);
-  const [sectionProgress, setSectionProgress] = useState({});
-  const [currentSection, setCurrentSection] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [coverImage, setCoverImage] = useState(null);
-  const [imageError, setImageError] = useState(null);
+  const [sectionProgress, setSectionProgress] = useState<
+    Record<string, number>
+  >({});
+  const [currentSection, setCurrentSection] = useState<Section | undefined>(
+    undefined,
+  );
+  const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<unknown | null>(null);
 
   const loadSections = async (id: string) => {
     const sectionData = await StorageService.getSectionList(id);
     setSections(sectionData);
   };
 
-  const checkProgress = async () => {
+  const checkProgress = useCallback(async () => {
     const progress = await checkProgressCourse(course.courseId);
     setStudentProgress(progress);
-  };
+  }, [course.courseId]);
 
-  const checkProgressInSection = async (sectionId) => {
+  const checkProgressInSection = useCallback(async (sectionId: string) => {
     const completed = await checkProgressSection(sectionId);
     setSectionProgress((prevProgress) => ({
       ...prevProgress,
       [sectionId]: completed,
     }));
-  };
+  }, []);
 
   useEffect(() => {
     let componentIsMounted = true;
@@ -83,7 +86,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
     return () => {
       componentIsMounted = false;
     };
-  }, []);
+  }, [course.courseId]);
 
   useEffect(() => {
     if (sections) {
@@ -91,7 +94,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
         checkProgressInSection(section.sectionId);
       });
     }
-  }, [sections]);
+  }, [checkProgressInSection, sections]);
 
   useEffect(() => {
     if (sections) {
@@ -113,7 +116,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
       }
     });
     return update;
-  }, [checkProgress, navigation, sections]);
+  }, [checkProgress, checkProgressInSection, navigation, sections]);
 
   useEffect(() => {
     if (!coverImage && course) {
@@ -141,7 +144,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
         onPress: () => {
           unsubscribe(course.courseId);
           setTimeout(() => {
-            navigation.navigate("Meus cursos");
+            navigation.navigate("Meus cursos" as never);
           }, 300);
         },
       },
@@ -149,17 +152,27 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
 
   const navigateToCurrentSection = () => {
     if (currentSection) {
-      navigation.navigate("Components", {
-        section: currentSection,
-        parsedCourse: course,
-      });
+      navigation.navigate(
+        ...([
+          "Components",
+          {
+            section: currentSection,
+            parsedCourse: course,
+          },
+        ] as never),
+      );
     }
   };
-  const navigateToSpecifiedSection = (section) => {
-    navigation.navigate("Section", {
-      course: course,
-      section: section,
-    });
+  const navigateToSpecifiedSection = (section: Section) => {
+    navigation.navigate(
+      ...([
+        "Section",
+        {
+          course: course,
+          section: section,
+        },
+      ] as never),
+    );
   };
 
   return (
@@ -167,7 +180,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
       {/* Back Button */}
       <TouchableOpacity
         className="absolute left-5 top-10 z-10 pr-3"
-        onPress={() => navigation.navigate("Meus cursos")}
+        onPress={() => navigation.navigate("Meus cursos" as never)}
       >
         <MaterialCommunityIcons
           name="chevron-left"
@@ -245,14 +258,12 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
           sections.length === 0 ? null : (
             <View className="flex-[1] flex-col bg-secondary">
               <Tooltip
-                isVisible={isVisible}
                 position={{
                   top: -30,
                   left: 70,
                   right: 30,
                   bottom: 24,
                 }}
-                setIsVisible={setIsVisible}
                 text={
                   "Essa é a página do seu curso. É aqui que você vai acessar as aulas e acompanhar seu progresso."
                 }

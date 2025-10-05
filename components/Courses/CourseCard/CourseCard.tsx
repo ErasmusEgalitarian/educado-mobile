@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import { checkCourseStoredLocally } from "../../../services/storage-service";
 import {
@@ -25,15 +25,16 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, isOnline }) => {
   const navigation = useNavigation();
   const [studentProgress, setStudentProgress] = useState(0);
 
-  const checkDownload = async () => {
+  const checkDownload = useCallback(async () => {
     setDownloaded((await checkCourseStoredLocally(course.courseId)) || false);
-  };
-  checkDownload();
+  }, [course.courseId]);
 
-  const checkProgress = async () => {
+  checkDownload();
+  const checkProgress = useCallback(async () => {
     const progress = await checkProgressCourse(course.courseId);
     setStudentProgress(progress);
-  };
+  }, [course.courseId]);
+
   checkProgress();
 
   const enabledUI =
@@ -105,11 +106,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, isOnline }) => {
               <Pressable
                 className="z-[1]"
                 onPress={() => {
-                  layout === enabledUI
-                    ? navigation.navigate("CourseOverview", {
-                        course: course,
-                      })
-                    : null;
+                  if (layout === enabledUI) {
+                    navigation.navigate("CourseOverview", {
+                      course: course,
+                    });
+                  }
                 }}
               >
                 <MaterialCommunityIcons
