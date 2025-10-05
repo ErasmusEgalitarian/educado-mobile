@@ -23,21 +23,20 @@ import { getStudentInfo } from "../../services/storage-service";
 import ProfileStatsBox from "../../components/Profile/ProfileStatsBox";
 import OfflineScreen from "../Offline/OfflineScreen";
 
-
 export interface Course {
-  title: string,
-  courseId: string,
-  description: string,
-  category: string,
-  estimatedHours: number,
-  dateUpdated: string,
-  difficulty: string,
-  published: boolean,
-  status: string,
-  rating: number,
+  title: string;
+  courseId: string;
+  description: string;
+  category: string;
+  estimatedHours: number;
+  dateUpdated: string;
+  difficulty: string;
+  published: boolean;
+  status: string;
+  rating: number;
 }
 
-const CourseScreen = () =>  {
+const CourseScreen = () => {
   const [courses, setCourses] = useState<Course[] | any[]>([]);
   const [courseLoaded, setCourseLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -197,6 +196,6 @@ const CourseScreen = () =>  {
       )}
     </>
   );
-}
+};
 
 export default CourseScreen;

@@ -21,7 +21,6 @@ import DownloadCourseButton from "../../components/Courses/CourseCard/DownloadCo
 import { getBucketImage } from "../../api/api";
 import { Course } from "./CourseScreen";
 
-
 interface CourseOverviewScreenProps {
   route: {
     params: {
@@ -30,8 +29,7 @@ interface CourseOverviewScreenProps {
   };
 }
 
-
-export interface Section  {
+export interface Section {
   title: string;
   sectionId: string;
   parentCourseId: string;
@@ -40,9 +38,10 @@ export interface Section  {
   total: number;
 }
 
-
 // eslint-disable-next-line no-undef
-const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({ route }) => {
+const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({
+  route,
+}) => {
   const { course } = route.params;
   const navigation = useNavigation();
   const [sections, setSections] = useState(null);
@@ -122,7 +121,7 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({ route }) =>
       const fetchImage = async () => {
         try {
           const image = await getBucketImage(course.courseId + "_c");
-            setCoverImage(image);
+          setCoverImage(image);
         } catch (error) {
           setImageError(error);
           console.error(error);
@@ -288,6 +287,6 @@ const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({ route }) =>
       </View>
     </>
   );
-}
+};
 
 export default CourseOverviewScreen;

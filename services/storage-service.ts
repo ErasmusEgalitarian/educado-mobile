@@ -303,7 +303,9 @@ export const refreshSection = async (section) => {
  * @param {string} course_id - The ID of the course.
  * @returns {Promise<Array>} A promise that resolves with a list of sections for the course.
  */
-export const getSectionList = async (course_id: string): Promise<Section[] | null> => {
+export const getSectionList = async (
+  course_id: string,
+): Promise<Section[] | null> => {
   let sectionList: any[] = [];
   try {
     if (isOnline) {
@@ -329,7 +331,9 @@ export const getSectionList = async (course_id: string): Promise<Section[] | nul
  * @param {Array} sectionList - The list of sections to refresh.
  * @returns {Promise<Array>} A promise that resolves with the refreshed section list.
  */
-export const refreshSectionList = async (sectionList: any[]): Promise<Section[] | null> => {
+export const refreshSectionList = async (
+  sectionList: any[],
+): Promise<Section[] | null> => {
   let newSectionList = [];
   try {
     if (sectionList !== null) {
@@ -649,7 +653,6 @@ export const storeCourseLocally = async (courseID) => {
   } finally {
     return success;
   }
-
 };
 
 /**
@@ -673,7 +676,6 @@ export const deleteLocallyStoredCourse = async (courseID) => {
   } finally {
     return success;
   }
-
 };
 
 /**
