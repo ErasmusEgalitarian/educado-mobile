@@ -6,6 +6,8 @@ import defaultImage from "../assets/images/defaultImage-base64.json";
 import * as FileSystem from "expo-file-system";
 import jwt from "expo-jwt";
 import Constants from "expo-constants";
+import { Course } from "../screens/Courses/CourseScreen";
+import { Section } from "../screens/Courses/CourseOverviewScreen";
 
 const SUB_COURSE_LIST = "@subCourseList";
 const USER_ID = "@userId";
@@ -301,8 +303,8 @@ export const refreshSection = async (section) => {
  * @param {string} course_id - The ID of the course.
  * @returns {Promise<Array>} A promise that resolves with a list of sections for the course.
  */
-export const getSectionList = async (course_id) => {
-  let sectionList = null;
+export const getSectionList = async (course_id: string): Promise<Section[] | null> => {
+  let sectionList: any[] = [];
   try {
     if (isOnline) {
       sectionList = await api.getAllSections(course_id);
@@ -317,9 +319,9 @@ export const getSectionList = async (course_id) => {
     } catch (e) {
       handleError(e, "getSectionList");
     }
-  } finally {
-    return await refreshSectionList(sectionList);
   }
+
+  return await refreshSectionList(sectionList);
 };
 
 /**
@@ -327,7 +329,7 @@ export const getSectionList = async (course_id) => {
  * @param {Array} sectionList - The list of sections to refresh.
  * @returns {Promise<Array>} A promise that resolves with the refreshed section list.
  */
-export const refreshSectionList = async (sectionList) => {
+export const refreshSectionList = async (sectionList: any[]): Promise<Section[] | null> => {
   let newSectionList = [];
   try {
     if (sectionList !== null) {
@@ -456,7 +458,7 @@ export const getVideoURL = async (videoName, resolution) => {
  * Retrieves a list of subscribed courses for a user.
  * @returns {Promise<Array>} A promise that resolves with the list of subscribed courses.
  */
-export const getSubCourseList = async () => {
+export const getSubCourseList = async (): Promise<Course[] | any> => {
   // get the logged-in user id from async storage
   const userId = await AsyncStorage.getItem(USER_ID);
 
@@ -648,52 +650,6 @@ export const storeCourseLocally = async (courseID) => {
     return success;
   }
 
-  async function storeLectureData(sectionList, course) {
-    for (let section of sectionList) {
-      //Stores lecture data
-      let componentList = await api.getComponents(section._id);
-      await AsyncStorage.setItem(
-        "C" + section._id,
-        JSON.stringify(componentList),
-      );
-      for (let component of componentList) {
-        if (component.type === "lecture") {
-          if (component.component.contentType === "video") {
-            await makeDirectory();
-            await storeLectureVideo(component.component._id + "_l");
-          }
-          continue;
-        }
-        if (component.component.image) {
-          //Stores images
-          try {
-            let image = await api.getBucketImage(component.component.image);
-            await AsyncStorage.setItem(
-              "I" + component.component._id,
-              JSON.stringify(image),
-            );
-          } catch {
-            await AsyncStorage.setItem(
-              "I" + component.component._id,
-              defaultImage.base64,
-            );
-          }
-        } else if (component.component.video) {
-          //Stores videos
-          await makeDirectory();
-          await FileSystem.writeAsStringAsync(
-            lectureVideoPath + component.component.video + ".json",
-            await api.getBucketImage(component.component.video),
-          );
-        }
-      }
-
-      //add a new variable "DateOfDownload" to the course object
-      if (course.dateOfDownload === undefined) {
-        course.dateOfDownload = new Date().toISOString();
-      }
-    }
-  }
 };
 
 /**
@@ -718,26 +674,6 @@ export const deleteLocallyStoredCourse = async (courseID) => {
     return success;
   }
 
-  async function removeComponentsBySection(sectionList) {
-    for (let section of sectionList) {
-      let componentList = JSON.parse(
-        await AsyncStorage.getItem("C" + section._id),
-      );
-      await AsyncStorage.removeItem("C" + section._id);
-
-      for (let component of componentList) {
-        if (component.type !== "lecture") {
-          continue;
-        }
-        if (component.lectureType === "video") {
-          await deleteLectureVideo(component.component._id + "_l");
-        }
-        if (component.component.image) {
-          await AsyncStorage.removeItem("I" + component._id);
-        }
-      }
-    }
-  }
 };
 
 /**
@@ -796,15 +732,15 @@ export const clearAsyncStorage = async () => {
  * @param {string} functionName - The name of the function where the error occurred.
  */
 
-function handleError(error, functionName) {
+const handleError = (error, functionName) => {
   if (error?.response?.data != null) {
     throw new Error(`Error in ${functionName}: ${error.response.data}`);
   } else {
     throw new Error(`Error in ${functionName}: ${error}`);
   }
-}
+};
 
-export async function getLectureVideo(videoName) {
+export const getLectureVideo = async (videoName) => {
   const filePath = `${lectureVideoPath}${videoName}.mp4`;
 
   try {
@@ -818,9 +754,9 @@ export async function getLectureVideo(videoName) {
   } catch (error) {
     return null;
   }
-}
+};
 
-export async function storeLectureVideo(videoName) {
+export const storeLectureVideo = async (videoName) => {
   try {
     // Get video data from API
     const videoData = await api.getBucketVideo(videoName);
@@ -842,9 +778,9 @@ export async function storeLectureVideo(videoName) {
     // Once the new version of transcoding service is deployed this can be uncommented.
     // handleError(error, 'storeLectureVideo');
   }
-}
+};
 
-export async function deleteLectureVideo(videoName) {
+export const deleteLectureVideo = async (videoName) => {
   try {
     const filePath = `${lectureVideoPath}${videoName}.mp4`;
 
@@ -852,4 +788,4 @@ export async function deleteLectureVideo(videoName) {
   } catch (error) {
     handleError(error, "deleteLectureVideo");
   }
-}
+};

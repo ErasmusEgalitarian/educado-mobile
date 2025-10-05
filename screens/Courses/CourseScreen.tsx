@@ -23,13 +23,22 @@ import { getStudentInfo } from "../../services/storage-service";
 import ProfileStatsBox from "../../components/Profile/ProfileStatsBox";
 import OfflineScreen from "../Offline/OfflineScreen";
 
-/**
- * Course screen component that displays a list of courses.
- * @component
- * @returns {JSX.Element} The course screen component.
- */
-export default function CourseScreen() {
-  const [courses, setCourses] = useState([]);
+
+export interface Course {
+  title: string,
+  courseId: string,
+  description: string,
+  category: string,
+  estimatedHours: number,
+  dateUpdated: string,
+  difficulty: string,
+  published: boolean,
+  status: string,
+  rating: number,
+}
+
+const CourseScreen = () =>  {
+  const [courses, setCourses] = useState<Course[] | any[]>([]);
   const [courseLoaded, setCourseLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
@@ -43,7 +52,7 @@ export default function CourseScreen() {
    * Asynchronous function that loads the courses from storage and updates the state.
    * @returns {void}
    */
-  async function loadCourses() {
+  const loadCourses = async () => {
     const courseData = await StorageService.getSubCourseList();
     if (shouldUpdate(courses, courseData)) {
       if (courseData.length !== 0 && Array.isArray(courseData)) {
@@ -55,7 +64,7 @@ export default function CourseScreen() {
       }
     }
     setLoading(false);
-  }
+  };
 
   // When refreshing the loadCourses function is called
   const onRefresh = () => {
@@ -189,3 +198,5 @@ export default function CourseScreen() {
     </>
   );
 }
+
+export default CourseScreen;

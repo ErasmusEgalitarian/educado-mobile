@@ -19,11 +19,30 @@ import Tooltip from "../../components/Onboarding/Tooltip";
 import ImageNotFound from "../../assets/images/imageNotFound.png";
 import DownloadCourseButton from "../../components/Courses/CourseCard/DownloadCourseButton";
 import { getBucketImage } from "../../api/api";
+import { Course } from "./CourseScreen";
 
-export default function CourseOverviewScreen({ route }) {
-  CourseOverviewScreen.propTypes = {
-    route: PropTypes.object,
+
+interface CourseOverviewScreenProps {
+  route: {
+    params: {
+      course: Course;
+    };
   };
+}
+
+
+export interface Section  {
+  title: string;
+  sectionId: string;
+  parentCourseId: string;
+  description: string;
+  components: any[];
+  total: number;
+}
+
+
+// eslint-disable-next-line no-undef
+const CourseOverviewScreen: React.FC<CourseOverviewScreenProps> = ({ route }) => {
   const { course } = route.params;
   const navigation = useNavigation();
   const [sections, setSections] = useState(null);
@@ -32,11 +51,12 @@ export default function CourseOverviewScreen({ route }) {
   const [currentSection, setCurrentSection] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [coverImage, setCoverImage] = useState(null);
+  const [imageError, setImageError] = useState(null);
 
-  async function loadSections(id) {
+  const loadSections = async (id: string) => {
     const sectionData = await StorageService.getSectionList(id);
     setSections(sectionData);
-  }
+  };
 
   const checkProgress = async () => {
     const progress = await checkProgressCourse(course.courseId);
@@ -54,9 +74,9 @@ export default function CourseOverviewScreen({ route }) {
   useEffect(() => {
     let componentIsMounted = true;
 
-    async function loadData() {
+    const loadData = async () => {
       await loadSections(course.courseId);
-    }
+    };
 
     if (componentIsMounted) {
       loadData();
@@ -102,12 +122,9 @@ export default function CourseOverviewScreen({ route }) {
       const fetchImage = async () => {
         try {
           const image = await getBucketImage(course.courseId + "_c");
-          if (typeof image === "string") {
             setCoverImage(image);
-          } else {
-            throw new Error();
-          }
         } catch (error) {
+          setImageError(error);
           console.error(error);
         }
       };
@@ -165,7 +182,7 @@ export default function CourseOverviewScreen({ route }) {
         <View className="flex flex-row flex-wrap justify-between bg-secondary">
           <View className="flex w-full items-center">
             <View className="flex w-full items-center justify-between">
-              {coverImage ? (
+              {!imageError && coverImage ? (
                 <Image
                   class="h-full max-w-full"
                   source={{ uri: coverImage }}
@@ -272,3 +289,5 @@ export default function CourseOverviewScreen({ route }) {
     </>
   );
 }
+
+export default CourseOverviewScreen;
