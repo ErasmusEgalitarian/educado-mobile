@@ -84,16 +84,6 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
             </View>
           </View>
         </View>
-
-        <View className="absolute items-start">
-          <View className="rotate-[315deg] items-center">
-            {subscribed ? (
-              <Text className="-left-8 -top-4 bg-yellow px-8 text-xs font-bold text-projectWhite drop-shadow-sm">
-                Inscrito
-              </Text>
-            ) : null}
-          </View>
-        </View>
       </View>
       <Modal
         animationType="slide"
