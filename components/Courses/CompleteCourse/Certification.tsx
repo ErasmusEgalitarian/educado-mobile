@@ -3,12 +3,14 @@ import LottieView from "lottie-react-native";
 import Text from "../../General/Text";
 import PropTypes from "prop-types";
 
+type CertificationProps = {
+  courseObject: {
+    title: string;
+  }
+}
 /* Check the CompleteCourseSlider file in the screens folder for more info */
 
-export default function Certification({ courseObject }) {
-  Certification.propTypes = {
-    courseObject: PropTypes.object.isRequired,
-  };
+export default function Certification({ courseObject }: CertificationProps) {
 
   return (
     <View className="flex h-full w-full items-center justify-start">
