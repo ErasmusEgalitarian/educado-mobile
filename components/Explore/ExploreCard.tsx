@@ -22,6 +22,7 @@ import UpdateDate from "./UpdateDate";
 import * as Utility from "../../services/utils";
 import PropTypes from "prop-types";
 import { ScrollView } from "react-native-gesture-handler";
+import colors from "@/theme/colors";
 
 /**
  * This component is used to display a course card.
@@ -35,15 +36,15 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 
   return isPublished ? (
     <View>
-      <View className="mx-4 mb-4 overflow-hidden rounded-lg bg-projectWhite p-6 shadow-2xl">
+      <View className="bg-surfaceSubtleGrayscale mx-4 mb-4 overflow-hidden rounded-lg p-6 shadow-2xl">
         <View className="flex-col items-center">
           <View className="w-full flex-row items-center justify-between">
-            <Text className="text-lg font-medium text-projectBlack">
+            <Text className="text-textTitleGrayscale text-lg font-medium">
               {course.title}
             </Text>
           </View>
 
-          <View className="h-1 w-full border-b-[1px] border-projectGray pt-2 opacity-50"></View>
+          <View className="border-surfaceDisabledGrayscale h-1 w-full border-b-[1px] pt-2 opacity-50"></View>
 
           <View className="h-[0.5] w-full pt-2" />
           <View className="w-full flex-row items-start justify-between">
@@ -65,33 +66,18 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                 />
               </View>
               <View className="h-1.25 opacity-50" />
-              {course.topFeedbackOptions &&
-                course.topFeedbackOptions.length > 0 && (
-                  <View className="flex-row flex-wrap">
-                    {course.topFeedbackOptions.map((option, index) => (
-                      <View
-                        key={index}
-                        className="mb-2 mr-2 rounded-full bg-[#E4F2F5] px-3 py-1"
-                      >
-                        <Text className="text-xs text-projectBlack">
-                          {option}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                )}
 
               <View className="w-full flex-row items-end justify-between pt-2">
                 <CustomRating rating={course.rating} />
                 <Pressable onPress={() => setModalVisible(true)}>
-                  <View className="flex-row items-center border-b border-profileCircle">
-                    <Text className="pr-2 text-xs font-bold text-profileCircle">
-                      Saiba Mais
+                  <View className="border-surfaceDefaultCyan flex-row items-center border-b px-1 py-0.5">
+                    <Text className="text-surfaceDefaultCyan mr-1 font-sans-semi-bold text-xs">
+                      saiba mais
                     </Text>
-                    <AntDesign
-                      name="doubleright"
+                    <MaterialCommunityIcons
+                      name="chevron-double-right"
                       size={12}
-                      color="text-profileCircle"
+                      color={colors.surfaceDefaultCyan}
                     />
                   </View>
                 </Pressable>
@@ -131,13 +117,13 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
               <View style={styles.modalView}>
                 <Pressable onPress={() => setModalVisible(false)}>
                   <View className="w-full flex-row items-center justify-between py-4">
-                    <Text className="text-2xl font-medium text-projectBlack">
+                    <Text className="text-textTitleGrayscale text-2xl font-medium">
                       {course.title}
                     </Text>
                     <MaterialIcons
                       name="keyboard-arrow-down"
                       size={34}
-                      color="black"
+                      color={colors.textTitleGrayscale}
                     />
                   </View>
                   <View className="flex-row flex-wrap items-center justify-start pb-4 text-xs">
@@ -158,19 +144,23 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                   </View>
                 </Pressable>
                 <CustomRating rating={course.rating} />
-                <View className="mb-4 h-1 w-full border-b-[1px] border-projectGray pt-4 opacity-50"></View>
+                <View className="border-surfaceDisabledGrayscale mb-4 h-1 w-full border-b-[1px] pt-4 opacity-50"></View>
                 <ScrollView style={{ maxHeight: "40%" }}>
                   <Text
-                    className="text-lg text-projectBlack"
+                    className="text-textTitleGrayscale text-lg"
                     onStartShouldSetResponder={() => true}
                   >
                     {course.description}
                   </Text>
                 </ScrollView>
-                <View className="mt-8 rounded-2xl border border-projectGray p-4">
+                <View className="border-textCaptionGrayscale mt-8 rounded-2xl border p-4">
                   <View className="flex-row items-center">
-                    <EvilIcons name="clock" size={24} color="grey" />
-                    <Text className="ml-2 pb-3 text-sm text-projectBlack">
+                    <MaterialCommunityIcons
+                      name="clock-outline"
+                      size={24}
+                      color={colors.textCaptionGrayscale}
+                    />
+                    <Text className="text-textTitleGrayscale ml-2 pb-3 text-sm">
                       {course.estimatedHours} horas de conteúdo (vídeos,
                       exercícios, leituras complementares)
                     </Text>
@@ -179,9 +169,9 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                     <MaterialCommunityIcons
                       name="certificate-outline"
                       size={24}
-                      color="grey"
+                      color={colors.textCaptionGrayscale}
                     />
-                    <Text className="ml-2 pb-3 text-sm text-projectBlack">
+                    <Text className="text-textTitleGrayscale ml-2 pb-3 text-sm">
                       Certificado de Conclusão
                     </Text>
                   </View>
@@ -189,9 +179,9 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                     <MaterialCommunityIcons
                       name="clock-fast"
                       size={24}
-                      color="grey"
+                      color={colors.textCaptionGrayscale}
                     />
-                    <Text className="ml-2 pb-3 text-sm text-projectBlack">
+                    <Text className="text-textTitleGrayscale ml-2 pb-3 text-sm">
                       Início imediato
                     </Text>
                   </View>
@@ -199,9 +189,9 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                     <MaterialCommunityIcons
                       name="calendar-month"
                       size={24}
-                      color="grey"
+                      color={colors.textCaptionGrayscale}
                     />
-                    <Text className="ml-2 pb-3 text-sm text-projectBlack">
+                    <Text className="text-textTitleGrayscale ml-2 pb-3 text-sm">
                       Acesso total por 1 ano
                     </Text>
                   </View>
@@ -209,9 +199,9 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                     <MaterialCommunityIcons
                       name="robot-outline"
                       size={24}
-                      color="grey"
+                      color={colors.textCaptionGrayscale}
                     />
-                    <Text className="ml-2 pb-3 text-sm text-projectBlack">
+                    <Text className="text-textTitleGrayscale ml-2 pb-3 text-sm">
                       Chat e suporte com inteligência artificial
                     </Text>
                   </View>
@@ -219,15 +209,19 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                     <Octicons
                       name="comment-discussion"
                       size={24}
-                      color="grey"
+                      color={colors.textCaptionGrayscale}
                     />
-                    <Text className="ml-2 pb-3 text-sm text-projectBlack">
+                    <Text className="text-textTitleGrayscale ml-2 pb-3 text-sm">
                       Acesso a comunidade do curso
                     </Text>
                   </View>
                   <View className="flex-row">
-                    <MaterialIcons name="phonelink" size={24} color="grey" />
-                    <Text className="ml-2 pb-3 text-sm text-projectBlack">
+                    <MaterialIcons
+                      name="phonelink"
+                      size={24}
+                      color={colors.textCaptionGrayscale}
+                    />
+                    <Text className="text-textTitleGrayscale ml-2 pb-3 text-sm">
                       Assista onde e quando quiser!
                     </Text>
                   </View>
@@ -251,13 +245,13 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
 const styles = StyleSheet.create({
   transparentBackground: {
     flex: 1,
-    backgroundColor: "rgba(228, 242, 245, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(250, 254, 255, 0.5)", // Semi-transparent background
     justifyContent: "flex-end", // Align the modal to the bottom
   },
   modalView: {
     height: "90%",
     width: "100%",
-    backgroundColor: "#F1F9FB",
+    backgroundColor: colors.surfaceSubtleCyan,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     padding: 20,
