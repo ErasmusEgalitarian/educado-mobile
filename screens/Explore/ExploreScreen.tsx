@@ -7,7 +7,6 @@ import { useNavigation } from "@react-navigation/native";
 import IconHeader from "../../components/General/IconHeader";
 import { shouldUpdate, determineCategory } from "../../services/utils";
 import NetworkStatusObserver from "../../hooks/NetworkStatusObserver";
-import Tooltip from "../../components/Onboarding/Tooltip";
 import OfflineScreen from "../Offline/OfflineScreen";
 
 /**
@@ -130,18 +129,6 @@ export default function ExploreScreen() {
               "Inscreva-se nos cursos do seu interesse e comece sua jornada"
             }
           />
-          <Tooltip
-            isVisible={isVisible}
-            position={{ top: -360, left: 50, right: 30, bottom: 24 }}
-            text={
-              "Aqui, você encontrará todos os cursos disponíveis e poderá conhecer e se inscrever facilmente."
-            }
-            setIsVisible={setIsVisible}
-            tailSide="top"
-            tailPosition="10%"
-            uniqueKey="Explore"
-            uniCodeChar="🔍"
-          />
           <View height="77%">
             <FilterNavigationBar
               onChangeText={(text) => handleFilter(text)}
@@ -156,19 +143,21 @@ export default function ExploreScreen() {
               <View className="overflow-y-auto">
                 {courses &&
                   filteredCourses &&
-                  filteredCourses.map((course, index) => (
-                    <ExploreCard
-                      key={index}
-                      isPublished={course.status === "published"}
-                      subscribed={
-                        /*isSubscribed[index]*/ checkIfSubscribed(
-                          course,
-                          subCourses,
-                        )
-                      }
-                      course={course}
-                    ></ExploreCard>
-                  ))}
+                  filteredCourses
+                    .reverse()
+                    .map((course, index) => (
+                      <ExploreCard
+                        key={index}
+                        isPublished={course.status === "published"}
+                        subscribed={
+                          /*isSubscribed[index]*/ checkIfSubscribed(
+                            course,
+                            subCourses,
+                          )
+                        }
+                        course={course}
+                      ></ExploreCard>
+                    ))}
               </View>
             </ScrollView>
           </View>
