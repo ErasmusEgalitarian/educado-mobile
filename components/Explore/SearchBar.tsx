@@ -12,12 +12,12 @@ import colors from "@/theme/colors";
  */
 function SearchBar({ onSearchChange }) {
   return (
-    <View className="border-surfaceLighterCyan bg-surfaceSubtleGrayscale relative mx-2.5 mb-2.5 flex-row items-center rounded-md border pr-2.5">
+    <View className="border-surfaceLighterCyan bg-surfaceSubtleGrayscale relative mx-2.5 mb-2.5 flex-row items-center rounded-medium border-[1px] px-4">
       <TextInput
         placeholder={"Pesquise aqui..."}
         placeholderTextColor={colors.textCaptionGrayscale}
         onChangeText={onSearchChange}
-        className="pr-35 flex-1 px-2.5 py-3"
+        className="pr-35 text-grayScale flex-1 py-1 font-sans-semi-bold text-sm"
       />
       <MaterialCommunityIcons
         name="magnify"

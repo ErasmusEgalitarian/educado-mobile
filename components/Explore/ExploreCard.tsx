@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   Pressable,
   Modal,
@@ -22,6 +21,7 @@ import * as Utility from "../../services/utils";
 import PropTypes from "prop-types";
 import { ScrollView } from "react-native-gesture-handler";
 import colors from "@/theme/colors";
+import Text from "../General/Text";
 
 /**
  * This component is used to display a course card.

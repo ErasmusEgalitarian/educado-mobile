@@ -1,10 +1,11 @@
 import { useState } from "react";
 import SearchBar from "./SearchBar";
-import { View, Text, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { categories } from "./categories";
 import PropTypes from "prop-types";
 import colors from "@/theme/colors";
+import Text from "../General/Text";
 
 /**
  * FilterNavBar component displays a search bar and a list of categories.

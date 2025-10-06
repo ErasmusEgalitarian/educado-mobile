@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import colors from "@/theme/colors";
+import Text from "../General/Text";
 import PropTypes from "prop-types";
 
 /**
