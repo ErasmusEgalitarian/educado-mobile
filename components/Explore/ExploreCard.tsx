@@ -18,7 +18,6 @@ import CardLabel from "./CardLabel";
 import CustomRating from "./CustomRating";
 import SubscriptionButton from "./SubscriptionButton";
 import AccessCourseButton from "./AccessCourseButton";
-import UpdateDate from "./UpdateDate";
 import * as Utility from "../../services/utils";
 import PropTypes from "prop-types";
 import { ScrollView } from "react-native-gesture-handler";
@@ -82,10 +81,6 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                   </View>
                 </Pressable>
               </View>
-
-              <UpdateDate
-                dateUpdated={Utility.getUpdatedDate(course.dateUpdated)}
-              />
             </View>
           </View>
         </View>
