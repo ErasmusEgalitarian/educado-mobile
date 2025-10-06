@@ -1,50 +1,63 @@
-import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Text from '@/components/General/Text';
+import React from "react";
+import { View, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Text from "@/components/General/Text";
+type icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
-/**
- * A component that displays a section card with collapsible content.
- * @param {Number} progress - The progress containing the student's progress.
- * @param {Number} numOfEntries - How many total entries are there
- * @param {string} title - Title of the card
- * @param {Function} onPress - The callback function to navigate
- * @param {boolean} disabled - Is the card disabled
- * @param {string} icon - Non disabled icon
- * @param {string} disabledIcon
- * @param {boolean} disableProgressNumbers - Disable the progression numbers
- * @returns {JSX.Element} - The SectionCard component.
- */
-export default function SectionCard({ numOfEntries, title, progress, onPress, disabled, icon, disabledIcon, disableProgressNumbers }) {
-  disableProgressNumbers = disableProgressNumbers === undefined ? false : disableProgressNumbers;
-  const isComplete = progress === numOfEntries ;
+export default function SectionCard({
+  numOfEntries,
+  title,
+  progress,
+  onPress,
+  disabled,
+  icon,
+  disabledIcon,
+  disableProgressNumbers,
+}: {
+  numOfEntries: number;
+  title: string;
+  progress: number;
+  onPress: () => void;
+  icon: icons;
+  disabled?: boolean;
+  disabledIcon?: icons;
+  disableProgressNumbers?: boolean;
+}) {
+  disableProgressNumbers =
+    disableProgressNumbers === undefined ? false : disableProgressNumbers;
+  const isComplete = progress === numOfEntries;
   const inProgress = 0 < progress && progress < numOfEntries;
-  const progressText = isComplete ? 'Concluído' : inProgress ? 'Em progresso' : 'Não iniciado';
-  const progressTextColor = isComplete ? 'text-success' : 'text-projectBlack';
-  disabledIcon = disabledIcon ? disabledIcon : 'lock-outline';
-
+  const progressText = isComplete
+    ? "Concluído"
+    : inProgress
+      ? "Em progresso"
+      : "Não iniciado";
+  const progressTextColor = isComplete ? "text-success" : "text-projectBlack";
+  disabledIcon = disabledIcon ? disabledIcon : "lock-outline";
 
   return (
     <View>
       <TouchableOpacity
-        className={`bg-secondary rounded-lg box-shadow-lg shadow-opacity-[1] mb-[15] mx-[18] overflow-hidden elevation-[8] ${disabled ? 'bg-bgLockedLesson' : ''}`}
+        className={`box-shadow-lg shadow-opacity-[1] elevation-[8] mx-[18] mb-[15] overflow-hidden rounded-lg bg-secondary ${disabled ? "bg-bgLockedLesson" : ""}`}
         onPress={onPress}
         disabled={disabled}
       >
         <View className="flex-row items-center justify-between px-[25] py-[15]">
           <View>
-            <Text className="text-[16px] font-montserrat-bold text-projectBlack mb-2">
+            <Text className="mb-2 font-montserrat-bold text-[16px] text-projectBlack">
               {title}
             </Text>
 
             <View className="flex-row items-center">
-              <Text className={`text-[14px] font-montserrat ${progressTextColor}`}>
-                { disableProgressNumbers ? '' : progress + '/' +numOfEntries}
-                {' ' + progressText}
+              <Text
+                className={`font-montserrat text-[14px] ${progressTextColor}`}
+              >
+                {disableProgressNumbers ? "" : progress + "/" + numOfEntries}
+                {" " + progressText}
               </Text>
             </View>
           </View>
-          { disabled ? (
+          {disabled ? (
             <MaterialCommunityIcons
               testID="chevron-right"
               name={disabledIcon}
@@ -58,11 +71,9 @@ export default function SectionCard({ numOfEntries, title, progress, onPress, di
               size={25}
               color="gray"
             />
-          )
-          }
+          )}
         </View>
       </TouchableOpacity>
-
     </View>
   );
 }

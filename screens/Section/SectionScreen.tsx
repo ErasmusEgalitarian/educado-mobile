@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, RouteProp, useNavigation } from "@react-navigation/native";
 import Text from "@/components/General/Text";
 import * as StorageService from "@/services/storage-service";
 import { checkProgressSection } from "@/services/utils";
@@ -9,13 +9,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import PropTypes from "prop-types";
 import SectionCard from "@/components/Section/SectionCard";
 
+
 export default function SectionScreen({ route }) {
   const { course, section } = route.params;
   const [components, setComponents] = useState(null);
   const [completedCompAmount, setCompletedCompAmount] = useState(0);
 
   const navigation = useNavigation();
-  async function loadComponents(id) {
+  async function loadComponents(id: string) {
     const componentsData = await StorageService.getComponentList(id);
     setComponents(componentsData);
   }
@@ -37,7 +38,7 @@ export default function SectionScreen({ route }) {
     };
   }, []);
 
-  const getProgressStatus = (compIndex) => {
+  const getProgressStatus = (compIndex: number) => {
     if(compIndex < completedCompAmount) {
       return [2,2];
     } else {
