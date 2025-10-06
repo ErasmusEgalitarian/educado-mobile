@@ -48,7 +48,15 @@
           "launchMode": "most-recent"
         }
       ],
-      "expo-router"
+      "expo-router",
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "android": ["en-US", "pt-BR"]
+          }
+        }
+      ]
     ],
     "extra": {
       "JWT_SECRET": "test",
