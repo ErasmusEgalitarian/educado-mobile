@@ -1,6 +1,7 @@
 import { TextInput, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
+import colors from "@/theme/colors";
 
 /**
  * This component is used to display a search bar.
@@ -11,13 +12,18 @@ import PropTypes from "prop-types";
  */
 function SearchBar({ onSearchChange }) {
   return (
-    <View className="border-black relative mx-2.5 mb-2.5 flex-row items-center rounded-md border border-projectGray bg-projectWhite pr-2.5">
+    <View className="border-surfaceLighterCyan bg-surfaceSubtleGrayscale relative mx-2.5 mb-2.5 flex-row items-center rounded-md border pr-2.5">
       <TextInput
         placeholder={"Pesquise aqui..."}
+        placeholderTextColor={colors.textCaptionGrayscale}
         onChangeText={onSearchChange}
         className="pr-35 flex-1 px-2.5 py-3"
       />
-      <MaterialCommunityIcons name="magnify" size={20} color="gray" />
+      <MaterialCommunityIcons
+        name="magnify"
+        size={20}
+        color={colors.textSubtitleGrayscale}
+      />
     </View>
   );
 }

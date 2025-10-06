@@ -23,10 +23,10 @@ module.exports = {
       // Text
       textTitleGrayscale: "#141B1F",
       textBodyGrayscale: "#28363E",
-      textSubtitleGrayscale: "#28363E",
-      textCaptionGrayscale: "#28363E",
-      textNegativeGrayscale: "#28363E",
-      textDisabledGrayscale: "#28363E",
+      textSubtitleGrayscale: "#4E6879",
+      textCaptionGrayscale: "#628397",
+      textNegativeGrayscale: "#FDFEFF",
+      textDisabledGrayscale: "#C1CFD7",
 
       // ******************
       // ***** Cyan *******
