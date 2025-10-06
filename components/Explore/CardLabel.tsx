@@ -1,5 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
+import colors from "@/theme/colors";
 import PropTypes from "prop-types";
 
 /**
@@ -10,7 +11,7 @@ import PropTypes from "prop-types";
  * @param time - Boolean value to determine to render the time label.
  * @returns {JSX.Element} - Returns a JSX element.
  */
-const CardLabel = ({ title, icon, color = "gray" }) => {
+const CardLabel = ({ title, icon, color = colors.textCaptionGrayscale }) => {
   return (
     <View className="flex-row items-center justify-start">
       <MaterialCommunityIcons name={icon} size={13} color={color} />

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Text from "../General/Text";
-import tailwindConfig from "../../tailwind.config.js";
+import colors from "@/theme/colors";
 import PropTypes from "prop-types";
 
 /**
@@ -14,7 +14,7 @@ const CustomRating = ({ rating = 0 }) => {
   const [ratingIcons, setRatingIcons] = useState(
     Array(5).fill({
       icon: "star-outline",
-      color: tailwindConfig.theme.colors.projectGray,
+      color: colors.surfaceYellow,
     }),
   );
   const [noRating, setNoRating] = useState(false);
@@ -26,16 +26,16 @@ const CustomRating = ({ rating = 0 }) => {
     if (rating !== 0) {
       const newRatingIcons = ratingIcons.map((icon, index) => {
         if (index < fullStars) {
-          return { icon: "star", color: tailwindConfig.theme.colors.yellow };
+          return { icon: "star", color: colors.surfaceYellow };
         } else if (index === fullStars && halfStar) {
           return {
             icon: "star-half-full",
-            color: tailwindConfig.theme.colors.yellow,
+            color: colors.surfaceYellow,
           };
         } else {
           return {
             icon: "star-outline",
-            color: tailwindConfig.theme.colors.projectGray,
+            color: colors.surfaceYellow,
           };
         }
       });
@@ -48,8 +48,8 @@ const CustomRating = ({ rating = 0 }) => {
 
   return noRating ? (
     <View className="flex-row items-start justify-start">
-      <Text className="pl-1 text-sm text-projectGray">
-        ainda sem avaliações
+      <Text className="text-borderDisabledGrayscale pl-1 text-sm">
+        Ainda sem avaliações
       </Text>
     </View>
   ) : (
@@ -64,7 +64,7 @@ const CustomRating = ({ rating = 0 }) => {
       ))}
       <Text
         className="pl-2 text-sm text-projectGray"
-        style={{ color: tailwindConfig.theme.colors.yellow }}
+        style={{ color: colors.yellow }}
       >
         {parseFloat(rating).toFixed(1)}
       </Text>
