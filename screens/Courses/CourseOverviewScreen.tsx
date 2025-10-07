@@ -1,24 +1,24 @@
 import { useState, useEffect, useCallback } from "react";
 import { Alert, View, TouchableOpacity, Image } from "react-native";
-import Text from "../../components/General/Text";
-import * as StorageService from "../../services/storage-service";
-import SectionCard from "../../components/Section/SectionCard";
+import Text from "@/components/General/Text";
+import * as StorageService from "@/services/storage-service";
+import SectionCard from "@/components/Section/SectionCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import CustomProgressBar from "../../components/Exercise/CustomProgressBar";
-import SubscriptionCancelButton from "../../components/Section/CancelSubscriptionButton";
-import { unsubscribe } from "../../services/storage-service";
+import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
+import SubscriptionCancelButton from "@/components/Section/CancelSubscriptionButton";
+import { unsubscribe } from "@/services/storage-service";
 import {
   checkProgressCourse,
   checkProgressSection,
-} from "../../services/utils";
-import ContinueSectionButton from "../../components/Section/ContinueSectionButton";
-import Tooltip from "../../components/Onboarding/Tooltip";
-import ImageNotFound from "../../assets/images/imageNotFound.png";
-import DownloadCourseButton from "../../components/Courses/CourseCard/DownloadCourseButton";
-import { getBucketImage } from "../../api/api";
-import { Course } from "./CourseScreen";
+} from "@/services/utils";
+import ContinueSectionButton from "@/components/Section/ContinueSectionButton";
+import Tooltip from "@/components/Onboarding/Tooltip";
+import ImageNotFound from "@/assets/images/imageNotFound.png";
+import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
+import { getBucketImage } from "@/api/api";
+import { Course } from "@/screens/Courses/CourseScreen";
 
 interface CourseOverviewScreenProps {
   route: {

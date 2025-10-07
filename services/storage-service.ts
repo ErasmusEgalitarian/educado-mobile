@@ -2,12 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import * as FileSystem from "expo-file-system";
 import jwt from "expo-jwt";
-import * as api from "../api/api";
-import * as userApi from "../api/user-api";
-import { Section } from "../screens/Courses/CourseOverviewScreen";
-import { Course } from "../screens/Courses/CourseScreen";
-import { NetworkStatusService } from "./network-status-service";
-import defaultImage from "../assets/images/defaultImage-base64.json";
+import * as api from '@/api/api'
+import * as userApi from "@/api/user-api";
+import defaultImage from "@/assets/images/defaultImage-base64.json";
+import { Section } from "@/screens/Courses/CourseOverviewScreen";
+import { Course } from "@/screens/Courses/CourseScreen";
+import { NetworkStatusService } from "@/services/network-status-service";
 
 const SUB_COURSE_LIST = "@subCourseList";
 const USER_ID = "@userId";
@@ -178,7 +178,7 @@ export const setUserInfo = async (userInfo: any) => {
  * Retrieves the JWT from AsyncStorage.
  * @returns {Promise<string>} A promise that resolves with the JWT.
  */
-export const getJWT = async () => {
+export const getJwt = async () => {
   return await AsyncStorage.getItem(LOGIN_TOKEN);
 };
 
@@ -186,7 +186,7 @@ export const getJWT = async () => {
  * Stores a JWT in AsyncStorage.
  * @param {string} jwt - The JWT to store.
  */
-export const setJWT = async (jwt: string) => {
+export const setJwt = async (jwt: string) => {
   await AsyncStorage.setItem(LOGIN_TOKEN, jwt);
 };
 
@@ -438,7 +438,7 @@ export const fetchLectureImage = async (imageID: string, lectureID: string) => {
  * @param resolution
  * @returns {Promise<string>}
  */
-export const getVideoURL = async (videoName: string, resolution?: string) => {
+export const getVideoUrl = async (videoName: string, resolution?: string) => {
   let videoUrl;
   if (!resolution) {
     resolution = "360";
