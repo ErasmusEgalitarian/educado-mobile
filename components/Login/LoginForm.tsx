@@ -99,6 +99,7 @@ export default function LoginForm() {
           label="E-mail"
           required={true}
           keyboardType="email-address"
+          error={false}
         />
         <FormFieldAlert testId="emailAlert" label={emailAlert} />
       </View>
@@ -114,6 +115,7 @@ export default function LoginForm() {
           label="Senha" // Password
           required={true}
           secureTextEntry={!showPassword}
+          error={false}
         />
         <PasswordEye
           testId="passwordEye"

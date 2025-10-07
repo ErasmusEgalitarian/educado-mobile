@@ -38,7 +38,7 @@ export default function FormTextField(props) {
         <TextInput
           className={
             `text-base w-full py-4 pl-[10px] bg-projectWhite rounded-lg ${props.bordered && !props.error ? 'border border-projectGray' : ''
-            } ${props.error ? 'border border-error bg-errorBox' : ''
+            } ${props.error ? 'border border-error bg-errorTheSecond' : ''
             }`
           }
           placeholder={props.placeholder ?? ''} // Placeholder text to be displayed
