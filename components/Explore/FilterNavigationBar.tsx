@@ -66,10 +66,7 @@ function FilterNavigationBar({
                         color: isSelected
                           ? colors.textNegativeGrayscale
                           : colors.textCaptionGrayscale,
-                        fontFamily: isSelected
-                          ? "Montserrat-Bold"
-                          : "Montserrat-SemiBold",
-                      }}
+                        }} className=" text-sm font-sans-bold"
                     >
                       {category.label}
                     </Text>
