@@ -55,6 +55,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
                 />
               </View>
               <View className="h-1.25 opacity-50" />
+              <CustomRating rating={course.rating} />
 
               <View className="flex-row justify-end">
                 <TouchableOpacity
@@ -81,12 +82,6 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
           </View>
         </View>
       </View>
-      <BottomDrawer
-        toggleModal={handleToggleBottomSheet}
-        course={course}
-        drawerState={isBottomSheetOpen}
-        subscribed={subscribed}
-      />
     </View>
   ) : null;
 }
