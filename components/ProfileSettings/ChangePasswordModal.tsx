@@ -5,7 +5,7 @@ import PasswordField from "../General/Forms/PasswordField";
 import FormButton from "../General/Forms/FormButton";
 import ToastNotification from "../General/ToastNotification";
 import { updateUserPassword } from "../../api/user-api";
-import { getUserInfo, getJwt } from "../../services/storage-service";
+import { getUserInfo, getJWT } from "../../services/storage-service";
 import FormFieldAlert from "../General/Forms/FormFieldAlert";
 import {
   validatePasswordContainsLetter,
@@ -63,7 +63,7 @@ const ChangePasswordModal = () => {
     try {
       // Get user ID
       const userInfo = await getUserInfo();
-      const JWT = await getJwt();
+      const JWT = await getJWT();
       // Make request
       await updateUserPassword(userInfo.id, currentPassword, newPassword, JWT);
       // Show success message

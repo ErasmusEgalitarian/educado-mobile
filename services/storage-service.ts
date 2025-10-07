@@ -178,7 +178,7 @@ export const setUserInfo = async (userInfo: any) => {
  * Retrieves the JWT from AsyncStorage.
  * @returns {Promise<string>} A promise that resolves with the JWT.
  */
-export const getJwt = async () => {
+export const getJWT = async () => {
   return await AsyncStorage.getItem(LOGIN_TOKEN);
 };
 
@@ -186,7 +186,7 @@ export const getJwt = async () => {
  * Stores a JWT in AsyncStorage.
  * @param {string} jwt - The JWT to store.
  */
-export const setJwt = async (jwt: string) => {
+export const setJWT = async (jwt: string) => {
   await AsyncStorage.setItem(LOGIN_TOKEN, jwt);
 };
 

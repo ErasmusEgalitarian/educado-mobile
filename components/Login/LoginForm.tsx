@@ -12,7 +12,7 @@ import Text from "../General/Text";
 import ShowAlert from "../General/ShowAlert";
 
 // Services
-import { setUserInfo, setJwt } from "../../services/storage-service";
+import { setUserInfo, setJWT } from "../../services/storage-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
@@ -50,7 +50,7 @@ export default function LoginForm() {
     await loginUser(obj)
       .then(async (response) => {
         // Set login token in AsyncStorage and navigate to home screen
-        await setJwt(response.accessToken);
+        await setJWT(response.accessToken);
         await setUserInfo({ ...response.userInfo });
         await AsyncStorage.setItem("loggedIn", "true");
         navigation.navigate("HomeStack");

@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import Text from "../../components/General/Text";
 // Services
 import { updateUserPassword } from "../../api/user-api";
-import { getUserInfo, getJwt } from "../../services/storage-service";
+import { getUserInfo, getJWT } from "../../services/storage-service";
 import FormFieldAlert from "../../components/General/Forms/FormFieldAlert";
 import {
   validatePasswordContainsLetter,
@@ -97,7 +97,7 @@ export default function EditPasswordScreen() {
     try {
       // Get user ID
       const userInfo = await getUserInfo();
-      const JWT = await getJwt();
+      const JWT = await getJWT();
 
       // Make request
       await updateUserPassword(userInfo.id, currentPassword, newPassword, JWT);

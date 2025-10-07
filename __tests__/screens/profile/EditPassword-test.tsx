@@ -1,7 +1,7 @@
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import EditPasswordScreen from "../../../screens/Profile/EditPasswordScreen"; // Adjust this import according to the actual location
 import { updateUserPassword } from "../../../api/user-api";
-import { getUserInfo, getJwt } from "../../../services/storage-service";
+import { getUserInfo, getJWT } from "../../../services/storage-service";
 
 jest.mock("@react-navigation/native", () => ({
   useNavigation: () => ({
@@ -24,7 +24,7 @@ describe("EditPassword Component", () => {
 
   beforeEach(() => {
     getUserInfo.mockResolvedValue(mockUserInfo);
-    getJwt.mockResolvedValue(mockJWT);
+    getJWT.mockResolvedValue(mockJWT);
   });
 
   afterEach(() => {

@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import DialogNotification from "../General/DialogNotification";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import tailwindConfig from "../../tailwind.config.js";
-import { setUserInfo, setJwt } from "../../services/storage-service";
+import { setUserInfo, setJWT } from "../../services/storage-service";
 
 /**
  * Component for registering a new account in the system, used in the register screen
@@ -205,7 +205,7 @@ export default function RegisterForm() {
     try {
       await loginUser(obj)
         .then((response) => {
-          setJwt(response.accessToken);
+          setJWT(response.accessToken);
           DialogNotification("success", "Usuário cadastrado! Cantando em...");
           setTimeout(() => {
             navigation.navigate("HomeStack");

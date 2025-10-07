@@ -27,7 +27,7 @@ import FormFieldAlert from "../../components/General/Forms/FormFieldAlert";
 import {
   getUserInfo,
   setUserInfo,
-  getJwt,
+  getJWT,
   getStudentProfilePhoto,
   updateStudentInfo,
   getLoginToken,
@@ -169,7 +169,7 @@ export default function EditProfileScreen() {
     };
 
     try {
-      const LOGIN_TOKEN = await getJwt();
+      const LOGIN_TOKEN = await getJWT();
       await updateUserFields(id, changedFields, LOGIN_TOKEN);
       await setUserInfo(updatedProfile);
       getProfile();
@@ -193,7 +193,7 @@ export default function EditProfileScreen() {
 
   const deleteAccount = async () => {
     try {
-      const LOGIN_TOKEN = await getJwt();
+      const LOGIN_TOKEN = await getJWT();
       const USER_INFO = "@userInfo";
       await AsyncStorage.multiRemove([LOGIN_TOKEN, USER_INFO]);
       await deleteUser(id, LOGIN_TOKEN);
