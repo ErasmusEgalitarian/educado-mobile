@@ -45,7 +45,7 @@ module.exports = {
       "error",
       {
         selector: "variable",
-        format: ["strictCamelCase", "UPPER_CASE", "StrictPascalCase"],
+        format: ["camelCase", "UPPER_CASE", "PascalCase"],
       },
       {
         selector: "typeLike",
