@@ -1,4 +1,4 @@
-const DefaultTheme = {
+const colors = {
   bgPrimary: "#186474",
   bgSecondary: "#f2f9fb",
   // **********************
