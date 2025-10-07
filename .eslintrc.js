@@ -31,7 +31,7 @@ module.exports = {
           {
             group: ["**/tailwind.config", "**/tailwind.config.js"],
             message:
-              "Don't import tailwind.config.js at runtime. Use className with NativeWind or tokens (e.g. '@/theme/tokens').",
+              "Don't import tailwind.config.js at runtime. Use className with NativeWind or tokens (e.g. '@/theme/colors').",
           },
           {
             group: ["./", "../"],

@@ -153,4 +153,8 @@ const DefaultTheme = {
   searchbar: "#D8EFF3",
 };
 
-export default DefaultTheme;
+export type ColorName = keyof typeof colors;
+
+export const color = (name: ColorName) => colors[name];
+
+export default colors;

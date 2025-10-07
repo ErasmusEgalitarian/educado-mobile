@@ -103,10 +103,8 @@ jobs:
       - name: Build
         if: ${{ steps.build_gate.outputs.need == 'true' }}
         uses: ./.github/actions/build
+# Commented out because we won't be using EAS for now, but build on GitHub
 # EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v5
 # - name: Set Up Expo
 #   uses: expo/expo-github-action@v8
 #   with:

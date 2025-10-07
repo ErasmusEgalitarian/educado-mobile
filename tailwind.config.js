@@ -6,6 +6,7 @@ module.exports = {
     "./screens/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    // Remember to edit theme/colors.ts as well!
     colors: {
       // **********************
       // ***** Gray Scale *****
@@ -130,7 +131,7 @@ module.exports = {
       projectWhite: "#FFFFFF",
       projectBlack: "#383838",
       projectGray: "#A1ACB2",
-      lightGray: "#E5E5E5",
+      lightGray: "#E4E4E4",
       error: "#FF4949",
       success: "#4AA04A",
       disable: "#DDD",
@@ -188,7 +189,7 @@ module.exports = {
     aspectRatio: false,
   },
   plugins: [
-    function ({ addUtilities }) {
+    ({ addUtilities }) => {
       addUtilities({
         ".text-top": {
           textAlignVertical: "top",
