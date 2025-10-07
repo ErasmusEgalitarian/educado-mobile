@@ -30,16 +30,16 @@ export default function FormButton(props) {
     <>
       <View>
         <TouchableOpacity
-          className={
-            "rounded-medium px-4 py-4 " +
+          className={'px-4 py-3 rounded-medium ' +
             (typeStyles[props.type] ?? typeStyles.primary_custom) +
-            (props.disabled ? " opacity-50" : "")
-          }
+            (props.disabled ? 'text-[#809CAD]! bg-[#C1CFD7]' : '')}
           style={props.style ?? null}
           onPress={props.onPress}
           disabled={props.disabled}
         >
-          <Text className="text-center font-sans-bold text-body text-projectWhite">
+          <Text className={"text-center font-sans-bold text-body " +
+            (props.disabled ? "text-[#809CAD]" : "text-projectWhite" )
+          }>
             {props.children}
           </Text>
         </TouchableOpacity>
