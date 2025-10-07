@@ -1,18 +1,26 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 import colors from "@/theme/colors";
-import Text from "../General/Text";
-import PropTypes from "prop-types";
+import Text from "@/components/General/Text";
+
+interface CardLabelProps {
+  title: string;
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;
+  color?: string;
+}
 
 /**
  * This component is used to display a label in a course card.
  * @param title - The text of the label.
  * @param icon - The icon of the label.
  * @param color - The color of the label and icon.
- * @param time - Boolean value to determine to render the time label.
- * @returns {JSX.Element} - Returns a JSX element.
+ * @returns {TSX.Element} - Returns a JSX element.
  */
-const CardLabel = ({ title, icon, color = colors.textCaptionGrayscale }) => {
+const CardLabel = ({
+  title,
+  icon,
+  color = colors.textCaptionGrayscale,
+}: CardLabelProps) => {
   return (
     <View className="flex-row items-center justify-start">
       <MaterialCommunityIcons name={icon} size={13} color={color} />
@@ -21,12 +29,6 @@ const CardLabel = ({ title, icon, color = colors.textCaptionGrayscale }) => {
       </Text>
     </View>
   );
-};
-
-CardLabel.propTypes = {
-  title: PropTypes.string,
-  icon: PropTypes.string,
-  color: PropTypes.string,
 };
 
 export default CardLabel;
