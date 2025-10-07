@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 export default function IconHeader({ title, description }) {
   IconHeader.propTypes = {
     title: PropTypes.string,
-    description: PropTypes.string,
   };
   return (
     <>
@@ -18,13 +17,12 @@ export default function IconHeader({ title, description }) {
         <Image
           source={require("../../assets/images/singleIcon.png")}
           alt="Icon"
-          className="mr-2 h-8 w-8"
+          className="mr-4 h-7 w-7"
         />
-        <Text className="font-sans-bold text-xl">{title}</Text>
+        <Text className="font-montserrat text-[24px] font-bold leading-[24px] tracking-[0px]">
+          {title}
+        </Text>
       </View>
-      <Text className="px-6 pb-4 pl-6 font-montserrat text-sm">
-        {description}
-      </Text>
     </>
   );
 }
