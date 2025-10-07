@@ -2,17 +2,17 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
-import { checkCourseStoredLocally } from "../../../services/storage-service";
+import { checkCourseStoredLocally } from "@/services/storage-service";
 import {
   checkProgressCourse,
   determineCategory,
   determineIcon,
   formatHours,
-} from "../../../services/utils";
-import colors from "../../../theme/colors";
-import CustomProgressBar from "../../Exercise/CustomProgressBar";
-import Text from "../../General/Text";
-import DownloadCourseButton from "./DownloadCourseButton";
+} from "@/services/utils";
+import colors from "@/theme/colors";
+import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
+import Text from "@/components/General/Text";
+import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
 
 interface CourseCardProps {
   course: Record<string, any>;
