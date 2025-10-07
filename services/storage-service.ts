@@ -443,11 +443,7 @@ export const getSubCourseList = async () => {
   }
 
   try {
-    if (isOnline) {
-      return await refreshSubCourseList(userId);
-    } else {
-      throw new Error("No internet connection in getSubCourseList");
-    }
+    return await refreshSubCourseList(userId);
   } catch (error) {
     // Check if the course list already exists in AsyncStorage
     let courseList = JSON.parse(await AsyncStorage.getItem(SUB_COURSE_LIST));
@@ -747,7 +743,7 @@ export const updateStoredCourses = async () => {
  * @param {string} courseID - The ID of the course to check.
  * @returns {Promise<boolean>} A promise that resolves with `true` if the course is stored locally.
  */
-export const checkCourseStoredLocally = async (courseID) => {
+export const checkCourseStoredLocally = async (courseID: string) => {
   try {
     return !!(await AsyncStorage.getItem(
       courseID + (await AsyncStorage.getItem(USER_ID)),
@@ -772,15 +768,15 @@ export const clearAsyncStorage = async () => {
  * @param {string} functionName - The name of the function where the error occurred.
  */
 
-function handleError(error, functionName) {
+const handleError = (error, functionName) => {
   if (error?.response?.data != null) {
     throw new Error(`Error in ${functionName}: ${error.response.data}`);
   } else {
     throw new Error(`Error in ${functionName}: ${error}`);
   }
-}
+};
 
-export async function getLectureVideo(videoName) {
+export const getLectureVideo = async (videoName: string) => {
   const filePath = `${lectureVideoPath}${videoName}.mp4`;
 
   try {
@@ -794,9 +790,9 @@ export async function getLectureVideo(videoName) {
   } catch (error) {
     return null;
   }
-}
+};
 
-export async function storeLectureVideo(videoName) {
+export const storeLectureVideo = async (videoName: string) => {
   try {
     // Get video data from API
     const videoData = await api.getBucketVideo(videoName);
@@ -818,9 +814,9 @@ export async function storeLectureVideo(videoName) {
     // Once the new version of transcoding service is deployed this can be uncommented.
     // handleError(error, 'storeLectureVideo');
   }
-}
+};
 
-export async function deleteLectureVideo(videoName) {
+export const deleteLectureVideo = async (videoName: string) => {
   try {
     const filePath = `${lectureVideoPath}${videoName}.mp4`;
 
@@ -828,4 +824,4 @@ export async function deleteLectureVideo(videoName) {
   } catch (error) {
     handleError(error, "deleteLectureVideo");
   }
-}
+};
