@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Text from "../General/Text";
+import Text from "@/components/General/Text";
 import colors from "@/theme/colors";
 import PropTypes from "prop-types";
 
@@ -45,7 +45,7 @@ const CustomRating = ({ rating = 0 }) => {
 
   return noRating ? (
     <View className="flex-row items-start justify-start">
-      <Text className="text-borderDisabledGrayscale pl-1 text-sm">
+      <Text className="pl-1 text-sm text-borderDisabledGrayscale">
         Ainda sem avaliações
       </Text>
     </View>

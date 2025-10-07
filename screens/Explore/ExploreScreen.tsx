@@ -101,7 +101,7 @@ export default function ExploreScreen() {
     return titleMatchesSearch && categoryMatchesFilter;
   });
 
-  const handleFilter = (text) => {
+  const handleFilter = (text: string) => {
     setSearchText(text);
     // console.log("handleFilter", searchText);
   };
@@ -129,7 +129,7 @@ export default function ExploreScreen() {
               "Inscreva-se nos cursos do seu interesse e comece sua jornada"
             }
           />
-          <View height="77%">
+          <View>
             <FilterNavigationBar
               onChangeText={(text) => handleFilter(text)}
               onCategoryChange={handleCategoryFilter}
