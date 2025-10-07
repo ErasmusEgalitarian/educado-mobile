@@ -438,7 +438,7 @@ export const fetchLectureImage = async (imageID: string, lectureID: string) => {
  * @param resolution
  * @returns {Promise<string>}
  */
-export const getVideoUrl = async (videoName: string, resolution?: string) => {
+export const getVideoURL = async (videoName: string, resolution?: string) => {
   let videoUrl;
   if (!resolution) {
     resolution = "360";

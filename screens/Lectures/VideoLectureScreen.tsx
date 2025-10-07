@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import { Icon } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { completeComponent, handleLastComponent } from "../../services/utils";
-import { getVideoUrl } from "../../services/storage-service";
+import { getVideoURL } from "../../services/storage-service";
 
 const VideoLectureScreen = ({
   lectureObject,
@@ -33,7 +33,7 @@ const VideoLectureScreen = ({
   useEffect(() => {
     const fetchVideoUrl = async () => {
       try {
-        const url = await getVideoUrl(lectureObject.video, currentResolution);
+        const url = await getVideoURL(lectureObject.video, currentResolution);
         if (!url) {
           throw new Error("Video URL is null");
         }
