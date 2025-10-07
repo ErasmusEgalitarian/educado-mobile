@@ -1,31 +1,37 @@
 import { useRef, useState } from "react";
-import { View, TouchableOpacity, SafeAreaView, Alert } from "react-native";
-import CompleteCourseSlider from "../../components/Courses/CompleteCourse/CompleteCourseSlider";
-import Text from "../../components/General/Text";
+import {
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  Alert,
+  Text,
+} from "react-native";
+import CompleteCourseSlider from "@/components/Courses/CompleteCourse/CompleteCourseSlider";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import PropTypes from "prop-types";
-import { giveFeedback } from "../../api/api";
+import { giveFeedback } from "@/api/api";
 import { Icon } from "@rneui/themed";
 
-/* 
+/*
 Description: 	This screen is displayed when the student completes a course.
 				The screen dispalys three slides. The first slide displays a congratulation message and an animation.
 				The second slide displays a circular progress bar, which shows the percentage of exercises completed in the first try.
 				The third slide displays the certificate gained by completing the course.
-				When the student presses the continue button, the student is taken to the next slide. 
+				When the student presses the continue button, the student is taken to the next slide.
 				On the last slide, the student is taken to the home screen when the student presses the continue button.
 Dependencies: 	The student must have the course in their course list.
 */
 
-export default function CompleteCourseScreen() {
+const CompleteCourseScreen = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const completeCourseSliderRef = useRef(null);
-  const [feedbackData, setFeedbackData] = useState({});
+  const completeCourseSliderRef = useRef<{
+    scrollBy: (offset: number) => void;
+  } | null>(null);
+  const [feedbackData, setFeedbackData] = useState<{ rating?: number }>({});
   const [feedbackError, setFeedbackError] = useState(false);
 
   const navigation = useNavigation();
   const route = useRoute();
-  const { course } = route.params;
+  const { course } = route.params as { course: { courseId: string } };
   const isFeedbackScreen = currentSlide === 1;
   const rating = feedbackData.rating ? feedbackData.rating : 0;
   const onFBScreenNoStars = isFeedbackScreen && rating === 0;
@@ -37,7 +43,7 @@ export default function CompleteCourseScreen() {
 			const user = await getUserInfo();
 			try {
 				await generateCertificate(course.courseId, student, user);
-				
+
 			} catch (error) {
 				console.log(error);
 			}
@@ -46,14 +52,14 @@ export default function CompleteCourseScreen() {
 		CreateCertificate();
 	}, []); */
 
-  const handleIndexChange = (index) => {
+  const handleIndexChange = (index: number) => {
     setCurrentSlide(index);
   };
   const handleSubmitFeedback = async () => {
     try {
       await giveFeedback(course.courseId, feedbackData);
-    } catch (e) {
-      if (e.response.status === 404) {
+    } catch (e: unknown) {
+      if ((e as { response?: { status: number } })?.response?.status === 404) {
         setFeedbackError(true);
       }
     }
@@ -68,26 +74,31 @@ export default function CompleteCourseScreen() {
       await handleSubmitFeedback();
       navigation.reset({
         index: 0,
-        routes: [{ name: "HomeStack" }],
+        routes: [{ name: "HomeStack" }] as never,
       });
     } else {
       completeCourseSliderRef.current.scrollBy(1);
     }
   };
 
+  // Show alert when feedback error occurs
+  if (feedbackError) {
+    Alert.alert(
+      "Não foi possível encontrar o curso sobre o qual você deu feedback.",
+    );
+  }
+
   return (
     <SafeAreaView className="bg-secondary">
-      {feedbackError &&
-        Alert.alert(
-          "Não foi possível encontrar o curso sobre o qual você deu feedback.",
-        )}
       <View className="flex h-full w-full flex-col items-center justify-around">
         <View className="flex h-5/6 w-screen items-center justify-center">
           <CompleteCourseSlider
-            setFeedbackData={setFeedbackData}
-            onIndexChanged={handleIndexChange}
-            ref={completeCourseSliderRef}
-            courseObject={course}
+            {...({
+              setFeedbackData,
+              onIndexChanged: handleIndexChange,
+              ref: completeCourseSliderRef,
+              courseObject: course,
+            } as Record<string, unknown>)}
           />
         </View>
 
@@ -102,7 +113,13 @@ export default function CompleteCourseScreen() {
             disabled={onFBScreenNoStars}
           >
             <View className="flex-row items-center">
-              <Text className="font-sans-bold text-center text-body text-projectWhite">
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+              >
                 {isFeedbackScreen ? "Enviar e concluir" : "Continuar"}
               </Text>
               <Icon
@@ -118,8 +135,8 @@ export default function CompleteCourseScreen() {
       </View>
     </SafeAreaView>
   );
-}
-
-CompleteCourseScreen.propsTypes = {
-  course: PropTypes.object.isRequired,
 };
+
+// TypeScript types are handled through the route params interface
+
+export default CompleteCourseScreen;

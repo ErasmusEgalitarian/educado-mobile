@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -7,29 +7,37 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import Text from "../../components/General/Text";
-import * as StorageService from "../../services/storage-service";
-import CourseCard from "../../components/Courses/CourseCard/CourseCard";
-import IconHeader from "../../components/General/IconHeader";
-import { shouldUpdate } from "../../services/utils";
-import ToastNotification from "../../components/General/ToastNotification";
-import LoadingScreen from "../../components/Loading/LoadingScreen";
-import NetworkStatusObserver from "../../hooks/NetworkStatusObserver";
+import Text from "@/components/General/Text";
+import * as StorageService from "@/services/storage-service";
+import CourseCard from "@/components/Courses/CourseCard/CourseCard";
+import IconHeader from "@/components/General/IconHeader";
+import { shouldUpdate } from "@/services/utils";
+import ToastNotification from "@/components/General/ToastNotification";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
+import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import errorSwitch from "../../components/General/error-switch";
-import ShowAlert from "../../components/General/ShowAlert";
-import Tooltip from "../../components/Onboarding/Tooltip";
-import { getStudentInfo } from "../../services/storage-service";
-import ProfileStatsBox from "../../components/Profile/ProfileStatsBox";
-import OfflineScreen from "../Offline/OfflineScreen";
+import errorSwitch from "@/components/General/error-switch";
+import ShowAlert from "@/components/General/ShowAlert";
+import Tooltip from "@/components/Onboarding/Tooltip";
+import { getStudentInfo } from "@/services/storage-service";
+import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
+import OfflineScreen from "@/screens/Offline/OfflineScreen";
 
-/**
- * Course screen component that displays a list of courses.
- * @component
- * @returns {JSX.Element} The course screen component.
- */
-export default function CourseScreen() {
-  const [courses, setCourses] = useState([]);
+export interface Course {
+  title: string;
+  courseId: string;
+  description: string;
+  category: string;
+  estimatedHours: number;
+  dateUpdated: string;
+  difficulty: string;
+  published: boolean;
+  status: string;
+  rating: number;
+}
+
+const CourseScreen = () => {
+  const [courses, setCourses] = useState<Course[] | any[]>([]);
   const [courseLoaded, setCourseLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
@@ -37,13 +45,12 @@ export default function CourseScreen() {
   const [studentLevel, setStudentLevel] = useState(0);
   const [studentPoints, setStudentPoints] = useState(0);
   const navigation = useNavigation();
-  const [isVisible, setIsVisible] = useState(false);
 
   /**
    * Asynchronous function that loads the courses from storage and updates the state.
    * @returns {void}
    */
-  async function loadCourses() {
+  const loadCourses = useCallback(async () => {
     const courseData = await StorageService.getSubCourseList();
     if (shouldUpdate(courses, courseData)) {
       if (courseData.length !== 0 && Array.isArray(courseData)) {
@@ -55,7 +62,7 @@ export default function CourseScreen() {
       }
     }
     setLoading(false);
-  }
+  }, [courses]);
 
   // When refreshing the loadCourses function is called
   const onRefresh = () => {
@@ -84,7 +91,7 @@ export default function CourseScreen() {
       loadCourses();
       fetchStudentData();
     });
-  }, [navigation]);
+  }, [loadCourses, navigation]);
 
   useEffect(() => {
     const logged = async () => {
@@ -111,7 +118,7 @@ export default function CourseScreen() {
       {!isOnline ? (
         <OfflineScreen />
       ) : courseLoaded ? (
-        <View height="100%">
+        <View className="h-full">
           <IconHeader
             title="Bem Vindo!"
             description="Aqui você encontra todos os cursos em que você está inscrito!"
@@ -123,6 +130,8 @@ export default function CourseScreen() {
               level={studentLevel || 0}
               points={studentPoints || 0}
               drawProgressBarOnly={true}
+              studyStreak={undefined}
+              leaderboardPosition={undefined}
             />
           </View>
 
@@ -140,14 +149,12 @@ export default function CourseScreen() {
       ) : (
         <View className="items-center justify-center bg-secondary">
           <Tooltip
-            isVisible={isVisible}
             position={{
               top: -150,
               left: 95,
               right: 5,
               bottom: 24,
             }}
-            setIsVisible={setIsVisible}
             text="Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito."
             tailSide="right"
             tailPosition="20%"
@@ -176,7 +183,7 @@ export default function CourseScreen() {
               <Pressable
                 testID="exploreButton"
                 className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
-                onPress={() => navigation.navigate("Explorar")}
+                onPress={() => navigation.navigate("Explorar" as never)}
               >
                 <Text className="font-sans-bold text-center text-body text-projectWhite">
                   Explorar cursos
@@ -188,4 +195,6 @@ export default function CourseScreen() {
       )}
     </>
   );
-}
+};
+
+export default CourseScreen;
