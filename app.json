@@ -2,6 +2,7 @@
   "expo": {
     "name": "Educado Mobile",
     "slug": "educado-mobile",
+    "scheme": "educado-mobile",
     "version": "2.1.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -46,6 +47,15 @@
         {
           "launchMode": "most-recent"
         }
+      ],
+      "expo-router",
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "android": ["en-US", "pt-BR"]
+          }
+        }
       ]
     ],
     "extra": {
@@ -53,6 +63,9 @@
       "eas": {
         "projectId": "33029e48-261a-46db-a3d6-211aa40139f0"
       }
+    },
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }
