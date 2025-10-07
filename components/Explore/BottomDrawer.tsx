@@ -25,12 +25,16 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
     toggleModal();
     subscribe(course.courseId);
     addCourseToStudent(course.courseId);
-    navigation.navigate("Section", { course });
+    navigation.navigate("Subscribed", {
+      course: course,
+    });
   };
 
   const navigateCourse = (course) => {
     toggleModal();
-    navigation.navigate("Section", { course });
+    navigation.navigate("CourseOverview", {
+      course: course,
+    });
   };
 
   return (
@@ -42,7 +46,9 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
     >
       <View
         className="flex-1"
-        style={{ backgroundColor: colors.surfaceSubtleCyan }}
+        style={{
+          backgroundColor: colors.surfaceSubtleCyan,
+        }}
       />
 
       <View
