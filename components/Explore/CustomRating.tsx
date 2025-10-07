@@ -10,13 +10,12 @@ import PropTypes from "prop-types";
  * @param rating - Number between 0 and 5
  * @returns {JSX.Element} - Rendered component
  */
+
 const CustomRating = ({ rating = 0 }) => {
-  const [ratingIcons, setRatingIcons] = useState(
-    Array(5).fill({
-      icon: "star-outline",
-      color: colors.surfaceYellow,
-    }),
-  );
+  const [ratingIcons, setRatingIcons] = useState(Array(5).fill({ 
+    icon: "star-outline", 
+    color: colors.surfaceYellow,
+  }));
   const [noRating, setNoRating] = useState(false);
 
   useEffect(() => {
@@ -30,13 +29,11 @@ const CustomRating = ({ rating = 0 }) => {
         } else if (index === fullStars && halfStar) {
           return {
             icon: "star-half-full",
-            color: colors.surfaceYellow,
-          };
+            color: colors.surfaceYellow };
         } else {
           return {
             icon: "star-outline",
-            color: colors.surfaceYellow,
-          };
+            color: colors.surfaceYellow };
         }
       });
 
@@ -63,8 +60,8 @@ const CustomRating = ({ rating = 0 }) => {
         />
       ))}
       <Text
-        className="pl-2 text-sm text-projectGray"
-        style={{ color: colors.yellow }}
+        className="pl-1 text-xs font-sans-bold"
+        style={{ color: colors.surfaceYellow }}
       >
         {parseFloat(rating).toFixed(1)}
       </Text>
