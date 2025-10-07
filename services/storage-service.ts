@@ -8,6 +8,8 @@ import jwt from "expo-jwt";
 import Constants from "expo-constants";
 import { ApiSection, Section } from "@/types/section";
 import { StudentInfo } from "@/types/student"
+import { ApiCourse, Course } from "@/types/course";
+import { UserInfo } from "@/types/user";
 
 const SUB_COURSE_LIST = "@subCourseList";
 const USER_ID = "@userId";
@@ -108,7 +110,13 @@ export const setStudentInfo = async (userId: string) => {
  * @returns {Promise<Object>} A promise that resolves with the fetched student information.
  */
 export const getStudentInfo = async (): Promise<StudentInfo> => {
-  return JSON.parse(await AsyncStorage.getItem(STUDENT_INFO));
+  const res = await AsyncStorage.getItem(STUDENT_INFO)
+
+  if (!res) {
+    throw new Error(`Could not retrieve Student info for ${String(STUDENT_INFO)}`)
+  }
+
+  return JSON.parse(res);
 };
 
 export const getStudentProfilePhoto = async () => {
@@ -116,14 +124,24 @@ export const getStudentProfilePhoto = async () => {
   return student.photo;
 };
 
-export const updateStudentInfo = async (studentInfo) => {
+export const updateStudentInfo = async (studentInfo: StudentInfo) => {
   await AsyncStorage.setItem(STUDENT_INFO, JSON.stringify(studentInfo));
 };
 
 // Increment studyStreak and update lastStudyDate
-export const updateLocalStudyStreak = async (newStudyDate) => {
+export const updateLocalStudyStreak = async (newStudyDate: Date) => {
   // Retrieve current studentInfo
-  const studentInfo = JSON.parse(await AsyncStorage.getItem(STUDENT_INFO));
+  const res = await AsyncStorage.getItem(STUDENT_INFO)
+
+  if (!res) {
+    throw new Error(`Could not retrieve student info for ${STUDENT_INFO}`)
+  }
+
+  const studentInfo: StudentInfo = JSON.parse(res);
+
+  if (studentInfo === null) {
+    throw new Error("Cannot parse student info from async storage");
+  }
 
   if (studentInfo) {
     studentInfo.studyStreak += 1;
@@ -140,26 +158,26 @@ export const updateLocalStudyStreak = async (newStudyDate) => {
  * Retrieves user information from AsyncStorage.
  * @returns {Promise<Object>} A promise that resolves with the fetched user information.
  */
-export const getUserInfo = async () => {
-  const fetchedUserInfo = JSON.parse(await AsyncStorage.getItem(USER_INFO));
-  if (fetchedUserInfo === null) {
-    throw new Error("Cannot fetch user info from async storage");
+export const getUserInfo = async (): Promise<UserInfo> => {
+  const res = await AsyncStorage.getItem(USER_INFO)
+
+  if (!res) {
+    throw new Error(`Could not retrieve user info for ${String(USER_INFO)}`)
   }
-  return fetchedUserInfo;
+
+  const userInfo: UserInfo = JSON.parse(res);
+  if (userInfo === null) {
+    throw new Error("Cannot parse user info from async storage");
+  }
+  return userInfo;
 };
 
 /**
  * Stores user information in AsyncStorage.
  * @param {Object} userInfo - The user information to store.
  */
-export const setUserInfo = async (userInfo) => {
-  const obj = {
-    id: userInfo.id,
-    firstName: userInfo.firstName,
-    lastName: userInfo.lastName,
-    email: userInfo.email,
-  };
-  await AsyncStorage.setItem(USER_INFO, JSON.stringify(obj));
+export const setUserInfo = async (userInfo: UserInfo) => {
+  await AsyncStorage.setItem(USER_INFO, JSON.stringify(userInfo));
   await AsyncStorage.setItem(USER_ID, userInfo.id); // needs to be separate
   await setStudentInfo(userInfo.id);
 };
@@ -168,7 +186,7 @@ export const setUserInfo = async (userInfo) => {
  * Retrieves the JWT from AsyncStorage.
  * @returns {Promise<string>} A promise that resolves with the JWT.
  */
-export const getJWT = async () => {
+export const getJWT = async (): Promise<string | null> => {
   return await AsyncStorage.getItem(LOGIN_TOKEN);
 };
 
@@ -176,11 +194,11 @@ export const getJWT = async () => {
  * Stores a JWT in AsyncStorage.
  * @param {string} jwt - The JWT to store.
  */
-export const setJWT = async (jwt) => {
+export const setJWT = async (jwt: string) => {
   await AsyncStorage.setItem(LOGIN_TOKEN, jwt);
 };
 
-export const getUserId = async () => {
+export const getUserId = async (): Promise<string | null> => {
   return await AsyncStorage.getItem(USER_ID);
 };
 /** COURSE AND COURSE LIST **/
@@ -189,23 +207,8 @@ export const getUserId = async () => {
  * Retrieves a list of all courses.
  * @returns {Promise<Array>} A promise that resolves with a list of courses.
  */
-export const getCourseList = async () => {
-  let courseList = [];
-  if (isOnline) {
-    try {
-      courseList = await api.getCourses();
-    } catch (error) {
-      if (error?.response?.data != null) {
-        throw new Error("API error in getCourses:" + error.response.data);
-      } else {
-        throw new Error("API error in getCourses:" + error);
-      }
-    } finally {
-      return await refreshCourseList(courseList);
-    }
-  } else {
-    return courseList;
-  }
+export const getCourseList = async (): Promise<Course[]> => {
+  return mapApiCoursesToCourses(await api.getCourses()?? []) ;
 };
 
 /**
@@ -213,34 +216,23 @@ export const getCourseList = async () => {
  * @param {Array} courseList - The list of courses to refresh.
  * @returns {Promise<Array>} A promise that resolves with the refreshed course list.
  */
-const refreshCourseList = async (courseList) => {
-  try {
-    let newCourseList = [];
-    if (courseList.length !== 0) {
-      for (const course of courseList) {
-        // Make new list with required members
-        newCourseList.push({
-          title: course.title,
-          courseId: course._id,
-          description: course.description,
-          category: course.category,
-          estimatedHours: course.estimatedHours,
-          dateUpdated: course.dateUpdated,
-          difficulty: course.difficulty,
-          published: course.published,
-          status: course.status,
-          rating: course.rating,
-          feedbackOptions: course.feedbackOptions,
-          topFeedbackOptions: course.topFeedbackOptions,
-        });
-      }
-    }
-    // Save new courseList for this key and return it.
-    return newCourseList;
-  } catch (error) {
-    handleError(error, "refreshCourseList");
-  }
+const mapApiCoursesToCourses = (courseList: ApiCourse[]): Course[] => {
+  return courseList.map<Course>((c) => ({
+    title: c.title,
+    courseId: c._id,
+    description: c.description,
+    category: c.category,
+    estimatedHours: c.estimatedHours,
+    dateUpdated: c.dateUpdated,
+    difficulty: c.difficulty,
+    published: c.published,
+    status: c.status,
+    rating: c.rating,
+    feedbackOptions: c.feedbackOptions,
+    topFeedbackOptions: c.topFeedbackOptions,
+  }));
 };
+
 
 /** SECTIONS **/
 
@@ -275,7 +267,7 @@ export const getSection = async (sectionId: string) => {
  * @param {Array} section - The list section to refresh.
  * @returns {Promise<Object>} A promise that resolves with the refreshed section.
  */
-export const refreshSection = async (section) => {
+export const refreshSection = async (section: ApiSection): Promise<Section> => {
   let newSection = null;
   try {
     if (section !== null) {
@@ -339,7 +331,7 @@ export const getSectionList = async (course_id: string): Promise<Section[]> => {
  * @returns {Promise<Array>} A promise that resolves with a list of components for the section.
  */
 // get all components for specific section
-export const getComponentList = async (sectionID) => {
+export const getComponentList = async (sectionID: string) => {
   let componentList = [];
   try {
     if (isOnline) {
@@ -433,7 +425,7 @@ export const getVideoURL = async (videoName, resolution) => {
  * Retrieves a list of subscribed courses for a user.
  * @returns {Promise<Array>} A promise that resolves with the list of subscribed courses.
  */
-export const getSubCourseList = async () => {
+export const getSubCourseList = async (): Promise<Course[] | null> => {
   // get the logged-in user id from async storage
   const userId = await AsyncStorage.getItem(USER_ID);
 
@@ -447,12 +439,13 @@ export const getSubCourseList = async () => {
     return await refreshSubCourseList(userId);
   } catch (error) {
     // Check if the course list already exists in AsyncStorage
-    let courseList = JSON.parse(await AsyncStorage.getItem(SUB_COURSE_LIST));
+    const courseList = await AsyncStorage.getItem(SUB_COURSE_LIST)
     if (courseList !== null) {
-      return courseList;
+      return JSON.parse(courseList);
     }
     handleError(error, "getSubCourseList");
   }
+  return null
 };
 
 /**
@@ -460,11 +453,11 @@ export const getSubCourseList = async () => {
  * @param {string} userId - The user ID.
  * @returns {Promise<Array>} A promise that resolves with the refreshed subscribed course list.
  */
-export const refreshSubCourseList = async (userId) => {
+export const refreshSubCourseList = async (userId: string): Promise<Course[]> => {
   return await api
     .getSubscriptions(userId)
     .then(async (list) => {
-      let newCourseList = [];
+      let newCourseList: Course[] = [];
       for (const course of list) {
         // Make new list with required members
         newCourseList.push({
@@ -488,7 +481,7 @@ export const refreshSubCourseList = async (userId) => {
       return newCourseList;
     })
     .catch((error) => {
-      handleError(error, "refreshSubCourseList");
+      throw new Error(error)
     });
 };
 
