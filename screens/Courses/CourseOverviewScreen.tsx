@@ -9,10 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
 import SubscriptionCancelButton from "@/components/Section/CancelSubscriptionButton";
 import { unsubscribe } from "@/services/storage-service";
-import {
-  checkProgressCourse,
-  checkProgressSection,
-} from "@/services/utils";
+import { checkProgressCourse, checkProgressSection } from "@/services/utils";
 import ContinueSectionButton from "@/components/Section/ContinueSectionButton";
 import Tooltip from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";

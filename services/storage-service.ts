@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import * as FileSystem from "expo-file-system";
 import jwt from "expo-jwt";
-import * as api from '@/api/api'
+import * as api from "@/api/api";
 import * as userApi from "@/api/user-api";
 import defaultImage from "@/assets/images/defaultImage-base64.json";
 import { Section } from "@/screens/Courses/CourseOverviewScreen";
