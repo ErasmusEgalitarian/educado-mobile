@@ -70,14 +70,14 @@ export default function LoginScreen() {
                   <LoginForm />
                 </View>
                 {/* Register button */}
-                <View className="flex-row justify-center">
-                  <Text className="mr-1 text-lg text-projectBlack">
+                <View className="flex-col items-center">
+                  <Text className="mr-1 text-lg text-textGrey">
                     {/* Dont have an account yet? */}
                     Ainda não tem conta?
                   </Text>
                   <Text
                     testId="registerNav"
-                    className={"left-1 text-lg text-profileCircle underline"}
+                    className={"left-1 text-lg underline text-projectBlack"}
                     onPress={() =>
                       navigation.navigate("Register", {
                         previousScreen: "Login",
