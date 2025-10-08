@@ -44,17 +44,12 @@ export default function EducadoModal(props: EducadoModalProps) {
               <AlertNotificationRoot>
               <KeyboardAwareScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
-              >
-                <View className="flex flex-row justify-end px-[10%]">
+              >                
+                <View className="flex flex-row items-center justify-between px-[10%] mb-4">
+                  <Text className="text-2xl font-semibold">{props.title ?? ""}</Text>
                   <Pressable onPress={props.closeModal}>
                     <Entypo name="chevron-down" size={24} />
                   </Pressable>
-                </View>
-
-                <View className="flex flex-row justify-start px-[10%]">
-                  <Text className="text-center text-2xl font-semibold">
-                    {props.title ? props.title : ""}
-                  </Text>
                 </View>
                 {props.children}
               </KeyboardAwareScrollView>

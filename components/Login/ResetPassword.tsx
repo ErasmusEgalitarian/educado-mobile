@@ -164,36 +164,42 @@ export default function ResetPassword(props: ResetPasswordProps) {
       id="EducadoModal"
       title="Redefinição de senha"
     >
-      <View className="my-16 px-10">
+      <View className="my-8 px-10">
         {!codeEntered ? (
           <View>
-            <FormTextField
-              bordered={true}
-              placeholder="Insira sua e-mail"
-              label="E-mail"
-              required={true}
-              onChangeText={(email) => setEmail(email)}
-              keyboardType="email-address"
-              testId="emailInput"
-              value={email}
-            />
-            <FormFieldAlert
-              testId="emailAlert"
-              label={passwordResetAlert}
-              success={isSuccess}
-            />
+
+            {!emailSent && (
+            <View>
+              <FormTextField
+                bordered={true}
+                placeholder="Insira sua e-mail"
+                label="E-mail"
+                required={true}
+                onChangeText={(email) => setEmail(email)}
+                keyboardType="email-address"
+                testId="emailInput"
+                value={email} 
+                />
+                <FormFieldAlert
+                testId="emailAlert"
+                label={passwordResetAlert}
+                success={isSuccess} 
+                />
+              </View>
+            )}
+
+
             <View className="mt-[40px]">
               {emailSent ? (
                 <View>
-                  <Text className="mb-[10px] text-left">
+                  <Text className="mb-[10px] text-center text-lg">
                     {/* We have sent a code to your mail to reset your password,
                      please enter the code you have received below: */}
-                    Enviamos para o seu email um código de redefinição de senha.
-                    Insira o código abaixo.
+                    Enviamos um código para o seu email de redefinição de senha, por favor, insira o mesmo abaixo
                   </Text>
                   <FormTextField
                     bordered={true}
-                    placeholder="X X X X"
+                    placeholder="XXXX"
                     onChangeText={(token) => setToken(token)}
                     testId="tokenInput"
                     value={token}
@@ -204,21 +210,21 @@ export default function ResetPassword(props: ResetPasswordProps) {
                     <FormButton
                       // Continue
                       label={
-                        buttonLoading ? "Validando código..." : "Continuar"
+                        buttonLoading ? "Validando código..." : "Verificar Codigo"
                       }
                       onPress={() => validateCode(email, token)}
                       testId="validateCodeBtn"
                       disabled={!codeInputValid(token)}
                     >
-                      {buttonLoading ? "Validando código..." : "Continuar"}
+                      {buttonLoading ? "Validando código..." : "Verificar Codigo"}
                     </FormButton>
                   </View>
-                  <View className="mx-10 flex-row justify-center">
+                  <View className="mx-10 flex-column items-center justify-center ">
                     {/* Did not receieve the code? */}
                     <Text>O código não chegou?</Text>
                     {/* Resend code*/}
                     <Text
-                      className="ml-1 underline"
+                      className="underline"
                       onPress={() => sendEmail(email)}
                     >
                       Reenviar código
