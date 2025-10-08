@@ -7,7 +7,7 @@ import patterns from "../../assets/validation/patterns";
  * @returns either the password state variable or the confirm password state variable depending on the confirm parameter
  */
 
-const removeEmojis = (passwordInput) => {
+export const removeEmojis = (passwordInput: string) => {
   return passwordInput.replace(patterns.emoji, "");
 };
 
@@ -16,7 +16,7 @@ const removeEmojis = (passwordInput) => {
  * @param {String} password
  * @returns {Boolean} true if password contains at least one letter, false otherwise
  */
-const validatePasswordContainsLetter = (password) => {
+export const validatePasswordContainsLetter = (password: string) => {
   const regex = /.*\p{L}.*$/u;
   return regex.test(password);
 };
@@ -26,7 +26,7 @@ const validatePasswordContainsLetter = (password) => {
  * @param {String} password
  * @returns {Boolean} true if password is longer than 7 characters, false otherwise
  */
-const validatePasswordLength = (password) => {
+export const validatePasswordLength = (password: string) => {
   return password.length > 7;
 };
 
@@ -36,7 +36,7 @@ const validatePasswordLength = (password) => {
  * @param {String} email
  * @returns {String} error message if email is invalid, empty string otherwise
  */
-const validateEmail = (email) => {
+export const validateEmail = (email: string) => {
   const emailPattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
   if (!emailPattern.test(email)) {
@@ -54,7 +54,7 @@ const validateEmail = (email) => {
  * @param {String} wordForName (e.g. 'Nome' or 'Sobrenome')
  * @returns {String} error message if name is invalid, empty string otherwise
  */
-const validateName = (name, wordForName = "Nome") => {
+export const validateName = (name: string, wordForName = "Nome") => {
   if (name.length > 50) {
     // Check this number
     return `${wordForName} muito longo`; // Name too long
@@ -70,10 +70,3 @@ const validateName = (name, wordForName = "Nome") => {
   return "";
 };
 
-module.exports = Object.freeze({
-  removeEmojis,
-  validatePasswordContainsLetter,
-  validatePasswordLength,
-  validateEmail,
-  validateName,
-});
