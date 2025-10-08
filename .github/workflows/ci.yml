@@ -75,7 +75,7 @@ jobs:
         run: node ./scripts/ci-tsc-report.mjs > tsc-report.json || true
       - name: Report
         run: |
-          node ./scripts/ci-filter-reports.mjs "$FILES_CHANGED_JSON" eslint-report.json tsc-report.json
+          node ./scripts/ci-report-problems.mjs "$FILES_CHANGED_JSON" eslint-report.json tsc-report.json
       - name: Run Tests
         run: npm run test:ci
       - name: Decide Build
