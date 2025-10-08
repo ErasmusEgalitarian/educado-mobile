@@ -6,11 +6,18 @@ import {
   Keyboard,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import EducadoLogo from "../Images/EducadoLogo";
 import Text from "./Text";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import PropTypes from "prop-types";
+import { ReactNode } from "react";
+
+interface EducadoModalProps {
+  children: ReactNode;
+  modalVisible: boolean,
+  closeModal: () => void,
+  title: string
+}
 
 /**
  *
@@ -20,37 +27,42 @@ import PropTypes from "prop-types";
  * - title: String for modal title
  * @returns
  */
-export default function EducadoModal(props) {
+export default function EducadoModal(props: EducadoModalProps) {
   return (
     <Modal
       visible={props.modalVisible}
       animationType="slide"
       className="border-black border-8"
+      transparent={true}
     >
-      <AlertNotificationRoot>
-        <KeyboardAwareScrollView className="bg-secondary">
+      <TouchableWithoutFeedback onPress={props.closeModal}>
+
+        {/* ERROR BG IS PLACEHOLDER UNTILL BLACK OPACITY COLOUR WORKS!!! */}
+        <View className="flex-1 justify-end bg-error">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View>
-              <View className="flex justify-center pt-[10%]">
+            <View className="bg-projectWhite h-[90%] rounded-t-3xl pt-10">
+              <AlertNotificationRoot>
+              <KeyboardAwareScrollView
+                contentContainerStyle={{ flexGrow: 1 }}
+              >
                 <View className="flex flex-row justify-end px-[10%]">
                   <Pressable onPress={props.closeModal}>
                     <Entypo name="chevron-down" size={24} />
                   </Pressable>
                 </View>
-                <View className="my-[10%] flex flex-row justify-center">
-                  <EducadoLogo fill="fill-black" />
-                </View>
+
                 <View className="flex flex-row justify-start px-[10%]">
-                  <Text className="text-center text-[24px]">
+                  <Text className="text-center text-2xl font-semibold">
                     {props.title ? props.title : ""}
                   </Text>
                 </View>
-              </View>
-              {props.children}
+                {props.children}
+              </KeyboardAwareScrollView>
+              </AlertNotificationRoot>
             </View>
           </TouchableWithoutFeedback>
-        </KeyboardAwareScrollView>
-      </AlertNotificationRoot>
+        </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }

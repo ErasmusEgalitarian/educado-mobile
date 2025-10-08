@@ -15,6 +15,11 @@ import ToastNotification from "../General/ToastNotification";
 import ShowAlert from "../General/ShowAlert";
 import PropTypes from "prop-types";
 
+interface ResetPasswordProps {
+  modalVisible: boolean,
+  onModalClose:  () => void;
+}
+
 /**
  * Component to create modal (popup) that prompts user for
  * email and code from email to reset password
@@ -22,7 +27,7 @@ import PropTypes from "prop-types";
  * - modalVisible: Boolean to show if modal should be visible
  * - onModalClose: Function to do when modal closes
  */
-export default function ResetPassword(props) {
+export default function ResetPassword(props: ResetPasswordProps) {
   const emailAlertMessage = "Não existe nenhum usuário com este email!";
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
@@ -38,7 +43,7 @@ export default function ResetPassword(props) {
    * @param {String} message Message to display in alert
    * @param {Boolean} status Displays if alert is success or error (green if true or red if false)
    */
-  function displayErrorAlert(message, status) {
+  function displayErrorAlert(message: string, status: boolean) {
     setPasswordResetAlert(message);
     setIsSuccess(status);
   }
@@ -55,9 +60,9 @@ export default function ResetPassword(props) {
 
   /**
    * Function to send mail to user with code to reset password
-   * @param {*} email
+   * @param {String} email
    */
-  async function sendEmail(email) {
+  async function sendEmail(email: string) {
     const obj = {
       email,
     };
@@ -103,7 +108,7 @@ export default function ResetPassword(props) {
    * @param {String} token
    */
 
-  async function validateCode(email, token) {
+  async function validateCode(email: string, token: string) {
     const obj = {
       email,
       token,
@@ -148,7 +153,7 @@ export default function ResetPassword(props) {
   };
 
   //checks if the 4-digit code entered is valid
-  const codeInputValid = (code) => {
+  const codeInputValid = (code: string) => {
     return /^\d+$/.test(code) && code.length === 4;
   };
 
@@ -159,7 +164,7 @@ export default function ResetPassword(props) {
       id="EducadoModal"
       title="Redefinição de senha"
     >
-      <View className="my-[80px] px-10">
+      <View className="my-16 px-10">
         {!codeEntered ? (
           <View>
             <FormTextField
@@ -229,7 +234,7 @@ export default function ResetPassword(props) {
                     passwordResetAlert !== "" || email === "" || buttonLoading
                   }
                 >
-                  {buttonLoading ? "Enviando e-mail..." : "Enviar código"}
+                  {buttonLoading ? "Enviando e-mail..." : "Entrar"}
                 </FormButton>
               )}
             </View>
