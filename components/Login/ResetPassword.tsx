@@ -178,12 +178,12 @@ export default function ResetPassword(props: ResetPasswordProps) {
                 onChangeText={(email) => setEmail(email)}
                 keyboardType="email-address"
                 testId="emailInput"
-                value={email} 
+                value={email}
                 />
                 <FormFieldAlert
                 testId="emailAlert"
                 label={passwordResetAlert}
-                success={isSuccess} 
+                success={isSuccess}
                 />
               </View>
             )}
