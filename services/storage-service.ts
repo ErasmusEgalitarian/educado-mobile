@@ -319,32 +319,27 @@ export const fetchLectureImage = async (imageID: string, lectureID: string) => {
 
 /**
  * gets videoURL for a Lecture if online, and video in base64 from file if offline
- * @param videoName
- * @param resolution
- * @returns {Promise<string>}
  */
-export const getVideoURL = async (videoName, resolution) => {
-  let videoUrl: string;
+// todo! fix name from getVideoURL to getVideoUrl
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const getVideoURL = async (videoName: string, resolution: string) => {
   if (!resolution) {
     resolution = "360";
   }
-  try {
-    if (isOnline) {
-      videoUrl = api.getVideoStreamUrl(videoName, resolution);
-    } else {
-      throw new Error("No internet connection in getVideoUrl.");
-    }
-  } catch {
-    // Use locally stored video if they exist and the DB cannot be reached
+
+  if (isOnline) {
     try {
-      videoUrl = await FileSystem.readAsStringAsync(
+      return api.getVideoStreamUrl(videoName, resolution);
+    } catch {
+      return await FileSystem.readAsStringAsync(
         lectureVideoPath + videoName + ".json",
       );
-    } catch (e) {
-      handleError(e, "getVideoUrl");
     }
   }
-  return videoUrl;
+
+  return await FileSystem.readAsStringAsync(
+    lectureVideoPath + videoName + ".json",
+  );
 };
 
 /** SUBSCRIPTIONS **/
