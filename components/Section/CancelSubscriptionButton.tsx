@@ -16,8 +16,9 @@ const SubscriptionCancelButton = ({
         color={colors.error}
         testID="subscriptionCancelButton"
         onPress={onPress}
+        uppercase={false}
       >
-        <Text className="font-extrabold underline">Cancelar inscrição</Text>
+        <Text className="underline font-montserrat text-[14px]">Retirar curso</Text>
       </Button>
     </View>
   );

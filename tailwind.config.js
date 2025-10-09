@@ -19,7 +19,7 @@ module.exports = {
       error: "#FF4949",
       success: "#4AA04A",
       disable: "#DDD",
-      disabled: "#E4F2F5",
+      disabled: "#EBF0F2",
       projectRed: "#FFE4E4",
       projectGreen: "#E4F1E4",
       projectLightGray: "#F1F9FB",

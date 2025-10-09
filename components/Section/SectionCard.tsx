@@ -43,7 +43,7 @@ const SectionCard = ({
         style={{ width: "100%" }}
       >
         <TouchableOpacity
-          className={`bg-secondary ${disabled ? "bg-bgLockedLesson" : ""}`}
+          className={`bg-secondary ${disabled ? "bg-disabled" : ""}`}
           style={{ borderRadius: 10, transform: [{ scale: 1.02 }] }}
           onPress={onPress}
           disabled={disabled}
