@@ -1,10 +1,16 @@
+// import { colors } from "./theme/colors";
+// eslint-disable-next-line no-restricted-imports
+import { textStyle } from "./theme/typography";
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./App.tsx",
-    "./components/**/*.{js,jsx,ts,tsx}",
-    "./screens/**/*.{js,jsx,ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./screens/**/*.{ts,tsx}",
   ],
+  presets: [require("nativewind/preset")],
   theme: {
     // Remember to edit theme/colors.ts as well!
 
@@ -156,16 +162,18 @@ module.exports = {
       badgesBlue: "#54ADF1",
       unselectedStar: "#CBCAB8",
     },
-    fontFamily: {
-      montserrat: ["Montserrat-Regular"],
-      "montserrat-bold": ["Montserrat-Bold"],
-      "montserrat-semi-bold": ["Montserrat-SemiBold"],
-      sans: ['"Montserrat-Regular"'],
-      "sans-bold": ["'Montserrat-Bold'"],
-      "sans-semi-bold": ["'Montserrat-SemiBold'"],
-      bold: ["Montserrat-Bold"],
-    },
     extend: {
+      fontFamily: {
+        sans: ["Montserrat_400Regular"],
+        "mont-400": ["Montserrat_400Regular"],
+        "mont-400-italic": ["Montserrat_400Regular_Italic"],
+        "mont-500": ["Montserrat_500Medium"],
+        "mont-600": ["Montserrat_600SemiBold"],
+        "mont-600-italic": ["Montserrat_600SemiBold_Italic"],
+        "mont-700": ["Montserrat_700Bold"],
+        "mont-700-italic": ["Montserrat_700Bold_Italic"],
+        "mont-800": ["Montserrat_800ExtraBold"],
+      },
       fontSize: {
         heading: 32,
         subheading: 24,
@@ -192,6 +200,21 @@ module.exports = {
           textAlignVertical: "top",
         },
       });
+    },
+    ({ addUtilities, theme }) => {
+      const utilities = Object.fromEntries(
+        Object.entries(textStyle).map(([key, value]) => [
+          `.typo-${key}`,
+          {
+            fontFamily: [theme(`fontFamily.${value.fontFamilyKey}`)],
+            fontSize: value.fontSize,
+            lineHeight: `${value.lineHeight}px`,
+            ...(value.caps ? { textTransform: "uppercase" } : null),
+          },
+        ]),
+      );
+
+      addUtilities(utilities);
     },
   ],
 };
