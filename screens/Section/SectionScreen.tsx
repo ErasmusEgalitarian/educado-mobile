@@ -23,7 +23,7 @@ export interface SectionScreenProps {
 
 const SectionScreen = ({ route }: SectionScreenProps): ReactElement => {
   const { course, section } = route.params;
-  const [components, setComponents] = useState([]);
+  const [components, setComponents] = useState<Component[]>([]);
   const [completedCompAmount, setCompletedCompAmount] = useState(0);
 
   const navigation = useNavigation();

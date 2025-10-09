@@ -30,6 +30,37 @@ const updateNetworkStatus = (networkStatus: boolean) => {
 
 NetworkStatusService.getInstance().addObserver({ update: updateNetworkStatus });
 
+const getLocalItem = async <T>(id: string): Promise<T> => {
+  const res = await AsyncStorage.getItem(id)
+  if (res === null) {
+    throw new Error("Could not retrieve item");
+  }
+  return JSON.parse(res);
+}
+
+type Fetcher<T, A extends unknown[]> = (...args: A) => Promise<T>;
+/**
+ * @example fetchWithFallback(api.getSomething, [...args], "S" + id)
+ * T = ApiData
+ * A = online function arg types
+ */
+const fetchWithFallback = async <T, A extends unknown[]>(
+  onlineFetcher: Fetcher<T, A>,
+  args: A, // Spreads the arguments here
+  localId: string,
+): Promise<T> => {
+
+  if (isOnline) {
+    try {
+      return await onlineFetcher(...args);
+    } catch {
+      return await getLocalItem(localId);
+    }
+  }
+
+  return await getLocalItem(localId);
+}
+
 /** LOGIN TOKEN **/
 
 /**
@@ -110,17 +141,12 @@ export const setStudentInfo = async (userId: string) => {
  * @returns {Promise<Object>} A promise that resolves with the fetched student information.
  */
 export const getStudentInfo = async (): Promise<StudentInfo> => {
-  const res = await AsyncStorage.getItem(STUDENT_INFO)
+  return await getLocalItem<StudentInfo>(STUDENT_INFO)
 
-  if (!res) {
-    throw new Error(`Could not retrieve Student info for ${String(STUDENT_INFO)}`)
-  }
-
-  return JSON.parse(res);
 };
 
 export const getStudentProfilePhoto = async () => {
-  const student = await getStudentInfo();
+  const student = await getLocalItem<StudentInfo>(STUDENT_INFO);
   return student.photo;
 };
 
@@ -131,17 +157,7 @@ export const updateStudentInfo = async (studentInfo: StudentInfo) => {
 // Increment studyStreak and update lastStudyDate
 export const updateLocalStudyStreak = async (newStudyDate: Date) => {
   // Retrieve current studentInfo
-  const res = await AsyncStorage.getItem(STUDENT_INFO)
-
-  if (!res) {
-    throw new Error(`Could not retrieve student info for ${STUDENT_INFO}`)
-  }
-
-  const studentInfo: StudentInfo = JSON.parse(res);
-
-  if (studentInfo === null) {
-    throw new Error("Cannot parse student info from async storage");
-  }
+  const studentInfo: StudentInfo = await getLocalItem<StudentInfo>(STUDENT_INFO)
 
   if (studentInfo) {
     studentInfo.studyStreak += 1;
@@ -159,17 +175,7 @@ export const updateLocalStudyStreak = async (newStudyDate: Date) => {
  * @returns {Promise<Object>} A promise that resolves with the fetched user information.
  */
 export const getUserInfo = async (): Promise<UserInfo> => {
-  const res = await AsyncStorage.getItem(USER_INFO)
-
-  if (!res) {
-    throw new Error(`Could not retrieve user info for ${String(USER_INFO)}`)
-  }
-
-  const userInfo: UserInfo = JSON.parse(res);
-  if (userInfo === null) {
-    throw new Error("Cannot parse user info from async storage");
-  }
-  return userInfo;
+  return getLocalItem<UserInfo>(USER_INFO)
 };
 
 /**
@@ -186,6 +192,8 @@ export const setUserInfo = async (userInfo: UserInfo) => {
  * Retrieves the JWT from AsyncStorage.
  * @returns {Promise<string>} A promise that resolves with the JWT.
  */
+// TODO: Rename setJWT to SetJwt
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const getJWT = async (): Promise<string | null> => {
   return await AsyncStorage.getItem(LOGIN_TOKEN);
 };
@@ -194,6 +202,8 @@ export const getJWT = async (): Promise<string | null> => {
  * Stores a JWT in AsyncStorage.
  * @param {string} jwt - The JWT to store.
  */
+// TODO: Rename getJWT to GetJwt
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const setJWT = async (jwt: string) => {
   await AsyncStorage.setItem(LOGIN_TOKEN, jwt);
 };
@@ -238,59 +248,38 @@ const mapApiCoursesToCourses = (courseList: ApiCourse[]): Course[] => {
 
 /**
  * Retrieves a sections for a specific course.
- * @param {string} courseId - The ID of the sectiom
- * @returns {Promise<Object>} A promise that resolves with the section object.
- */
+**/
 export const getSection = async (sectionId: string) => {
-  let section = null;
-  try {
-    if (isOnline) {
-      section = await api.getSectionById(sectionId);
-    } else {
-      throw new Error("No internet connection in getSection");
-    }
-  } catch (error) {
-    // Use locally stored section if they exist and the DB cannot be reached
-    try {
-      section = JSON.parse(await AsyncStorage.getItem("S" + sectionId));
-      throw new Error("JSON parse error in getSection", error);
-    } catch (e) {
-      handleError(e, "getSection");
-    }
-  } finally {
-    return await refreshSection(section);
-  }
+  const apiSection = await fetchWithFallback(
+    api.getSectionById,
+    [sectionId],
+    "S" + sectionId,
+  );
+  return mapApiSectionToSection(apiSection);
 };
+
+
+
 
 /**
- * Refreshes the section with updated data.
- * @param {Array} section - The list section to refresh.
- * @returns {Promise<Object>} A promise that resolves with the refreshed section.
+ * Maps from the ApiSection type to Section.
  */
-export const refreshSection = async (section: ApiSection): Promise<Section> => {
-  let newSection = null;
-  try {
-    if (section !== null) {
-      newSection = {
-        title: section.title,
-        sectionId: section._id,
-        parentCourseId: section.parentCourse,
-        description: section.description,
-        components: section.components,
-        total: section.totalPoints,
-      };
-    } else {
-      throw new Error("Error in refreshSection: Missing field in section");
-    }
-  } catch (error) {
-    handleError(error, "refreshSection");
-  } finally {
-    //Returns new fitted section, or null if there was no data fetched from DB or Storage,
-    return newSection;
+export const mapApiSectionToSection = (section: ApiSection | null): Section | null => {
+  if (section === null) {
+    return null
   }
+
+  return {
+    title: section.title,
+    sectionId: section._id,
+    parentCourseId: section.parentCourse,
+    description: section.description,
+    components: section.components,
+    total: section.totalPoints,
+  };
 };
 
-export const refreshSectionList = (sectionList: ApiSection[]): Section[] => {
+export const mapApiSectionListToSectionList = (sectionList: ApiSection[]): Section[] => {
   return sectionList.map<Section>((s) => ({
     title: s.title,
     sectionId: s._id,
@@ -306,86 +295,26 @@ export const refreshSectionList = (sectionList: ApiSection[]): Section[] => {
  * @param {string} course_id - The ID of the course.
  * @returns {Promise<Array>} A promise that resolves with a list of sections for the course.
  */
-export const getSectionList = async (course_id: string): Promise<Section[]> => {
-  try {
-    const sectionList = await api.getAllSections(course_id);
-    return await refreshSectionList(sectionList);
-  } catch (e) {
-    handleError(e, "getSectionList");
-  }
-  try {
-    const raw = (await AsyncStorage.getItem("S" + course_id)) ?? "null";
-    const sectionList = JSON.parse(raw);
-    return await refreshSectionList(sectionList);
-  } catch (e) {
-    handleError(e, "getSectionList");
-    return await refreshSectionList([]);
-  }
+export const getSectionList = async (course_id: string) => {
+  const apiSections = await fetchWithFallback(api.getAllSections, [course_id], "S"+course_id);
+  return mapApiSectionListToSectionList(apiSections);
 };
 
 /** COMPONENTS **/
 
-/**
+/*
  * Retrieves a list of components for a specific section.
- * @param {string} sectionID - The ID of the section.
- * @returns {Promise<Array>} A promise that resolves with a list of components for the section.
  */
 // get all components for specific section
-export const getComponentList = async (sectionID: string) => {
-  let componentList = [];
-  try {
-    if (isOnline) {
-      componentList = await api.getComponents(sectionID);
-    } else {
-      throw new Error("No internet connection in getComponentsList");
-    }
-  } catch (error) {
-    // Use locally stored components if they exist and the DB cannot be reached
-    try {
-      if (
-        (componentList = JSON.parse(
-          await AsyncStorage.getItem("C" + sectionID),
-        )) === null
-      ) {
-        throw new Error("JSON parse error in getComponentsList " + error);
-      }
-    } catch (e) {
-      handleError(e, "getComponentList");
-    }
-  } finally {
-    return componentList;
-  }
+export const getComponentList = async (sectionId: string) => {
+  return await fetchWithFallback(api.getComponents, [sectionId], "C"+sectionId)
 };
 
 /**
  * Fetches an image for a lecture.
- * @param {string} imageID - The ID of the image.
- * @param {string} lectureID - The ID of the lecture.
- * @returns {Promise<Object>} A promise that resolves with the lecture image.
- */
-export const fetchLectureImage = async (imageID, lectureID) => {
-  let image = null;
-  try {
-    if (isOnline) {
-      image = await api.getBucketImage(imageID);
-    } else {
-      throw new Error("No internet connection in fetchLectureImage");
-    }
-  } catch (error) {
-    // Use locally stored lectures if they exist and the DB cannot be reached
-    try {
-      if (
-        (image = JSON.parse(await AsyncStorage.getItem("I" + lectureID))) ===
-        null
-      ) {
-        throw new Error("JSON parse error in fetchLectureImage " + error);
-      }
-    } catch (e) {
-      handleError(e, "fetchLectureImage");
-    }
-  } finally {
-    return image;
-  }
+ **/
+export const fetchLectureImage = async (imageID: string, lectureID: string) => {
+  return await fetchWithFallback(api.getBucketImage, [imageID], "I" + lectureID);
 };
 
 /**
@@ -395,7 +324,7 @@ export const fetchLectureImage = async (imageID, lectureID) => {
  * @returns {Promise<string>}
  */
 export const getVideoURL = async (videoName, resolution) => {
-  let videoUrl;
+  let videoUrl: string;
   if (!resolution) {
     resolution = "360";
   }
@@ -405,7 +334,7 @@ export const getVideoURL = async (videoName, resolution) => {
     } else {
       throw new Error("No internet connection in getVideoUrl.");
     }
-  } catch (error) {
+  } catch {
     // Use locally stored video if they exist and the DB cannot be reached
     try {
       videoUrl = await FileSystem.readAsStringAsync(
@@ -414,9 +343,8 @@ export const getVideoURL = async (videoName, resolution) => {
     } catch (e) {
       handleError(e, "getVideoUrl");
     }
-  } finally {
-    return videoUrl;
   }
+  return videoUrl;
 };
 
 /** SUBSCRIPTIONS **/

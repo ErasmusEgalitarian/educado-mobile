@@ -3,8 +3,8 @@ export interface Course {
   courseId: string;
   description: string;
   category: string;
-  estimatedHours: any;
-  dateUpdated: any;
+  estimatedHours: number;
+  dateUpdated: string;
   difficulty: number;
   published: boolean;
   status: string;
