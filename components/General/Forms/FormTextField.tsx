@@ -22,30 +22,31 @@ export default function FormTextField(props) {
   return (
     <View>
       <View className="flex flex-row">
+
         {/* Text size above input fields on login and registration */}
-        <Text className={"ml-2 text-lg"}>{props.label ?? ""}</Text>
+        <Text className={'ml-2 text-lg'}>
+          {props.label ?? ''}
+        </Text>
 
         {/* Text size for red asterisks (fields required) */}
-        <Text className={"ml-1 text-lg text-error"}>
-          {props.required ? "*" : ""}
+        <Text className={'ml-1 text-lg text-error'}>
+          {props.required ? '*' : ''}
         </Text>
       </View>
-      <View className="">
+      <View className=''>
         {/* Various properties for text input fields */}
         <TextInput
           className={
-            "h-50 br-25 rounded-lg bg-projectWhite py-1 pl-[10px] text-base" +
-            (props.bordered ? " border-2 border-projectGray" : "") +
-            (props.error ? " border-2 border-error" : "")
+            `text-base w-full py-4 pl-[10px] bg-projectWhite rounded-lg ${props.bordered && !props.error ? 'border border-projectGray' : ''
+            } ${props.error ? 'border border-error bg-errorTheSecond' : ''
+            }`
           }
-          placeholder={props.placeholder ?? ""} // Placeholder text to be displayed
-          keyboardType={props.keyboardType ?? "default"} // Keyboard type (e.g. numeric, email-address, etc.)
-          autoComplete={props.autoComplete ?? "off"} // Whether to enable auto-completion
+          placeholder={props.placeholder ?? ''} // Placeholder text to be displayed
+          keyboardType={props.keyboardType ?? 'default'} // Keyboard type (e.g. numeric, email-address, etc.)
+          autoComplete={props.autoComplete ?? 'off'} // Whether to enable auto-completion
           secureTextEntry={props.secureTextEntry ?? false} // Whether to mask the input (for passwords, etc.)
           passwordGuidelines={props.passwordGuidelines ?? false} // Whether to display password guidelines
-          onChangeText={
-            props.onChangeText ? (value) => props.onChangeText(value) : null
-          } // Callback function to be called when the text changes
+          onChangeText={props.onChangeText ? value => props.onChangeText(value) : null} // Callback function to be called when the text changes
           value={props.value} // Value of the input
         />
       </View>

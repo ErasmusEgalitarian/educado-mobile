@@ -59,12 +59,12 @@ export default function LoginForm() {
         switch (error?.error?.code) {
           case "E0004":
             // No user exists with this email!
-            setEmailAlert("Não existe nenhum usuário com este email!");
+            setEmailAlert("Insira um E-mail válido");
             break;
 
           case "E0105":
             // Password is incorrect!
-            setPasswordAlert("Senha incorreta!");
+            setPasswordAlert("Senha incorreta. Por favor, tente novamente");
             break;
 
           case "E0003":
@@ -91,19 +91,21 @@ export default function LoginForm() {
 
   return (
     <View>
-      <View className="mb-6">
+      <View className="mb-1">
         <FormTextField
           testId="emailInput"
           placeholder="Insira sua e-mail"
           onChangeText={(email) => setEmail(email)}
           label="E-mail"
-          required={true}
+          required={false}
           keyboardType="email-address"
+          bordered={true}
+          error={false}
         />
         <FormFieldAlert testId="emailAlert" label={emailAlert} />
       </View>
 
-      <View className="relative mb-6">
+      <View className="relative">
         <FormTextField
           testId="passwordInput"
           placeholder="Insira sua senha" // Type your password
@@ -112,8 +114,10 @@ export default function LoginForm() {
             setPassword(removeEmojis(inputPassword, password));
           }}
           label="Senha" // Password
-          required={true}
+          required={false}
           secureTextEntry={!showPassword}
+          bordered={true}
+          error={false}
         />
         <PasswordEye
           testId="passwordEye"
@@ -126,7 +130,7 @@ export default function LoginForm() {
       <View>
         {/* TODO: tilføj onPress til nedenstående; reset password */}
         <Text
-          className={"mb-15 text-right text-lg text-projectBlack underline"}
+          className={"mb-20 text-right text-lg text-textGrey underline"}
           onPress={() => setModalVisible(true)}
         >
           {/* reset your password? */}
@@ -142,7 +146,7 @@ export default function LoginForm() {
       >
         Entrar
       </FormButton>
-      <View className="pt-10">
+      <View className="">
         <ResetPassword
           className={!modalVisible ? "hidden" : ""}
           modalVisible={modalVisible}

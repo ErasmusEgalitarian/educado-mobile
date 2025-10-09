@@ -11,7 +11,7 @@ import { Pressable } from "react-native";
 export default function PasswordEye(props) {
   return (
     <Pressable
-      className="absolute right-0 top-5 p-3"
+      className="absolute right-0 top-9 p-3"
       onPress={props.toggleShowPassword}
     >
       <MaterialCommunityIcons
