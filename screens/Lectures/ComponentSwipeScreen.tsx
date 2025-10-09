@@ -1,23 +1,26 @@
 import { useState, useEffect, useRef } from "react";
+import type { ReactElement } from "react";
 import { View, ActivityIndicator } from "react-native";
 import Swiper from "react-native-swiper";
-import PropTypes from "prop-types";
-import Text from "../../components/General/Text";
-import ProgressTopBar from "./ProgressTopBar";
-import LectureScreen from "./LectureScreen";
-import ExerciseScreen from "../Excercises/ExerciseScreen";
-import tailwindConfig from "../../tailwind.config.js";
+import Text from "@/components/General/Text";
+import ProgressTopBar from "@/screens/Lectures/ProgressTopBar";
+import LectureScreen from "@/screens/Lectures/LectureScreen";
+import ExerciseScreen from "@/screens/Excercises/ExerciseScreen";
+import tailwindConfig from "@/theme/colors";
 import {
   completeComponent,
   findIndexOfUncompletedComp,
   differenceInDays,
-} from "../../services/utils";
+} from "@/services/utils";
 import {
   getComponentList,
   getStudentInfo,
   updateLocalStudyStreak,
-} from "../../services/storage-service";
-import { updateStudyStreak } from "../../api/user-api";
+} from "@/services/storage-service";
+import { updateStudyStreak } from "@/api/user-api";
+import type { Section } from "@/types/section"
+import type { Course } from "@/types/course"
+import type { Component } from "@/types/component"
 
 const LectureType = {
   TEXT: "text",
@@ -41,7 +44,18 @@ const ComponentType = {
  * Dependencies:	That there exists a course object and a section object, which has components.
  * Props:			- route: The route object, which contains the section object and the course object
  */
-const ComponentSwipeScreen = ({ route }) => {
+
+export interface ComponentSwipeScreenProps {
+  route: {
+    params: {
+      section: Section;
+      parsedCourse: Course;
+      parsedComponentIndex?: number;
+    };
+  };
+}
+
+export const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps): ReactElement => {
   const { section, parsedCourse, parsedComponentIndex } = route.params;
   const [loading, setLoading] = useState(true);
   const [currentLectureType, setCurrentLectureType] = useState(
@@ -50,8 +64,8 @@ const ComponentSwipeScreen = ({ route }) => {
   const [index, setIndex] = useState(0);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [combinedLecturesAndExercises, setCombinedLecturesAndExercises] =
-    useState([]);
-  const swiperRef = useRef(null);
+    useState<Component[]>([]);
+  const swiperRef = useRef<Swiper | null>(null);
   const [resetKey, setResetKey] = useState(0);
   const [studentId, setStudentId] = useState("");
   const [lastStudyDate, setLastStudyDate] = useState(
@@ -64,7 +78,7 @@ const ComponentSwipeScreen = ({ route }) => {
    * If difference is greater than 0 it updates: studyStreak and lastStudyDate
    * both in database, local storage and this local state.
    */
-  async function handleStudyStreak() {
+  const handleStudyStreak = async () => {
     try {
       const today = new Date();
       const dayDifference = differenceInDays(new Date(lastStudyDate), today);
@@ -73,22 +87,25 @@ const ComponentSwipeScreen = ({ route }) => {
       if (dayDifference > 0) {
         const statusCode = await updateStudyStreak(studentId); // Database
 
-        if (statusCode !== 200) throw new Error();
+        if (statusCode !== 200) {
+          console.error(`Failed to update study streak. Status code: ${statusCode}`);
+          return;
+        }
 
-        updateLocalStudyStreak(today); // Local storage
-        setLastStudyDate(today);
+        await updateLocalStudyStreak(today); // Local storage
+        setLastStudyDate(today.toISOString());
       }
     } catch (error) {
       console.error("Error handling study streak: " + error);
     }
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const studentInfo = await getStudentInfo();
         setStudentId(studentInfo._id);
-        setLastStudyDate(studentInfo.lastStudyDate);
+        setLastStudyDate(studentInfo.lastStudyDate.toISOString);
 
         let initialIndex =
           parsedComponentIndex ??
@@ -126,14 +143,16 @@ const ComponentSwipeScreen = ({ route }) => {
     };
 
     fetchData();
-  }, [section, parsedCourse]);
+  }, [section, parsedCourse, parsedComponentIndex]);
 
   // Handler for continuing from a lecture
   const handleLectureContinue = () => {
-    swiperRef.current.scrollBy(1, true);
+    if (swiperRef.current) {
+      swiperRef.current.scrollBy(1, true);
+    }
   };
 
-  const handleExerciseContinue = (isCorrect) => {
+  const handleExerciseContinue = (isCorrect: boolean) => {
     if (!isCorrect) {
       // Update the section component list to move the incorrect exercise to the end
       const currentComp = combinedLecturesAndExercises[index];
@@ -147,15 +166,17 @@ const ComponentSwipeScreen = ({ route }) => {
       // Force re-render by updating the resetKey
       setResetKey((prevKey) => prevKey + 1);
     } else {
-      swiperRef.current.scrollBy(1, true);
-      setScrollEnabled(true);
+      if (swiperRef.current) {
+        swiperRef.current.scrollBy(1, true);
+        setScrollEnabled(true);
+      }
     }
 
     return index === combinedLecturesAndExercises.length - 1; // True if this is the last lecture/exercise
   };
 
-  const handleIndexChange = async (_index) => {
-    handleStudyStreak();
+  const handleIndexChange = async (_index: number) => {
+    await handleStudyStreak();
     const currentSlide = combinedLecturesAndExercises[_index];
 
     if (currentSlide.type === ComponentType.EXERCISE) {
@@ -190,7 +211,7 @@ const ComponentSwipeScreen = ({ route }) => {
       <View className="h-screen flex-col items-center justify-center">
         <ActivityIndicator
           size="large"
-          color={tailwindConfig.theme.colors.primary_custom}
+          color={tailwindConfig.bgprimary_custom}
         />
         <Text>Loading...</Text>
       </View>
@@ -204,7 +225,7 @@ const ComponentSwipeScreen = ({ route }) => {
               courseObject={parsedCourse}
               lectureType={currentLectureType}
               components={combinedLecturesAndExercises}
-              currentIndex={index}
+              currentIndex={index} // TODO: fix type error in ProgressTopBar
             />
           </View>
         )}
@@ -225,7 +246,7 @@ const ComponentSwipeScreen = ({ route }) => {
                 comp.type === ComponentType.LECTURE ? (
                   <LectureScreen
                     key={comp.component._id || _index} // Use a unique key if available
-                    currentIndex={_index}
+                    currentIndex={_index} // TODO: fix type error in LectureScreen
                     indexCount={combinedLecturesAndExercises.length}
                     lectureObject={comp.component}
                     courseObject={parsedCourse}
@@ -256,14 +277,5 @@ const ComponentSwipeScreen = ({ route }) => {
   }
 };
 
-ComponentSwipeScreen.propTypes = {
-  route: PropTypes.shape({
-    params: PropTypes.shape({
-      section: PropTypes.object.isRequired,
-      parsedCourse: PropTypes.object.isRequired,
-      parsedComponentIndex: PropTypes.number,
-    }).isRequired,
-  }).isRequired,
-};
 
 export default ComponentSwipeScreen;
