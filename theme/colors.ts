@@ -1,6 +1,4 @@
 const colors = {
-  bgPrimary: "#186474",
-  bgSecondary: "#f2f9fb",
   // **********************
   // ***** Gray Scale *****
   // **********************
@@ -118,13 +116,17 @@ const colors = {
 
   // Old primary colors (to be deprecated and slowly removed)
   primary: "#246670",
-  secondary: "#35A1B1",
+  secondary: "#F1F9FB",
+  bgprimary_custom: "#166276",
+  bgPrimary: "#C9E5EC",
+  bgSecondary: "#F2F9Fb",
+  primary_custom: "#166276",
   white: "#FFFFFF",
   black: "#000000",
   projectWhite: "#FFFFFF",
   projectBlack: "#383838",
   projectGray: "#A1ACB2",
-  lightGray: "#E5E5E5",
+  lightGray: "#E4E4E4",
   error: "#FF4949",
   success: "#4AA04A",
   disable: "#DDD",
@@ -132,17 +134,17 @@ const colors = {
   projectRed: "#FFE4E4",
   projectGreen: "#E4F1E4",
   projectLightGray: "#F1F9FB",
-  cyanBlue: "#65D4EE",
+  cyanBlue: "#166276",
   limeGreen: "#9DE89C",
   yellow: "#FAC12F",
-  babyBlue: "#CFE9EF",
+  babyBlue: "#166276",
   limeGreenDarker: "#8DD08C",
   correctAnswer: "#00897B",
   wrongAnswer: "#CF6679",
   profileCircle: "#166276",
   pointsText: "#C1A146",
   pointsCoin: "#AD872D",
-  progressBar: "#5ECCDD",
+  progressBar: "#166276",
   progressBarUnFilled: "#E4F2F5",
   badgesGreen: "#8CC43B",
   badgesPurple: "#C383F7",
@@ -151,6 +153,7 @@ const colors = {
   grayScale: "#628397",
   tealButton: "#35A1B1",
   searchbar: "#D8EFF3",
+  unselectedStar: "#CBCAB8",
 };
 
 export type ColorName = keyof typeof colors;
