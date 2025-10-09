@@ -57,12 +57,12 @@ export default function LoginForm() {
       })
       .catch((error) => {
         switch (error?.error?.code) {
-          case "E0004":
+          case "E0004": //E0004
             // No user exists with this email!
             setEmailAlert("Insira um E-mail válido");
             break;
 
-          case "E0105":
+          case "E0105": //E0105
             // Password is incorrect!
             setPasswordAlert("Senha incorreta. Por favor, tente novamente");
             break;
@@ -100,7 +100,7 @@ export default function LoginForm() {
           required={false}
           keyboardType="email-address"
           bordered={true}
-          error={false}
+          error={emailAlert != ""}
         />
         <FormFieldAlert testId="emailAlert" label={emailAlert} />
       </View>
@@ -117,7 +117,7 @@ export default function LoginForm() {
           required={false}
           secureTextEntry={!showPassword}
           bordered={true}
-          error={false}
+          error={passwordAlert != ""}
         />
         <PasswordEye
           testId="passwordEye"
