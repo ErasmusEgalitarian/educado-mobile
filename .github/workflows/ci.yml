@@ -1,6 +1,7 @@
 name: CI
 on:
   pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
   merge_group:
 concurrency:
   group: ci-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
@@ -12,6 +13,7 @@ jobs:
   ci:
     name: CI
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.draft == false }}
     env:
       CI: true
     steps:
