@@ -38,13 +38,13 @@ export default function EducadoModal(props: EducadoModalProps) {
       <TouchableWithoutFeedback onPress={props.closeModal}>
 
         {/* ERROR BG IS PLACEHOLDER UNTILL BLACK OPACITY COLOUR WORKS!!! */}
-        <View className="flex-1 justify-end bg-error">
+        <View className="flex-1 justify-end bg-semitransBG">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="bg-projectWhite h-[90%] rounded-t-3xl pt-10">
               <AlertNotificationRoot>
               <KeyboardAwareScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
-              >                
+              >
                 <View className="flex flex-row items-center justify-between px-[10%] mb-4">
                   <Text className="text-2xl font-semibold">{props.title ?? ""}</Text>
                   <Pressable onPress={props.closeModal}>
