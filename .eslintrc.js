@@ -48,6 +48,15 @@ module.exports = {
         ],
       },
     ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        selector:
+          "JSXAttribute[name.name='className'] Literal[value=/\\bfont-(bold|medium|semibold|montserrat(?:-bold|-semi-bold)?|sans-bold)\\b/]",
+        message:
+          "Use the components/General/Text.tsx component with textStyle, tone and align props",
+      },
+    ],
     "@typescript-eslint/naming-convention": [
       "error",
       {

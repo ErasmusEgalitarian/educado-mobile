@@ -151,4 +151,5 @@ export type ColorName = keyof typeof colors;
 
 export const color = (name: ColorName) => colors[name];
 
+// For legacy purposes
 export default colors;
