@@ -32,5 +32,8 @@
     "loading": "Edu está pensando",
     "placeholder": "Pesquise aqui",
     "unknown-error": "Erro: Erro desconhecido"
-  }
+  },
+  "course title": "Título do Curso",
+  "duration": "Duração",
+  "my courses": "Meus Cursos"
 }

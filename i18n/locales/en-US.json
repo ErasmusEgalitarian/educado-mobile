@@ -32,5 +32,8 @@
     "loading": "Edu is thinking",
     "placeholder": "Pesquise aqui",
     "unknown-error": "Error: Unknown error"
-  }
+  },
+  "course title": "Course Title",
+  "duration": "Duration",
+  "my courses": "My Courses"
 }

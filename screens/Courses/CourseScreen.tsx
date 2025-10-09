@@ -50,7 +50,7 @@ const CourseScreen = () => {
    * Asynchronous function that loads the courses from storage and updates the state.
    * @returns {void}
    */
-  const loadCourses = useCallback(async () => {
+  const loadCourses = async () => {
     const courseData = await StorageService.getSubCourseList();
     if (shouldUpdate(courses, courseData)) {
       if (courseData.length !== 0 && Array.isArray(courseData)) {
@@ -62,7 +62,7 @@ const CourseScreen = () => {
       }
     }
     setLoading(false);
-  }, [courses]);
+  };
 
   // When refreshing the loadCourses function is called
   const onRefresh = () => {

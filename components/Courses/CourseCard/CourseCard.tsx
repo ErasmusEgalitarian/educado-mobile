@@ -12,6 +12,7 @@ import {
 import { colors } from "@/theme/colors";
 import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
+import { t } from "@/i18n";
 
 interface CourseCardProps {
   course: {
@@ -24,7 +25,7 @@ interface CourseCardProps {
 }
 
 // eslint-disable-next-line no-undef
-const CourseCard: React.FC<CourseCardProps> = ({ course, isOnline }) => {
+const CourseCard = ({ course, isOnline }: CourseCardProps) => {
   const [downloaded, setDownloaded] = useState(false);
   const navigation = useNavigation();
   const [studentProgress, setStudentProgress] = useState(0);
@@ -83,7 +84,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, isOnline }) => {
                     color: "#000",
                   }}
                 >
-                  {course.title ? course.title : "Título do curso"}
+                  {course.title ? course.title : t("Título do curso")}
                 </Text>
                 <View className="flex-row items-center">
                   <DownloadCourseButton course={course} disabled={isDisabled} />
@@ -96,22 +97,18 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, isOnline }) => {
                 <MaterialCommunityIcons
                   size={18}
                   name={determineIcon(course.category)}
-                  color={"gray"}
-                ></MaterialCommunityIcons>
+                  color="gray"
+                />
                 <Text className="mx-[2.5%] my-[3%]">
                   {determineCategory(course.category)}
                 </Text>
               </View>
               <View className="flex-row items-center">
-                <MaterialCommunityIcons
-                  size={18}
-                  name="clock"
-                  color={"gray"}
-                ></MaterialCommunityIcons>
+                <MaterialCommunityIcons size={18} name="clock" color="gray" />
                 <Text className="mx-[2.5%] my-[3%]">
                   {course.estimatedHours
                     ? formatHours(course.estimatedHours)
-                    : "duração"}
+                    : t("duração")}
                 </Text>
               </View>
             </View>
