@@ -36,6 +36,21 @@ const FilterNavigationBar = ({
     onChangeText(text);
   };
 
+  const getCatagoryItemStyle = (isSelected: boolean) => ({
+    backgroundColor: isSelected
+      ? colors.borderDarkerCyan
+      : colors.surfaceSubtleCyan,
+    borderColor: isSelected
+      ? colors.borderDarkerCyan
+      : colors.borderDefaultGrayscale,
+  });
+
+  const getCategoryTextStyle = (isSelected: boolean) => ({
+    color: isSelected
+      ? colors.textNegativeGrayscale
+      : colors.textCaptionGrayscale,
+  });
+
   return (
     <View>
       <View className="z-10 p-2">
@@ -57,21 +72,10 @@ const FilterNavigationBar = ({
                     key={category.label}
                     onPress={() => handleCategorySelect(category.label)}
                     className="mr-2 items-center justify-center rounded-lg border-[1px] border-projectGray px-2 py-2"
-                    style={{
-                      backgroundColor: isSelected
-                        ? colors.borderDarkerCyan
-                        : colors.surfaceSubtleCyan,
-                      borderColor: isSelected
-                        ? colors.borderDarkerCyan
-                        : colors.borderDefaultGrayscale,
-                    }}
+                    style={{ ...getCatagoryItemStyle(isSelected) }}
                   >
                     <Text
-                      style={{
-                        color: isSelected
-                          ? colors.textNegativeGrayscale
-                          : colors.textCaptionGrayscale,
-                      }}
+                      style={{ ...getCategoryTextStyle(isSelected) }}
                       className="font-sans-bold text-sm"
                     >
                       {category.label}
