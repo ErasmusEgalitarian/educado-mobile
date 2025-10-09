@@ -59,7 +59,7 @@ export default function LoginForm() {
         switch (error?.error?.code) {
           case "E0004":
             // No user exists with this email!
-            setEmailAlert("Insira um E-mail Válido");
+            setEmailAlert("Insira um E-mail válido");
             break;
 
           case "E0105":
