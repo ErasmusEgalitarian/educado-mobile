@@ -1,27 +1,26 @@
 import { TouchableOpacity } from "react-native";
-import { View } from "react-native";
-import Text from "../Text";
-import PropTypes from "prop-types";
+import { View, Text } from "react-native";
+
+interface FormButtonProps {
+  label: string,
+  onPress: () => void,
+  type: string,
+  disabled: boolean,
+  style: [],
+  children: string
+}
 
 /**
  * Button component for eg. login and register screens.
  * @param {Object} props Should contain the following properties:
  * - label: String
  * - onPress: Function
- * @returns {React.Element} Button component
  */
-export default function FormButton(props) {
-  FormButton.propTypes = {
-    children: PropTypes.string,
-    disabled: PropTypes.bool,
-    onPress: PropTypes.func,
-    style: PropTypes.array,
-    type: PropTypes.string,
-  };
+const FormButton = (props: FormButtonProps) => {
 
   // Put this here for possible custom styling
   const typeStyles = {
-    primary_custom: "bg-primary_custom",
+    primary_custom: "bg-primaryCustom",
     error: "bg-error",
     warning: "bg-yellow",
   };
@@ -30,16 +29,17 @@ export default function FormButton(props) {
     <>
       <View>
         <TouchableOpacity
-          className={
-            "rounded-medium px-4 py-4 " +
+          className={'px-4 py-3 rounded-xl ' +
             (typeStyles[props.type] ?? typeStyles.primary_custom) +
-            (props.disabled ? " opacity-50" : "")
-          }
+            (props.disabled ? 'text-[#809CAD]! bg-[#C1CFD7]' : '')}
           style={props.style ?? null}
           onPress={props.onPress}
           disabled={props.disabled}
         >
-          <Text className="font-sans-bold text-center text-body text-projectWhite">
+          {/* eslint-disable-next-line no-restricted-syntax */}
+          <Text className={"text-center font-sans-bold text-body " +
+            (props.disabled ? "text-[#809CAD]" : "text-projectWhite" )
+          }>
             {props.children}
           </Text>
         </TouchableOpacity>
@@ -47,3 +47,5 @@ export default function FormButton(props) {
     </>
   );
 }
+
+export default FormButton;
