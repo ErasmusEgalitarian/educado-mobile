@@ -1,7 +1,13 @@
 import { TextInput, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import PropTypes from "prop-types";
+
 import colors from "@/theme/colors";
+
+interface SearchBarProps {
+  searchText?: string;
+  onSearchChange?: (text: string) => void;
+  placeholder?: string;
+}
 
 /**
  * This component is used to display a search bar.
@@ -10,14 +16,18 @@ import colors from "@/theme/colors";
  * @param placeholder - The placeholder text for the search bar.
  * @returns {JSX.Element} - Returns a JSX element.
  */
-function SearchBar({ onSearchChange }) {
+const SearchBar = ({
+  searchText,
+  onSearchChange = () => {},
+  placeholder = "Search...",
+}: SearchBarProps) => {
   return (
-    <View className="border-surfaceLighterCyan bg-surfaceSubtleGrayscale relative mx-2.5 mb-2.5 flex-row items-center rounded-medium border-[1px] px-4">
+    <View className="relative mx-2.5 mb-2.5 flex-row items-center rounded-medium border-[1px] border-surfaceLighterCyan bg-surfaceSubtleGrayscale px-4">
       <TextInput
-        placeholder={"Pesquise aqui..."}
+        placeholder={"Buscar curso"}
         placeholderTextColor={colors.textCaptionGrayscale}
         onChangeText={onSearchChange}
-        className="pr-35 text-grayScale flex-1 py-1 font-sans-semi-bold text-sm"
+        className="pr-35 flex-1 py-1 font-sans-semi-bold text-sm text-grayScale"
       />
       <MaterialCommunityIcons
         name="magnify"
@@ -26,11 +36,6 @@ function SearchBar({ onSearchChange }) {
       />
     </View>
   );
-}
-
-SearchBar.propTypes = {
-  onSearchChange: PropTypes.func,
-  placeholder: PropTypes.string,
 };
 
 export default SearchBar;

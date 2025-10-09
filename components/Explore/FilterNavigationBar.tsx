@@ -1,11 +1,10 @@
 import { useState } from "react";
-import SearchBar from "./SearchBar";
+import SearchBar from "@/components/Explore/SearchBar";
 import { View, Pressable } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { categories } from "./categories";
-import PropTypes from "prop-types";
+import { categories } from "@/components/Explore/categories";
 import colors from "@/theme/colors";
-import Text from "../General/Text";
+import Text from "@/components/General/Text";
 
 /**
  * FilterNavBar component displays a search bar and a list of categories.
@@ -13,20 +12,26 @@ import Text from "../General/Text";
  * @param onCategoryChange - Callback function called when a category is selected.
  * @returns {JSX.Element} - Rendered component
  */
-function FilterNavigationBar({
-  onChangeText,
-  onCategoryChange,
-  searchPlaceholder,
-}) {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [searchText, setSearchText] = useState("");
+type FilterNavigationBarProps = {
+  onChangeText?: (text: string) => void;
+  onCategoryChange?: (category: string) => void;
+  searchPlaceholder?: string;
+};
 
-  const handleCategorySelect = (category) => {
+const FilterNavigationBar = ({
+  onChangeText = () => {},
+  onCategoryChange = () => {},
+  searchPlaceholder,
+}: FilterNavigationBarProps) => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchText, setSearchText] = useState<string>("");
+
+  const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
     onCategoryChange(category);
   };
 
-  const handleSearchInputChange = (text) => {
+  const handleSearchInputChange = (text: string) => {
     setSearchText(text);
     onChangeText(text);
   };
@@ -66,7 +71,8 @@ function FilterNavigationBar({
                         color: isSelected
                           ? colors.textNegativeGrayscale
                           : colors.textCaptionGrayscale,
-                        }} className=" text-sm font-sans-bold"
+                      }}
+                      className="font-sans-bold text-sm"
                     >
                       {category.label}
                     </Text>
@@ -79,12 +85,6 @@ function FilterNavigationBar({
       </View>
     </View>
   );
-}
-
-FilterNavigationBar.propTypes = {
-  onChangeText: PropTypes.func,
-  onCategoryChange: PropTypes.func,
-  searchPlaceholder: PropTypes.string,
 };
 
 export default FilterNavigationBar;
