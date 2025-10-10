@@ -69,7 +69,7 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
         </View>
 
         <View className="flex-column mb-4">
-          <View className="flex-column flex-wrap items-start justify-start pb-2">
+          <View className="flex-row flex-wrap items-start justify-start pb-2">
             <CardLabel
               title={Utility.determineCategory(course.category)}
               icon={Utility.determineIcon(course.category)}
@@ -87,7 +87,8 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
               icon={"equalizer"}
               color={colors.grayScale}
             />
-            <View className="mb-1 w-2.5" />
+          </View>
+
             <View>
               {subscribed ? (
                 <View className="mb-1 w-full flex-row">
@@ -102,17 +103,20 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
                 </View>
               ) : null}
             </View>
+            <View className="mb-1 w-2.5" />
             <CustomRating rating={course.rating} />
-          </View>
+
         </View>
 
-        <View className="border-surfaceDisabled w-full border-b-[1px] opacity-50" />
+        <View className="border-surfaceDisabledGrayscale w-full border-b-[1px] opacity-50" />
 
         <ScrollView className="inner-shadow my-4 max-h-24 w-full">
-          <Text className="text-m flex-start w-full">{course.description}</Text>
+          <Text className="text-base flex-start w-full">{course.description}</Text>
         </ScrollView>
-
-        <InfoBox course={course} />
+        
+        <View className="pb-5">
+          <InfoBox course={course} />
+        </View>
 
         <View className="w-full">
           {subscribed ? (
