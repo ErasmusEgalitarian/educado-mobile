@@ -48,6 +48,7 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
         className="flex-1"
         style={{
           backgroundColor: colors.surfaceSubtleCyan,
+          opacity: 0.5
         }}
       />
 
@@ -108,7 +109,7 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
 
         </View>
 
-        <View className="border-surfaceDisabledGrayscale w-full border-b-[1px] opacity-50" />
+        <View className="border-surfaceDisabledGrayscale w-full border-b-[1px]" />
 
         <ScrollView className="inner-shadow my-4 max-h-24 w-full">
           <Text className="text-base flex-start w-full">{course.description}</Text>
