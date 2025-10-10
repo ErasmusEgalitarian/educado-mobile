@@ -5,5 +5,17 @@
   "courses": "Courses",
   "explore": "Explore",
   "edu": "Edu",
-  "profile": "Profile"
+  "profile": "Profile",
+  "api": {
+    "courses": "Failed to load courses",
+    "audio": "Error sending audio",
+    "rate": "Calm down! Lots of requests",
+    "try-again": "Error: Please try again"
+  },
+  "edu-screen": {
+    "header": "My name is Edu, and I'm here to help you navigate this app",
+    "loading": "Edu is thinking",
+    "placeholder": "Pesquise aqui",
+    "unknown-error": "Error: Unknown error"
+  }
 }

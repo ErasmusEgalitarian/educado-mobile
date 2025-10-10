@@ -1,6 +1,9 @@
-import { backEndClient } from "../axios";
+import { backEndClient } from "@/axios";
 import { isAxiosError } from "axios";
 import { Buffer } from "buffer";
+import { Course } from "@/types/course";
+import { AudioResponse } from "@/types/ai";
+import { t } from "@/i18n";
 
 const timeoutInMs = 1200;
 
@@ -57,16 +60,17 @@ export const getCourse = async (courseId: string) => {
 /**
  * Get all courses
  */
-export const getCourses = async () => {
+export const getCourses = async (): Promise<Course[]> => {
   try {
-    const res = await backEndClient.get("/api/courses");
-    return res.data;
+    const response = await backEndClient.get("/api/courses");
+
+    return response.data as Course[];
   } catch (error) {
     if (isAxiosError(error)) {
-      throw error.response?.data;
-    } else {
-      throw error;
+      throw new Error(error.response?.data.error ?? t("api.courses"));
     }
+
+    throw error;
   }
 };
 
@@ -321,40 +325,35 @@ export const getBucketVideo = async (fileName: string) => {
 
 export const sendMessageToChatbot = async (
   userMessage: string,
-  courses: never[],
-) => {
+  courses: Course[],
+): Promise<AudioResponse> => {
   try {
     const response = await backEndClient.post("/api/ai", {
       userInput: userMessage,
       courses: courses,
     });
 
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return "Erro: Tente novamente.";
-    }
+    return response.data as AudioResponse;
   } catch (error) {
     if (isAxiosError(error)) {
-      if (error.response && error.response.status === 429) {
-        // Handle rate-limiting error
-        return error.response.data.error || "Acalme-se! Muitas solicitações.";
+      if (error?.response?.status === 429) {
+        throw new Error(error.response.data.error || t("api.rate"));
       }
 
-      console.warn("Axios error:", error);
-      return "Erro: Tente novamente.";
-    } else {
-      throw error;
+      throw new Error(t("api.try-again"));
     }
+
+    throw error;
   }
 };
 
 export const sendAudioToChatbot = async (
   audioUri: string,
-  courses: never[],
-) => {
+  courses: Course[],
+): Promise<AudioResponse> => {
   try {
     const formData = new FormData();
+
     formData.append("audio", {
       uri: audioUri,
       name: "audio.m4a", // You can use a generic name or dynamically extract it
@@ -363,7 +362,6 @@ export const sendAudioToChatbot = async (
 
     formData.append("courses", JSON.stringify(courses));
 
-    // Send the formData via Axios
     const serverResponse = await backEndClient.post(
       "/api/ai/processAudio",
       formData,
@@ -374,9 +372,12 @@ export const sendAudioToChatbot = async (
       },
     );
 
-    return serverResponse.data;
+    return serverResponse.data as AudioResponse;
   } catch (error) {
-    console.error("Error sending audio data:", error);
+    if (isAxiosError(error)) {
+      throw new Error(error.response?.data || t("api.audio"));
+    }
+
     throw error;
   }
 };

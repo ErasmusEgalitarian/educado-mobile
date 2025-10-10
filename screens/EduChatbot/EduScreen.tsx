@@ -6,39 +6,43 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import BaseScreen from "../../components/General/BaseScreen";
-import IconHeader from "../../components/General/IconHeader";
-import RecordingButton from "../../components/Ai/RecordingButton";
-import FeedbackButtons from "../../components/Ai/FeedbackButtons";
+import { BaseScreen } from "@/components/General/BaseScreen";
+import IconHeader from "@/components/General/IconHeader";
+import { RecordingButton } from "@/components/Ai/RecordingButton";
+import FeedbackButtons from "@/components/Ai/FeedbackButtons";
 import { Icon } from "@rneui/themed";
 import Markdown from "react-native-markdown-display";
 import { Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
-import { sendMessageToChatbot, getCourses } from "../../api/api";
+import { sendMessageToChatbot, getCourses } from "@/api/api";
+import { AudioResponse, ChatMessage } from "@/types/ai";
+import { Course } from "@/types/course";
+import { t } from "@/i18n";
 
-export default function EduScreen() {
+type PlayingIndex = number | null;
+
+const EduScreen = () => {
   const [userMessage, setUserMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState([]);
-  const [courses, setCourses] = useState([]);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(null); // Tracks which audio is playing
-  const [currentSound, setCurrentSound] = useState(null); // Stores the current Audio.Sound instance
-  const scrollViewRef = useRef(null);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<PlayingIndex>(null); // Tracks which audio is playing
+  const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null); // Stores the current Audio.Sound instance
   const [loading, setLoading] = useState(false);
   const [loadingDots, setLoadingDots] = useState("");
 
-  const handleAudioResponse = (audioResponse) => {
+  const scrollViewRef = useRef<ScrollView | null>(null);
+
+  const handleAudioResponse = (audioResponse: AudioResponse) => {
     const trimmedUserResponse = audioResponse.message
       .trim()
       .replace(/[\n\s]+$/, "");
-    setChatMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: "User", text: trimmedUserResponse },
-    ]);
     const trimmedAiResponse = audioResponse.aiResponse
       .trim()
       .replace(/[\n\s]+$/, "");
-    setChatMessages((prevMessages) => [
-      ...prevMessages,
+
+    setChatMessages((previousMessages) => [
+      ...previousMessages,
+      { sender: "User", text: trimmedUserResponse },
       {
         sender: "Chatbot",
         text: trimmedAiResponse,
@@ -48,122 +52,163 @@ export default function EduScreen() {
   };
 
   const handleSendMessage = async () => {
-    if (!userMessage) return;
+    const userMessageContent = userMessage.trim();
 
-    setChatMessages([...chatMessages, { sender: "User", text: userMessage }]);
-    setLoading(true);
+    if (!userMessageContent) {
+      return;
+    }
+
     setUserMessage("");
-    const chatbotResponse = await sendMessageToChatbot(userMessage, courses);
-
-    setChatMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        sender: "Chatbot",
-        text: chatbotResponse.message,
-        audio: chatbotResponse.audio,
-      },
+    setChatMessages((previousChatMessages) => [
+      ...previousChatMessages,
+      { sender: "User", text: userMessageContent },
     ]);
+    setLoading(true);
 
-    setLoading(false);
+    try {
+      const chatbotResponse = await sendMessageToChatbot(userMessage, courses);
+
+      setChatMessages((previousChatMessages) => [
+        ...previousChatMessages,
+        {
+          sender: "Chatbot",
+          text: chatbotResponse.message ?? chatbotResponse.aiResponse ?? "Ok.",
+          audio: chatbotResponse.audio,
+        },
+      ]);
+    } catch (error) {
+      const chatbotError =
+        error instanceof Error
+          ? error.message
+          : `${t("edu-screen.unknown-error")}.`;
+
+      setChatMessages((previousChatMessages) => [
+        ...previousChatMessages,
+        {
+          sender: "Chatbot",
+          text: chatbotError,
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const playAudio = async (base64Audio, index) => {
+  const playAudio = async (base64Audio: string, index: number) => {
     try {
-      // Stop the currently playing audio if the same button is clicked
       if (currentlyPlaying === index) {
         if (currentSound) {
           console.log("Stopping current sound...");
-          await currentSound.unloadAsync(); // Unload the sound
-          setCurrentSound(null); // Clear current sound instance
+
+          await currentSound.unloadAsync();
+
+          setCurrentSound(null);
         }
-        setCurrentlyPlaying(null); // Clear currently playing index
+
+        setCurrentlyPlaying(null);
+
         return;
       }
 
-      // Prepare the audio data
       const audioData = base64Audio.startsWith("data:audio/mpeg;base64,")
         ? base64Audio.split(",")[1]
         : base64Audio;
 
       const filePath = `${FileSystem.cacheDirectory}chatbotResponse.mp3`;
+
       await FileSystem.writeAsStringAsync(filePath, audioData, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      // Create a new Audio.Sound instance
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: filePath },
-        { shouldPlay: true }, // Start playback immediately
-      );
-
-      // Stop and unload any previous sound
       if (currentSound) {
         console.log("Stopping previous sound...");
+
         await currentSound.unloadAsync();
       }
 
-      setCurrentSound(sound); // Set the new sound instance
-      setCurrentlyPlaying(index); // Update the currently playing index
+      await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
 
-      // Handle playback completion
-      sound.setOnPlaybackStatusUpdate((status) => {
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: filePath },
+        { shouldPlay: true },
+      );
+
+      sound.setOnPlaybackStatusUpdate(async (status) => {
+        if (!status.isLoaded) {
+          return;
+        }
+
         if (status.didJustFinish) {
-          sound.unloadAsync(); // Unload the sound
+          await sound.unloadAsync();
+
           setCurrentSound(null);
           setCurrentlyPlaying(null);
         }
       });
+
+      setCurrentSound(sound);
+      setCurrentlyPlaying(index);
     } catch (error) {
       console.error("Error playing or stopping audio:", error);
-      // Reset state in case of error
+
       if (currentSound) {
         await currentSound.unloadAsync();
       }
+
       setCurrentSound(null);
       setCurrentlyPlaying(null);
     }
   };
 
   useEffect(() => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({ animated: true });
-    }
+    scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [chatMessages, loading]);
 
   useEffect(() => {
-    if (loading) {
-      const interval = setInterval(() => {
-        setLoadingDots((prev) => (prev.length < 3 ? prev + "." : ""));
-      }, 500);
-      return () => clearInterval(interval);
-    } else {
+    if (!loading) {
       setLoadingDots("");
     }
+
+    const interval = setInterval(() => {
+      setLoadingDots((previousLoadingDots) =>
+        previousLoadingDots.length < 3 ? previousLoadingDots + "." : "",
+      );
+    }, 500);
+
+    return () => clearInterval(interval);
   }, [loading]);
 
   const fetchCourses = async () => {
     setCourses([]);
-    const tempCourses = await getCourses();
-    tempCourses.forEach((element) => {
-      if (element.status == "published") {
-        setCourses((prevCourses) => [
-          ...prevCourses,
-          {
-            title: element.title || "",
-            category: element.category || "",
-            rating: element.rating || 0,
-            description: element.description || "",
-            estimatedHours: element.estimatedHours || 0,
-            difficulty: element.difficulty || 0,
-          },
-        ]);
-      }
-    });
+
+    try {
+      const courses = await getCourses();
+
+      const publishedCourses = courses.filter(
+        (course) => course.status === "published",
+      );
+
+      setCourses(publishedCourses);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+
+      setCourses([]);
+    }
   };
 
   useEffect(() => {
-    fetchCourses();
+    void fetchCourses();
+
     console.log("got courses");
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (currentSound) {
+        void currentSound.unloadAsync();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -178,13 +223,11 @@ export default function EduScreen() {
         >
           <IconHeader
             title={"Edu"}
-            description={
-              "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo."
-            }
+            description={`${t("edu-screen.header")}.`}
           />
         </View>
         <View className="flex-end flex-1">
-          <ScrollView ref={scrollViewRef} style={"flex-1"} className="pr-2.5">
+          <ScrollView ref={scrollViewRef} className="flex-1 pr-2.5">
             {chatMessages.map((message, index) =>
               message.sender === "User" ? (
                 <View key={index} style={{ alignSelf: "flex-end" }}>
@@ -215,7 +258,7 @@ export default function EduScreen() {
                       </View>
                       <View className="w-full">
                         <Markdown>{message.text}</Markdown>
-                        <View classname="w-max">
+                        <View className="w-max">
                           <FeedbackButtons
                             aiText={message.text}
                             userText={chatMessages[index - 1]?.text || ""}
@@ -225,7 +268,9 @@ export default function EduScreen() {
                       {message.audio && (
                         <View className="self-center pl-2">
                           <TouchableOpacity
-                            onPress={() => playAudio(message.audio, index)}
+                            onPress={() =>
+                              void playAudio(message.audio!, index)
+                            }
                             className=""
                           >
                             <Icon
@@ -260,7 +305,7 @@ export default function EduScreen() {
                   color="primary_custom"
                   size={20}
                 />
-                <Text>Edu está pensando{loadingDots}</Text>
+                <Text>{`${t("edu-screen.loading")}${loadingDots}`}</Text>
               </View>
             )}
           </ScrollView>
@@ -268,14 +313,14 @@ export default function EduScreen() {
             <TextInput
               value={userMessage}
               onChangeText={setUserMessage}
-              placeholder={"Pesquise aqui..."}
+              placeholder={t("edu-screen.placeholder")}
               className="flex-1"
-              onSubmitEditing={handleSendMessage}
+              onSubmitEditing={() => void handleSendMessage()}
             />
             {userMessage.trim() ? (
               <TouchableOpacity
                 className={`ml-2 flex h-7 w-7 items-center justify-center rounded-full ${loading ? "bg-gray-400" : "bg-primary_custom"}`}
-                onPress={loading ? null : handleSendMessage}
+                onPress={() => void handleSendMessage()}
                 disabled={loading}
               >
                 <Icon
@@ -297,4 +342,6 @@ export default function EduScreen() {
       </BaseScreen>
     </>
   );
-}
+};
+
+export default EduScreen;

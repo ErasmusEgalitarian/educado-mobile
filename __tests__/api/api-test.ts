@@ -1,5 +1,5 @@
 import MockAdapter from "axios-mock-adapter";
-import { mockDataAPI } from "../mockData/mockDataAPI";
+import { mockDataAPI } from "@/__tests__/mockData/mockDataAPI";
 import {
   getCourse,
   getCourses,
@@ -10,7 +10,7 @@ import {
   unSubscribeToCourse,
   giveFeedback,
   getAllFeedbackOptions,
-} from "../../api/api";
+} from "@/api/api";
 import {
   describe,
   expect,
@@ -19,7 +19,8 @@ import {
   beforeEach,
   afterEach,
 } from "@jest/globals";
-import { backEndClient } from "../../axios";
+import { backEndClient } from "@/axios";
+import { isAxiosError } from "axios";
 
 jest.mock("@react-native-async-storage/async-storage");
 
@@ -68,7 +69,7 @@ describe("API Functions", () => {
     });
 
     it("should handle errors", async () => {
-      const errorData = { message: "Course not found" };
+      const errorData = new Error("Failed to load courses");
 
       mock.onGet("/api/courses").reply(500, errorData);
 
@@ -325,8 +326,10 @@ describe("API Functions", () => {
 
       try {
         await getAllFeedbackOptions();
-      } catch (error: any) {
-        expect(error.message).toBe("Network Error");
+      } catch (error) {
+        if (isAxiosError(error)) {
+          expect(error.message).toBe("Network Error");
+        }
       }
     });
   });

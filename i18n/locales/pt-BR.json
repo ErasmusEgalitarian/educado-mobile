@@ -5,5 +5,17 @@
   "courses": "Cursos",
   "explore": "Explorar",
   "edu": "Edu",
-  "profile": "Perfil"
+  "profile": "Perfil",
+  "api": {
+    "courses": "Falha ao carregar cursos",
+    "audio": "Erro ao enviar áudio",
+    "rate": "Acalme-se! Muitas solicitações",
+    "try-again": "Erro: Tente novamente"
+  },
+  "edu-screen": {
+    "header": "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo",
+    "loading": "Edu está pensando",
+    "placeholder": "Pesquise aqui",
+    "unknown-error": "Erro: Erro desconhecido"
+  }
 }
