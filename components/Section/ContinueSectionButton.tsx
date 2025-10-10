@@ -19,7 +19,7 @@ const ContinueSectionButton = ({ onPress }) => {
         onPress={onPress}
       >
         <View className="flex-row items-center justify-center p-4">
-          <Text className="mr-2 font-montserrat-bold text-xl text-projectWhite">
+          <Text className="font-montserrat-bold mr-2 text-xl text-projectWhite">
             Começar curso
           </Text>
           <MaterialCommunityIcons

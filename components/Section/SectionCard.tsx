@@ -28,7 +28,7 @@ export default function SectionCard({ section, progress, onPress }) {
       >
         <View className="flex-row items-center justify-between px-[25] py-[15]">
           <View>
-            <Text className="mb-2 font-montserrat-bold text-[16px] text-projectBlack">
+            <Text className="font-montserrat-bold mb-2 text-[16px] text-projectBlack">
               {section.title}
             </Text>
 

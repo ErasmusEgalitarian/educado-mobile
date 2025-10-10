@@ -75,7 +75,7 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
 
   return (
     <View className="flex h-full w-full items-center justify-start">
-      <Text className="mb-14 p-4 text-center font-sans-bold text-3xl text-primary_custom">
+      <Text className="font-sans-bold mb-14 p-4 text-center text-3xl text-primary_custom">
         Veja suas estatísticas do curso
       </Text>
 
@@ -90,7 +90,7 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
           backgroundColor={projectColors.projectWhite}
         >
           {() => (
-            <Text className="text-center font-sans-bold text-2xl text-primary_custom">
+            <Text className="font-sans-bold text-center text-2xl text-primary_custom">
               {percentage}%
             </Text>
           )}
@@ -100,7 +100,7 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
         </Text>
       </View>
 
-      <Text className="mb-3 text-center font-sans-bold text-lg text-projectBlack">
+      <Text className="font-sans-bold mb-3 text-center text-lg text-projectBlack">
         Placar Educado
       </Text>
 
@@ -112,11 +112,11 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
               alt="arrow-right"
               className="h-10 w-10 rounded-full"
             />
-            <Text className="ml-3 text-center font-sans-bold text-lg text-projectWhite">
+            <Text className="font-sans-bold ml-3 text-center text-lg text-projectWhite">
               Hans Zimmer
             </Text>
           </View>
-          <Text className="text-center font-sans-bold text-lg text-projectWhite">
+          <Text className="font-sans-bold text-center text-lg text-projectWhite">
             1099
           </Text>
         </View>
@@ -130,11 +130,11 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
               alt="arrow-right"
               className="h-10 w-10 rounded-full"
             />
-            <Text className="ml-3 text-center font-sans-bold text-lg text-projectWhite">
+            <Text className="font-sans-bold ml-3 text-center text-lg text-projectWhite">
               Hans Zimmer
             </Text>
           </View>
-          <Text className="text-center font-sans-bold text-lg text-projectWhite">
+          <Text className="font-sans-bold text-center text-lg text-projectWhite">
             1100
           </Text>
         </View>
@@ -148,11 +148,11 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
               alt="arrow-right"
               className="h-10 w-10 rounded-full"
             />
-            <Text className="ml-3 text-center font-sans-bold text-lg text-projectWhite">
+            <Text className="font-sans-bold ml-3 text-center text-lg text-projectWhite">
               Hans Zimmer
             </Text>
           </View>
-          <Text className="text-center font-sans-bold text-lg text-projectWhite">
+          <Text className="font-sans-bold text-center text-lg text-projectWhite">
             1101
           </Text>
         </View>

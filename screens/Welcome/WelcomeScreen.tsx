@@ -42,7 +42,7 @@ export default function WelcomeScreen() {
                   );
                 }}
               >
-                <Text className="text-center font-sans-bold text-body text-projectWhite">
+                <Text className="font-sans-bold text-center text-body text-projectWhite">
                   Cadastrer
                 </Text>
               </TouchableOpacity>

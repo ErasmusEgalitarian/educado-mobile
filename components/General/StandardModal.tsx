@@ -36,7 +36,7 @@ const StandardModal = (props) => {
                 <BackButton onPress={props.closeModal} />
 
                 {/* Title */}
-                <Text className="w-full text-center font-sans-bold text-xl">
+                <Text className="font-sans-bold w-full text-center text-xl">
                   {props.title}
                 </Text>
               </View>

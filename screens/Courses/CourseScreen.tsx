@@ -164,10 +164,10 @@ export default function CourseScreen() {
           <View className="items-center justify-center gap-10 py-10">
             <View className="h-auto w-full items-center justify-center px-10">
               <Image source={require("../../assets/images/no-courses.png")} />
-              <Text className="pb-4 pt-4 text-center font-sans-bold text-subheading leading-[29.26] text-projectBlack">
+              <Text className="font-sans-bold pb-4 pt-4 text-center text-subheading leading-[29.26] text-projectBlack">
                 Comece agora
               </Text>
-              <Text className="text-center font-montserrat text-body text-projectBlack">
+              <Text className="font-montserrat text-center text-body text-projectBlack">
                 Você ainda não se increveu em nenhum curso. Acesse a página
                 Explore e use a busca para encontrar cursos do seu interesse.
               </Text>
@@ -178,7 +178,7 @@ export default function CourseScreen() {
                 className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
                 onPress={() => navigation.navigate("Explorar")}
               >
-                <Text className="text-center font-sans-bold text-body text-projectWhite">
+                <Text className="font-sans-bold text-center text-body text-projectWhite">
                   Explorar cursos
                 </Text>
               </Pressable>

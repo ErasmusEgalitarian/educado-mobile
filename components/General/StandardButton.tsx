@@ -11,7 +11,7 @@ export default function StandardButton({ props }) {
       className="rounded-lg bg-primary_custom px-10 py-4"
       onPress={onPress}
     >
-      <Text className="text-center font-sans-bold text-lg text-projectWhite">
+      <Text className="font-sans-bold text-center text-lg text-projectWhite">
         {buttonText}
       </Text>
     </TouchableOpacity>

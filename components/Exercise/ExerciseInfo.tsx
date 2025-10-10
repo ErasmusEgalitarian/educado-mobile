@@ -15,7 +15,7 @@ const ExerciseInfo = ({ courseTitle, sectionTitle }) => {
       <Text className="text-caption-body text-center font-sans text-projectGray">
         Course name: {courseTitle}
       </Text>
-      <Text className="text-center font-sans-bold text-lg text-projectBlack">
+      <Text className="font-sans-bold text-center text-lg text-projectBlack">
         {sectionTitle}
       </Text>
     </View>

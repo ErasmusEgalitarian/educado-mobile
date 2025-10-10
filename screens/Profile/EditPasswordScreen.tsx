@@ -142,7 +142,7 @@ export default function EditPasswordScreen() {
             <BackButton onPress={() => navigation.navigate("Perfil")} />
 
             {/* Title */}
-            <Text className="w-full text-center font-sans-bold text-xl">
+            <Text className="font-sans-bold w-full text-center text-xl">
               Alterar senha
             </Text>
           </View>

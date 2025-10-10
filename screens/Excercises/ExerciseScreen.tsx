@@ -104,7 +104,7 @@ const ExerciseScreen = ({
           <View className="mb-4">
             <Text
               testID="exerciseQuestion"
-              className="text-center font-sans-bold text-lg text-projectBlack"
+              className="font-sans-bold text-center text-lg text-projectBlack"
             >
               {exerciseObject.question}
             </Text>
@@ -131,7 +131,7 @@ const ExerciseScreen = ({
                     onPress={() => handleReviewAnswer(answer.correct, index)}
                     className="flex-1"
                   >
-                    <Text className="pb-1 pt-2 font-montserrat text-body text-projectBlack">
+                    <Text className="font-montserrat pb-1 pt-2 text-body text-projectBlack">
                       {answer.text}
                     </Text>
                   </TouchableOpacity>
@@ -190,7 +190,7 @@ const ExerciseScreen = ({
           disabled={selectedAnswer === null} // Prevents interaction when no answer is selected
         >
           <View className="flex-row items-center">
-            <Text className="text-center font-sans-bold text-body text-projectWhite">
+            <Text className="font-sans-bold text-center text-body text-projectWhite">
               {buttonText || "Continuar"}
             </Text>
             <Icon

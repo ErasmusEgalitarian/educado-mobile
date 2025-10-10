@@ -88,7 +88,7 @@ export default function Feedback({ setFeedbackData }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
       <View className="flex w-full items-center px-6">
-        <Text className="mt-11 p-4 text-center font-sans-bold text-3xl text-primary_custom">
+        <Text className="font-sans-bold mt-11 p-4 text-center text-3xl text-primary_custom">
           Conte o que achou sobre o curso!
         </Text>
         <View className="flex w-full items-center border-b-[1px] border-lightGray py-4">
@@ -152,7 +152,7 @@ export default function Feedback({ setFeedbackData }) {
           </Text>
           <View className="w-full">
             <TextInput
-              className="my-4 h-[100px] w-full rounded-lg border-[1px] border-projectGray p-4 font-montserrat-bold text-top"
+              className="font-montserrat-bold my-4 h-[100px] w-full rounded-lg border-[1px] border-projectGray p-4 text-top"
               placeholder="Escreva aqui seu feedback"
               placeholderTextColor={"#A1ACB2"}
               onChangeText={(text) => setFeedbackText(text)}

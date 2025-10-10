@@ -47,7 +47,7 @@ const CustomProgressBar = ({
         borderRadius={8}
       ></Progress.Bar>
       {displayLabel && (
-        <Text className="px-5 text-center font-montserrat-bold text-caption-medium text-projectBlack">
+        <Text className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack">
           {progress}%
         </Text>
       )}

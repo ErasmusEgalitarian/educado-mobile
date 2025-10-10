@@ -178,7 +178,7 @@ export default function PopUp({ pointAmount, isCorrectAnswer }) {
             style={{
               opacity: opacityValue,
             }}
-            className="text-center font-sans-bold text-lg text-correctAnswer"
+            className="font-sans-bold text-center text-lg text-correctAnswer"
           >
             {pointAmount}pts
           </Animated.Text>

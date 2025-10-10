@@ -178,7 +178,7 @@ const CertificateCard = ({ certificate }: CertificateCardProps) => {
                       size={24}
                       color={"white"}
                     />
-                    <Text className="ml-2 text-center font-montserrat-bold text-lg text-projectWhite">
+                    <Text className="font-montserrat-bold ml-2 text-center text-lg text-projectWhite">
                       Baixar PDF
                     </Text>
                   </>

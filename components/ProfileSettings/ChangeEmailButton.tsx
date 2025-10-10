@@ -144,7 +144,7 @@ export default function ProfileComponent() {
                   className="w-full rounded-medium bg-primary_custom px-10 py-4"
                   onPress={() => saveEmailChanges()}
                 >
-                  <Text className="text-center font-sans-bold text-body text-projectWhite">
+                  <Text className="font-sans-bold text-center text-body text-projectWhite">
                     Salvar alterações
                   </Text>
                 </TouchableOpacity>
@@ -154,7 +154,7 @@ export default function ProfileComponent() {
                 className="mt-2 w-full rounded-medium border-0 border-opacity-0 px-10 py-4"
                 onPress={() => setEmailModalVisible(false)}
               >
-                <Text className="text-center font-sans-bold text-projectBlack">
+                <Text className="font-sans-bold text-center text-projectBlack">
                   Cancelar
                 </Text>
               </TouchableOpacity>

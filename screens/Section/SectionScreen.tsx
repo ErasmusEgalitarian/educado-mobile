@@ -74,7 +74,7 @@ export default function SectionScreen({ route }) {
           <Text className="font-montserrat-bold text-[28px]">
             {section.title}
           </Text>
-          <Text className="border-b-[1px] border-lightGray font-montserrat text-[16px]">
+          <Text className="font-montserrat border-b-[1px] border-lightGray text-[16px]">
             {section.description}
           </Text>
         </View>

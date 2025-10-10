@@ -22,7 +22,7 @@ export default function IconHeader({ title, description }) {
         />
         <Text className="text-xl font-bold">{title}</Text>
       </View>
-      <Text className="px-6 pb-4 pl-6 font-montserrat text-sm">
+      <Text className="font-montserrat px-6 pb-4 pl-6 text-sm">
         {description}
       </Text>
     </>
