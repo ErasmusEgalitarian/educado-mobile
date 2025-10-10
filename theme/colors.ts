@@ -1,4 +1,4 @@
-const colors = {
+export const colors = {
   // **********************
   // ***** Gray Scale *****
   // **********************
@@ -114,15 +114,10 @@ const colors = {
   // ******************
   surfaceYellow: "#F1CC4F",
 
-  // Old primary colors (to be deprecated and slowly removed)
-  primary: "#246670",
-  secondary: "#F1F9FB",
   bgprimary_custom: "#166276",
   bgPrimary: "#C9E5EC",
-  bgSecondary: "#F2F9Fb",
   primary_custom: "#166276",
-  white: "#FFFFFF",
-  black: "#000000",
+  secondary: "#F1F9FB",
   projectWhite: "#FFFFFF",
   projectBlack: "#383838",
   projectGray: "#A1ACB2",
@@ -145,16 +140,12 @@ const colors = {
   pointsText: "#C1A146",
   pointsCoin: "#AD872D",
   progressBar: "#166276",
-  progressBarUnFilled: "#E4F2F5",
+  progressBarUnFilled: "#E4E4E4", // This stands more out from the background, but Figma = #E4F2F5
   badgesGreen: "#8CC43B",
   badgesPurple: "#C383F7",
   badgesBlue: "#54ADF1",
-  darkCyan: "#246670",
-  grayScale: "#628397",
-  tealButton: "#35A1B1",
-  searchbar: "#D8EFF3",
   unselectedStar: "#CBCAB8",
-};
+} as const;
 
 export type ColorName = keyof typeof colors;
 
