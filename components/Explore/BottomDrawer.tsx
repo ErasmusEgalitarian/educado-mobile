@@ -56,14 +56,14 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
         style={{ height: windowHeight * 0.87, width: windowWidth * 1 }}
       >
         <View className="mb-4 flex-row items-center justify-between">
-          <Text className="text-textTitle font-sans-semi-bold text-2xl">
+          <Text className="text-textTitleGrayscale font-sans-semi-bold text-2xl">
             {course.title}
           </Text>
           <TouchableOpacity onPress={() => toggleModal()}>
             <MaterialCommunityIcons
               name={"chevron-down"}
               size={25}
-              color="textTitle"
+              color={colors.textTitleGrayscale}
             />
           </TouchableOpacity>
         </View>
