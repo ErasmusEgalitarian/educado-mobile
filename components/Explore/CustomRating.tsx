@@ -51,7 +51,7 @@ const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
 
   return noRating ? (
     <View className="flex-row items-start justify-start">
-      <Text className="pl-1 text-sm text-borderDisabledGrayscale">
+      <Text className="pl-1 text-xs text-borderDisabledGrayscale">
         Ainda sem avaliações
       </Text>
     </View>
