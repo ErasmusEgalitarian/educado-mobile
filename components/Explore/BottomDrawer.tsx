@@ -63,7 +63,7 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
             <MaterialCommunityIcons
               name={"chevron-down"}
               size={25}
-              color="textTitleGrayscale"
+              color={colors.textTitleGrayscale}
             />
           </TouchableOpacity>
         </View>
