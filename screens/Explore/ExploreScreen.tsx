@@ -8,6 +8,7 @@ import IconHeader from "../../components/General/IconHeader";
 import { shouldUpdate, determineCategory } from "../../services/utils";
 import NetworkStatusObserver from "../../hooks/NetworkStatusObserver";
 import OfflineScreen from "../Offline/OfflineScreen";
+import BaseScreen from "@/components/General/BaseScreen"
 
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.
@@ -122,7 +123,7 @@ export default function ExploreScreen() {
       {!isOnline ? (
         <OfflineScreen />
       ) : (
-        <>
+        <BaseScreen>
           <IconHeader
             title={"Explorar cursos"}
             description={
@@ -161,7 +162,7 @@ export default function ExploreScreen() {
               </View>
             </ScrollView>
           </View>
-        </>
+        </BaseScreen>
       )}
     </>
   );
