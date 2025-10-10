@@ -62,7 +62,7 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
               <View className="h-1.25 opacity-50" />
               <CustomRating rating={course.rating} />
 
-              <View className="flex-row justify-end">
+              <View className="w-full flex-row justify-end">
                 <TouchableOpacity
                   onPress={handleToggleBottomSheet}
                   className="flex-row items-center border-b border-surfaceDefaultCyan px-1 py-0.5"
