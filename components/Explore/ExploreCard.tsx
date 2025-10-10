@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CardLabel from "@/components/Explore/CardLabel";
+import {CardLabel} from "@/components/Explore/CardLabel";
 import CustomRating from "@/components/Explore/CustomRating";
 import * as Utility from "@/services/utils";
 import colors from "@/theme/colors";
@@ -9,7 +9,7 @@ import Text from "@/components/General/Text";
 import BottomDrawer from "@/components/Explore/BottomDrawer";
 import type { Course } from "@/types/course";
 
-export interface ExploreCardProps {
+interface ExploreCardProps {
   course: Course;
   isPublished: boolean;
   subscribed: boolean;

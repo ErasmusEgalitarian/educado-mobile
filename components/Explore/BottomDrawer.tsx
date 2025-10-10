@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Text from "@/components/General/Text";
-import CardLabel from "@/components/Explore/CardLabel";
+import {CardLabel} from "@/components/Explore/CardLabel";
 import CustomRating from "@/components/Explore/CustomRating";
 import {CourseButton} from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";

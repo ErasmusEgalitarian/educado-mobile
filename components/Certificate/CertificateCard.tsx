@@ -13,7 +13,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import CertificateTemplate from "./CertificateTemplate";
 import CertificatePopup from "./CertificatePopup";
 import CertificateOverlay from "./CertificateOverlay";
-import CardLabel from "../Explore/CardLabel";
+import {CardLabel} from "@/components/Explore/CardLabel";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 

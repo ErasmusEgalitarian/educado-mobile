@@ -1,7 +1,7 @@
 import * as Utility from "../../services/utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity } from "react-native";
-import CardLabel from "../Explore/CardLabel";
+import {CardLabel} from "@/components/Explore/CardLabel";
 import PropTypes from "prop-types";
 
 const CertificateOverlay = ({ certificate, handleVisualizarClick }) => {

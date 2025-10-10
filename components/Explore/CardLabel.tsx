@@ -16,7 +16,8 @@ interface CardLabelProps {
  * @param color - The color of the label and icon.
  * @returns {TSX.Element} - Returns a JSX element.
  */
-const CardLabel = ({
+
+export const CardLabel = ({
   title,
   icon,
   color = colors.textCaptionGrayscale,
@@ -30,5 +31,3 @@ const CardLabel = ({
     </View>
   );
 };
-
-export default CardLabel;
