@@ -1,17 +1,21 @@
-import React from "react";
-import { View, Pressable, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import PropTypes from "prop-types";
-import { subscribe, addCourseToStudent } from "@/services/StorageService";
+import { View, Pressable } from "react-native";
+import type { Course } from "@/types/course";
+import { ReactElement } from "react";
+
+export interface CourseButtonProps {
+  course: Course;
+  onPress: (course: Course) => void;
+  children: ReactElement;
+}
 
 /**
  * CourseButton component displays a button to subscribe to or access a course
  * @param course - Course object containing course details
+ * @param onPress - Callback function executed when the button is pressed, receiving the course as an argument
+ * @param children - The React element(s) to render inside the button
  * @returns {JSX.Element} - Rendered component
  */
-const CourseButton = ({ course, onPress, children }) => {
-  const navigation = useNavigation();
-
+export const CourseButton = ({ course, onPress, children } : CourseButtonProps)  => {
   return (
     <View className="">
       <Pressable
@@ -24,8 +28,4 @@ const CourseButton = ({ course, onPress, children }) => {
   );
 };
 
-CourseButton.propTypes = {
-  course: PropTypes.object,
-};
 
-export default CourseButton;

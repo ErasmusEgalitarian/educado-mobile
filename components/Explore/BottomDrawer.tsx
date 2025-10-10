@@ -9,7 +9,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Text from "@/components/General/Text";
 import CardLabel from "@/components/Explore/CardLabel";
 import CustomRating from "@/components/Explore/CustomRating";
-import CourseButton from "@/components/Explore/CourseButton";
+import {CourseButton} from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { subscribe, addCourseToStudent } from "@/services/storage-service";
@@ -113,7 +113,7 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
         <ScrollView className="inner-shadow my-4 max-h-24 w-full">
           <Text className="text-base flex-start w-full">{course.description}</Text>
         </ScrollView>
-        
+
         <View className="pb-5">
           <InfoBox course={course} />
         </View>
