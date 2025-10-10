@@ -14,7 +14,7 @@ export default function BaseScreen({ children }) {
 
   return (
     <AlertNotificationRoot>
-      <View className="flex-1 bg-secondary">{children}</View>
+      <View className="flex-1 bg-surfaceSubtleCyan">{children}</View>
     </AlertNotificationRoot>
   );
 }
