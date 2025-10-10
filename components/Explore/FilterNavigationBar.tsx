@@ -53,7 +53,7 @@ const FilterNavigationBar = ({
 
   return (
     <View>
-      <View className="z-10 p-2">
+      <View className="z-10 px-2">
         <SearchBar
           searchText={searchText}
           onSearchChange={handleSearchInputChange}
@@ -61,9 +61,9 @@ const FilterNavigationBar = ({
         />
       </View>
 
-      <View className="z-10 pb-4 pl-2 pr-2">
+      <View className="z-10 pb-4 pl-2 pr-2 mt-1">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex items-center p-2">
+          <View className="flex items-center px-2 py-1">
             <View className="flex-row overflow-x-auto">
               {categories.map((category) => {
                 const isSelected = selectedCategory === category.label;

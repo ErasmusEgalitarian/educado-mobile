@@ -130,7 +130,7 @@ export default function ExploreScreen() {
               "Inscreva-se nos cursos do seu interesse e comece sua jornada"
             }
           />
-          <View>
+          <View className="mt-8">
             <FilterNavigationBar
               onChangeText={(text) => handleFilter(text)}
               onCategoryChange={handleCategoryFilter}
@@ -141,7 +141,7 @@ export default function ExploreScreen() {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
             >
-              <View className="overflow-y-auto">
+              <View className="overflow-y-auto mt-8">
                 {courses &&
                   filteredCourses &&
                   filteredCourses
