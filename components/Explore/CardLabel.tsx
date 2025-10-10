@@ -23,8 +23,8 @@ const CardLabel = ({
 }: CardLabelProps) => {
   return (
     <View className="flex-row items-center justify-start">
-      <MaterialCommunityIcons name={icon} size={13} color={color} />
-      <Text className="pl-1 text-sm" style={{ color: color }}>
+      <MaterialCommunityIcons name={icon} size={12} color={color} />
+      <Text className="pl-1 font-sans-bold text-xs" style={{ color: color }}>
         {title}
       </Text>
     </View>
