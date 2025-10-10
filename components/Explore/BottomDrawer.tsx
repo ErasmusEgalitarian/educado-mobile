@@ -52,13 +52,13 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
       />
 
       <View
-        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-8 py-10 shadow-2xl shadow-black"
+        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9 shadow-2xl shadow-black"
         style={{ height: windowHeight * 0.87, width: windowWidth * 1 }}
       >
-        <View className="mb-4 flex-row items-center justify-between">
-          <Text className="text-textTitleGrayscale font-sans-semi-bold text-2xl">
-            {course.title}
-          </Text>
+        <View className="h-8 mb-3 flex-row items-center justify-between">
+            <Text className="text-textTitleGrayscale font-sans-semi-bold text-2xl">
+              {course.title}
+            </Text>
           <TouchableOpacity onPress={() => toggleModal()}>
             <MaterialCommunityIcons
               name={"chevron-down"}
