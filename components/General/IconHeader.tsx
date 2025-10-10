@@ -1,5 +1,5 @@
 import { View, Image } from "react-native";
-import Text from "./Text";
+import Text from "@/components/General/Text";
 
 /**
  * Custom header component with an icon and title.
