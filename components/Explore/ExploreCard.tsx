@@ -1,23 +1,32 @@
 import { useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CardLabel from "./CardLabel";
-import CustomRating from "./CustomRating";
-import * as Utility from "../../services/utils";
-import PropTypes from "prop-types";
+import CardLabel from "@/components/Explore/CardLabel";
+import CustomRating from "@/components/Explore/CustomRating";
+import * as Utility from "@/services/utils";
 import colors from "@/theme/colors";
-import Text from "../General/Text";
-import BottomDrawer from "./BottomDrawer";
+import Text from "@/components/General/Text";
+import BottomDrawer from "@/components/Explore/BottomDrawer";
+import type { Course } from "@/types/course";
 
+export interface ExploreCardProps {
+  course: Course;
+  isPublished: boolean;
+  subscribed: boolean;
+}
 /**
  * This component is used to display a course card.
  * @param course - The course object to be displayed.
  * @param isPublished - Boolean value that indicates if the course is published. If false, the card will not be displayed.
  * @param subscribed - Boolean value that indicates if the user is subscribed to the course.
- * @returns {TSX.Element} - Returns a JSX element. If the course is not published, returns null.
+ * @returns {TSX.Element | null} - Returns a JSX element. If the course is not published, returns null.
  */
-export default function ExploreCard({ course, isPublished, subscribed }) {
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+export const ExploreCard = ({
+  course,
+  isPublished,
+  subscribed,
+}: ExploreCardProps) => {
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
 
   const handleToggleBottomSheet = () => {
     setIsBottomSheetOpen(!isBottomSheetOpen);
@@ -89,34 +98,4 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
       </View>
     </View>
   ) : null;
-}
-
-const styles = StyleSheet.create({
-  transparentBackground: {
-    flex: 1,
-    backgroundColor: "rgba(250, 254, 255, 0.5)", // Semi-transparent background
-    justifyContent: "flex-end", // Align the modal to the bottom
-  },
-  modalView: {
-    height: "90%",
-    width: "100%",
-    backgroundColor: colors.surfaceSubtleCyan,
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-});
-
-ExploreCard.propTypes = {
-  course: PropTypes.object,
-  isPublished: PropTypes.bool,
-  subscribed: PropTypes.bool,
 };
