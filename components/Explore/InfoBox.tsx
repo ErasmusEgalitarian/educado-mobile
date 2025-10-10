@@ -3,17 +3,37 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Text from "@/components/General/Text";
 import * as Utility from "@/services/utils";
 import colors from "@/theme/colors";
+import type { ComponentProps } from "react";
 
-const InfoBoxItem = ({ title, icon }) => {
+type MaterialCommunityIconName = ComponentProps<
+  typeof MaterialCommunityIcons
+>["name"];
+
+export interface InfoBoxItemProps {
+  title: string;
+  icon: MaterialCommunityIconName;
+  className?: string;
+}
+
+export interface InfoBoxProps {
+  course: {
+    estimatedHours: number;
+    difficulty: number;
+  };
+}
+
+const InfoBoxItem = ({ title, icon, className }: InfoBoxItemProps) => {
   return (
-    <View className="flex-row items-center justify-start py-2">
+    <View
+      className={`flex-row items-center justify-start py-2 ${className ?? ""}`}
+    >
       <MaterialCommunityIcons name={icon} size={20} color={colors.grayScale} />
       <Text className="pl-2 font-sans text-sm text-projectBlack">{title}</Text>
     </View>
   );
 };
 
-const InfoBox = ({ course }) => {
+const InfoBox = ({ course }: InfoBoxProps) => {
   return (
     <View className="w-full flex-col rounded-2xl border border-solid border-grayScale px-4 py-1">
       <InfoBoxItem
