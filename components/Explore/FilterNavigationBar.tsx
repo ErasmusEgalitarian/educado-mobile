@@ -75,8 +75,10 @@ const FilterNavigationBar = ({
                     style={{ ...getCatagoryItemStyle(isSelected) }}
                   >
                     <Text
-                      style={{ ...getCategoryTextStyle(isSelected) }}
-                      className="font-sans-bold text-sm"
+                      className="text-body font-bold"
+                      style={{
+                        ...getCategoryTextStyle(isSelected),
+                      }}
                     >
                       {category.label}
                     </Text>
