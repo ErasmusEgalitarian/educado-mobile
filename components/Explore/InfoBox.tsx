@@ -1,12 +1,10 @@
 import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Text from "@/components/General/Text";
-import {CardLabel} from "@/components/Explore/CardLabel";
-import CustomRating from "@/components/Explore/CustomRating";
-import CourseButton from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";
 import colors from "@/theme/colors";
 import type { ComponentProps } from "react";
+import type { Course } from "@/types/course";
 
 type MaterialCommunityIconName = ComponentProps<
   typeof MaterialCommunityIcons
@@ -16,13 +14,6 @@ export interface InfoBoxItemProps {
   title: string;
   icon: MaterialCommunityIconName;
   className?: string;
-}
-
-export interface InfoBoxProps {
-  course: {
-    estimatedHours: number;
-    difficulty: number;
-  };
 }
 
 const InfoBoxItem = ({ title, icon, className }: InfoBoxItemProps) => {
@@ -36,7 +27,7 @@ const InfoBoxItem = ({ title, icon, className }: InfoBoxItemProps) => {
   );
 };
 
-const InfoBox = ({ course }: InfoBoxProps) => {
+const InfoBox = ({ course }: { course: Course }) => {
   return (
     <View className="w-full flex-col rounded-2xl border border-solid border-grayScale px-4 py-1">
       <InfoBoxItem
