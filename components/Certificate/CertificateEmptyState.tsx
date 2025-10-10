@@ -11,7 +11,7 @@ export default function CertificateEmptyState() {
         <View className="absolute left-0 right-0 top-0 mx-4 mb-6 mt-12">
           <BackButton onPress={() => navigation.navigate("ProfileHome")} />
 
-          <Text className="w-full text-center font-sans-bold text-xl">
+          <Text className="font-sans-bold w-full text-center text-xl">
             Certificados
           </Text>
         </View>
@@ -22,7 +22,7 @@ export default function CertificateEmptyState() {
             source={noCertificateImage}
             alt="No Certificates"
           />
-          <Text className="mt-4 text-center font-montserrat-semi-bold text-2xl">
+          <Text className="font-montserrat-semi-bold mt-4 text-center text-2xl">
             Nenhum certificado disponível :
           </Text>
           <Text className="my-4 text-center text-lg leading-[22px]">

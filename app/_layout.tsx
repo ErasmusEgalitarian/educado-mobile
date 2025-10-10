@@ -5,6 +5,7 @@ import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import * as eva from "@eva-design/eva";
 import { DownloadProvider } from "@/services/DownloadProvider";
+import "@/global.css";
 
 const RootLayout = () => {
   return (

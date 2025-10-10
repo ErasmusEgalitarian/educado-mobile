@@ -20,7 +20,7 @@ const getDeviceLocaleTag = (): string => {
   return (locale as string) || "en-US";
 };
 
-const i18n = new I18n({
+export const i18n = new I18n({
   "en-US": enUS,
   "pt-BR": ptBR,
   en: enUS,
@@ -31,6 +31,5 @@ i18n.enableFallback = true;
 i18n.defaultLocale = "en-US";
 i18n.locale = getDeviceLocaleTag();
 
-const t = (key: string, options?: TranslateOptions) => i18n.t(key, options);
-
-export { i18n, t };
+export const t = (key: string, options?: TranslateOptions) =>
+  i18n.t(key, options);

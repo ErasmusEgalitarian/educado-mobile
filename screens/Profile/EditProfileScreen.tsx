@@ -220,7 +220,7 @@ export default function EditProfileScreen() {
             <BackButton onPress={() => navigation.navigate("ProfileHome")} />
 
             {/* Title */}
-            <Text className="w-full text-center font-sans-bold text-xl">
+            <Text className="font-sans-bold w-full text-center text-xl">
               Editar perfil
             </Text>
           </View>

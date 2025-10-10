@@ -17,4 +17,8 @@ runs:
       shell: bash
       run: |
         cd android
-        ./gradlew :app:compileDebugSources -x lint -x test --no-daemon --stacktrace --warning-mode all
+        ./gradlew :app:compileDebugSources -x lint -x test --no-daemon --stacktrace --warning-mode all \
+        -Dorg.gradle.jvmargs="-Xmx3g \
+        -XX:MaxMetaspaceSize=1g \
+        -Dfile.encoding=UTF-8" \
+        -Dorg.gradle.workers.max=2

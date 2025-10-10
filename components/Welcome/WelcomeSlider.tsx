@@ -44,7 +44,7 @@ export default function WelcomeSlider() {
       {Sections.map((sections, index) => (
         <View key={index} className="relative h-full items-center px-10">
           <View className="top-0 px-4">
-            <Text className="text-center font-sans-bold text-subheading">
+            <Text className="font-sans-bold text-center text-subheading">
               {sections.title}
             </Text>
           </View>

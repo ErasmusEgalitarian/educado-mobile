@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LoginScreen from "@/screens/Login/LoginScreen";
 import RegisterScreen from "@/screens/Registration/RegistrationScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -21,8 +21,6 @@ import CompleteCourseScreen from "@/screens/Courses/CompleteCourseScreen";
 import CameraScreen from "@/screens/Camera/CameraScreen";
 import LeaderboardScreen from "@/screens/Leaderboard/LeaderboardScreen";
 import SubscribedToCourseScreen from "@/screens/Courses/SubscribedToCourseScreen";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 
 const Stack = createNativeStackNavigator();
 
@@ -129,7 +127,7 @@ const CourseStack = () => (
   </Stack.Navigator>
 );
 
-const useWelcomeScreenLogic = (
+export const useWelcomeScreenLogic = (
   loadingTime: number,
   onResult: (route: string, loading: boolean) => void,
 ) => {
@@ -158,35 +156,9 @@ const useWelcomeScreenLogic = (
   }, loadingTime);
 };
 
-const App = () => {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+export const App = () => {
   const [initialRoute, setInitialRoute] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
-        "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-        "Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
-      });
-      setFontsLoaded(true);
-    };
-
-    loadFonts();
-  }, []);
-
-  useEffect(() => {
-    const prepare = async () => {
-      if (!fontsLoaded) {
-        await SplashScreen.preventAutoHideAsync();
-      } else {
-        await SplashScreen.hideAsync();
-      }
-    };
-
-    prepare();
-  }, [fontsLoaded]);
 
   // Callback function to handle the results
   const handleResult = (route: string, loading: boolean) => {
@@ -196,16 +168,9 @@ const App = () => {
 
   useWelcomeScreenLogic(3000, handleResult);
 
-  // ************** Don't touch this code **************
-  if (!fontsLoaded) {
-    return null;
-  }
-
-  // Makes sure fonts are loaded before rendering the app
-  if (isLoading && fontsLoaded) {
+  if (isLoading) {
     return <LoadingScreen />;
   }
-  // ***************************************************
 
   return (
     <Stack.Navigator initialRouteName={initialRoute}>
@@ -305,5 +270,3 @@ const App = () => {
     </Stack.Navigator>
   );
 };
-
-export { App, useWelcomeScreenLogic };

@@ -35,7 +35,7 @@ const out = diagnostics.map((diagnostic) => {
     file: file,
     line: line + 1,
     column: character + 1,
-    code: diagnostic.code,
+    code: `TS${diagnostic.code}`,
     category: ts.DiagnosticCategory[diagnostic.category],
     message: ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"),
   };

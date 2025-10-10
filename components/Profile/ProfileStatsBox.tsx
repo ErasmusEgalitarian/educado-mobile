@@ -44,7 +44,7 @@ const ProfileStatsBox = ({
             <View className="h-16 w-24 flex-1 flex-col items-center rounded-lg bg-badgesGreen py-2">
               <Image source={require("../../assets/images/profileFlame.png")} />
               <Text
-                className="mt-2 font-sans-bold text-projectWhite"
+                className="font-sans-bold mt-2 text-projectWhite"
                 numberOfLines={1}
                 adjustsFontSizeToFit
               >
@@ -57,7 +57,7 @@ const ProfileStatsBox = ({
               <Image source={require("../../assets/images/profileCoin.png")} />
 
               <Text
-                className="mt-2 font-sans-bold text-projectWhite"
+                className="font-sans-bold mt-2 text-projectWhite"
                 numberOfLines={1}
                 adjustsFontSizeToFit
               >
@@ -71,7 +71,7 @@ const ProfileStatsBox = ({
                 source={require("../../assets/images/profileLightning.png")}
               />
               <Text
-                className="mt-2 font-sans-bold text-projectWhite"
+                className="font-sans-bold mt-2 text-projectWhite"
                 numberOfLines={1}
                 adjustsFontSizeToFit
               >

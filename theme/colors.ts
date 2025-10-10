@@ -1,6 +1,5 @@
-const colors = {
-  bgPrimary: "#186474",
-  bgSecondary: "#f2f9fb",
+export const colors = {
+
   // **********************
   // ***** Gray Scale *****
   // **********************
@@ -117,10 +116,10 @@ const colors = {
   surfaceYellow: "#F1CC4F",
 
   // Old primary colors (to be deprecated and slowly removed)
-  primary: "#246670",
-  secondary: "#35A1B1",
-  white: "#FFFFFF",
-  black: "#000000",
+  bgprimary_custom: "#166276",
+  bgPrimary: "#C9E5EC",
+  primary_custom: "#166276",
+  secondary: "#F1F9FB",
   projectWhite: "#FFFFFF",
   projectBlack: "#383838",
   projectGray: "#A1ACB2",
@@ -157,4 +156,5 @@ export type ColorName = keyof typeof colors;
 
 export const color = (name: ColorName) => colors[name];
 
+// For legacy purposes
 export default colors;

@@ -22,7 +22,7 @@ export default function SubscribedToCourseScreen({ route }) {
 
       <View className="z-20 flex h-3/4 w-full items-center justify-end px-6">
         <View className="mb-8 h-40 w-fit justify-center">
-          <Text className="bg-secondary text-center font-montserrat-bold text-3xl text-heading text-primary_custom">
+          <Text className="font-montserrat-bold bg-secondary text-center text-3xl text-heading text-primary_custom">
             Parabéns! Você está inscrito no curso &quot;{course.title}&quot;
           </Text>
         </View>

@@ -83,7 +83,7 @@ export default function CertificateScreen() {
         <View className="relative mx-4 mb-6 mt-12">
           <BackButton onPress={() => navigation.navigate("ProfileHome")} />
 
-          <Text className="w-full text-center font-sans-bold text-xl">
+          <Text className="font-sans-bold w-full text-center text-xl">
             Certificados
           </Text>
         </View>

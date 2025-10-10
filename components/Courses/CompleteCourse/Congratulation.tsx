@@ -20,7 +20,7 @@ export default function Congratulation() {
 
   return (
     <View className="flex h-full w-full items-center justify-start">
-      <Text className="p-4 text-center font-sans-bold text-3xl text-primary_custom">
+      <Text className="font-sans-bold p-4 text-center text-3xl text-primary_custom">
         Excelente trabalho, você terminou!
       </Text>
 

@@ -178,7 +178,7 @@ export default function CourseOverviewScreen({ route }) {
             <View className="mt-[-10%] flex w-[293px] rounded-xl bg-projectWhite p-[14px]">
               <View className="flex flex-row justify-between">
                 {/* Course Title */}
-                <Text className="line-height-[29px] max-w-[80%] font-montserrat-bold text-[24px]">
+                <Text className="line-height-[29px] font-montserrat-bold max-w-[80%] text-[24px]">
                   {course.title}
                 </Text>
                 {/* TODO: Button to download course should be implemented */}

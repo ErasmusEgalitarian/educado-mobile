@@ -16,7 +16,7 @@ export default function SettingsButton() {
         onPress={handleGearIconPress}
       >
         <View className="flex flex-row items-center justify-center">
-          <Text className="text-center font-sans-bold text-body text-projectWhite">
+          <Text className="font-sans-bold text-center text-body text-projectWhite">
             Configurações
           </Text>
         </View>

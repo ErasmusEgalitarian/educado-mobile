@@ -60,7 +60,7 @@ export default function DeleteAccountButton() {
         className="w-full rounded-medium bg-error px-10 py-4"
         onPress={deleteAlert}
       >
-        <Text className="text-center font-sans-bold text-body text-projectWhite">
+        <Text className="font-sans-bold text-center text-body text-projectWhite">
           Deletar conta
         </Text>
       </TouchableOpacity>

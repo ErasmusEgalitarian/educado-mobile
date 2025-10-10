@@ -39,7 +39,7 @@ export default function OfflineScreen() {
           color="black"
           style={{ alignSelf: "center" }}
         />
-        <Text className="text-center font-montserrat-semi-bold text-[24px]">
+        <Text className="font-montserrat-semi-bold text-center text-[24px]">
           {"\n"}Sem conexão com internet.
         </Text>
         <View className="flex-row flex-wrap justify-center">
@@ -48,7 +48,7 @@ export default function OfflineScreen() {
             {"\n"}Você está sem acesso a internet. Vá para
           </Text>
           <View className="flex-row flex-wrap justify-center">
-            <Text className="text-center font-montserrat-bold text-body">
+            <Text className="font-montserrat-bold text-center text-body">
               meus cursos
             </Text>
             <Text className="text-center text-body">
@@ -63,7 +63,7 @@ export default function OfflineScreen() {
             onPress={() => navigation.navigate("Download")}
           >
             {/* Click to explore courses */}
-            <Text className="text-center font-sans-bold text-body text-projectWhite">
+            <Text className="font-sans-bold text-center text-body text-projectWhite">
               Acesse meus cursos baixados
             </Text>
           </Pressable>

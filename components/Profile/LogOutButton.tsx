@@ -50,7 +50,7 @@ export default function LogOutButton(props) {
             color={tailwindColors.error}
             testID={props.testID}
           />
-          <Text className="text-center font-sans-bold text-lg text-error underline">
+          <Text className="font-sans-bold text-center text-lg text-error underline">
             Sair
           </Text>
         </View>
