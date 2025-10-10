@@ -1,16 +1,17 @@
 import { View, Image } from "react-native";
 import Text from "./Text";
-import PropTypes from "prop-types";
 
 /**
  * Custom header component with an icon and title.
  * @param {string} title - The title to display next to the icon.
  * @returns {JSX.Element} The IconHeader component.
  */
-export default function IconHeader({ title, description }) {
-  IconHeader.propTypes = {
-    title: PropTypes.string,
-  };
+export interface IconHeaderProps {
+  title: string;
+  description?: string;
+}
+
+const IconHeader = ({ title, description }: IconHeaderProps) => {
   return (
     <>
       <View className="flex flex-row items-center pb-2 pl-6 pt-[20%]">
@@ -25,4 +26,6 @@ export default function IconHeader({ title, description }) {
       </View>
     </>
   );
-}
+};
+
+export default { IconHeader };
