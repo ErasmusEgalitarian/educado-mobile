@@ -7,21 +7,39 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Text from "@/components/General/Text";
-import {CardLabel} from "@/components/Explore/CardLabel";
+import { CardLabel } from "@/components/Explore/CardLabel";
 import CustomRating from "@/components/Explore/CustomRating";
-import {CourseButton} from "@/components/Explore/CourseButton";
+import { CourseButton } from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { subscribe, addCourseToStudent } from "@/services/storage-service";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import InfoBox from "@/components/Explore/InfoBox";
+import type { Course } from "@/types/course";
 
-const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
+export interface BottomDrawerProps {
+  toggleModal: () => void;
+  course: Course;
+  drawerState: boolean;
+  subscribed: boolean;
+}
+
+type BottomDrawerNavParams = {
+  Subscribed: { course: Course };
+  CourseOverview: { course: Course };
+};
+
+const BottomDrawer = ({
+  toggleModal,
+  course,
+  drawerState,
+  subscribed,
+}: BottomDrawerProps) => {
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<BottomDrawerNavParams>>();
 
-  const subscribeCourse = (course) => {
+  const subscribeCourse = (course: Course) => {
     toggleModal();
     subscribe(course.courseId);
     addCourseToStudent(course.courseId);
@@ -30,7 +48,7 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
     });
   };
 
-  const navigateCourse = (course) => {
+  const navigateCourse = (course: Course) => {
     toggleModal();
     navigation.navigate("CourseOverview", {
       course: course,
@@ -53,13 +71,13 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
       />
 
       <View
-        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9 shadow-2xl shadow-black"
+        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-8 py-10 shadow-2xl shadow-black"
         style={{ height: windowHeight * 0.87, width: windowWidth * 1 }}
       >
-        <View className="h-8 mb-3 flex-row items-center justify-between">
-            <Text className="text-textTitleGrayscale font-sans-semi-bold text-2xl">
-              {course.title}
-            </Text>
+        <View className="mb-4 flex-row items-center justify-between">
+          <Text className="font-sans-semi-bold text-2xl text-textTitleGrayscale">
+            {course.title}
+          </Text>
           <TouchableOpacity onPress={() => toggleModal()}>
             <MaterialCommunityIcons
               name={"chevron-down"}
@@ -90,29 +108,30 @@ const BottomDrawer = ({ toggleModal, course, drawerState, subscribed }) => {
             />
           </View>
 
-            <View>
-              {subscribed ? (
-                <View className="mb-1 w-full flex-row">
-                  <MaterialCommunityIcons
-                    name="check-circle"
-                    size={13}
-                    color={colors.surfaceDefaultGreen}
-                  />
-                  <Text className="flex-start pl-1 font-sans-bold text-xs text-surfaceDefaultGreen">
-                    Inscrição realizada
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-            <View className="mb-1 w-2.5" />
-            <CustomRating rating={course.rating} />
-
+          <View>
+            {subscribed ? (
+              <View className="mb-1 w-full flex-row">
+                <MaterialCommunityIcons
+                  name="check-circle"
+                  size={13}
+                  color={colors.surfaceDefaultGreen}
+                />
+                <Text className="flex-start pl-1 font-sans-bold text-xs text-surfaceDefaultGreen">
+                  Inscrição realizada
+                </Text>
+              </View>
+            ) : null}
+          </View>
+          <View className="mb-1 w-2.5" />
+          <CustomRating rating={course.rating} />
         </View>
 
-        <View className="border-surfaceDisabledGrayscale w-full border-b-[1px]" />
+        <View className="w-full border-b-[1px] border-surfaceDisabledGrayscale opacity-50" />
 
         <ScrollView className="inner-shadow my-4 max-h-24 w-full">
-          <Text className="text-base flex-start w-full">{course.description}</Text>
+          <Text className="flex-start w-full text-base">
+            {course.description}
+          </Text>
         </ScrollView>
 
         <View className="pb-5">
