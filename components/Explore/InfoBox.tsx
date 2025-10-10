@@ -1,26 +1,15 @@
 import React from "react";
-import {
-  Modal,
-  View,
-  useWindowDimensions,
-  TouchableOpacity,
-} from "react-native";
+import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Text from "@/components/General/Text";
-import CardLabel from "@/components/Explore/CardLabel";
-import CustomRating from "@/components/Explore/CustomRating";
-import CourseButton from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";
-import { ScrollView } from "react-native-gesture-handler";
-import { subscribe, addCourseToStudent } from "@/services/storage-service";
-import { useNavigation } from "@react-navigation/native";
 import colors from "@/theme/colors";
 
 const InfoBoxItem = ({ title, icon }) => {
   return (
     <View className="flex-row items-center justify-start py-2">
       <MaterialCommunityIcons name={icon} size={20} color={colors.grayScale} />
-      <Text className="text-sm pl-2 font-sans text-projectBlack">{title}</Text>
+      <Text className="pl-2 font-sans text-sm text-projectBlack">{title}</Text>
     </View>
   );
 };
