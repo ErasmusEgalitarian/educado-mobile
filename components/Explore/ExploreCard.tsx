@@ -28,9 +28,16 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
       <View className="mx-4 mb-4 overflow-hidden rounded-lg bg-surfaceSubtleGrayscale p-6 shadow-2xl">
         <View className="flex-col items-center">
           <View className="w-full flex-row items-center justify-between">
-            <Text className="text-lg font-medium text-textTitleGrayscale">
-              {course.title}
-            </Text>
+            <View className="flex-row items-center">
+              <MaterialCommunityIcons
+                name="chart-bar-stacked"
+                size={24}
+                color="#141B1F"
+              />
+              <Text className="ml-2 font-montserrat text-[16px] font-bold text-[#141B1F]">
+                {course.title}
+              </Text>
+            </View>
           </View>
 
           <View className="h-1 w-full border-b-[1px] border-surfaceDisabledGrayscale pt-2 opacity-50"></View>
@@ -38,17 +45,15 @@ export default function ExploreCard({ course, isPublished, subscribed }) {
           <View className="h-[0.5] w-full pt-2" />
           <View className="w-full flex-row items-start justify-between">
             <View className="w-full flex-col items-start justify-between">
-              <View className="flex-row flex-wrap items-center justify-start pb-2">
+              <View className="flex-col items-start justify-start space-y-2 pb-2">
                 <CardLabel
                   title={Utility.determineCategory(course.category)}
                   icon={Utility.determineIcon(course.category)}
                 />
-                <View className="w-2.5" />
                 <CardLabel
                   title={Utility.formatHours(course.estimatedHours)}
                   icon={"clock-outline"}
                 />
-                <View className="w-2.5" />
                 <CardLabel
                   title={Utility.getDifficultyLabel(course.difficulty)}
                   icon={"book-multiple-outline"}
