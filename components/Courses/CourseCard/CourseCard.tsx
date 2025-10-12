@@ -14,13 +14,15 @@ import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
 import { t } from "@/i18n";
 
+interface Course {
+  courseId: string;
+  title?: string;
+  category?: string;
+  estimatedHours?: number;
+}
+
 interface CourseCardProps {
-  course: {
-    courseId: string;
-    title?: string;
-    category?: string;
-    estimatedHours?: number;
-  };
+  course: Course;
   isOnline: boolean;
 }
 
