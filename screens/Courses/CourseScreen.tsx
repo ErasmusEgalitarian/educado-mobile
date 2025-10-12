@@ -1,13 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Image,
   Pressable,
   RefreshControl,
   ScrollView,
   View,
+  Text,
 } from "react-native";
-import Text from "@/components/General/Text";
 import * as StorageService from "@/services/storage-service";
 import CourseCard from "@/components/Courses/CourseCard/CourseCard";
 import IconHeader from "@/components/General/IconHeader";
@@ -22,22 +22,18 @@ import Tooltip from "@/components/Onboarding/Tooltip";
 import { getStudentInfo } from "@/services/storage-service";
 import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
 import OfflineScreen from "@/screens/Offline/OfflineScreen";
+import { Course } from "@/types/course";
 
-export interface Course {
-  title: string;
-  courseId: string;
-  description: string;
-  category: string;
-  estimatedHours: number;
-  dateUpdated: string;
-  difficulty: string;
-  published: boolean;
-  status: string;
-  rating: number;
+interface StudentData {
+  level?: number;
+  points?: number;
+  photo?: string;
+  studyStreak?: number;
+  lastStudyDate?: Date;
 }
 
 const CourseScreen = () => {
-  const [courses, setCourses] = useState<Course[] | any[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [courseLoaded, setCourseLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
@@ -53,7 +49,10 @@ const CourseScreen = () => {
   const loadCourses = async () => {
     const courseData = await StorageService.getSubCourseList();
     if (shouldUpdate(courses, courseData)) {
-      if (courseData.length !== 0 && Array.isArray(courseData)) {
+      const hasValidCourseData =
+        courseData && Array.isArray(courseData) && courseData.length > 0;
+
+      if (hasValidCourseData) {
         setCourses(courseData);
         setCourseLoaded(true);
       } else {
@@ -77,8 +76,9 @@ const CourseScreen = () => {
       const fetchedStudent = await getStudentInfo();
 
       if (fetchedStudent !== null) {
-        setStudentLevel(fetchedStudent.level);
-        setStudentPoints(fetchedStudent.points);
+        const studentData = fetchedStudent as StudentData;
+        setStudentLevel(studentData.level || 0);
+        setStudentPoints(studentData.points || 0);
       }
     } catch (error) {
       ShowAlert(errorSwitch(error));
@@ -87,11 +87,13 @@ const CourseScreen = () => {
 
   useEffect(() => {
     // this makes sure loadCourses is called when the screen is focused
-    return navigation.addListener("focus", () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       loadCourses();
       fetchStudentData();
     });
-  }, [loadCourses, navigation]);
+    return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   useEffect(() => {
     const logged = async () => {
@@ -171,10 +173,16 @@ const CourseScreen = () => {
           <View className="items-center justify-center gap-10 py-10">
             <View className="h-auto w-full items-center justify-center px-10">
               <Image source={require("../../assets/images/no-courses.png")} />
-              <Text className="font-sans-bold pb-4 pt-4 text-center text-subheading leading-[29.26] text-projectBlack">
+              <Text
+                className="pb-4 pt-4 text-center text-subheading leading-[29.26] text-projectBlack"
+                style={{ fontFamily: "sans-bold" }}
+              >
                 Comece agora
               </Text>
-              <Text className="font-montserrat text-center text-body text-projectBlack">
+              <Text
+                className="text-center text-body text-projectBlack"
+                style={{ fontFamily: "montserrat" }}
+              >
                 Você ainda não se increveu em nenhum curso. Acesse a página
                 Explore e use a busca para encontrar cursos do seu interesse.
               </Text>
@@ -185,7 +193,10 @@ const CourseScreen = () => {
                 className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
                 onPress={() => navigation.navigate("Explorar" as never)}
               >
-                <Text className="font-sans-bold text-center text-body text-projectWhite">
+                <Text
+                  className="text-center text-body text-projectWhite"
+                  style={{ fontFamily: "sans-bold" }}
+                >
                   Explorar cursos
                 </Text>
               </Pressable>
