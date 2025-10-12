@@ -61,7 +61,7 @@ export const SectionCard = ({
         style={{ width: "100%" }}
       >
         <TouchableOpacity
-          className={`bg-surfaceSubtleGrayscale ${disabled ? "bg-disabled" : ""}`}
+          className={!disabled ? "bg-surfaceSubtleGrayscale" : "bg-disabled"}
           style={{ borderRadius: 15, transform: [{ scale: 1.02 }] }}
           onPress={onPress}
           disabled={disabled}
