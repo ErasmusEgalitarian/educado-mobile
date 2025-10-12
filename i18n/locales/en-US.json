@@ -12,6 +12,21 @@
     "rate": "Calm down! Lots of requests",
     "try-again": "Error: Please try again"
   },
+  "general": {
+    "yes": "Yes",
+    "no": "No",
+    "confirmation": "Are you sure?"
+  },
+  "course": {
+    "start": "Start course",
+    "completed-up": "Completed",
+    "completed-low": "completed",
+    "points": "points",
+    "withdraw": "Withdraw from course",
+    "cancel-subscription": "Cancel subscription",
+    "in-progress": "In progress",
+    "not-started": "Not started"
+  },
   "edu-screen": {
     "header": "My name is Edu, and I'm here to help you navigate this app",
     "loading": "Edu is thinking",

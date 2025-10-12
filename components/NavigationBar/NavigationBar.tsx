@@ -10,7 +10,7 @@ import EditProfileScreen from "../../screens/Profile/EditProfileScreen";
 import CertificateScreen from "../../screens/Certificate/CertificateScreen";
 import { Icon } from "@rneui/themed";
 import { Platform, Keyboard } from "react-native";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 
 const Tab = createBottomTabNavigator();
 

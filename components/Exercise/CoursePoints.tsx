@@ -3,14 +3,14 @@ import Animated from "react-native-reanimated";
 import AnimatedNumbers from "../Gamification/AnimatedNumber";
 import { getStudentInfo } from "../../services/storage-service";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
 import {
   getPointsFromExerciseReceiver,
   getPointsFromExerciseUnsubscribe,
 } from "../events/receiver-events";
 
-/* 
+/*
 Description:	This component displays the points the student has earned in the course.
 				The points are retrieved from the student model (in the field courses.totalPoints) in the database,
 				which are updated when completing an exercise.

@@ -1,7 +1,7 @@
 import { View, Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
 import CoursePoints from "../../components/Exercise/CoursePoints";
 

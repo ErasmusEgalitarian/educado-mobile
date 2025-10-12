@@ -1,31 +1,34 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import PropTypes from "prop-types";
+import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { t } from "@/i18n";
+
+export interface ContinueSectionButtonProps {
+  onPress: () => void;
+}
 
 /**
  * Renders a button component for continuing a section.
+ *
  * @param {Function} onPress - The function to be called when the button is pressed.
- * @returns {JSX.Element} - The rendered component.
  */
-const ContinueSectionButton = ({ onPress }) => {
-  ContinueSectionButton.propTypes = {
-    onPress: PropTypes.func.isRequired,
-  };
-
+export const ContinueSectionButton = ({
+  onPress,
+}: ContinueSectionButtonProps) => {
   return (
     <View className="h-[70] w-[100%] self-center">
       <TouchableOpacity
-        className="flex w-[100%] rounded-lg bg-bgprimary_custom"
+        className="flex w-[100%] bg-bgprimary_custom"
+        style={{ borderRadius: 15 }}
         onPress={onPress}
       >
         <View className="flex-row items-center justify-center p-4">
-          <Text className="font-montserrat-bold mr-2 text-xl text-projectWhite">
-            Começar curso
+          <Text className="mr-2 text-projectWhite text-body-bold">
+            {t("course.start")}
           </Text>
           <MaterialCommunityIcons
             testID="play-circle-outline"
             name="play-circle-outline"
-            size={32}
+            size={20}
             color="white"
           />
         </View>
@@ -33,5 +36,3 @@ const ContinueSectionButton = ({ onPress }) => {
     </View>
   );
 };
-
-export default ContinueSectionButton;

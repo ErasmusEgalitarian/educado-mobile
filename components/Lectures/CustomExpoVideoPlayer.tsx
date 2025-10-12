@@ -2,8 +2,7 @@ import { forwardRef } from "react";
 import PropTypes from "prop-types";
 import { View, StyleSheet, Dimensions } from "react-native";
 import { Video } from "expo-av";
-
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 
 const CustomExpoVideoPlayer = forwardRef(
   ({ onStatusUpdate, videoUrl, isMuted = false, isPlaying = true }, ref) => {

@@ -1,6 +1,6 @@
 import { Pressable } from "react-native";
 import { Icon } from "@rneui/base";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
 
 /**

@@ -13,4 +13,9 @@ export interface Course {
   rating: number;
   feedbackOptions: string;
   topFeedbackOptions: string;
+  dateOfDownload: string;
+}
+
+export interface ApiCourse extends Omit<Course, "courseId"> {
+  _id: string;
 }

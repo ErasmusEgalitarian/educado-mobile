@@ -5,6 +5,7 @@ import Slick from "react-native-slick";
 import Congratulation from "./Congratulation";
 import PropTypes from "prop-types";
 import Feedback from "./Feedback";
+import tailwindConfig from "@/tailwind.config";
 
 /* Check the CompleteCourse file in the screens folder for more info
 props: 			onIndexChanged: function that is called when the index of which slide the student are currently on changes
@@ -23,7 +24,6 @@ const CompleteCourseSlider = forwardRef(
 
     const slick = useRef(null);
 
-    const tailwindConfig = require("../../../tailwind.config.js");
     const projectColors = tailwindConfig.theme.colors;
 
     const screens = [

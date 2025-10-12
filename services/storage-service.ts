@@ -1,11 +1,16 @@
-import * as api from "../api/api";
-import * as userApi from "../api/user-api";
+import * as api from "@/api/api";
+import * as userApi from "@/api/user-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NetworkStatusService } from "./network-status-service";
-import defaultImage from "../assets/images/defaultImage-base64.json";
+import { NetworkStatusService } from "@/services/network-status-service";
+import defaultImage from "@/assets/images/defaultImage-base64.json";
 import * as FileSystem from "expo-file-system";
 import jwt from "expo-jwt";
 import Constants from "expo-constants";
+import { ApiSection, Section } from "@/types/section";
+import { StudentInfo } from "@/types/student";
+import { ApiCourse, Course } from "@/types/course";
+import { UserInfo } from "@/types/user";
+import { Component } from "@/types/component";
 
 const SUB_COURSE_LIST = "@subCourseList";
 const USER_ID = "@userId";
@@ -20,19 +25,81 @@ let isOnline = true;
  * Updates the network status.
  * @param {boolean} networkStatus - The current network status.
  */
-const updateNetworkStatus = (networkStatus) => {
+const updateNetworkStatus = (networkStatus: boolean) => {
   isOnline = networkStatus;
 };
 
 NetworkStatusService.getInstance().addObserver({ update: updateNetworkStatus });
 
+const getLocalItem = async <T>(id: string): Promise<T> => {
+  const res = await AsyncStorage.getItem(id);
+
+  if (res === null) {
+    throw new Error("Could not retrieve item");
+  }
+
+  return JSON.parse(res) as T;
+};
+
+const setLocalItem = async <T>(id: string, item: T): Promise<void> => {
+  try {
+    await AsyncStorage.setItem(id, JSON.stringify(item));
+  } catch {
+    throw new Error("Could not store item");
+  }
+};
+
+type Fetcher<T, A extends unknown[]> = (...args: A) => Promise<T>;
+
+const fetchWithFallback = async <T, A extends unknown[], B extends unknown[]>(
+  onlineFetcher: Fetcher<T, A>,
+  onlineArgs: A,
+  localFetcher: Fetcher<T, B>,
+  localArgs: B,
+  localSetter: (data: T) => Promise<void> = Promise.resolve,
+) => {
+  if (!isOnline) {
+    return await localFetcher(...localArgs);
+  }
+  try {
+    const data = await onlineFetcher(...onlineArgs);
+    try {
+      await localSetter(data);
+    } catch {
+      console.error("Localstorage set failed.");
+    }
+    return data;
+  } catch {
+    return await localFetcher(...localArgs);
+  }
+};
+
+/**
+ * @example fetchWithStorageFallback(api.getSomething, [...args], "S" + id)
+ * T = ApiData
+ * A = online function arg types
+ */
+const fetchWithStorageFallback = async <T, A extends unknown[]>(
+  onlineFetcher: Fetcher<T, A>,
+  args: A, // Spreads the arguments here
+  localId: string,
+): Promise<T> => {
+  return fetchWithFallback(
+    onlineFetcher,
+    args,
+    getLocalItem<T>,
+    [localId],
+    (data: T) => setLocalItem(localId, data),
+  );
+};
+
 /** LOGIN TOKEN **/
 
 /**
  * Retrieves the login token from AsyncStorage.
- * @returns {Promise<Boolean>} A promise that resolves with the a true or false value.
+ * @returns a promise of the existing token, that can be a string or null if it does not exist.
  */
-export const getLoginToken = async () => {
+export const getLoginToken = async (): Promise<string | null> => {
   return await AsyncStorage.getItem(LOGIN_TOKEN);
 };
 
@@ -40,7 +107,7 @@ export const getLoginToken = async () => {
  * Check if login token is valid.
  * @returns {boolean} Returns a boolean indicating whether the token is valid.
  */
-export const isLoginTokenValid = async () => {
+export const isLoginTokenValid = async (): Promise<boolean> => {
   const token = await getLoginToken();
   try {
     if (token === null) {
@@ -48,6 +115,7 @@ export const isLoginTokenValid = async () => {
     }
 
     // Access JWT_SECRET
+    // @ts-expect-error The possible return values are handled below.
     const jwtSecret = Constants.expoConfig.extra.JWT_SECRET;
 
     const decodedToken = jwt.decode(token, jwtSecret);
@@ -61,9 +129,7 @@ export const isLoginTokenValid = async () => {
     const currentTime = Math.floor(Date.now() / 1000) + 60 * 60 * 3; // Add 3 hours to make sure session do not expire while in use
 
     // Check if the expiration time (exp) is in the future
-    if (decodedToken.exp > currentTime) {
-      return true; // return true if valid time
-    }
+    return decodedToken.exp > currentTime;
   } catch (error) {
     console.log(error);
     // An error occurred during decoding or validation
@@ -76,16 +142,15 @@ export const isLoginTokenValid = async () => {
  * Retrieves and stores student information for a given user ID.
  * @param userId - The user ID to retrieve student information for.
  */
-export const setStudentInfo = async (userId) => {
+export const setStudentInfo = async (userId: string) => {
   if (isOnline) {
     try {
       const fetchedStudentInfo = await userApi.getStudentInfo(userId);
       if (fetchedStudentInfo.profilePhoto) {
         try {
-          const photo = await api.getBucketImage(
+          fetchedStudentInfo.photo = await api.getBucketImage(
             fetchedStudentInfo.profilePhoto,
           );
-          fetchedStudentInfo.photo = photo;
         } catch (error) {
           fetchedStudentInfo.photo = null;
           console.log(`Failed to fetch photo. Proceeding without it: ${error}`);
@@ -94,7 +159,9 @@ export const setStudentInfo = async (userId) => {
       await updateStudentInfo(fetchedStudentInfo);
       await AsyncStorage.setItem(STUDENT_ID, fetchedStudentInfo._id); // needs to be seperate
     } catch (error) {
-      throw new Error("API error in getStudentInfo:", error);
+      const errorToThrow =
+        error instanceof Error ? error : new Error(String(error));
+      throw new Error(`API error in getStudentInfo: ${errorToThrow.message}`);
     }
   } else {
     throw new Error("No internet connection in getStudentInfo");
@@ -105,31 +172,30 @@ export const setStudentInfo = async (userId) => {
  * Retrieves student information from AsyncStorage.
  * @returns {Promise<Object>} A promise that resolves with the fetched student information.
  */
-export const getStudentInfo = async () => {
-  return JSON.parse(await AsyncStorage.getItem(STUDENT_INFO));
+export const getStudentInfo = async (): Promise<StudentInfo> => {
+  return await getLocalItem<StudentInfo>(STUDENT_INFO);
 };
 
 export const getStudentProfilePhoto = async () => {
-  const student = await getStudentInfo();
+  const student = await getLocalItem<StudentInfo>(STUDENT_INFO);
   return student.photo;
 };
 
-export const updateStudentInfo = async (studentInfo) => {
+export const updateStudentInfo = async (studentInfo: StudentInfo) => {
   await AsyncStorage.setItem(STUDENT_INFO, JSON.stringify(studentInfo));
 };
 
 // Increment studyStreak and update lastStudyDate
-export const updateLocalStudyStreak = async (newStudyDate) => {
+export const updateLocalStudyStreak = async (newStudyDate: Date) => {
   // Retrieve current studentInfo
-  const studentInfo = JSON.parse(await AsyncStorage.getItem(STUDENT_INFO));
+  const studentInfo: StudentInfo =
+    await getLocalItem<StudentInfo>(STUDENT_INFO);
 
-  if (studentInfo) {
-    studentInfo.studyStreak += 1;
-    studentInfo.lastStudyDate = newStudyDate;
+  studentInfo.studyStreak += 1;
+  studentInfo.lastStudyDate = newStudyDate;
 
-    // Save updated studentInfo
-    await AsyncStorage.setItem(STUDENT_INFO, JSON.stringify(studentInfo));
-  }
+  // Save updated studentInfo
+  await AsyncStorage.setItem(STUDENT_INFO, JSON.stringify(studentInfo));
 };
 
 /** USER **/
@@ -138,26 +204,16 @@ export const updateLocalStudyStreak = async (newStudyDate) => {
  * Retrieves user information from AsyncStorage.
  * @returns {Promise<Object>} A promise that resolves with the fetched user information.
  */
-export const getUserInfo = async () => {
-  const fetchedUserInfo = JSON.parse(await AsyncStorage.getItem(USER_INFO));
-  if (fetchedUserInfo === null) {
-    throw new Error("Cannot fetch user info from async storage");
-  }
-  return fetchedUserInfo;
+export const getUserInfo = async (): Promise<UserInfo> => {
+  return getLocalItem<UserInfo>(USER_INFO);
 };
 
 /**
  * Stores user information in AsyncStorage.
  * @param {Object} userInfo - The user information to store.
  */
-export const setUserInfo = async (userInfo) => {
-  const obj = {
-    id: userInfo.id,
-    firstName: userInfo.firstName,
-    lastName: userInfo.lastName,
-    email: userInfo.email,
-  };
-  await AsyncStorage.setItem(USER_INFO, JSON.stringify(obj));
+export const setUserInfo = async (userInfo: UserInfo) => {
+  await AsyncStorage.setItem(USER_INFO, JSON.stringify(userInfo));
   await AsyncStorage.setItem(USER_ID, userInfo.id); // needs to be separate
   await setStudentInfo(userInfo.id);
 };
@@ -166,7 +222,9 @@ export const setUserInfo = async (userInfo) => {
  * Retrieves the JWT from AsyncStorage.
  * @returns {Promise<string>} A promise that resolves with the JWT.
  */
-export const getJWT = async () => {
+// TODO: Rename setJWT to SetJwt
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const getJWT = async (): Promise<string | null> => {
   return await AsyncStorage.getItem(LOGIN_TOKEN);
 };
 
@@ -174,11 +232,13 @@ export const getJWT = async () => {
  * Stores a JWT in AsyncStorage.
  * @param {string} jwt - The JWT to store.
  */
-export const setJWT = async (jwt) => {
+// TODO: Rename getJWT to GetJwt
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const setJWT = async (jwt: string) => {
   await AsyncStorage.setItem(LOGIN_TOKEN, jwt);
 };
 
-export const getUserId = async () => {
+export const getUserId = async (): Promise<string | null> => {
   return await AsyncStorage.getItem(USER_ID);
 };
 /** COURSE AND COURSE LIST **/
@@ -187,23 +247,12 @@ export const getUserId = async () => {
  * Retrieves a list of all courses.
  * @returns {Promise<Array>} A promise that resolves with a list of courses.
  */
-export const getCourseList = async () => {
-  let courseList = [];
-  if (isOnline) {
-    try {
-      courseList = await api.getCourses();
-    } catch (error) {
-      if (error?.response?.data != null) {
-        throw new Error("API error in getCourses:" + error.response.data);
-      } else {
-        throw new Error("API error in getCourses:" + error);
-      }
-    } finally {
-      return await refreshCourseList(courseList);
-    }
-  } else {
-    return courseList;
-  }
+export const getCourseList = async (): Promise<Course[]> => {
+  return mapApiCoursesToCourses((await api.getCourses()) ?? []);
+};
+
+const mapApiCourseToCourse = ({ _id, ...rest }: ApiCourse): Course => {
+  return { ...rest, courseId: _id };
 };
 
 /**
@@ -211,243 +260,119 @@ export const getCourseList = async () => {
  * @param {Array} courseList - The list of courses to refresh.
  * @returns {Promise<Array>} A promise that resolves with the refreshed course list.
  */
-const refreshCourseList = async (courseList) => {
-  try {
-    let newCourseList = [];
-    if (courseList.length !== 0) {
-      for (const course of courseList) {
-        // Make new list with required members
-        newCourseList.push({
-          title: course.title,
-          courseId: course._id,
-          description: course.description,
-          category: course.category,
-          estimatedHours: course.estimatedHours,
-          dateUpdated: course.dateUpdated,
-          difficulty: course.difficulty,
-          published: course.published,
-          status: course.status,
-          rating: course.rating,
-          feedbackOptions: course.feedbackOptions,
-          topFeedbackOptions: course.topFeedbackOptions,
-        });
-      }
-    }
-    // Save new courseList for this key and return it.
-    return newCourseList;
-  } catch (error) {
-    handleError(error, "refreshCourseList");
-  }
+const mapApiCoursesToCourses = (courseList: ApiCourse[]) => {
+  return courseList.map((c) => mapApiCourseToCourse(c));
 };
 
 /** SECTIONS **/
 
 /**
  * Retrieves a sections for a specific course.
- * @param {string} courseId - The ID of the sectiom
- * @returns {Promise<Object>} A promise that resolves with the section object.
- */
-export const getSection = async (sectionId) => {
-  let section = null;
-  try {
-    if (isOnline) {
-      section = await api.getSectionById(sectionId);
-    } else {
-      throw new Error("No internet connection in getSection");
-    }
-  } catch (error) {
-    // Use locally stored section if they exist and the DB cannot be reached
-    try {
-      section = JSON.parse(await AsyncStorage.getItem("S" + sectionId));
-      throw new Error("JSON parse error in getSection", error);
-    } catch (e) {
-      handleError(e, "getSection");
-    }
-  } finally {
-    return await refreshSection(section);
-  }
+ **/
+export const getSection = async (sectionId: string) => {
+  const apiSection = await fetchWithStorageFallback(
+    api.getSectionById,
+    [sectionId],
+    "S" + sectionId,
+  );
+  return mapApiSectionToSection(apiSection);
 };
 
 /**
- * Refreshes the section with updated data.
- * @param {Array} section - The list section to refresh.
- * @returns {Promise<Object>} A promise that resolves with the refreshed section.
+ * Maps from the ApiSection type to Section.
  */
-export const refreshSection = async (section) => {
-  let newSection = null;
-  try {
-    if (section !== null) {
-      newSection = {
-        title: section.title,
-        sectionId: section._id,
-        parentCourseId: section.parentCourse,
-        description: section.description,
-        components: section.components,
-        total: section.totalPoints,
-      };
-    } else {
-      throw new Error("Error in refreshSection: Missing field in section");
-    }
-  } catch (error) {
-    handleError(error, "refreshSection");
-  } finally {
-    //Returns new fitted section, or null if there was no data fetched from DB or Storage,
-    return newSection;
+export const mapApiSectionToSection = (
+  section: ApiSection | null,
+): Section | null => {
+  if (section === null) {
+    return null;
   }
+
+  return {
+    title: section.title,
+    sectionId: section._id,
+    parentCourseId: section.parentCourse,
+    description: section.description,
+    components: section.components,
+    total: section.totalPoints,
+  };
+};
+
+export const mapApiSectionListToSectionList = (
+  sectionList: ApiSection[],
+): Section[] => {
+  return sectionList.map<Section>((s) => ({
+    title: s.title,
+    sectionId: s._id,
+    parentCourseId: s.parentCourse,
+    description: s.description,
+    components: s.components,
+    total: s.totalPoints,
+  }));
 };
 
 /**
  * Retrieves a list of sections for a specific course.
- * @param {string} course_id - The ID of the course.
- * @returns {Promise<Array>} A promise that resolves with a list of sections for the course.
+ *
+ * @param courseId - The ID of the course.
+ * @param signal - Abort signal
  */
-export const getSectionList = async (course_id) => {
-  let sectionList = null;
-  try {
-    if (isOnline) {
-      sectionList = await api.getAllSections(course_id);
-    } else {
-      throw new Error("No internet connection in getSectionList");
-    }
-  } catch (error) {
-    // Use locally stored section if they exist and the DB cannot be reached
-    try {
-      sectionList = JSON.parse(await AsyncStorage.getItem("S" + course_id));
-      throw new Error("JSON parse error in getSectionList" + error);
-    } catch (e) {
-      handleError(e, "getSectionList");
-    }
-  } finally {
-    return await refreshSectionList(sectionList);
-  }
-};
+export const getSectionList = async (
+  courseId: string,
+  signal?: AbortSignal,
+) => {
+  const apiSections = await fetchWithStorageFallback(
+    api.getAllSections,
+    [courseId, signal],
+    "S" + courseId,
+  );
 
-/**
- * Refreshes the section list with updated data.
- * @param {Array} sectionList - The list of sections to refresh.
- * @returns {Promise<Array>} A promise that resolves with the refreshed section list.
- */
-export const refreshSectionList = async (sectionList) => {
-  let newSectionList = [];
-  try {
-    if (sectionList !== null) {
-      for (const section of sectionList) {
-        newSectionList.push({
-          title: section.title,
-          sectionId: section._id,
-          parentCourseId: section.parentCourse,
-          description: section.description,
-          components: section.components,
-          total: section.totalPoints,
-        });
-      }
-    } else {
-      throw new Error(
-        "Error in refreshSectionList: Missing field in sectionList",
-      );
-    }
-  } catch (error) {
-    handleError(error, "refreshSectionList");
-  } finally {
-    //Returns new fitted section list, or empty list if there was no data fetched from DB or Storage,
-    return newSectionList;
-  }
+  return mapApiSectionListToSectionList(apiSections);
 };
 
 /** COMPONENTS **/
 
-/**
+/*
  * Retrieves a list of components for a specific section.
- * @param {string} sectionID - The ID of the section.
- * @returns {Promise<Array>} A promise that resolves with a list of components for the section.
  */
 // get all components for specific section
-export const getComponentList = async (sectionID) => {
-  let componentList = [];
-  try {
-    if (isOnline) {
-      componentList = await api.getComponents(sectionID);
-    } else {
-      throw new Error("No internet connection in getComponentsList");
-    }
-  } catch (error) {
-    // Use locally stored components if they exist and the DB cannot be reached
-    try {
-      if (
-        (componentList = JSON.parse(
-          await AsyncStorage.getItem("C" + sectionID),
-        )) === null
-      ) {
-        throw new Error("JSON parse error in getComponentsList " + error);
-      }
-    } catch (e) {
-      handleError(e, "getComponentList");
-    }
-  } finally {
-    return componentList;
-  }
+export const getComponentList = async (
+  sectionId: string,
+  signal: AbortSignal,
+) => {
+  return await fetchWithStorageFallback(
+    api.getComponents,
+    [sectionId, signal],
+    "C" + sectionId,
+  );
 };
 
 /**
  * Fetches an image for a lecture.
- * @param {string} imageID - The ID of the image.
- * @param {string} lectureID - The ID of the lecture.
- * @returns {Promise<Object>} A promise that resolves with the lecture image.
- */
-export const fetchLectureImage = async (imageID, lectureID) => {
-  let image = null;
-  try {
-    if (isOnline) {
-      image = await api.getBucketImage(imageID);
-    } else {
-      throw new Error("No internet connection in fetchLectureImage");
-    }
-  } catch (error) {
-    // Use locally stored lectures if they exist and the DB cannot be reached
-    try {
-      if (
-        (image = JSON.parse(await AsyncStorage.getItem("I" + lectureID))) ===
-        null
-      ) {
-        throw new Error("JSON parse error in fetchLectureImage " + error);
-      }
-    } catch (e) {
-      handleError(e, "fetchLectureImage");
-    }
-  } finally {
-    return image;
-  }
+ **/
+export const fetchLectureImage = async (imageID: string, lectureID: string) => {
+  return await fetchWithStorageFallback(
+    api.getBucketImage,
+    [imageID],
+    "I" + lectureID,
+  );
 };
 
 /**
  * gets videoURL for a Lecture if online, and video in base64 from file if offline
- * @param videoName
- * @param resolution
- * @returns {Promise<string>}
  */
-export const getVideoURL = async (videoName, resolution) => {
-  let videoUrl;
+// todo! fix name from getVideoURL to getVideoUrl
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const getVideoURL = async (videoName: string, resolution: string) => {
   if (!resolution) {
     resolution = "360";
   }
-  try {
-    if (isOnline) {
-      videoUrl = api.getVideoStreamUrl(videoName, resolution);
-    } else {
-      throw new Error("No internet connection in getVideoUrl.");
-    }
-  } catch (error) {
-    // Use locally stored video if they exist and the DB cannot be reached
-    try {
-      videoUrl = await FileSystem.readAsStringAsync(
-        lectureVideoPath + videoName + ".json",
-      );
-    } catch (e) {
-      handleError(e, "getVideoUrl");
-    }
-  } finally {
-    return videoUrl;
-  }
+  return fetchWithFallback(
+    async (v: string, r: string) => api.getVideoStreamUrl(v, r),
+    [videoName, resolution],
+    FileSystem.readAsStringAsync,
+    [lectureVideoPath + videoName + ".json"],
+  );
 };
 
 /** SUBSCRIPTIONS **/
@@ -456,7 +381,7 @@ export const getVideoURL = async (videoName, resolution) => {
  * Retrieves a list of subscribed courses for a user.
  * @returns {Promise<Array>} A promise that resolves with the list of subscribed courses.
  */
-export const getSubCourseList = async () => {
+export const getSubCourseList = async (): Promise<Course[] | null> => {
   // get the logged-in user id from async storage
   const userId = await AsyncStorage.getItem(USER_ID);
 
@@ -466,47 +391,28 @@ export const getSubCourseList = async () => {
     );
   }
 
-  try {
-    if (isOnline) {
-      return await refreshSubCourseList(userId);
-    } else {
-      throw new Error("No internet connection in getSubCourseList");
-    }
-  } catch (error) {
-    // Check if the course list already exists in AsyncStorage
-    let courseList = JSON.parse(await AsyncStorage.getItem(SUB_COURSE_LIST));
-    if (courseList !== null) {
-      return courseList;
-    }
-    handleError(error, "getSubCourseList");
-  }
+  const apiCourses = await fetchWithStorageFallback(
+    api.getSubscriptions,
+    [userId],
+    SUB_COURSE_LIST,
+  );
+  await AsyncStorage.setItem(SUB_COURSE_LIST, JSON.stringify(apiCourses));
+  return mapApiCoursesToCourses(apiCourses);
 };
 
+// TODO: Remove refreshSubCourseList here and from tests
 /**
  * Refreshes the subscribed course list for a user.
  * @param {string} userId - The user ID.
  * @returns {Promise<Array>} A promise that resolves with the refreshed subscribed course list.
  */
-export const refreshSubCourseList = async (userId) => {
+export const refreshSubCourseList = async (
+  userId: string,
+): Promise<Course[]> => {
   return await api
     .getSubscriptions(userId)
     .then(async (list) => {
-      let newCourseList = [];
-      for (const course of list) {
-        // Make new list with required members
-        newCourseList.push({
-          title: course.title,
-          courseId: course._id,
-          description: course.description,
-          category: course.category,
-          estimatedHours: course.estimatedHours,
-          dateUpdated: course.dateUpdated,
-          difficulty: course.difficulty,
-          published: course.published,
-          status: course.status,
-          rating: course.rating,
-        });
-      }
+      const newCourseList: Course[] = mapApiCoursesToCourses(list);
       // Save new courseList for this key and return it.
       await AsyncStorage.setItem(
         SUB_COURSE_LIST,
@@ -514,17 +420,15 @@ export const refreshSubCourseList = async (userId) => {
       );
       return newCourseList;
     })
-    .catch((error) => {
-      handleError(error, "refreshSubCourseList");
+    .catch((error: unknown) => {
+      throw new Error(error);
     });
 };
 
 /**
  * Subscribes a user to a course.
- * @param {string} courseId - The ID of the course to subscribe to.
- * @returns {Promise<Object>} A promise that resolves with the subscription result.
  */
-export const subscribe = async (courseId) => {
+export const subscribe = async (courseId: string) => {
   // get the logged-in user id from async storage
   const userId = await AsyncStorage.getItem(USER_ID);
 
@@ -532,40 +436,31 @@ export const subscribe = async (courseId) => {
     throw new Error("Cannot fetch user id from async storage");
   }
 
-  try {
-    await api.subscribeToCourse(userId, courseId);
-  } catch (error) {
-    handleError(error, "subscribe");
-  }
+  await api.subscribeToCourse(userId, courseId);
 };
 
-export const addCourseToStudent = async (courseId) => {
+export const addCourseToStudent = async (courseId: string) => {
   const userId = await AsyncStorage.getItem(USER_ID);
   const loginToken = await getLoginToken();
 
-  try {
-    const student = await userApi.addCourseToStudent(
-      userId,
-      courseId,
-      loginToken,
-    );
-    if (!student) {
-      throw new Error("Student not found");
-    }
+  const student = await userApi.addCourseToStudent(
+    userId,
+    courseId,
+    loginToken,
+  );
 
-    await updateStudentInfo(student);
-  } catch (e) {
-    handleError(e, "addCourseToStudent");
+  if (!student) {
+    throw new Error("Student not found");
   }
+
+  await updateStudentInfo(student);
 };
 
 // unsubscribe to a course
 /**
  * Unsubscribes a user from a course.
- * @param {string} courseId - The ID of the course to unsubscribe from.
- * @returns {Promise<Object>} A promise that resolves with the unsubscription result.
  */
-export const unsubscribe = async (courseId) => {
+export const unsubscribe = async (courseId: string) => {
   // get the logged-in user id from async storage
   const userId = await AsyncStorage.getItem(USER_ID);
 
@@ -573,14 +468,10 @@ export const unsubscribe = async (courseId) => {
     throw new Error("Cannot fetch user id from async storage");
   }
 
-  try {
-    if ((await AsyncStorage.getItem(courseId)) !== null) {
-      deleteLocallyStoredCourse(courseId);
-    }
-    return await api.unSubscribeToCourse(userId, courseId);
-  } catch (error) {
-    handleError(error, "unsubscribe");
+  if ((await AsyncStorage.getItem(courseId)) !== null) {
+    await deleteLocallyStoredCourse(courseId);
   }
+  await api.unSubscribeToCourse(userId, courseId);
 };
 
 /** Downloading course **/
@@ -592,30 +483,32 @@ export const makeDirectory = async () => {
   });
 };
 
-/**
- * Stores a course locally
- * @param {String} courseID - A string with the ID of the course to be stored
- * @returns {Promise<boolean>} A promise that resolves with `true` if the course was stored successfully.
- */
+export const getAllCoursesLocally = async (): Promise<Course[]> => {
+  const courseList = [];
 
-export const getAllCoursesLocally = async () => {
-  let courseList = [];
-  try {
-    const keys = await AsyncStorage.getAllKeys();
-    for (let key of keys) {
-      if (!key.includes(await AsyncStorage.getItem(USER_ID))) continue;
-      courseList.push(JSON.parse(await AsyncStorage.getItem(key)));
+  const keys = await AsyncStorage.getAllKeys();
+  const userId = await AsyncStorage.getItem(USER_ID);
+
+  if (userId === null) {
+    throw new Error("Cannot fetch user id from async storage");
+  }
+
+  for (const key of keys) {
+    if (key.includes(userId)) {
+      const course = await getLocalItem<Course>(key);
+      courseList.push(course);
     }
-  } catch (error) {
-    if (error?.response?.data == null) {
-      throw new Error(error);
-    }
-    throw new Error(error.response.data);
   }
   return courseList;
 };
 
-export const storeCourseLocally = async (courseID) => {
+/**
+ * Stores a course locally
+ */
+
+export const storeCourseLocally = async (
+  courseID: string,
+): Promise<boolean> => {
   let success = true;
   if (!isOnline) {
     return false;
@@ -630,68 +523,65 @@ export const storeCourseLocally = async (courseID) => {
 
     //Stores section data
     const sectionList = await api.getAllSections(courseID);
-    await AsyncStorage.setItem("S" + courseID, JSON.stringify(sectionList));
+    await setLocalItem("S" + courseID, sectionList);
     await storeLectureData(sectionList, course);
     await AsyncStorage.setItem(
       courseID + (await AsyncStorage.getItem(USER_ID)),
       JSON.stringify(course),
     );
-  } catch (error) {
+  } catch {
     success = false;
-    deleteLocallyStoredCourse(courseID);
-    if (error?.response?.data != null) {
-      throw new Error(error.response.data);
-    } else {
-      throw new Error(error);
-    }
-  } finally {
-    return success;
+    await deleteLocallyStoredCourse(courseID);
   }
+  return success;
+};
 
-  async function storeLectureData(sectionList, course) {
-    for (let section of sectionList) {
-      //Stores lecture data
-      let componentList = await api.getComponents(section._id);
-      await AsyncStorage.setItem(
-        "C" + section._id,
-        JSON.stringify(componentList),
-      );
-      for (let component of componentList) {
-        if (component.type === "lecture") {
-          if (component.component.contentType === "video") {
-            await makeDirectory();
-            await storeLectureVideo(component.component._id + "_l");
-          }
-          continue;
-        }
-        if (component.component.image) {
-          //Stores images
-          try {
-            let image = await api.getBucketImage(component.component.image);
-            await AsyncStorage.setItem(
-              "I" + component.component._id,
-              JSON.stringify(image),
-            );
-          } catch {
-            await AsyncStorage.setItem(
-              "I" + component.component._id,
-              defaultImage.base64,
-            );
-          }
-        } else if (component.component.video) {
-          //Stores videos
+const storeLectureData = async (
+  sectionList: ApiSection[],
+  course: ApiCourse,
+) => {
+  for (const section of sectionList) {
+    //Stores lecture data
+    const componentList = await api.getComponents(section._id);
+    await AsyncStorage.setItem(
+      "C" + section._id,
+      JSON.stringify(componentList),
+    );
+    for (const component of componentList) {
+      if (component.type === "lecture") {
+        if (component.component.contentType === "video") {
           await makeDirectory();
-          await FileSystem.writeAsStringAsync(
-            lectureVideoPath + component.component.video + ".json",
-            await api.getBucketImage(component.component.video),
+          await storeLectureVideo(component.component._id + "_l");
+        }
+        continue;
+      }
+      if (component.component.image) {
+        //Stores images
+        try {
+          const image = await api.getBucketImage(component.component.image);
+          await AsyncStorage.setItem(
+            "I" + component.component._id,
+            JSON.stringify(image),
+          );
+        } catch {
+          await AsyncStorage.setItem(
+            "I" + component.component._id,
+            defaultImage.base64,
           );
         }
+      } else if (component.component.video) {
+        //Stores videos
+        await makeDirectory();
+        await FileSystem.writeAsStringAsync(
+          lectureVideoPath + component.component.video + ".json",
+          await api.getBucketImage(component.component.video),
+        );
       }
+    }
 
-      //add a new variable "DateOfDownload" to the course object
-      if (course.dateOfDownload === undefined) {
-        course.dateOfDownload = new Date().toISOString();
-      }
+    //add a new variable "DateOfDownload" to the course object
+    if (course.dateOfDownload === undefined) {
+      course.dateOfDownload = new Date().toISOString();
     }
   }
 };
@@ -701,40 +591,35 @@ export const storeCourseLocally = async (courseID) => {
  * @param {string} courseID - The ID of the course to remove from local storage.
  * @returns {Promise<boolean>} A promise that resolves with `true` if the course was deleted successfully.
  */
-export const deleteLocallyStoredCourse = async (courseID) => {
+export const deleteLocallyStoredCourse = async (courseID: string) => {
   let success = true;
   try {
     await AsyncStorage.removeItem(
       courseID + (await AsyncStorage.getItem(USER_ID)),
     );
-
-    const sectionList = JSON.parse(await AsyncStorage.getItem("S" + courseID));
+    const sectionList = await getLocalItem<ApiSection[]>("S" + courseID);
     await AsyncStorage.removeItem("S" + courseID);
     await removeComponentsBySection(sectionList);
-  } catch (error) {
+  } catch {
     success = false;
-    handleError(error, "deleteLocallyStoredCourse");
-  } finally {
-    return success;
   }
+  return success;
+};
 
-  async function removeComponentsBySection(sectionList) {
-    for (let section of sectionList) {
-      let componentList = JSON.parse(
-        await AsyncStorage.getItem("C" + section._id),
-      );
-      await AsyncStorage.removeItem("C" + section._id);
+const removeComponentsBySection = async (sectionList: ApiSection[]) => {
+  for (const section of sectionList) {
+    const componentList = await getLocalItem<Component[]>("C" + section._id);
+    await AsyncStorage.removeItem("C" + section._id);
 
-      for (let component of componentList) {
-        if (component.type !== "lecture") {
-          continue;
-        }
-        if (component.lectureType === "video") {
-          await deleteLectureVideo(component.component._id + "_l");
-        }
-        if (component.component.image) {
-          await AsyncStorage.removeItem("I" + component._id);
-        }
+    for (const component of componentList) {
+      if (component.type !== "lecture") {
+        continue;
+      }
+      if (component.lectureType === "video") {
+        await deleteLectureVideo(component.component._id + "_l");
+      }
+      if (component.component.image) {
+        await AsyncStorage.removeItem("I" + component._id);
       }
     }
   }
@@ -744,23 +629,17 @@ export const deleteLocallyStoredCourse = async (courseID) => {
  * Updates all locally stored courses.
  */
 export const updateStoredCourses = async () => {
-  try {
-    const subList = await getSubCourseList();
-    for (const subListElement of subList) {
-      let course;
-      if (
-        (course = JSON.parse(
-          await AsyncStorage.getItem(
-            subListElement.courseId + (await AsyncStorage.getItem(USER_ID)),
-          ),
-        )) !== null &&
-        course.dateUpdated !== subListElement.dateUpdated
-      ) {
-        storeCourseLocally(subListElement.courseId);
-      }
+  const subList = (await getSubCourseList()) ?? [];
+  for (const subListElement of subList) {
+    let course;
+    if (
+      (course = await getLocalItem<ApiCourse>(
+        subListElement.courseId + (await AsyncStorage.getItem(USER_ID)),
+      )) !== null &&
+      course.dateUpdated !== subListElement.dateUpdated
+    ) {
+      await storeCourseLocally(subListElement.courseId);
     }
-  } catch (error) {
-    handleError(error, "updateStoredCourses");
   }
 };
 
@@ -771,14 +650,10 @@ export const updateStoredCourses = async () => {
  * @param {string} courseID - The ID of the course to check.
  * @returns {Promise<boolean>} A promise that resolves with `true` if the course is stored locally.
  */
-export const checkCourseStoredLocally = async (courseID) => {
-  try {
-    return !!(await AsyncStorage.getItem(
-      courseID + (await AsyncStorage.getItem(USER_ID)),
-    ));
-  } catch (error) {
-    handleError(error, "checkCourseStoredLocally");
-  }
+export const checkCourseStoredLocally = async (courseID: string) => {
+  return !!(await AsyncStorage.getItem(
+    courseID + (await AsyncStorage.getItem(USER_ID)),
+  ));
 };
 
 /**
@@ -790,21 +665,7 @@ export const clearAsyncStorage = async () => {
   console.log(await AsyncStorage.getAllKeys());
 };
 
-/**
- * Handles errors.
- * @param {Error} error - The error to handle.
- * @param {string} functionName - The name of the function where the error occurred.
- */
-
-function handleError(error, functionName) {
-  if (error?.response?.data != null) {
-    throw new Error(`Error in ${functionName}: ${error.response.data}`);
-  } else {
-    throw new Error(`Error in ${functionName}: ${error}`);
-  }
-}
-
-export async function getLectureVideo(videoName) {
+export const getLectureVideo = async (videoName: string) => {
   const filePath = `${lectureVideoPath}${videoName}.mp4`;
 
   try {
@@ -815,12 +676,12 @@ export async function getLectureVideo(videoName) {
     }
 
     return filePath;
-  } catch (error) {
+  } catch {
     return null;
   }
-}
+};
 
-export async function storeLectureVideo(videoName) {
+export const storeLectureVideo = async (videoName: string) => {
   try {
     // Get video data from API
     const videoData = await api.getBucketVideo(videoName);
@@ -839,17 +700,11 @@ export async function storeLectureVideo(videoName) {
     return filePath;
   } catch (error) {
     console.log("Error storing video:", error);
-    // Once the new version of transcoding service is deployed this can be uncommented.
-    // handleError(error, 'storeLectureVideo');
   }
-}
+};
 
-export async function deleteLectureVideo(videoName) {
-  try {
-    const filePath = `${lectureVideoPath}${videoName}.mp4`;
+export const deleteLectureVideo = async (videoName: string) => {
+  const filePath = `${lectureVideoPath}${videoName}.mp4`;
 
-    await FileSystem.deleteAsync(filePath);
-  } catch (error) {
-    handleError(error, "deleteLectureVideo");
-  }
-}
+  await FileSystem.deleteAsync(filePath);
+};

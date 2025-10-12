@@ -1,7 +1,7 @@
 import { ActivityIndicator, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Text from "../General/Text";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 
 const LoadingScreen = () => {
   const logo = require("../../assets/images/logo.png");
