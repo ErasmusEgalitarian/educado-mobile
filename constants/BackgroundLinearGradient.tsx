@@ -1,8 +1,8 @@
 import { LinearGradient } from "expo-linear-gradient";
 import PropTypes from "prop-types";
+import tailwindConfig from "@/tailwind.config";
 
 export function BackgroundLinearGradient({ children }) {
-  const tailwindConfig = require("../tailwind.config.js");
   const projectColors = tailwindConfig.theme.colors;
 
   const gradientColors = [projectColors.bgPrimary, projectColors.projectWhite];

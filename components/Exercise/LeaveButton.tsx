@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Icon, Button } from "@rneui/base";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 const projectColors = tailwindConfig.theme.colors;
 import PropTypes from "prop-types";
 

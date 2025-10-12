@@ -1,4 +1,8 @@
 export const colors = {
+  // When updating colors, please add a comment that
+  // matches up with the design guide from figma. Once all
+  // the type errors are fixed, the variables will be updated
+
   // **********************
   // ***** Gray Scale *****
   // **********************
@@ -114,10 +118,12 @@ export const colors = {
   // ******************
   surfaceYellow: "#F1CC4F",
 
-  bgprimary_custom: "#166276",
-  bgPrimary: "#C9E5EC",
-  primary_custom: "#166276",
-  secondary: "#F1F9FB",
+  // older colors
+
+  bgprimary_custom: "#35A1B1", // --same as primary_custom
+  bgPrimary: "#C9E5EC", // --unused
+  primary_custom: "#35A1B1", // surface default
+  secondary: "#FAFEFF", // surface subtle
   projectWhite: "#FFFFFF",
   projectBlack: "#383838",
   projectGray: "#A1ACB2",
@@ -125,7 +131,7 @@ export const colors = {
   error: "#FF4949",
   success: "#4AA04A",
   disable: "#DDD",
-  disabled: "#E4F2F5",
+  disabled: "#EBF0F2", // greyscale surface default
   projectRed: "#FFE4E4",
   projectGreen: "#E4F1E4",
   projectLightGray: "#F1F9FB",
@@ -139,17 +145,18 @@ export const colors = {
   profileCircle: "#166276",
   pointsText: "#C1A146",
   pointsCoin: "#AD872D",
-  progressBar: "#166276",
-  progressBarUnFilled: "#E4E4E4", // This stands more out from the background, but Figma = #E4F2F5
+  progressBar: "#35A1B1", // --same as primary_custom
+  progressBarUnFilled: "#D8EFF3", // surface lighter
   badgesGreen: "#8CC43B",
   badgesPurple: "#C383F7",
   badgesBlue: "#54ADF1",
   unselectedStar: "#CBCAB8",
+  greyscaleTexticonBody: "#28363E", // greyscale text_icon body
+  greyscaleTexticonSubtitle: "#4E6879", // greyscale text_icon subtitle
+  greyscaleTexticonDisabled: "#809CAD", // greyscale text_icon disabled
+  greyscaleTexticonCaption: "#628397", // greyscale text_icon caption
 } as const;
 
 export type ColorName = keyof typeof colors;
 
 export const color = (name: ColorName) => colors[name];
-
-// For legacy purposes
-export default colors;

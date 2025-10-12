@@ -1,21 +1,37 @@
 import { backEndClient } from "@/axios";
 import { isAxiosError } from "axios";
 import { Buffer } from "buffer";
-import { Course } from "@/types/course";
+import { ApiCourse, Course } from "@/types/course";
 import { AudioResponse } from "@/types/ai";
 import { t } from "@/i18n";
+import type { Component } from "@/types/component";
+import type { ApiSection } from "@/types/section";
+import { ApiLecture } from "@/types/lecture";
+import { ApiFeedbackOptions } from "@/types/feedback";
+
+interface ApiError {
+  message?: string;
+  code?: string;
+}
 
 const timeoutInMs = 1200;
 
 /**
  * Get components for a specific section
  */
-export const getComponents = async (sectionId: string) => {
+export const getComponents = async (
+  sectionId: string,
+  signal?: AbortSignal,
+): Promise<Component[]> => {
   try {
     const res = await backEndClient.get(
       `/api/courses/sections/${sectionId}/components`,
+      {
+        signal,
+      },
     );
-    return res.data;
+
+    return res.data as Component[];
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -25,10 +41,13 @@ export const getComponents = async (sectionId: string) => {
   }
 };
 
-export const getSectionById = async (sectionId: string) => {
+export const getSectionById = async (
+  sectionId: string,
+): Promise<ApiSection> => {
   try {
     const res = await backEndClient.get(`/api/sections/${sectionId}`);
-    return res.data;
+
+    return res.data as ApiSection;
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -41,13 +60,13 @@ export const getSectionById = async (sectionId: string) => {
 /**
  * Get a specific course
  */
-export const getCourse = async (courseId: string) => {
+export const getCourse = async (courseId: string): Promise<ApiCourse> => {
   try {
     const res = await backEndClient.get(`/api/courses/${courseId}`, {
       timeout: timeoutInMs,
     });
 
-    return res.data;
+    return res.data as ApiCourse;
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -60,14 +79,17 @@ export const getCourse = async (courseId: string) => {
 /**
  * Get all courses
  */
-export const getCourses = async (): Promise<Course[]> => {
+export const getCourses = async (): Promise<ApiCourse[]> => {
   try {
     const response = await backEndClient.get("/api/courses");
 
-    return response.data as Course[];
+    return response.data as ApiCourse[];
   } catch (error) {
-    if (isAxiosError(error)) {
-      throw new Error(error.response?.data.error ?? t("api.courses"));
+    if (isAxiosError<ApiError>(error)) {
+      const data = error.response?.data ?? undefined;
+      const message = data?.message ?? t("api.courses");
+
+      throw new Error(message);
     }
 
     throw error;
@@ -77,12 +99,17 @@ export const getCourses = async (): Promise<Course[]> => {
 /**
  * Get all sections for a specific course
  */
-export const getAllSections = async (courseId: string) => {
+export const getAllSections = async (
+  courseId: string,
+  signal?: AbortSignal,
+): Promise<ApiSection[]> => {
   try {
     const res = await backEndClient.get(`/api/courses/${courseId}/sections`, {
       timeout: timeoutInMs,
+      signal,
     });
-    return res.data;
+
+    return res.data as ApiSection[];
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -95,12 +122,16 @@ export const getAllSections = async (courseId: string) => {
 /**
  * Get a specific section. Same as @see {@link getSectionById}
  */
-export const getSection = async (courseId: string, sectionId: string) => {
+export const getSection = async (
+  courseId: string,
+  sectionId: string,
+): Promise<ApiSection> => {
   try {
     const res = await backEndClient.get(
       `/api/courses/${courseId}/sections/${sectionId}`,
     );
-    return res.data;
+
+    return res.data as ApiSection;
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -113,12 +144,15 @@ export const getSection = async (courseId: string, sectionId: string) => {
 /**
  * Get all lectures in a specific section:
  */
-export const getLecturesInSection = async (sectionId: string) => {
+export const getLecturesInSection = async (
+  sectionId: string,
+): Promise<ApiLecture[]> => {
   try {
     const res = await backEndClient.get(`/api/lectures/section/${sectionId}`, {
       timeout: timeoutInMs,
     });
-    return res.data;
+
+    return res.data as ApiLecture[];
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -131,7 +165,9 @@ export const getLecturesInSection = async (sectionId: string) => {
 /**
  * Get user subscriptions
  */
-export const getSubscriptions = async (userId: string) => {
+export const getSubscriptions = async (
+  userId: string,
+): Promise<ApiCourse[]> => {
   try {
     // maybe not best practise to pass user ID as request query
     // but this is the only format where it works
@@ -141,7 +177,7 @@ export const getSubscriptions = async (userId: string) => {
       { timeout: 1200 },
     );
 
-    return res.data;
+    return res.data as ApiCourse[];
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -192,7 +228,7 @@ export const giveFeedback = async (
     feedbackText?: string;
     feedbackOptions?: { name: string }[];
   },
-) => {
+): Promise<string> => {
   const { rating, feedbackText, feedbackOptions } = feedbackData;
 
   try {
@@ -202,33 +238,36 @@ export const giveFeedback = async (
       feedbackOptions: feedbackOptions,
     });
 
-    return response.data;
+    return response.data as string;
   } catch (error) {
     if (isAxiosError(error)) {
       console.error(
         "Error giving feedback:",
-        error.response?.data || error.message,
+        error.response?.data ?? error.message,
       );
 
-      throw error.response?.data || error;
+      throw error.response?.data ?? error;
     } else {
       throw error;
     }
   }
 };
 
-export const getAllFeedbackOptions = async () => {
+export const getAllFeedbackOptions = async (): Promise<
+  ApiFeedbackOptions[]
+> => {
   try {
     const response = await backEndClient.get("/api/feedback/options");
-    return response.data;
+
+    return response.data as ApiFeedbackOptions[];
   } catch (error) {
     if (isAxiosError(error)) {
       console.error(
         "Error getting feedback options:",
-        error.response?.data.error || error.message,
+        error.response?.data.error ?? error.message,
       );
 
-      throw error.response?.data || error;
+      throw error.response?.data ?? error;
     } else {
       throw error;
     }
@@ -261,10 +300,13 @@ export const getVideoStreamUrl = (fileName: string, resolution: string) => {
   return `${process.env.EXPO_PUBLIC_BACK_END_HOST}/api/bucket/stream/${fileName}${resolutionPostfix}.mp4`;
 };
 
-export const getLectureById = async (lectureId: string) => {
+export const getLectureById = async (
+  lectureId: string,
+): Promise<ApiLecture> => {
   try {
     const res = await backEndClient.get(`/api/lectures/${lectureId}`);
-    return res.data;
+
+    return res.data as ApiLecture;
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -284,14 +326,13 @@ export const getBucketImage = async (fileName: string) => {
 
     if (fileType === "jpg") {
       fileType = "jpeg";
-    } else if (!fileType) {
+    } else {
       // Default to png
-      fileType = "png";
+      fileType ??= "png";
     }
 
     // Convert the image to base64
-    const image = `data:image/${fileType};base64,${Buffer.from(res.data, "base64")}`;
-    return image;
+    return `data:image/${fileType};base64,${Buffer.from(res.data, "base64")}`;
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -312,8 +353,7 @@ export const getBucketVideo = async (fileName: string) => {
 
     console.log("res.data", res.data);
 
-    const video = `data:video/mp4;base64,${Buffer.from(res.data, "binary").toString("base64")}`;
-    return video;
+    return `data:video/mp4;base64,${Buffer.from(res.data, "binary").toString("base64")}`;
   } catch (error) {
     if (isAxiosError(error)) {
       throw error.response?.data;
@@ -336,8 +376,8 @@ export const sendMessageToChatbot = async (
     return response.data as AudioResponse;
   } catch (error) {
     if (isAxiosError(error)) {
-      if (error?.response?.status === 429) {
-        throw new Error(error.response.data.error || t("api.rate"));
+      if (error.response?.status === 429) {
+        throw new Error(error.response.data.error ?? t("api.rate"));
       }
 
       throw new Error(t("api.try-again"));
@@ -375,7 +415,10 @@ export const sendAudioToChatbot = async (
     return serverResponse.data as AudioResponse;
   } catch (error) {
     if (isAxiosError(error)) {
-      throw new Error(error.response?.data || t("api.audio"));
+      const data = error.response?.data ?? undefined;
+      const message = data?.message ?? t("api.courses");
+
+      throw new Error(message);
     }
 
     throw error;

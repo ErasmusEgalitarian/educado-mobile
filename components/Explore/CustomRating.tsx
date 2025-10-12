@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Text from "../General/Text";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
 
 /**

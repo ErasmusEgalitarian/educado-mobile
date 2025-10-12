@@ -8,7 +8,7 @@ import {
   Keyboard,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import tailwindConfig from "../../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
 import { getAllFeedbackOptions } from "../../../api/api";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";

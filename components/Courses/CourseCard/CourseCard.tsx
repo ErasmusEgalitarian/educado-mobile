@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import Text from "../../General/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomProgressBar from "../../Exercise/CustomProgressBar";
-import tailwindConfig from "../../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import {
   determineIcon,
   determineCategory,

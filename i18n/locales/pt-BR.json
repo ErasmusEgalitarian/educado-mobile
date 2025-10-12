@@ -12,6 +12,21 @@
     "rate": "Acalme-se! Muitas solicitações",
     "try-again": "Erro: Tente novamente"
   },
+  "general": {
+    "yes": "Sim",
+    "no": "Não",
+    "confirmation": "Tem certeza?"
+  },
+  "course": {
+    "start": "Começar curso",
+    "completed-up": "Concluído",
+    "completed-low": "concluído",
+    "points": "pontos",
+    "withdraw": "Retirar curso",
+    "cancel-subscription": "Cancelar subscrição",
+    "in-progress": "Em progresso",
+    "not-started": "Não iniciado"
+  },
   "edu-screen": {
     "header": "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo",
     "loading": "Edu está pensando",

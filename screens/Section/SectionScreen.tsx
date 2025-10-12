@@ -1,55 +1,74 @@
-import { useState, useEffect } from "react";
-import { View, TouchableOpacity } from "react-native";
+import type { ReactElement } from "react";
+import { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import Text from "../../components/General/Text";
-import * as StorageService from "../../services/storage-service";
-import { checkProgressSection } from "../../services/utils";
+import * as StorageService from "@/services/storage-service";
+import { checkProgressSection } from "@/services/utils";
 import { ScrollView } from "react-native-gesture-handler";
-import PropTypes from "prop-types";
+import { SectionCard } from "@/components/Section/SectionCard";
+import { Component } from "@/types/component";
+import { Course } from "@/types/course";
+import { Section } from "@/types/section";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function SectionScreen({ route }) {
+export interface SectionScreenProps {
+  route: {
+    params: {
+      section: Section;
+      course: Course;
+    };
+  };
+}
+
+/**
+ * Section screen.
+ *
+ * @param route
+ */
+const SectionScreen = ({ route }: SectionScreenProps): ReactElement => {
   const { course, section } = route.params;
-  const [components, setComponents] = useState(null);
+  const [components, setComponents] = useState<Component[]>([]);
   const [completedCompAmount, setCompletedCompAmount] = useState(0);
 
   const navigation = useNavigation();
-  async function loadComponents(id) {
-    const componentsData = await StorageService.getComponentList(id);
+
+  const loadComponents = async (id: string, signal: AbortSignal) => {
+    const componentsData = await StorageService.getComponentList(id, signal);
+
     setComponents(componentsData);
-  }
+  };
 
   useEffect(() => {
-    let componentIsMounted = true;
+    const abortController = new AbortController();
 
-    async function loadData() {
-      await loadComponents(section.sectionId);
+    const loadData = async () => {
+      await loadComponents(section.sectionId, abortController.signal);
+
       setCompletedCompAmount(await checkProgressSection(section.sectionId));
-    }
+    };
 
-    if (componentIsMounted) {
-      loadData();
-    }
+    void loadData();
 
     return () => {
-      componentIsMounted = false;
+      abortController.abort();
     };
-  }, []);
+  }, [section.sectionId]);
 
-  const getProgressStatus = (compIndex) => {
+  const getProgressStatus = (compIndex: number) => {
     if (compIndex < completedCompAmount) {
-      return "Concluído";
-    } else if (compIndex == completedCompAmount) {
-      return "Em progresso";
+      return [2, 2];
     } else {
-      return "Não iniciado";
+      return [0, 2];
     }
   };
 
   const navigateBack = () => {
     navigation.goBack();
   };
-  const navigateToComponent = (compIndex) => {
+
+  const navigateToComponent = (compIndex: number) => {
+    // @ts-expect-error This type error gets fixed when moving to Expo Router
     navigation.navigate("Components", {
       section: section,
       parsedCourse: course,
@@ -57,97 +76,63 @@ export default function SectionScreen({ route }) {
     });
   };
 
+  const getIcon = (component: Component) => {
+    return component.type === "exercise"
+      ? "book-open-blank-variant"
+      : component.component.contentType === "text"
+        ? "book-edit"
+        : "play-circle";
+  };
+
   return (
-    <ScrollView className="h-full bg-secondary">
-      {/* Back Button */}
-      <TouchableOpacity
-        className="absolute left-5 top-10 z-10 pr-3"
-        onPress={navigateBack}
-      >
-        <MaterialCommunityIcons name="chevron-left" size={25} color="black" />
-      </TouchableOpacity>
-      <View className="mx-[18] my-6 flex">
-        <View className="flex-none items-center justify-center py-6">
-          <Text className="font-montserrat text-[20px]">{course.title}</Text>
+    <SafeAreaView>
+      <ScrollView className="h-full bg-secondary">
+        <View className="mx-10 mt-10 flex-col">
+          <View className="flex-row">
+            <TouchableOpacity onPress={navigateBack}>
+              <MaterialCommunityIcons
+                name="chevron-left"
+                size={25}
+                color="black"
+              />
+            </TouchableOpacity>
+            <Text className="ml-2 text-h3-sm-regular">{course.title}</Text>
+          </View>
+          <View className="my-6 flex">
+            <View className="flex-initial py-2">
+              <Text className="text-h1-sm-bold">{section.title}</Text>
+              <Text className="border-b-[1px] border-lightGray pb-4 text-subtitle-regular">
+                {section.description}
+              </Text>
+            </View>
+          </View>
         </View>
-        <View className="flex-inital py-2">
-          <Text className="font-montserrat-bold text-[28px]">
-            {section.title}
-          </Text>
-          <Text className="font-montserrat border-b-[1px] border-lightGray text-[16px]">
-            {section.description}
-          </Text>
-        </View>
-      </View>
-      {components ? (
-        components.length === 0 ? null : (
+        {components.length === 0 ? null : (
           <View>
-            {components.map((component, i) => {
+            {components.map((component: Component, i) => {
               const isDisabled = i > completedCompAmount;
+              const [progress, amount] = getProgressStatus(i);
               return (
-                <TouchableOpacity
+                <SectionCard
+                  disableProgressNumbers={true}
+                  numOfEntries={amount}
+                  progress={progress}
+                  title={component.component.title}
+                  icon={getIcon(component)}
+                  disabledIcon="lock-outline"
                   key={i}
-                  className={`shadow-opacity-[0.3] elevation-[8] mx-[18] mb-[15] overflow-hidden rounded-lg border-[1px] border-lightGray bg-secondary shadow-lg ${isDisabled ? "opacity-50" : ""}`}
                   onPress={() => {
                     navigateToComponent(i);
                   }}
                   disabled={isDisabled}
-                >
-                  <View className="flex-row items-center justify-between px-[25] py-[15]">
-                    <View>
-                      <Text className="font-montserrat-bold text-[18px]">
-                        {component.component.title}
-                      </Text>
-                      <Text>
-                        {getProgressStatus(i)}
-                        {i < completedCompAmount ? (
-                          <MaterialCommunityIcons
-                            testID={"check-circle"}
-                            name={"check-circle"}
-                            size={16}
-                            color="green"
-                          />
-                        ) : (
-                          ""
-                        )}
-                      </Text>
-                    </View>
-
-                    {component.type === "exercise" ? (
-                      <MaterialCommunityIcons
-                        name="book-open-blank-variant"
-                        size={30}
-                        color="#166276"
-                      />
-                    ) : component.component.contentType === "text" ? (
-                      <MaterialCommunityIcons
-                        name="book-edit"
-                        size={30}
-                        color="#166276"
-                      />
-                    ) : (
-                      <MaterialCommunityIcons
-                        name="play-circle"
-                        size={30}
-                        color="#166276"
-                      />
-                    )}
-                  </View>
-                </TouchableOpacity>
+                />
               );
             })}
           </View>
-        )
-      ) : null}
-    </ScrollView>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
-}
-
-SectionScreen.propTypes = {
-  route: PropTypes.shape({
-    params: PropTypes.shape({
-      section: PropTypes.object.isRequired,
-      course: PropTypes.object.isRequired,
-    }).isRequired,
-  }).isRequired,
 };
+
+export default SectionScreen;

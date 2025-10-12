@@ -6,7 +6,7 @@ import Text from "../../components/General/Text";
 import ProgressTopBar from "./ProgressTopBar";
 import LectureScreen from "./LectureScreen";
 import ExerciseScreen from "../Excercises/ExerciseScreen";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import {
   completeComponent,
   findIndexOfUncompletedComp,

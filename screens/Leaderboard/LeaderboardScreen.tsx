@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getLeaderboardDataAndUserRank } from "../../api/api";
-import DefaultTheme from "../../theme/colors"; // import the theme colors
+import { colors } from "../../theme/colors"; // import the theme colors
 import { getUserInfo } from "../../services/storage-service"; // import getUserInfo
 import PropTypes from "prop-types"; // import PropTypes
 import LeaveButton from "../../components/Exercise/LeaveButton"; // import LeaveButton
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: DefaultTheme.bgSecondary,
+    backgroundColor: colors.bgSecondary,
     paddingTop: 40,
   },
   header: {
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 50,
-    backgroundColor: DefaultTheme.bgPrimary,
+    backgroundColor: colors.bgPrimary,
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 3,
     borderColor: "#FFFFFF",
-    backgroundColor: DefaultTheme.bgPrimary,
+    backgroundColor: colors.bgPrimary,
     marginHorizontal: 10,
   },
   listProfileImage: {
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
     color: "#333333",
   },
   highlight: {
-    backgroundColor: DefaultTheme.bgPrimary,
+    backgroundColor: colors.bgPrimary,
   },
   highlightText: {
     color: "#FFFFFF",

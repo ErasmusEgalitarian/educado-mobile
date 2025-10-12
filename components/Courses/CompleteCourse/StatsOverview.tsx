@@ -12,6 +12,7 @@ import { Easing } from "react-native-reanimated";
 import { getStudentInfo } from "../../../services/storage-service";
 import { findCompletedCourse } from "../../../services/utils";
 import PropTypes from "prop-types";
+import tailwindConfig from "@/tailwind.config";
 
 /* Check the CompleteCourseSlider file in the screens folder for more info */
 
@@ -22,7 +23,6 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
 
   const [percentage, setPercentage] = useState(0);
   const circleSize = Dimensions.get("window").height * 0.25;
-  const tailwindConfig = require("../../../tailwind.config.js");
   const projectColors = tailwindConfig.theme.colors;
   const circularProgressRef = useRef(null);
 

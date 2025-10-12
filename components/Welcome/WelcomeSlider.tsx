@@ -4,10 +4,10 @@ import Svg, { Path } from "react-native-svg";
 import Sections from "../../constants/preview-sections";
 import Slick from "react-native-slick";
 import Text from "../General/Text";
+import tailwindConfig from "@/tailwind.config";
 
 export default function WelcomeSlider() {
   const slick = useRef(null);
-  const tailwindConfig = require("../../tailwind.config.js");
   const projectColors = tailwindConfig.theme.colors;
 
   return (

@@ -1,30 +1,33 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { Button } from "react-native-paper";
-import tailwindConfig from "../../tailwind.config.js";
-import PropTypes from "prop-types";
+import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
+
+export interface SubscriptionCancelButtonProps {
+  onPress: () => void;
+}
 
 /**
- * Renders a button component for cancelling a subscription.
- * @param {Function} onPress - The function to be called when the button is pressed.
- * @returns {JSX.Element} - The rendered component.
+ * Subscription cancellation button.
+ *
+ * @param onPress
  */
-const SubscriptionCancelButton = ({ onPress }) => {
-  SubscriptionCancelButton.propTypes = {
-    onPress: PropTypes.func.isRequired,
-  };
-
+export const SubscriptionCancelButton = ({
+  onPress,
+}: SubscriptionCancelButtonProps) => {
   return (
     <View className="w-1/2 justify-end self-center py-4">
       <Button
-        mode={"contained"}
-        color={tailwindConfig.theme.colors.error}
+        mode={"text"}
+        color={colors.error}
         testID="subscriptionCancelButton"
         onPress={onPress}
+        uppercase={false}
       >
-        Cancelar inscrição
+        <Text className="underline text-subtitle-semibold">
+          {t("course.withdraw")}
+        </Text>
       </Button>
     </View>
   );
 };
-
-export default SubscriptionCancelButton;
