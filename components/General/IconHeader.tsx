@@ -28,4 +28,4 @@ const IconHeader = ({ title, description }: IconHeaderProps) => {
   );
 };
 
-export default { IconHeader };
+export default IconHeader;
