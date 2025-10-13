@@ -36,7 +36,7 @@ export default function FormTextField(props) {
           className={
             "h-50 br-25 rounded-lg bg-projectWhite py-1 pl-[10px] text-base" +
             (props.bordered ? " border-2 border-projectGray" : "") +
-            (props.error ? " border-2 border-error" : "")
+            (props.error ? " border-2 border-error bg-errorOpacity" : "")
           }
           placeholder={props.placeholder ?? ""} // Placeholder text to be displayed
           keyboardType={props.keyboardType ?? "default"} // Keyboard type (e.g. numeric, email-address, etc.)
