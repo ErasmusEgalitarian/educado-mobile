@@ -1,25 +1,31 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { View, Keyboard } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import LoginForm from "../../components/Login/LoginForm";
-import LogoBackButton from "../../components/Login/LogoBackButton";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import LoginForm from "@/components/Login/LoginForm";
+import LogoBackButton from "@/components/Login/LogoBackButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableWithoutFeedback } from "react-native";
-import Text from "../../components/General/Text";
+import Text from "@/components/General/Text";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import LoadingScreen from "../../components/Loading/LoadingScreen";
-import * as StorageService from "../../services/storage-service";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
+import * as StorageService from "@/services/storage-service";
 import { useFocusEffect } from "@react-navigation/native";
 
 /**
  * Login screen component containing a login form and possibilities of resetting password or registering a new user.
- * @param {Object} props not used in this component as of now
  */
-export default function LoginScreen() {
+const Login = () => {
   const [loading, setLoading] = useState(true);
-  const navigation = useNavigation();
-  const route = useRoute();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const navigation = useNavigation<any>();
+
+  type LoginScreenRouteParams = {
+    previousScreen?: string;
+  };
+
+  const route =
+    useRoute<RouteProp<{ params: LoginScreenRouteParams }, "params">>();
   const previousScreen = route.params?.previousScreen || "WelcomeStack";
 
   /**
@@ -38,16 +44,15 @@ export default function LoginScreen() {
       } else {
         setLoading(false);
       }
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       setLoading(false);
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      checkLoginToken();
-    }, []),
-  );
+  useFocusEffect(() => {
+    checkLoginToken();
+  });
 
   return (
     <SafeAreaView className="flex-1 justify-start bg-secondary">
@@ -76,8 +81,8 @@ export default function LoginScreen() {
                     Ainda não tem conta?
                   </Text>
                   <Text
-                    testId="registerNav"
-                    className={"left-1 text-lg underline text-projectBlack"}
+                    testID="registerNav"
+                    className={"left-1 text-lg text-projectBlack underline"}
                     onPress={() =>
                       navigation.navigate("Register", {
                         previousScreen: "Login",
@@ -95,4 +100,6 @@ export default function LoginScreen() {
       )}
     </SafeAreaView>
   );
-}
+};
+
+export default Login;
