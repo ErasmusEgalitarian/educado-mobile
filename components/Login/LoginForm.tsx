@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { loginUser } from "../../api/user-api";
-import FormTextField from "../General/Forms/FormTextField";
-import FormButton from "../General/Forms/FormButton";
-import PasswordEye from "../General/Forms/PasswordEye";
-import ResetPassword from "./ResetPassword";
-import FormFieldAlert from "../General/Forms/FormFieldAlert";
-import { removeEmojis } from "../General/validation";
-import Text from "../General/Text";
-import ShowAlert from "../General/ShowAlert";
+import { loginUser } from "@/api/user-api";
+import FormTextField from "@/components/General/Forms/FormTextField";
+import FormButton from "@/components/General/Forms/FormButton";
+import PasswordEye from "@/components/General/Forms/PasswordEye";
+import ResetPassword from "@/components/Login/ResetPassword";
+import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
+import { removeEmojis } from "@/components/General/validation";
+import Text from "@/components/General/Text";
+import ShowAlert from "@/components/General/ShowAlert";
 
 // Services
-import { setUserInfo, setJWT } from "../../services/storage-service";
+import { setUserInfo, setJWT } from "@/services/storage-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Login form component for login screen containing email and password input fields and a login button.
- * @returns {React.Element} Component for logging in (login screen)
  */
-export default function LoginForm() {
-  const navigation = useNavigation();
+const LoginForm = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const navigation = useNavigation<any>(); // TODO: Find a way to avoid using 'any' here
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,12 +29,7 @@ export default function LoginForm() {
   // State variable to track password visibility
   const [showPassword, setShowPassword] = useState(false);
 
-  /**
-   * Logs user in with the entered credentials
-   * @param {String} email Email user tries to login with
-   * @param {String} password Password user tries to login with
-   */
-  async function login(email, password) {
+  const login = async (email: string, password: string) => {
     //Reset alerts
     setEmailAlert("");
     setPasswordAlert("");
@@ -77,7 +72,7 @@ export default function LoginForm() {
             ShowAlert("Erro desconhecido!");
         }
       });
-  }
+  };
 
   // Function to close the reset password modal
   const closeModal = () => {
@@ -93,6 +88,7 @@ export default function LoginForm() {
     <View>
       <View className="mb-1">
         <FormTextField
+          // eslint-disable-next-line
           testId="emailInput"
           placeholder="Insira sua e-mail"
           onChangeText={(email) => setEmail(email)}
@@ -100,24 +96,25 @@ export default function LoginForm() {
           required={false}
           keyboardType="email-address"
           bordered={true}
-          error={emailAlert != ""}
+          error={emailAlert !== ""}
         />
         <FormFieldAlert testId="emailAlert" label={emailAlert} />
       </View>
 
       <View className="relative">
         <FormTextField
+          // eslint-disable-next-line
           testId="passwordInput"
           placeholder="Insira sua senha" // Type your password
           value={password}
           onChangeText={(inputPassword) => {
-            setPassword(removeEmojis(inputPassword, password));
+            setPassword(removeEmojis(inputPassword));
           }}
           label="Senha" // Password
           required={false}
           secureTextEntry={!showPassword}
           bordered={true}
-          error={passwordAlert != ""}
+          error={passwordAlert !== ""}
         />
         <PasswordEye
           testId="passwordEye"
@@ -158,4 +155,6 @@ export default function LoginForm() {
       </View>
     </View>
   );
-}
+};
+
+export default LoginForm;

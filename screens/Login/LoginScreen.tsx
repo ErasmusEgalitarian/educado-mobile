@@ -81,7 +81,7 @@ const Login = () => {
                     Ainda não tem conta?
                   </Text>
                   <Text
-                    testID="registerNav"
+                    testId="registerNav"
                     className={"left-1 text-lg text-projectBlack underline"}
                     onPress={() =>
                       navigation.navigate("Register", {
