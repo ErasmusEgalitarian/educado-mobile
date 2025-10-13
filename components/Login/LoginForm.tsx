@@ -145,7 +145,6 @@ const LoginForm = () => {
       </FormButton>
       <View className="">
         <ResetPassword
-          className={!modalVisible ? "hidden" : ""}
           modalVisible={modalVisible}
           onModalClose={closeModal}
           testId="resetPasswordModal"

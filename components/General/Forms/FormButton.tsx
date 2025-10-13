@@ -1,23 +1,16 @@
 import { TouchableOpacity } from "react-native";
-import { View, Text } from "react-native";
+import { View } from "react-native";
+import Text from "@/components/General/Text";
 
-interface FormButtonProps {
-  label: string,
-  onPress: () => void,
-  type: string,
-  disabled: boolean,
-  style: [],
-  children: string
+interface PropTypes {
+  children: string;
+  disabled?: boolean;
+  onPress?: () => void;
+  style?: object[];
+  type?: "primary_custom" | "error" | "warning";
 }
 
-/**
- * Button component for eg. login and register screens.
- * @param {Object} props Should contain the following properties:
- * - label: String
- * - onPress: Function
- */
-const FormButton = (props: FormButtonProps) => {
-
+const FormButton = (props: PropTypes) => {
   // Put this here for possible custom styling
   const typeStyles = {
     primary_custom: "bg-primaryCustom",
@@ -29,23 +22,28 @@ const FormButton = (props: FormButtonProps) => {
     <>
       <View>
         <TouchableOpacity
-          className={'px-4 py-3 rounded-xl ' +
-            (typeStyles[props.type] ?? typeStyles.primary_custom) +
-            (props.disabled ? 'text-[#809CAD]! bg-[#C1CFD7]' : '')}
+          className={
+            "rounded-xl px-4 py-3 " +
+            (typeStyles[props.type ?? "primary_custom"] ??
+              typeStyles.primary_custom) +
+            (props.disabled ? "text-[#809CAD]! bg-[#C1CFD7]" : "")
+          }
           style={props.style ?? null}
           onPress={props.onPress}
           disabled={props.disabled}
         >
-          {/* eslint-disable-next-line no-restricted-syntax */}
-          <Text className={"text-center font-sans-bold text-body " +
-            (props.disabled ? "text-[#809CAD]" : "text-projectWhite" )
-          }>
+          <Text
+            className={
+              "text-center font-sans-bold text-body " +
+              (props.disabled ? "text-[#809CAD]" : "text-projectWhite")
+            }
+          >
             {props.children}
           </Text>
         </TouchableOpacity>
       </View>
     </>
   );
-}
+};
 
 export default FormButton;
