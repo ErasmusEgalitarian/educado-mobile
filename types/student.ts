@@ -1,5 +1,7 @@
 export interface StudentInfo {
-  photo: string;
+  _id: string;
+  photo: string | null;
+  profilePhoto?: string;
   studyStreak: number;
   lastStudyDate: Date;
 }
