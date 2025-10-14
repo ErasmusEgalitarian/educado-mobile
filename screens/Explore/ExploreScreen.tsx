@@ -1,169 +1,132 @@
 import { useState, useEffect } from "react";
 import { View, ScrollView, RefreshControl } from "react-native";
-import FilterNavigationBar from "../../components/Explore/FilterNavigationBar";
+import FilterNavigationBar from "@/components/Explore/FilterNavigationBar";
 import { ExploreCard } from "@/components/Explore/ExploreCard";
-import * as StorageService from "../../services/storage-service";
+import { getCourseList, getSubCourseList } from "@/services/storage-service";
 import { useNavigation } from "@react-navigation/native";
-import IconHeader from "../../components/General/IconHeader";
-import { shouldUpdate, determineCategory } from "../../services/utils";
-import NetworkStatusObserver from "../../hooks/NetworkStatusObserver";
-import OfflineScreen from "../Offline/OfflineScreen";
+import IconHeader from "@/components/General/IconHeader";
+import { shouldUpdate, determineCategory } from "@/services/utils";
+import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
+import OfflineScreen from "@/screens/Offline/OfflineScreen";
+import { Course } from "@/types/course";
 import BaseScreen from "@/components/General/BaseScreen"
 
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.
  * @returns {JSX.Element} - Rendered component
  */
-export default function ExploreScreen() {
-  // Search text state
-  const [searchText, setSearchText] = useState("");
-  // Selected category state
-  const [selectedCategory, setSelectedCategory] = useState(null);
+export const ExploreScreen = () => {
+    // Hooks for updating data and states
+    const [searchText, setSearchText] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState<string>(null);
+    const [courses, setCourses] = useState<Course[]>([]);
+    const [subCourses, setSubCourses] = useState<Set<string>>(new Set);
+    const [isOnline, setIsOnline] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const navigation = useNavigation();
 
-  //Sets dummy data for courses (will be replaced with data from backend)
-  const [courses, setCourses] = useState([]);
-  const [subCourses, setSubCourses] = useState([]);
-  const [isOnline, setIsOnline] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const navigation = useNavigation();
-  const [isVisible, setIsVisible] = useState(false);
+    /**
+     * Loads courses and updates React state variables ´courses´ and ´subCourses´.
+     *
+     * @async
+     * @returns {Promise<void>} State is updated, nothing is returned.
+     */
+    const loadCourses = async (): Promise<void> => {
+        const [courseData, subData] = await Promise.all([
+          getCourseList(),
+          getSubCourseList(),
+        ]);
 
-  /**
-   * Asynchronous function that loads the subscribed courses from storage and updates the state.
-   * @returns {void}
-   */
-  async function loadSubscriptions() {
-    const subData = await StorageService.getSubCourseList();
-    if (shouldUpdate(subCourses, subData)) {
-      if (subData.length !== 0 && Array.isArray(subData)) {
-        setSubCourses(subData);
-      } else {
-        setSubCourses([]);
-      }
-    }
-  }
+        if (shouldUpdate(courses, courseData)) {
+          setCourses(Array.isArray(courseData) && courseData.length ? courseData : []);
+        }
 
-  /**
-   * Asynchronous function that loads the courses from storage and updates the state.
-   * @returns {void}
-   */
-  async function loadCourses() {
-    const courseData = await StorageService.getCourseList();
-    if (shouldUpdate(courses, courseData)) {
-      if (courseData.length !== 0 && Array.isArray(courseData)) {
-        setCourses(courseData);
-      } else {
-        setCourses([]);
-      }
-    }
-  }
+        if (Array.isArray(subData) && subData.length) {
+          setSubCourses(new Set(subData.map(sub => sub.courseId)));
+        } else {
+          setSubCourses(new Set());
+        }
+    };
 
-  // When refreshing the loadCourse and load subscription function is called
-  const onRefresh = () => {
-    setRefreshing(true);
-    loadSubscriptions();
-    loadCourses();
-    setRefreshing(false);
-  };
-
-  useEffect(() => {
-    // this makes sure loadcourses is called when the screen is focused
-    const update = navigation.addListener("focus", async () => {
-      console.log("Explore screen focused");
-      loadCourses();
-      loadSubscriptions();
+    useEffect(() => {
+        return navigation.addListener("focus", async () => {
+            console.log("Explore screen focused");
+            await loadCourses();
+        });
     });
-    return update;
-  }, [navigation, subCourses, selectedCategory, searchText, isOnline]);
 
-  const checkIfSubscribed = (course, subCourses) => {
-    for (let subCourse of subCourses) {
-      if (subCourse.courseId === course.courseId) {
-        return true;
-      }
-    }
-    return false;
-  };
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await loadCourses();
+        setRefreshing(false);
+    };
 
-  ///---------------------------------------------///
+    const handleFilter = (text: string) => {
+        setSearchText(text);
+    };
 
-  // Function to filter courses based on searchText or selectedCategory
+    const handleCategoryFilter = (category) => {
+        if (category === "Todos") {
+          setSelectedCategory(null); // Set selectedCategory to null to show all items
+        } else {
+          setSelectedCategory(category); // Set selectedCategory to the selected category label
+        }
+    };
 
-  const filteredCourses = courses.filter((course) => {
-    // Check if the course title includes the search text
-    const titleMatchesSearch = course.title
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
-    // Check if the course category matches the selected category (or no category is selected)
-    const categoryMatchesFilter =
-      !selectedCategory ||
-      determineCategory(course.category) === selectedCategory;
-    // Return true if both title and category conditions are met
-    return titleMatchesSearch && categoryMatchesFilter;
-  });
+    /**
+     * Filters courses to match search query or selected category
+     *
+     * @returns {boolean} true if there are any matching results
+     */
+    const filteredCourses = courses.filter((course) => {
+        const titleMatchesSearch = course.title
+            .toLowerCase()
+            .includes(searchText.toLowerCase());
+        const categoryMatchesFilter =
+            !selectedCategory ||
+            determineCategory(course.category) === selectedCategory;
+        return titleMatchesSearch && categoryMatchesFilter;
+    });
 
-  const handleFilter = (text: string) => {
-    setSearchText(text);
-    // console.log("handleFilter", searchText);
-  };
+    return (
+        <>
+            <NetworkStatusObserver setIsOnline={setIsOnline} />
 
-  const handleCategoryFilter = (category) => {
-    //if category label is "all" it will display all courses, otherwise it will display courses with the selected category
-    if (category === "Todos") {
-      setSelectedCategory(null); // Set selectedCategory to null to show all items
-    } else {
-      setSelectedCategory(category); // Set selectedCategory to the selected category label
-    }
-  };
-
-  return (
-    <>
-      <NetworkStatusObserver setIsOnline={setIsOnline} />
-
-      {!isOnline ? (
-        <OfflineScreen />
-      ) : (
-        <BaseScreen>
-          <IconHeader
-            title={"Explorar cursos"}
-            description={
-              "Inscreva-se nos cursos do seu interesse e comece sua jornada"
-            }
-          />
-          <View className="mt-8">
-            <FilterNavigationBar
-              onChangeText={(text) => handleFilter(text)}
-              onCategoryChange={handleCategoryFilter}
-            />
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-            >
-              <View className="overflow-y-auto mt-8">
-                {courses &&
-                  filteredCourses &&
-                  filteredCourses
-                    .reverse()
-                    .map((course, index) => (
-                      <ExploreCard
-                        key={index}
-                        isPublished={course.status === "published"}
-                        subscribed={
-                          /*isSubscribed[index]*/ checkIfSubscribed(
-                            course,
-                            subCourses,
-                          )
-                        }
-                        course={course}
-                      ></ExploreCard>
-                    ))}
-              </View>
-            </ScrollView>
-          </View>
-        </BaseScreen>
-      )}
-    </>
-  );
-}
+            {!isOnline ? (
+                <OfflineScreen />
+            ) : (
+                <BaseScreen>
+                    <IconHeader
+                      title={"Explorar cursos"}
+                    />
+                        <View className="mt-8">
+                        <FilterNavigationBar
+                            onChangeText={(text) => handleFilter(text)}
+                            onCategoryChange={handleCategoryFilter}
+                        />
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            refreshControl={
+                                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                            }
+                        >
+                          <View className="overflow-y-auto mt-8">
+                              {filteredCourses
+                                  .reverse()
+                                  .map((course, index) => (
+                                      <ExploreCard
+                                        key={index}
+                                        isPublished={course.status === "published"}
+                                        subscribed={subCourses.has(course.courseId)}
+                                        course={course}
+                                      />
+                                  ))
+                              }
+                          </View>
+                        </ScrollView>
+                    </View>
+                </BaseScreen>
+            )}
+        </>
+    );
+};
