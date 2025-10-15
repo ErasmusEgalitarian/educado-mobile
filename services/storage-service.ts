@@ -268,10 +268,7 @@ export const getCourseList = async (): Promise<Course[]> => {
   return mapApiCoursesToCourses((await api.getCourses()) ?? []);
 };
 
-const mapApiCourseToCourse = ({
-  _id: id,
-  ...rest
-}: ApiCourse): Course => {
+const mapApiCourseToCourse = ({ _id: id, ...rest }: ApiCourse): Course => {
   return { ...rest, courseId: id };
 };
 
