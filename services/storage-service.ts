@@ -268,8 +268,11 @@ export const getCourseList = async (): Promise<Course[]> => {
   return mapApiCoursesToCourses((await api.getCourses()) ?? []);
 };
 
-const mapApiCourseToCourse = ({ _id, ...rest }: ApiCourse): Course => {
-  return { ...rest, courseId: _id };
+const mapApiCourseToCourse = ({
+  _id: id,
+  ...rest
+}: ApiCourse): Course => {
+  return { ...rest, courseId: id };
 };
 
 /**
@@ -367,11 +370,11 @@ export const getComponentList = async (
 /**
  * Fetches an image for a lecture.
  **/
-export const fetchLectureImage = async (imageID: string, lectureID: string) => {
+export const fetchLectureImage = async (imageId: string, lectureId: string) => {
   return await fetchWithStorageFallback(
     api.getBucketImage,
-    [imageID],
-    "I" + lectureID,
+    [imageId],
+    "I" + lectureId,
   );
 };
 
@@ -527,7 +530,7 @@ export const getAllCoursesLocally = async (): Promise<Course[]> => {
  */
 
 export const storeCourseLocally = async (
-  courseID: string,
+  courseId: string,
 ): Promise<boolean> => {
   let success = true;
   if (!isOnline) {
@@ -535,21 +538,21 @@ export const storeCourseLocally = async (
   }
   try {
     //Stores the course data
-    const course = await api.getCourse(courseID);
+    const course = await api.getCourse(courseId);
     const userId = await AsyncStorage.getItem(STORAGE_KEYS.USER_ID);
-    await AsyncStorage.setItem(courseID + userId, JSON.stringify(course));
+    await AsyncStorage.setItem(courseId + userId, JSON.stringify(course));
 
     //Stores section data
-    const sectionList = await api.getAllSections(courseID);
-    await setLocalItem("S" + courseID, sectionList);
+    const sectionList = await api.getAllSections(courseId);
+    await setLocalItem("S" + courseId, sectionList);
     await storeLectureData(sectionList, course);
     await AsyncStorage.setItem(
-      courseID + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
+      courseId + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
       JSON.stringify(course),
     );
   } catch {
     success = false;
-    await deleteLocallyStoredCourse(courseID);
+    await deleteLocallyStoredCourse(courseId);
   }
   return success;
 };
@@ -615,17 +618,17 @@ const storeLectureData = async (
 
 /**
  * Deletes a locally stored course.
- * @param {string} courseID - The ID of the course to remove from local storage.
+ * @param {string} courseId - The ID of the course to remove from local storage.
  * @returns {Promise<boolean>} A promise that resolves with `true` if the course was deleted successfully.
  */
-export const deleteLocallyStoredCourse = async (courseID: string) => {
+export const deleteLocallyStoredCourse = async (courseId: string) => {
   let success = true;
   try {
     await AsyncStorage.removeItem(
-      courseID + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
+      courseId + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
     );
-    const sectionList = await getLocalItem<ApiSection[]>("S" + courseID);
-    await AsyncStorage.removeItem("S" + courseID);
+    const sectionList = await getLocalItem<ApiSection[]>("S" + courseId);
+    await AsyncStorage.removeItem("S" + courseId);
     await removeComponentsBySection(sectionList);
   } catch {
     success = false;
@@ -675,12 +678,12 @@ export const updateStoredCourses = async () => {
 
 /**
  * Checks if a course is stored locally.
- * @param {string} courseID - The ID of the course to check.
+ * @param {string} courseId - The ID of the course to check.
  * @returns {Promise<boolean>} A promise that resolves with `true` if the course is stored locally.
  */
-export const checkCourseStoredLocally = async (courseID: string) => {
+export const checkCourseStoredLocally = async (courseId: string) => {
   return !!(await AsyncStorage.getItem(
-    courseID + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
+    courseId + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
   ));
 };
 
