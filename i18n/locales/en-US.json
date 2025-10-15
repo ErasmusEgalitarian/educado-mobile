@@ -28,7 +28,12 @@
     "not-started": "Not started",
     "course-title": "Course Title",
     "duration": "Duration",
-    "my-courses": "My Courses"
+    "my-courses": "My Courses",
+    "welcome-title": "Welcome!",
+    "welcome-description": "Here you can find all the courses you are enrolled in!",
+    "get-started": "Get Started",
+    "no-courses-message": "You haven't enrolled in any courses yet. Go to the Explore page and use the search to find courses of your interest.",
+    "explore-courses": "Explore courses"
   },
   "edu-screen": {
     "header": "My name is Edu, and I'm here to help you navigate this app",

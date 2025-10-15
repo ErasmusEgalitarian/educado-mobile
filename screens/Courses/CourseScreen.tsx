@@ -24,6 +24,7 @@ import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
 import OfflineScreen from "@/screens/Offline/OfflineScreen";
 import { Course } from "@/types/course";
 import { StudentInfo } from "@/types/student";
+import { t } from "@/i18n";
 
 const CourseScreen = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -115,8 +116,8 @@ const CourseScreen = () => {
       ) : courseLoaded ? (
         <View className="h-full">
           <IconHeader
-            title="Bem Vindo!"
-            description="Aqui você encontra todos os cursos em que você está inscrito!"
+            title={t("course.welcome-title")}
+            description={t("course.welcome-description")}
           />
 
           {/* Render stats box with level and progress bar only */}
@@ -170,14 +171,13 @@ const CourseScreen = () => {
                 className="pb-4 pt-4 text-center text-subheading leading-[29.26] text-projectBlack"
                 style={{ fontFamily: "sans-bold" }}
               >
-                Comece agora
+                {t("course.get-started")}
               </Text>
               <Text
                 className="text-center text-body text-projectBlack"
                 style={{ fontFamily: "montserrat" }}
               >
-                Você ainda não se increveu em nenhum curso. Acesse a página
-                Explore e use a busca para encontrar cursos do seu interesse.
+                {t("course.no-courses-message")}
               </Text>
             </View>
             <View>
@@ -190,7 +190,7 @@ const CourseScreen = () => {
                   className="text-center text-body text-projectWhite"
                   style={{ fontFamily: "sans-bold" }}
                 >
-                  Explorar cursos
+                  {t("course.explore-courses")}
                 </Text>
               </Pressable>
             </View>

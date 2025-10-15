@@ -28,7 +28,12 @@
     "in-progress": "Em progresso",
     "not-started": "Não iniciado",
     "duration": "Duração",
-    "my-courses": "Meus Cursos"
+    "my-courses": "Meus Cursos",
+    "welcome-title": "Bem Vindo!",
+    "welcome-description": "Aqui você encontra todos os cursos em que você está inscrito!",
+    "get-started": "Comece agora",
+    "no-courses-message": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.",
+    "explore-courses": "Explorar cursos"
   },
   "edu-screen": {
     "header": "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo",
