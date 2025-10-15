@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExerciseInfo renders ExerciseInfo correctly 1`] = `
+<View
+  className="z-10 mt-20 items-center px-6"
+>
+  <Text
+    className="text-caption-body text-center font-sans text-projectGray"
+  >
+    Course name: 
+  </Text>
+  <Text
+    className="font-sans-bold text-center text-lg text-projectBlack"
+  />
+</View>
+`;

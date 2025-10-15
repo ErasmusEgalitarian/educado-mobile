@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Ensure that the alert is rendered correctly 1`] = `
+<View
+  className="flex-row items-center"
+>
+  <Text
+    className="mx-2 text-base text-error"
+  />
+</View>
+`;
