@@ -4,4 +4,6 @@ export interface StudentInfo {
   profilePhoto?: string;
   studyStreak: number;
   lastStudyDate: Date;
+  level?: number;
+  points?: number;
 }

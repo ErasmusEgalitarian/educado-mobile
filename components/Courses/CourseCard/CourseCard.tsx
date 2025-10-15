@@ -13,13 +13,7 @@ import { colors } from "@/theme/colors";
 import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
 import { t } from "@/i18n";
-
-interface Course {
-  courseId: string;
-  title?: string;
-  category?: string;
-  estimatedHours?: number;
-}
+import { Course } from "@/types/course";
 
 interface CourseCardProps {
   course: Course;
@@ -86,7 +80,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
                     color: "#000",
                   }}
                 >
-                  {course.title ? course.title : t("Título do curso")}
+                  {course.title ? course.title : t("course.course-title")}
                 </Text>
                 <View className="flex-row items-center">
                   <DownloadCourseButton course={course} disabled={isDisabled} />
@@ -110,7 +104,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
                 <Text className="mx-[2.5%] my-[3%]">
                   {course.estimatedHours
                     ? formatHours(course.estimatedHours)
-                    : t("duração")}
+                    : t("course.duration")}
                 </Text>
               </View>
             </View>

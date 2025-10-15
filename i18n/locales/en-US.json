@@ -25,15 +25,15 @@
     "withdraw": "Withdraw from course",
     "cancel-subscription": "Cancel subscription",
     "in-progress": "In progress",
-    "not-started": "Not started"
+    "not-started": "Not started",
+    "course-title": "Course Title",
+    "duration": "Duration",
+    "my-courses": "My Courses"
   },
   "edu-screen": {
     "header": "My name is Edu, and I'm here to help you navigate this app",
     "loading": "Edu is thinking",
     "placeholder": "Pesquise aqui",
     "unknown-error": "Error: Unknown error"
-  },
-  "course title": "Course Title",
-  "duration": "Duration",
-  "my courses": "My Courses"
+  }
 }

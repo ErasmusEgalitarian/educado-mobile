@@ -23,14 +23,7 @@ import { getStudentInfo } from "@/services/storage-service";
 import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
 import OfflineScreen from "@/screens/Offline/OfflineScreen";
 import { Course } from "@/types/course";
-
-interface StudentData {
-  level?: number;
-  points?: number;
-  photo?: string;
-  studyStreak?: number;
-  lastStudyDate?: Date;
-}
+import { StudentInfo } from "@/types/student";
 
 const CourseScreen = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -76,7 +69,7 @@ const CourseScreen = () => {
       const fetchedStudent = await getStudentInfo();
 
       if (fetchedStudent !== null) {
-        const studentData = fetchedStudent as StudentData;
+        const studentData = fetchedStudent as StudentInfo;
         setStudentLevel(studentData.level || 0);
         setStudentPoints(studentData.points || 0);
       }

@@ -19,21 +19,21 @@
   },
   "course": {
     "start": "Começar curso",
+    "course-title": "Título do curso",
     "completed-up": "Concluído",
     "completed-low": "concluído",
     "points": "pontos",
     "withdraw": "Retirar curso",
     "cancel-subscription": "Cancelar subscrição",
     "in-progress": "Em progresso",
-    "not-started": "Não iniciado"
+    "not-started": "Não iniciado",
+    "duration": "Duração",
+    "my-courses": "Meus Cursos"
   },
   "edu-screen": {
     "header": "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo",
     "loading": "Edu está pensando",
     "placeholder": "Pesquise aqui",
     "unknown-error": "Erro: Erro desconhecido"
-  },
-  "course title": "Título do Curso",
-  "duration": "Duração",
-  "my courses": "Meus Cursos"
+  }
 }
