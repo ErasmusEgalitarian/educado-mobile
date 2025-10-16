@@ -6,7 +6,6 @@ import patterns from "@/assets/validation/patterns";
  * @param currentPasword current password state variable
  * @returns either the password state variable or the confirm password state variable depending on the confirm parameter
  */
-
 export const removeEmojis = (passwordInput: string) => {
   return passwordInput.replace(patterns.emoji, "");
 };
@@ -16,7 +15,7 @@ export const removeEmojis = (passwordInput: string) => {
  * @param password
  * @returns true if password contains at least one letter, false otherwise
  */
-export const validatePasswordContainsLetter = (password: string) => {
+export const validatePasswordContainsLetter = (password: string): boolean => {
   const regex = /.*\p{L}.*$/u;
   return regex.test(password);
 };
@@ -26,7 +25,7 @@ export const validatePasswordContainsLetter = (password: string) => {
  * @param password
  * @returns true if password is longer than 7 characters, false otherwise
  */
-export const validatePasswordLength = (password: string) => {
+export const validatePasswordLength = (password: string): boolean => {
   return password.length > 7;
 };
 
@@ -36,11 +35,11 @@ export const validatePasswordLength = (password: string) => {
  * @param email
  * @returns error message if email is invalid, empty string otherwise
  */
-export const validateEmail = (email: string) => {
+export const validateEmail = (email: string): string => {
   const emailPattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
   if (!emailPattern.test(email)) {
-    return "E-mail inválido"; // Email invalid
+    return "EMAIL INVÁLIDO"; // Email invalid
   }
 
   // Passed all checks, email is valid
@@ -54,7 +53,7 @@ export const validateEmail = (email: string) => {
  * @param wordForName (e.g. 'Nome' or 'Sobrenome')
  * @returns error message if name is invalid, empty string otherwise
  */
-export const validateName = (name: string, wordForName: string = "Nome") => {
+export const validateName = (name: string, wordForName: string = "Nome"): string => {
   if (name.length > 50) {
     // Check this number
     return `${wordForName} muito longo`; // Name too long

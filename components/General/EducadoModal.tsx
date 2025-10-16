@@ -6,10 +6,9 @@ import {
   Keyboard,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import Text from "./Text";
+import Text from "@/components/General/Text";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import PropTypes from "prop-types";
 import { ReactNode } from "react";
 
 interface EducadoModalProps {
@@ -27,7 +26,7 @@ interface EducadoModalProps {
  * - title: String for modal title
  * @returns
  */
-export default function EducadoModal(props: EducadoModalProps) {
+const EducadoModal = (props: EducadoModalProps) => {
   return (
     <Modal
       visible={props.modalVisible}
@@ -60,11 +59,6 @@ export default function EducadoModal(props: EducadoModalProps) {
       </TouchableWithoutFeedback>
     </Modal>
   );
-}
-
-EducadoModal.propTypes = {
-  children: PropTypes.object,
-  closeModal: PropTypes.func,
-  modalVisible: PropTypes.bool,
-  title: PropTypes.string,
 };
+
+export default EducadoModal;

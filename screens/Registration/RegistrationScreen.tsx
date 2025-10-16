@@ -1,32 +1,37 @@
 import { useEffect } from "react";
 import { View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import RegisterForm from "../../components/Login/RegisterForm";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import RegisterForm from "@/components/Login/RegisterForm";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LogoBackButton from "../../components/Login/LogoBackButton";
-import Text from "../../components/General/Text";
+import LogoBackButton from "@/components/Login/LogoBackButton";
+import Text from "@/components/General/Text";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import * as StorageService from "../../services/storage-service";
+import * as StorageService from "@/services/storage-service";
 
-export default function RegistrationScreen() {
-  const navigation = useNavigation();
-  const route = useRoute();
+const RegistrationScreen = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const navigation = useNavigation<any>();
+
+  type LoginScreenRouteParams = {
+    previousScreen?: string;
+  };
+
+  const route =
+    useRoute<RouteProp<{ params: LoginScreenRouteParams }, "params">>();
   const previousScreen = route.params?.previousScreen || "WelcomeStack";
 
-  const checkLoginToken = async () => {
+  useEffect(() => {
     try {
-      const isValid = await StorageService.isLoginTokenValid();
+      // TODO: the function called has an error that allows it to return 'undefined'
+      // @ts-ignore
+      const isValid: boolean = await StorageService.isLoginTokenValid();
       if (isValid) {
         navigation.navigate("HomeStack");
       }
     } catch (error) {
-      console.log("Failed to fetch the login token from storage");
+      console.log("Failed to fetch the login token from storage\n" + error);
     }
-  };
-
-  useEffect(() => {
-    checkLoginToken();
-  }, []);
+  }, [navigation]);
 
   return (
     <SafeAreaView className="flex-1 justify-start bg-secondary">
@@ -50,7 +55,7 @@ export default function RegistrationScreen() {
                   Já possui conta?
                 </Text>
                 <Text
-                  testId={"loginNav"}
+                  testId="loginNav"
                   className={
                     "left-1 text-lg leading-5 text-profileCircle underline"
                   }
@@ -68,4 +73,6 @@ export default function RegistrationScreen() {
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
-}
+};
+
+export default RegistrationScreen;

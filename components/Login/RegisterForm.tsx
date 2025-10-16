@@ -1,59 +1,56 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { loginUser, registerUser } from "../../api/user-api";
-import FormTextField from "../General/Forms/FormTextField";
-import FormButton from "../General/Forms/FormButton";
-import PasswordEye from "../General/Forms/PasswordEye";
+import { loginUser, registerUser } from "@/api/user-api";
+import FormTextField from "@/components/General/Forms/FormTextField";
+import FormButton from "@/components/General/Forms/FormButton";
+import PasswordEye from "@/components/General/Forms/PasswordEye";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import ShowAlert from "../General/ShowAlert";
-import FormFieldAlert from "../General/Forms/FormFieldAlert";
+import ShowAlert from "@/components/General/ShowAlert";
+import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
 import {
   removeEmojis,
   validatePasswordContainsLetter,
   validatePasswordLength,
   validateEmail,
   validateName,
-} from "../General/validation";
-import Text from "../General/Text";
-import errorSwitch from "../General/error-switch";
+} from "@/components/General/validation";
+import Text from "@/components/General/Text";
+import errorSwitch from "@/components/General/error-switch";
 import { useNavigation } from "@react-navigation/native";
-import DialogNotification from "../General/DialogNotification";
+import DialogNotification from "@/components/General/DialogNotification";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import tailwindConfig from "@/tailwind.config";
-import { setUserInfo, setJWT } from "../../services/storage-service";
+import colors from "@/theme/colors";
+import { setUserInfo, setJWT } from "@/services/storage-service";
 
 /**
  * Component for registering a new account in the system, used in the register screen
- * @returns {React.Element} Component containing the form for registering a new user
  */
+const RegisterForm = () => {
+  const tailwindColors = colors;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const navigation = useNavigation<any>();
 
-export default function RegisterForm() {
-  const tailwindColors = tailwindConfig.theme.colors;
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  const navigation = useNavigation();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [emailAlert, setEmailAlert] = useState("");
+  const [emailAlert, setEmailAlert] = useState<string>("");
   const [nameAlert, setNameAlert] = useState("");
-  const [isAllInputValid, setIsAllInputValid] = useState(false);
-  const [confirmPasswordAlert, setConfirmPasswordAlert] = useState("");
+  const [isAllInputValid, setIsAllInputValid] = useState<boolean>(false);
+  const [confirmPasswordAlert, setConfirmPasswordAlert] = useState<string>("");
 
   // State variable to track password visibility
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
   // Password Constraint variables
-  const [passwordContainsLetter, setPasswordContainsLetter] = useState(false);
-  const [passwordLengthValid, setPasswordLengthValid] = useState(false);
+  const [passwordContainsLetter, setPasswordContainsLetter] = useState<boolean>(false);
+  const [passwordLengthValid, setPasswordLengthValid] = useState<boolean>(false);
 
   useEffect(() => {
     // Clear input and alerts on first render
-    setFirstName("");
-    setLastName("");
+    setName("");
     setEmail("");
     setPassword("");
     setConfirmPassword("");
@@ -70,110 +67,82 @@ export default function RegisterForm() {
     const lengthValid = validatePasswordLength(password);
     setPasswordLengthValid(lengthValid);
     checkIfPasswordsMatch(password, confirmPassword);
-  }, [password]);
+  }, [confirmPassword, password]);
 
   useEffect(() => {
     checkIfPasswordsMatch(password, confirmPassword);
-  }, [confirmPassword]);
+  }, [confirmPassword, password]);
 
+  // validating name
   useEffect(() => {
-    let validationError = "";
-    if (firstName !== "") {
-      validationError = validateName(firstName, "Nome"); // First name
+    if (name !== "") {
+      setNameAlert(validateName(name));
     }
-    if (validationError === "" && lastName !== "") {
-      validationError = validateName(lastName, "Sobrenome"); // Last name
-    }
+  }, [name]);
 
-    setNameAlert(validationError);
-  }, [firstName, lastName]);
-
+  // validate email
   useEffect(() => {
     if (email === "") {
       setEmailAlert("");
       return;
     }
 
-    const validationError = validateEmail(email);
-    setEmailAlert(validationError);
+    setEmailAlert(validateEmail(email));
   }, [email]);
 
-  useEffect(() => {
-    validateInput();
-  }, [
-    nameAlert,
-    emailAlert,
-    passwordLengthValid,
-    passwordContainsLetter,
-    confirmPasswordAlert,
-  ]);
-
-  // Functions to toggle password visibility states
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
-  const checkIfPasswordsMatch = (password, confirmPassword) => {
-    if (password === confirmPassword) {
-      setConfirmPasswordAlert("");
-    } else {
-      // The passwords do not match
-      setConfirmPasswordAlert("Os campos de senha precisam ser iguais");
-    }
-  };
-
-  // TODO: This function should take into consideration
-  // that alerts might be empty when input is yet to be given
   /**
-   * Function for validating all input fields' content
+   * useEffect runs with every new input and checks for validation.
    */
-  function validateInput() {
+  useEffect(() => {
     const validationPassed =
       nameAlert === "" &&
       emailAlert === "" &&
-      firstName != "" &&
-      lastName != "" &&
-      email != "" &&
+      name !== "" &&
+      email !== "" &&
       passwordLengthValid &&
       passwordContainsLetter &&
       confirmPasswordAlert === "";
 
     setIsAllInputValid(validationPassed);
-  }
+  }, [nameAlert, emailAlert, passwordLengthValid, passwordContainsLetter, confirmPasswordAlert, name, email]);
+
+  // Functions to toggle password visibility states
+  const toggleShowPassword = (): void => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleShowConfirmPassword = (): void => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const checkIfPasswordsMatch = (password: string, confirmPassword: string): void => {
+    if (password === confirmPassword) {
+      setConfirmPasswordAlert("");
+    } else {
+      setConfirmPasswordAlert("Os campos de senha precisam ser iguais");
+    }
+  };
 
   /**
    * Function for registering a new user in the database
-   * @param {String} firstName
-   * @param {String} lastName
-   * @param {String} email
-   * @param {String} password
    */
-  async function register() {
-    validateInput(firstName, email, password);
-
+  const register = async (name: string, email: string, password: string) => {
     if (!isAllInputValid) {
       return;
     }
 
-    //Sanitize names to removes spaces infront and after
-    const sanitizedFirstName = firstName.trim();
-    const sanitizedLastName = lastName.trim();
-    const lowerCaseEmail = email.toLowerCase();
-
     const obj = {
-      firstName: sanitizedFirstName,
-      lastName: sanitizedLastName,
-      email: lowerCaseEmail,
+      firstName: name.trim(),
+      // TODO: once backend is setup and api call are handled properly, the last name shoult be removed
+      lastName: "NO LAST NAME SHOULD BE HERE!",
+      email: email.toLowerCase(),
       password: password,
     };
 
     try {
+
       await registerUser(obj)
-        .then(async function (response) {
+        .then(async (response) => {
           // Save user info in storage
           // TODO: Refactor backend to get the same response as on login
           const userInfo = {
@@ -182,7 +151,7 @@ export default function RegisterForm() {
           };
           await setUserInfo(userInfo);
         })
-        .then(async function () {
+        .then(async () => {
           // logs in the user, if no errors occur, navigates to home screen and sets token
           await loginFromRegister(obj);
         })
@@ -192,16 +161,15 @@ export default function RegisterForm() {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   /**
    * function to log in the user and set the login token, meant to be called after registering
    * @param {Object} obj the object containing the following fields:
-   *  firstName: String
-   *  lastName: String
    *  email: String
+   *  password: String
    */
-  async function loginFromRegister(obj) {
+  const loginFromRegister = async (obj: {email: string, password: string}) => {
     try {
       await loginUser(obj)
         .then((response) => {
@@ -217,73 +185,63 @@ export default function RegisterForm() {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   return (
-    <View>
+    <View className="mb-2 flex h-[78vh] flex-col">
       <AlertNotificationRoot>
-        <View className="mb-6">
+        <View className="mb-2 flex-none">
           <FormTextField
-            label="Nome" // first name
-            name={"Nome"}
-            value={firstName}
+            label="Nome" // name
+            value={name}
             testId="firstNameInput"
-            placeholder="Nome"
+            placeholder="Nome Sobrenome"
             required={true}
             onChangeText={(firstName) => {
-              setFirstName(firstName);
+              setName(firstName);
             }}
+            error={nameAlert !== ""}
           />
         </View>
-        <View className="mb-6">
+        <View className="mb-2 flex-none">
           <FormTextField
-            label="Sobrenome" // Last name
-            name={"Sobrenome"}
-            value={lastName}
-            testId="lastNameInput"
-            placeholder="Sobrenome"
-            required={true}
-            onChangeText={(lastName) => {
-              setLastName(lastName);
-            }}
-          />
-          <FormFieldAlert label={nameAlert} />
-        </View>
-        <View className="mb-6">
-          <FormTextField
-            className="mb-6"
-            label="E-mail"
-            name={"E-mail"}
+            label="Email"
             testId="emailInput"
             value={email}
-            placeholder="Insira sua e-mail"
+            placeholder="useremail@gmail.com"
             keyboardType="email-address"
             required={true}
             onChangeText={async (email) => {
               setEmail(email);
               validateEmail(email);
             }}
+            error={emailAlert !== ""}
           />
-          <FormFieldAlert label={emailAlert} testId="emailAlert" />
+          {/*Only render if there is error, otherwise there will be an empty area for nothing.*/}
+          {emailAlert ? (
+            <FormFieldAlert label={emailAlert} testId="emailAlert" />
+          ) : (
+            <></>
+          )}
         </View>
-        <View className="mb-6">
-          <View className="relative">
+        <View className="flex-none">
+          <View>
             <FormTextField
               label="Senha" //Password
-              name={"Senha"}
               testId="passwordInput"
               value={password}
-              placeholder="Insira sua senha" // Enter your password
+              placeholder="********"
               placeholderTextColor={tailwindColors.projectGray}
               secureTextEntry={!showPassword}
               required={true}
-              onChangeText={(inputPassword) => {
-                setPassword(removeEmojis(inputPassword, password));
+              onChangeText={(inputPassword: string) => {
+                setPassword(removeEmojis(inputPassword));
               }}
+              error={password !== "" && !(passwordContainsLetter && passwordLengthValid)}
             />
             <PasswordEye
               testId="passwordEye"
-              showPasswordIcon={showPassword}
+              showPasswordIcon={!showPassword}
               toggleShowPassword={toggleShowPassword}
             />
           </View>
@@ -292,13 +250,15 @@ export default function RegisterForm() {
             <Text
               testId="passwordLengthAlert"
               className={
-                "text-xs" +
-                (passwordLengthValid || !password
-                  ? " text-projectBlack"
-                  : " text-error")
+                "text-sm" +
+                (password === ""
+                  ? " text-projectGray"
+                  : passwordLengthValid
+                    ? " text-success"
+                    : " text-error")
               }
             >
-              {/* Minimum 8 characters */}• Mínimo 8 caracteres
+              {/* Minimum 8 characters */}Mínimo 8 caracteres
             </Text>
             <View className="-translate-y-1 flex-row items-center">
               {passwordLengthValid ? (
@@ -314,13 +274,15 @@ export default function RegisterForm() {
             <Text
               testId="passwordLetterAlert"
               className={
-                "font-sans text-xs" +
-                (passwordContainsLetter || !password
-                  ? " text-projectBlack"
-                  : " text-error")
+                "text-sm" +
+                (password === ""
+                  ? " text-projectGray"
+                  : passwordContainsLetter
+                    ? " text-success"
+                    : " text-error")
               }
             >
-              {/* Must contain at least one letter */}• Conter pelo menos uma
+              {/* Must contain at least one letter */}Conter pelo menos uma
               letra
             </Text>
             <View className="-translate-y-1 flex-row items-center">
@@ -334,33 +296,32 @@ export default function RegisterForm() {
             </View>
           </View>
         </View>
-        <View className="mb-2">
+        <View className="flex-none">
           <View className="relative">
             <FormTextField
               label="Confirmar senha" // Confirm password
               value={confirmPassword}
               testId="confirmPasswordInput"
-              onChangeText={(inputConfirmPassword) => {
-                setConfirmPassword(
-                  removeEmojis(inputConfirmPassword, confirmPassword),
-                );
+              onChangeText={(inputConfirmPassword: string) => {
+                setConfirmPassword(removeEmojis(inputConfirmPassword));
               }}
-              placeholder="Confirme sua senha" // Confirm your password
+              placeholder="********" // Confirm your password
               secureTextEntry={!showConfirmPassword}
               required={true}
+              error={confirmPasswordAlert !== ""}
             />
             <PasswordEye
               testId="confirmPasswordEye"
-              showPasswordIcon={showConfirmPassword}
+              showPasswordIcon={!showConfirmPassword}
               toggleShowPassword={toggleShowConfirmPassword}
             />
           </View>
-          <FormFieldAlert label={confirmPasswordAlert} />
+          <FormFieldAlert label={confirmPasswordAlert} testId="confirmPasswordAlert" />
         </View>
         {/* Register */}
-        <View className="bg-primary my-2">
+        <View className="bg-primary mt-auto flex-none">
           <FormButton
-            onPress={() => register(firstName, lastName, email, password)}
+            onPress={() => register(name, email, password)}
             testId="registerButton"
             disabled={!isAllInputValid}
           >
@@ -371,3 +332,5 @@ export default function RegisterForm() {
     </View>
   );
 }
+
+export default RegisterForm;

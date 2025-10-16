@@ -38,7 +38,7 @@ const Login = () => {
     try {
       const isValid = await StorageService.isLoginTokenValid();
       if (isValid) {
-        StorageService.updateStoredCourses();
+        await StorageService.updateStoredCourses();
         await AsyncStorage.setItem("loggedIn", "true");
         navigation.navigate("HomeStack");
       } else {

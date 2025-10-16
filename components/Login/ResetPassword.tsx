@@ -1,18 +1,18 @@
 import { View } from "react-native";
-import { useState, useEffect } from "react";
-import FormTextField from "../General/Forms/FormTextField";
-import FormButton from "../General/Forms/FormButton";
-import EducadoModal from "../General/EducadoModal";
-import EnterNewPasswordScreen from "./EnterNewPasswordScreen";
-import Text from "../General/Text";
+import { useState } from "react";
+import FormTextField from "@/components/General/Forms/FormTextField";
+import FormButton from "@/components/General/Forms/FormButton";
+import EducadoModal from "@/components/General/EducadoModal";
+import EnterNewPasswordScreen from "@/components/Login/EnterNewPasswordScreen";
+import Text from "@/components/General/Text";
 import {
   sendResetPasswordEmail,
   validateResetPasswordCode,
-} from "../../api/user-api";
-import FormFieldAlert from "../General/Forms/FormFieldAlert";
-import { validateEmail } from "../General/validation";
-import ToastNotification from "../General/ToastNotification";
-import ShowAlert from "../General/ShowAlert";
+} from "@/api/user-api";
+import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
+import { validateEmail } from "@/components/General/validation";
+import ToastNotification from "@/components/General/ToastNotification";
+import ShowAlert from "@/components/General/ShowAlert";
 
 interface ResetPasswordProps {
   modalVisible: boolean,
@@ -26,7 +26,7 @@ interface ResetPasswordProps {
  * - modalVisible: Boolean to show if modal should be visible
  * - onModalClose: Function to do when modal closes
  */
-export default function ResetPassword(props: ResetPasswordProps) {
+const ResetPassword = (props: ResetPasswordProps) => {
   const emailAlertMessage = "Email não localizado";
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
@@ -43,21 +43,21 @@ export default function ResetPassword(props: ResetPasswordProps) {
    * @param {String} message Message to display in alert
    * @param {Boolean} status Displays if alert is success or error (green if true or red if false)
    */
-  function displayErrorAlert(message: string, status: boolean) {
+  const displayErrorAlert = (message: string, status: boolean) => {
     setPasswordResetAlert(message);
     setIsSuccess(status);
-  }
+  };
 
   /**
    * Function to send mail to user with code to reset password
    * @param {String} email
    */
-  async function sendEmail(email: string) {
+  const sendEmail = async (email: string) => {
     const validationError = validateEmail(email);
     if (validationError) {
       displayErrorAlert(validationError, false);
       setEmailError(true);
-      return; // Stop before calling API
+      return;
     }
 
     setEmailError(false);
@@ -100,7 +100,7 @@ export default function ResetPassword(props: ResetPasswordProps) {
         }
       });
     setButtonLoading(false);
-  }
+  };
 
   /**
    * Function to validate the code entered by the user
@@ -108,7 +108,7 @@ export default function ResetPassword(props: ResetPasswordProps) {
    * @param {String} token
    */
 
-  async function validateCode(email: string, token: string) {
+  const validateCode = async (email: string, token: string) => {
     const obj = {
       email,
       token,
@@ -142,7 +142,7 @@ export default function ResetPassword(props: ResetPasswordProps) {
             console.log(error);
         }
       });
-  }
+  };
 
   //resets the state of the reset password modal
   const resetState = () => {
@@ -259,5 +259,6 @@ export default function ResetPassword(props: ResetPasswordProps) {
       </View>
     </EducadoModal>
   );
-}
+};
 
+export default ResetPassword;
