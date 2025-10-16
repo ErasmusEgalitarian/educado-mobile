@@ -43,7 +43,7 @@ export const ExploreCard = ({
                 size={24}
                 color="#141B1F"
               />
-              <Text className="h-5 ml-2 font-montserrat text-[16px] font-bold text-[#141B1F]">
+              <Text className="h-5 ml-2 mr-8 font-sans-bold text-xl text-textTitleGrayscale">
                 {course.title}
               </Text>
             </View>
