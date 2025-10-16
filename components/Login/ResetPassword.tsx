@@ -13,7 +13,6 @@ import FormFieldAlert from "../General/Forms/FormFieldAlert";
 import { validateEmail } from "../General/validation";
 import ToastNotification from "../General/ToastNotification";
 import ShowAlert from "../General/ShowAlert";
-import PropTypes from "prop-types";
 
 interface ResetPasswordProps {
   modalVisible: boolean,
@@ -210,15 +209,12 @@ export default function ResetPassword(props: ResetPasswordProps) {
                     onChangeText={(token) => setToken(token)}
                     testId="tokenInput"
                     value={token}
+                    error={tokenAlert !== ""}
                   />
                   <FormFieldAlert testId="tokenAlert" label={tokenAlert} />
                   {/* Continue button */}
                   <View className="mb-[24px] mt-[40px]">
                     <FormButton
-                      // Continue
-                      label={
-                        buttonLoading ? "Validando código..." : "Verificar Codigo"
-                      }
                       onPress={() => validateCode(email, token)}
                       testId="validateCodeBtn"
                       disabled={!codeInputValid(token)}
@@ -265,7 +261,3 @@ export default function ResetPassword(props: ResetPasswordProps) {
   );
 }
 
-ResetPassword.propTypes = {
-  modalVisible: PropTypes.bool,
-  onModalClose: PropTypes.func,
-};

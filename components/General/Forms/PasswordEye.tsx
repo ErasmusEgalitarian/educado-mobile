@@ -2,13 +2,17 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import { Pressable } from "react-native";
 
+interface PasswordEyeProps {
+  showPasswordIcon: boolean
+  toggleShowPassword: () => void
+}
 /**
  * Icon component for the eye besides passwords to toggle if text can be seen by user
  * @param {Object} props Should contain the following properties
  * - showPasswordIcon: Boolean
  * - toggleShowPassword: Function
  */
-export default function PasswordEye(props) {
+export default function PasswordEye(props: PasswordEyeProps) {
   return (
     <Pressable
       className="absolute right-0 top-9 p-3"

@@ -144,20 +144,21 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
     <View>
       <View>
         <FormTextField
-          placeholder="Insira sua senha" // Enter your password
+          placeholder="••••••••"
           onChangeText={(password) => setNewPassword(removeEmojis(password))}
           id="password"
-          label="Nova senha" // New password
+          label="Nova senha"
           required={true}
           bordered={true}
           secureTextEntry={!showPassword}
           passwordGuidelines={true}
           testId="passwordInput"
           value={newPassword}
+          error={newPassword !== "" && !(passwordContainsLetter && passwordLengthValid)}
         />
         <PasswordEye
           id="showPasswordEye"
-          showPasswordIcon={showPassword}
+          showPasswordIcon={!showPassword}
           toggleShowPassword={() =>
             toggleShowPassword(setShowPassword, showPassword)
           }
@@ -167,14 +168,16 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
         <Text
           testId="passwordLengthAlert"
           className={
-            "text-sm" +
-            (passwordLengthValid || !newPassword
-              ? " text-projectGray"
-              : " text-error")
+            "text-sm" + (newPassword === "" ? " text-projectGray" : (
+              passwordLengthValid ? " text-success" : " text-error"
+            ))
           }
         >
-          {/* Minimum 8 characters */}• Mínimo 8 caracteres
+          {/** Minimum 8 characters */}
+          Mínimo 8 caracteres
         </Text>
+
+
         <View className="-translate-y-1 flex-row items-center">
           {passwordLengthValid ? (
             <MaterialCommunityIcons name="check" size={20} color="#4AA04A" />
@@ -185,13 +188,13 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
         <Text
           testId="passwordLetterAlert"
           className={
-            "font-sans text-sm" +
-            (passwordContainsLetter || !newPassword
-              ? " text-projectGray"
-              : " text-error")
+            "text-sm" + (newPassword === "" ? " text-projectGray" : (
+              passwordContainsLetter ? " text-success" : " text-error"
+            ))
           }
         >
-          {/* Must contain at least one letter */}• Conter pelo menos uma letra
+          {/* Must contain at least one letter */}
+          Conter pelo menos uma letra
         </Text>
         <View className="-translate-y-1 flex-row items-center">
           {passwordContainsLetter ? (
@@ -202,7 +205,7 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
       <FormFieldAlert label={passwordAlert} />
       <View className="mt-[24px]">
         <FormTextField
-          placeholder="Confirme sua senha" // Confirm your password
+          placeholder="••••••••" // Confirm your password
           bordered={true}
           onChangeText={(confirmPassword) =>
             setConfirmPassword(removeEmojis(confirmPassword))
@@ -212,9 +215,10 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
           secureTextEntry={!showConfirmPassword}
           testId="confirmPasswordInput"
           value={confirmPassword}
+          error={confirmPasswordAlert !== ""}
         />
         <PasswordEye
-          showPasswordIcon={showConfirmPassword}
+          showPasswordIcon={!showConfirmPassword}
           toggleShowPassword={() =>
             toggleShowPassword(setShowConfirmPassword, showConfirmPassword)
           }
@@ -232,19 +236,8 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
       >
         Entrar
       </FormButton>
-      <View className="mt-2 flex-row items-end justify-center">
-        <Text className="mr-1 text-lg leading-5 text-projectGray">
-          {/* Wrong email? */}
-          E-mail errado?
-        </Text>
-        <Text
-          className="text-lg leading-5 text-projectBlack underline"
-          onPress={() => props.resetState()}
-        >
-          {/* Go back */}
-          Volte aqui
-        </Text>
-      </View>
+
+      
     </View>
   );
 }
