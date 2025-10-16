@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import { useEffect, useState } from "react";
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import { useState, useEffect } from "react";
+import { Alert, View, TouchableOpacity, Image, Text } from "react-native";
 import * as StorageService from "@/services/storage-service";
 import { unsubscribe } from "@/services/storage-service";
 import { SectionCard } from "@/components/Section/SectionCard";
@@ -46,6 +46,7 @@ const CourseOverviewScreen = ({
   >({});
   const [currentSection, setCurrentSection] = useState<Section | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<unknown | null>(null);
 
   const loadSections = async (id: string, signal: AbortSignal) => {
     const sectionData = await StorageService.getSectionList(id, signal);
@@ -107,7 +108,7 @@ const CourseOverviewScreen = ({
         });
       }
     });
-  }, [course.courseId, navigation, sections]);
+  }, [navigation, sections, course.courseId]);
 
   useEffect(() => {
     if (!coverImage) {
@@ -116,6 +117,7 @@ const CourseOverviewScreen = ({
           const image = await getBucketImage(course.courseId + "_c");
           setCoverImage(image);
         } catch (error) {
+          setImageError(error);
           console.error(error);
         }
       };
@@ -136,8 +138,7 @@ const CourseOverviewScreen = ({
           void unsubscribe(course.courseId);
 
           setTimeout(() => {
-            // @ts-expect-error Fixed when moved to app router
-            navigation.navigate("Meus cursos");
+            navigation.navigate("Meus cursos" as never);
           }, 300);
         },
       },
@@ -146,31 +147,36 @@ const CourseOverviewScreen = ({
 
   const navigateToCurrentSection = () => {
     if (currentSection) {
-      // @ts-expect-error Fixed when moved to app router
-      navigation.navigate("Components", {
-        section: currentSection,
-        parsedCourse: course,
-      });
+      navigation.navigate(
+        ...([
+          "Components",
+          {
+            section: currentSection,
+            parsedCourse: course,
+          },
+        ] as never),
+      );
     }
   };
 
   const navigateToSpecifiedSection = (section: Section) => {
-    // @ts-expect-error Fixed when moved to app router
-    navigation.navigate("Section", {
-      course: course,
-      section: section,
-    });
+    navigation.navigate(
+      ...([
+        "Section",
+        {
+          course: course,
+          section: section,
+        },
+      ] as never),
+    );
   };
 
   return (
     <>
       {/* Back Button */}
       <TouchableOpacity
-        className="absolute left-[29px] top-[60px] z-10"
-        onPress={() => {
-          // @ts-expect-error Fixed when moved to app router
-          navigation.navigate("Meus cursos");
-        }}
+        className="absolute left-5 top-10 z-10 pr-3"
+        onPress={() => navigation.navigate("Meus cursos" as never)}
       >
         <MaterialCommunityIcons
           name="chevron-left"
@@ -185,7 +191,7 @@ const CourseOverviewScreen = ({
       >
         <View className="flex w-full items-center">
           <View className="flex w-full items-center justify-between">
-            {coverImage ? (
+            {!imageError && coverImage ? (
               <Image
                 source={{ uri: coverImage }}
                 style={{ width: "100%", height: 296, resizeMode: "cover" }}

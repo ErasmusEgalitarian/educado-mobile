@@ -7,18 +7,30 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import * as StorageService from "../../../services/storage-service";
-import PropTypes from "prop-types";
-import { checkCourseStoredLocally } from "../../../services/storage-service";
-import trashCanOutline from "../../../assets/images/trash-can-outline.png";
-import fileDownload from "../../../assets/images/file_download.png";
-import { IconContext } from "../../../services/DownloadProvider";
+import * as StorageService from "@/services/storage-service";
+import { checkCourseStoredLocally } from "@/services/storage-service";
+import trashCanOutline from "@/assets/images/trash-can-outline.png";
+import fileDownload from "@/assets/images/file_download.png";
+import { IconContext } from "@/services/DownloadProvider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const DownloadCourseButton = ({ course, disabled }) => {
+interface DownloadCourseButtonProps {
+  course: {
+    courseId: string;
+  };
+  disabled: boolean;
+}
+
+const DownloadCourseButton = ({
+  course,
+  disabled,
+}: DownloadCourseButtonProps) => {
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const { iconState, updateIcon } = useContext(IconContext);
+  const { iconState, updateIcon } = useContext(IconContext) as {
+    iconState: Record<string, unknown>;
+    updateIcon: (courseId: string, icon: unknown) => void;
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -122,7 +134,14 @@ const DownloadCourseButton = ({ course, disabled }) => {
               {/* Modal content container */}
               <View className="w-[90%] rounded-xl bg-projectLightGray p-5">
                 <View className="flex-row items-center justify-between">
-                  <Text className="mb-1 text-xl font-bold text-projectBlack">
+                  <Text
+                    style={{
+                      marginBottom: 4,
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: "#000",
+                    }}
+                  >
                     {isDownloaded ? "Excluir download" : "Baixar download"}
                   </Text>
                   <MaterialCommunityIcons
@@ -132,14 +151,28 @@ const DownloadCourseButton = ({ course, disabled }) => {
                     onPress={() => setModalVisible(false)}
                   ></MaterialCommunityIcons>
                 </View>
-                <Text className="mb-2.5 text-base text-projectBlack">
+                <Text
+                  style={{
+                    marginBottom: 10,
+                    fontSize: 16,
+                    color: "#000",
+                  }}
+                >
                   Você tem certeza que deseja excluir o download do curso? Você
                   ainda pode assisti-lo com acesso à internet e baixá-lo
                   novamente.
                 </Text>
                 <View className="w-100 flex-row items-center justify-between">
                   <TouchableOpacity onPress={() => setModalVisible(false)}>
-                    <Text className="border-b border-primary_custom text-xl font-bold text-primary_custom">
+                    <Text
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#007AFF",
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        color: "#007AFF",
+                      }}
+                    >
                       Cancelar
                     </Text>
                   </TouchableOpacity>
@@ -151,7 +184,13 @@ const DownloadCourseButton = ({ course, disabled }) => {
                         : "rounded-lg bg-primary_custom px-10 py-4"
                     }
                   >
-                    <Text className="text-xl font-bold text-projectWhite">
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        color: "#fff",
+                      }}
+                    >
                       {isDownloaded ? "Excluir" : "Baixar"}
                     </Text>
                   </TouchableOpacity>
@@ -163,11 +202,6 @@ const DownloadCourseButton = ({ course, disabled }) => {
       </Modal>
     </View>
   );
-};
-
-DownloadCourseButton.propTypes = {
-  course: PropTypes.object.isRequired,
-  disabled: PropTypes.bool,
 };
 
 export default DownloadCourseButton;

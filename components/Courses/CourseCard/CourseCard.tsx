@@ -1,65 +1,43 @@
-import { View, Pressable, ImageBackground } from "react-native";
-import { useEffect, useState, useRef } from "react";
-import { useNavigation } from "@react-navigation/native";
-import Text from "../../General/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomProgressBar from "../../Exercise/CustomProgressBar";
-import tailwindConfig from "@/tailwind.config";
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import { Pressable, View, Text } from "react-native";
+import { checkCourseStoredLocally } from "@/services/storage-service";
 import {
-  determineIcon,
-  determineCategory,
-  formatHours,
   checkProgressCourse,
-} from "../../../services/utils";
-import DownloadCourseButton from "./DownloadCourseButton";
-import PropTypes from "prop-types";
-import { checkCourseStoredLocally } from "../../../services/storage-service";
-import { getBucketImage } from "../../../api/api";
+  determineCategory,
+  determineIcon,
+  formatHours,
+} from "@/services/utils";
+import { colors } from "@/theme/colors";
+import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
+import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
+import { t } from "@/i18n";
+import { Course } from "@/types/course";
 
-/**
- * CourseCard component displays a card for a course with its details
- * @param {Object} props - Component props
- * @param {Object} props.course - Course object containing course details
- * @returns {JSX.Element} - Rendered component
- */
-export default function CourseCard({ course, isOnline }) {
+interface CourseCardProps {
+  course: Course;
+  isOnline: boolean;
+}
+
+// eslint-disable-next-line no-undef
+const CourseCard = ({ course, isOnline }: CourseCardProps) => {
   const [downloaded, setDownloaded] = useState(false);
   const navigation = useNavigation();
   const [studentProgress, setStudentProgress] = useState(0);
-  const [coverImage, setCoverImage] = useState(null);
-  const prevCourseId = useRef(null);
 
   const checkDownload = async () => {
-    setDownloaded(await checkCourseStoredLocally(course.courseId));
+    setDownloaded((await checkCourseStoredLocally(course.courseId)) || false);
   };
+
   checkDownload();
 
   const checkProgress = async () => {
     const progress = await checkProgressCourse(course.courseId);
     setStudentProgress(progress);
   };
+
   checkProgress();
-
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const image = await getBucketImage(course.courseId + "_c");
-        if (typeof image === "string") {
-          setCoverImage(image);
-        } else {
-          throw new Error();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    if (course !== null && course.courseId !== prevCourseId.current) {
-      setCoverImage(null); // Reset coverImage state
-      fetchImage();
-      prevCourseId.current = course.courseId;
-    }
-  }, [course]);
 
   const enabledUI =
     "bg-projectWhite rounded-lg elevation-[3] m-[3%] mx-[5%] overflow-hidden";
@@ -74,92 +52,95 @@ export default function CourseCard({ course, isOnline }) {
     <Pressable
       testID="courseCard"
       className={layout}
-      onPress={() =>
-        layout === enabledUI
-          ? navigation.navigate("CourseOverview", {
-              course: course,
-            })
-          : null
-      }
+      onPress={() => {
+        if (layout === enabledUI) {
+          navigation.navigate(
+            ...([
+              "CourseOverview",
+              {
+                course: course,
+              },
+            ] as never),
+          );
+        }
+      }}
     >
       <View>
-        <ImageBackground source={{ uri: coverImage }}>
-          {coverImage && (
-            <View className="rounded-lg" style={{ height: 110 }} />
-          )}
-          <View className="relative">
-            <View className="absolute bottom-0 left-0 right-0 top-0 bg-projectWhite opacity-95" />
-            <View className="p-[5%]">
-              <View className="flex flex-col">
-                <View className="flex-row items-start justify-between px-[1%] py-[1%]">
-                  <Text className="font-montserrat-semi-bold flex-1 self-center text-[18px] text-projectBlack">
-                    {course.title ? course.title : "Título do curso"}
-                  </Text>
-                  <View className="flex-row items-center">
-                    <DownloadCourseButton
-                      course={course}
-                      disabled={isDisabled}
-                    />
-                  </View>
-                </View>
-              </View>
-              <View className="m-[2%] h-[1] bg-disable" />
-              <View className="flex-row flex-wrap items-center justify-start">
-                <View className="flex-row items-center">
-                  <MaterialCommunityIcons
-                    size={18}
-                    name={determineIcon(course.category)}
-                    color={"gray"}
-                  ></MaterialCommunityIcons>
-                  <Text className="mx-[2.5%] my-[3%]">
-                    {determineCategory(course.category)}
-                  </Text>
-                </View>
-                <View className="flex-row items-center">
-                  <MaterialCommunityIcons
-                    size={18}
-                    name="clock"
-                    color={"gray"}
-                  ></MaterialCommunityIcons>
-                  <Text className="mx-[2.5%] my-[3%]">
-                    {course.estimatedHours
-                      ? formatHours(course.estimatedHours)
-                      : "duração"}
-                  </Text>
-                </View>
-              </View>
-              <View className="flex-row items-center">
-                <CustomProgressBar
-                  width={56}
-                  progress={studentProgress}
-                  height={1}
-                />
-                <Pressable
-                  className="z-[1]"
-                  onPress={() => {
-                    layout === enabledUI
-                      ? navigation.navigate("CourseOverview", {
-                          course: course,
-                        })
-                      : null;
+        <View className="relative">
+          <View className="absolute bottom-0 left-0 right-0 top-0 bg-projectWhite opacity-95" />
+          <View className="p-[5%]">
+            <View className="flex flex-col">
+              <View className="flex-row items-start justify-between px-[1%] py-[1%]">
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    flex: 1,
+                    alignSelf: "center",
+                    fontSize: 18,
+                    color: "#000",
                   }}
                 >
-                  <MaterialCommunityIcons
-                    size={28}
-                    name="play-circle"
-                    color={tailwindConfig.theme.colors.primary_custom}
-                  ></MaterialCommunityIcons>
-                </Pressable>
+                  {course.title ? course.title : t("course.course-title")}
+                </Text>
+                <View className="flex-row items-center">
+                  <DownloadCourseButton course={course} disabled={isDisabled} />
+                </View>
               </View>
             </View>
+            <View className="m-[2%] h-[1] bg-disable" />
+            <View className="flex-row flex-wrap items-center justify-start">
+              <View className="flex-row items-center">
+                <MaterialCommunityIcons
+                  size={18}
+                  name={determineIcon(course.category)}
+                  color="gray"
+                />
+                <Text className="mx-[2.5%] my-[3%]">
+                  {determineCategory(course.category)}
+                </Text>
+              </View>
+              <View className="flex-row items-center">
+                <MaterialCommunityIcons size={18} name="clock" color="gray" />
+                <Text className="mx-[2.5%] my-[3%]">
+                  {course.estimatedHours
+                    ? formatHours(course.estimatedHours)
+                    : t("course.duration")}
+                </Text>
+              </View>
+            </View>
+            <View className="flex-row items-center">
+              <CustomProgressBar
+                width={56}
+                progress={studentProgress}
+                height={1}
+              />
+              <Pressable
+                className="z-[1]"
+                onPress={() => {
+                  if (layout === enabledUI) {
+                    navigation.navigate(
+                      ...([
+                        "CourseOverview",
+                        {
+                          course: course,
+                        },
+                      ] as never),
+                    );
+                  }
+                }}
+              >
+                <MaterialCommunityIcons
+                  size={28}
+                  name="play-circle"
+                  color={colors?.primary_custom}
+                ></MaterialCommunityIcons>
+              </Pressable>
+            </View>
           </View>
-        </ImageBackground>
+        </View>
       </View>
     </Pressable>
   );
-}
-
-CourseCard.propTypes = {
-  course: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  isOnline: PropTypes.bool,
 };
+
+export default CourseCard;

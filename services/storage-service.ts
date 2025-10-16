@@ -12,13 +12,21 @@ import { ApiCourse, Course } from "@/types/course";
 import { UserInfo } from "@/types/user";
 import { Component } from "@/types/component";
 
-const SUB_COURSE_LIST = "@subCourseList";
-const USER_ID = "@userId";
-const STUDENT_ID = "@studentId";
-const USER_INFO = "@userInfo";
-const STUDENT_INFO = "@studentInfo";
-const LOGIN_TOKEN = "@loginToken";
-const lectureVideoPath = FileSystem.documentDirectory + "lectureVideos/";
+// Storage keys configuration
+const STORAGE_KEYS = {
+  SUB_COURSE_LIST: "@subCourseList",
+  USER_ID: "@userId",
+  STUDENT_ID: "@studentId",
+  USER_INFO: "@userInfo",
+  STUDENT_INFO: "@studentInfo",
+  LOGIN_TOKEN: "@loginToken",
+} as const;
+
+// File paths configuration
+const FILE_PATHS = {
+  LECTURE_VIDEOS: FileSystem.documentDirectory + "lectureVideos/",
+} as const;
+
 let isOnline = true;
 
 /**
@@ -100,7 +108,7 @@ const fetchWithStorageFallback = async <T, A extends unknown[]>(
  * @returns a promise of the existing token, that can be a string or null if it does not exist.
  */
 export const getLoginToken = async (): Promise<string | null> => {
-  return await AsyncStorage.getItem(LOGIN_TOKEN);
+  return await AsyncStorage.getItem(STORAGE_KEYS.LOGIN_TOKEN);
 };
 
 /**
@@ -115,8 +123,7 @@ export const isLoginTokenValid = async (): Promise<boolean> => {
     }
 
     // Access JWT_SECRET
-    // @ts-expect-error The possible return values are handled below.
-    const jwtSecret = Constants.expoConfig.extra.JWT_SECRET;
+    const jwtSecret = Constants.expoConfig?.extra?.JWT_SECRET;
 
     const decodedToken = jwt.decode(token, jwtSecret);
 
@@ -157,7 +164,10 @@ export const setStudentInfo = async (userId: string) => {
         }
       }
       await updateStudentInfo(fetchedStudentInfo);
-      await AsyncStorage.setItem(STUDENT_ID, fetchedStudentInfo._id); // needs to be seperate
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.STUDENT_ID,
+        fetchedStudentInfo._id,
+      ); // needs to be seperate
     } catch (error) {
       const errorToThrow =
         error instanceof Error ? error : new Error(String(error));
@@ -173,29 +183,36 @@ export const setStudentInfo = async (userId: string) => {
  * @returns {Promise<Object>} A promise that resolves with the fetched student information.
  */
 export const getStudentInfo = async (): Promise<StudentInfo> => {
-  return await getLocalItem<StudentInfo>(STUDENT_INFO);
+  return await getLocalItem<StudentInfo>(STORAGE_KEYS.STUDENT_INFO);
 };
 
 export const getStudentProfilePhoto = async () => {
-  const student = await getLocalItem<StudentInfo>(STUDENT_INFO);
+  const student = await getLocalItem<StudentInfo>(STORAGE_KEYS.STUDENT_INFO);
   return student.photo;
 };
 
 export const updateStudentInfo = async (studentInfo: StudentInfo) => {
-  await AsyncStorage.setItem(STUDENT_INFO, JSON.stringify(studentInfo));
+  await AsyncStorage.setItem(
+    STORAGE_KEYS.STUDENT_INFO,
+    JSON.stringify(studentInfo),
+  );
 };
 
 // Increment studyStreak and update lastStudyDate
 export const updateLocalStudyStreak = async (newStudyDate: Date) => {
   // Retrieve current studentInfo
-  const studentInfo: StudentInfo =
-    await getLocalItem<StudentInfo>(STUDENT_INFO);
+  const studentInfo: StudentInfo = await getLocalItem<StudentInfo>(
+    STORAGE_KEYS.STUDENT_INFO,
+  );
 
   studentInfo.studyStreak += 1;
   studentInfo.lastStudyDate = newStudyDate;
 
   // Save updated studentInfo
-  await AsyncStorage.setItem(STUDENT_INFO, JSON.stringify(studentInfo));
+  await AsyncStorage.setItem(
+    STORAGE_KEYS.STUDENT_INFO,
+    JSON.stringify(studentInfo),
+  );
 };
 
 /** USER **/
@@ -205,7 +222,7 @@ export const updateLocalStudyStreak = async (newStudyDate: Date) => {
  * @returns {Promise<Object>} A promise that resolves with the fetched user information.
  */
 export const getUserInfo = async (): Promise<UserInfo> => {
-  return getLocalItem<UserInfo>(USER_INFO);
+  return getLocalItem<UserInfo>(STORAGE_KEYS.USER_INFO);
 };
 
 /**
@@ -213,8 +230,8 @@ export const getUserInfo = async (): Promise<UserInfo> => {
  * @param {Object} userInfo - The user information to store.
  */
 export const setUserInfo = async (userInfo: UserInfo) => {
-  await AsyncStorage.setItem(USER_INFO, JSON.stringify(userInfo));
-  await AsyncStorage.setItem(USER_ID, userInfo.id); // needs to be separate
+  await AsyncStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(userInfo));
+  await AsyncStorage.setItem(STORAGE_KEYS.USER_ID, userInfo.id); // needs to be separate
   await setStudentInfo(userInfo.id);
 };
 
@@ -225,7 +242,7 @@ export const setUserInfo = async (userInfo: UserInfo) => {
 // TODO: Rename setJWT to SetJwt
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const getJWT = async (): Promise<string | null> => {
-  return await AsyncStorage.getItem(LOGIN_TOKEN);
+  return await AsyncStorage.getItem(STORAGE_KEYS.LOGIN_TOKEN);
 };
 
 /**
@@ -235,11 +252,11 @@ export const getJWT = async (): Promise<string | null> => {
 // TODO: Rename getJWT to GetJwt
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const setJWT = async (jwt: string) => {
-  await AsyncStorage.setItem(LOGIN_TOKEN, jwt);
+  await AsyncStorage.setItem(STORAGE_KEYS.LOGIN_TOKEN, jwt);
 };
 
 export const getUserId = async (): Promise<string | null> => {
-  return await AsyncStorage.getItem(USER_ID);
+  return await AsyncStorage.getItem(STORAGE_KEYS.USER_ID);
 };
 /** COURSE AND COURSE LIST **/
 
@@ -251,8 +268,8 @@ export const getCourseList = async (): Promise<Course[]> => {
   return mapApiCoursesToCourses((await api.getCourses()) ?? []);
 };
 
-const mapApiCourseToCourse = ({ _id, ...rest }: ApiCourse): Course => {
-  return { ...rest, courseId: _id };
+const mapApiCourseToCourse = ({ _id: id, ...rest }: ApiCourse): Course => {
+  return { ...rest, courseId: id };
 };
 
 /**
@@ -350,11 +367,11 @@ export const getComponentList = async (
 /**
  * Fetches an image for a lecture.
  **/
-export const fetchLectureImage = async (imageID: string, lectureID: string) => {
+export const fetchLectureImage = async (imageId: string, lectureId: string) => {
   return await fetchWithStorageFallback(
     api.getBucketImage,
-    [imageID],
-    "I" + lectureID,
+    [imageId],
+    "I" + lectureId,
   );
 };
 
@@ -371,7 +388,7 @@ export const getVideoURL = async (videoName: string, resolution: string) => {
     async (v: string, r: string) => api.getVideoStreamUrl(v, r),
     [videoName, resolution],
     FileSystem.readAsStringAsync,
-    [lectureVideoPath + videoName + ".json"],
+    [FILE_PATHS.LECTURE_VIDEOS + videoName + ".json"],
   );
 };
 
@@ -383,7 +400,7 @@ export const getVideoURL = async (videoName: string, resolution: string) => {
  */
 export const getSubCourseList = async (): Promise<Course[] | null> => {
   // get the logged-in user id from async storage
-  const userId = await AsyncStorage.getItem(USER_ID);
+  const userId = await AsyncStorage.getItem(STORAGE_KEYS.USER_ID);
 
   if (userId === null) {
     throw new Error(
@@ -394,9 +411,12 @@ export const getSubCourseList = async (): Promise<Course[] | null> => {
   const apiCourses = await fetchWithStorageFallback(
     api.getSubscriptions,
     [userId],
-    SUB_COURSE_LIST,
+    STORAGE_KEYS.SUB_COURSE_LIST,
   );
-  await AsyncStorage.setItem(SUB_COURSE_LIST, JSON.stringify(apiCourses));
+  await AsyncStorage.setItem(
+    STORAGE_KEYS.SUB_COURSE_LIST,
+    JSON.stringify(apiCourses),
+  );
   return mapApiCoursesToCourses(apiCourses);
 };
 
@@ -415,13 +435,13 @@ export const refreshSubCourseList = async (
       const newCourseList: Course[] = mapApiCoursesToCourses(list);
       // Save new courseList for this key and return it.
       await AsyncStorage.setItem(
-        SUB_COURSE_LIST,
+        STORAGE_KEYS.SUB_COURSE_LIST,
         JSON.stringify(newCourseList),
       );
       return newCourseList;
     })
     .catch((error: unknown) => {
-      throw new Error(error);
+      throw new Error(String(error));
     });
 };
 
@@ -430,7 +450,7 @@ export const refreshSubCourseList = async (
  */
 export const subscribe = async (courseId: string) => {
   // get the logged-in user id from async storage
-  const userId = await AsyncStorage.getItem(USER_ID);
+  const userId = await AsyncStorage.getItem(STORAGE_KEYS.USER_ID);
 
   if (userId === null) {
     throw new Error("Cannot fetch user id from async storage");
@@ -440,7 +460,7 @@ export const subscribe = async (courseId: string) => {
 };
 
 export const addCourseToStudent = async (courseId: string) => {
-  const userId = await AsyncStorage.getItem(USER_ID);
+  const userId = await AsyncStorage.getItem(STORAGE_KEYS.USER_ID);
   const loginToken = await getLoginToken();
 
   const student = await userApi.addCourseToStudent(
@@ -462,7 +482,7 @@ export const addCourseToStudent = async (courseId: string) => {
  */
 export const unsubscribe = async (courseId: string) => {
   // get the logged-in user id from async storage
-  const userId = await AsyncStorage.getItem(USER_ID);
+  const userId = await AsyncStorage.getItem(STORAGE_KEYS.USER_ID);
 
   if (userId === null) {
     throw new Error("Cannot fetch user id from async storage");
@@ -478,7 +498,7 @@ export const unsubscribe = async (courseId: string) => {
 
 //create a new folder to store videos if it does not already exist.
 export const makeDirectory = async () => {
-  await FileSystem.makeDirectoryAsync(lectureVideoPath, {
+  await FileSystem.makeDirectoryAsync(FILE_PATHS.LECTURE_VIDEOS, {
     intermediates: true,
   });
 };
@@ -487,7 +507,7 @@ export const getAllCoursesLocally = async (): Promise<Course[]> => {
   const courseList = [];
 
   const keys = await AsyncStorage.getAllKeys();
-  const userId = await AsyncStorage.getItem(USER_ID);
+  const userId = await AsyncStorage.getItem(STORAGE_KEYS.USER_ID);
 
   if (userId === null) {
     throw new Error("Cannot fetch user id from async storage");
@@ -507,7 +527,7 @@ export const getAllCoursesLocally = async (): Promise<Course[]> => {
  */
 
 export const storeCourseLocally = async (
-  courseID: string,
+  courseId: string,
 ): Promise<boolean> => {
   let success = true;
   if (!isOnline) {
@@ -515,25 +535,59 @@ export const storeCourseLocally = async (
   }
   try {
     //Stores the course data
-    const course = await api.getCourse(courseID);
-    await AsyncStorage.setItem(
-      courseID + (await AsyncStorage.getItem(USER_ID)),
-      JSON.stringify(course),
-    );
+    const course = await api.getCourse(courseId);
+    const userId = await AsyncStorage.getItem(STORAGE_KEYS.USER_ID);
+    await AsyncStorage.setItem(courseId + userId, JSON.stringify(course));
 
     //Stores section data
-    const sectionList = await api.getAllSections(courseID);
-    await setLocalItem("S" + courseID, sectionList);
+    const sectionList = await api.getAllSections(courseId);
+    await setLocalItem("S" + courseId, sectionList);
     await storeLectureData(sectionList, course);
     await AsyncStorage.setItem(
-      courseID + (await AsyncStorage.getItem(USER_ID)),
+      courseId + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
       JSON.stringify(course),
     );
   } catch {
     success = false;
-    await deleteLocallyStoredCourse(courseID);
+    await deleteLocallyStoredCourse(courseId);
   }
   return success;
+};
+
+const storeComponentData = async (component: Component) => {
+  if (component.type === "lecture") {
+    if (component.component.contentType === "video") {
+      await makeDirectory();
+      await storeLectureVideo(component.component._id + "_l");
+    }
+    return;
+  }
+
+  if (component.component.image) {
+    await storeComponentImage(
+      component.component._id,
+      component.component.image,
+    );
+  } else if (component.component.video) {
+    await storeComponentVideo(component.component.video);
+  }
+};
+
+const storeComponentImage = async (componentId: string, imageId: string) => {
+  try {
+    const image = await api.getBucketImage(imageId);
+    await AsyncStorage.setItem("I" + componentId, JSON.stringify(image));
+  } catch {
+    await AsyncStorage.setItem("I" + componentId, defaultImage.base64);
+  }
+};
+
+const storeComponentVideo = async (videoId: string) => {
+  await makeDirectory();
+  await FileSystem.writeAsStringAsync(
+    FILE_PATHS.LECTURE_VIDEOS + videoId + ".json",
+    await api.getBucketImage(videoId),
+  );
 };
 
 const storeLectureData = async (
@@ -547,36 +601,9 @@ const storeLectureData = async (
       "C" + section._id,
       JSON.stringify(componentList),
     );
+
     for (const component of componentList) {
-      if (component.type === "lecture") {
-        if (component.component.contentType === "video") {
-          await makeDirectory();
-          await storeLectureVideo(component.component._id + "_l");
-        }
-        continue;
-      }
-      if (component.component.image) {
-        //Stores images
-        try {
-          const image = await api.getBucketImage(component.component.image);
-          await AsyncStorage.setItem(
-            "I" + component.component._id,
-            JSON.stringify(image),
-          );
-        } catch {
-          await AsyncStorage.setItem(
-            "I" + component.component._id,
-            defaultImage.base64,
-          );
-        }
-      } else if (component.component.video) {
-        //Stores videos
-        await makeDirectory();
-        await FileSystem.writeAsStringAsync(
-          lectureVideoPath + component.component.video + ".json",
-          await api.getBucketImage(component.component.video),
-        );
-      }
+      await storeComponentData(component);
     }
 
     //add a new variable "DateOfDownload" to the course object
@@ -588,17 +615,17 @@ const storeLectureData = async (
 
 /**
  * Deletes a locally stored course.
- * @param {string} courseID - The ID of the course to remove from local storage.
+ * @param {string} courseId - The ID of the course to remove from local storage.
  * @returns {Promise<boolean>} A promise that resolves with `true` if the course was deleted successfully.
  */
-export const deleteLocallyStoredCourse = async (courseID: string) => {
+export const deleteLocallyStoredCourse = async (courseId: string) => {
   let success = true;
   try {
     await AsyncStorage.removeItem(
-      courseID + (await AsyncStorage.getItem(USER_ID)),
+      courseId + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
     );
-    const sectionList = await getLocalItem<ApiSection[]>("S" + courseID);
-    await AsyncStorage.removeItem("S" + courseID);
+    const sectionList = await getLocalItem<ApiSection[]>("S" + courseId);
+    await AsyncStorage.removeItem("S" + courseId);
     await removeComponentsBySection(sectionList);
   } catch {
     success = false;
@@ -634,7 +661,8 @@ export const updateStoredCourses = async () => {
     let course;
     if (
       (course = await getLocalItem<ApiCourse>(
-        subListElement.courseId + (await AsyncStorage.getItem(USER_ID)),
+        subListElement.courseId +
+          (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
       )) !== null &&
       course.dateUpdated !== subListElement.dateUpdated
     ) {
@@ -647,12 +675,12 @@ export const updateStoredCourses = async () => {
 
 /**
  * Checks if a course is stored locally.
- * @param {string} courseID - The ID of the course to check.
+ * @param {string} courseId - The ID of the course to check.
  * @returns {Promise<boolean>} A promise that resolves with `true` if the course is stored locally.
  */
-export const checkCourseStoredLocally = async (courseID: string) => {
+export const checkCourseStoredLocally = async (courseId: string) => {
   return !!(await AsyncStorage.getItem(
-    courseID + (await AsyncStorage.getItem(USER_ID)),
+    courseId + (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
   ));
 };
 
@@ -666,7 +694,7 @@ export const clearAsyncStorage = async () => {
 };
 
 export const getLectureVideo = async (videoName: string) => {
-  const filePath = `${lectureVideoPath}${videoName}.mp4`;
+  const filePath = `${FILE_PATHS.LECTURE_VIDEOS}${videoName}.mp4`;
 
   try {
     const fileInfo = await FileSystem.getInfoAsync(filePath);
@@ -690,7 +718,7 @@ export const storeLectureVideo = async (videoName: string) => {
       throw new Error("No video data");
     }
 
-    const filePath = `${lectureVideoPath}${videoName}.mp4`;
+    const filePath = `${FILE_PATHS.LECTURE_VIDEOS}${videoName}.mp4`;
 
     // Store video in file system
     await FileSystem.writeAsStringAsync(filePath, videoData, {
@@ -704,7 +732,7 @@ export const storeLectureVideo = async (videoName: string) => {
 };
 
 export const deleteLectureVideo = async (videoName: string) => {
-  const filePath = `${lectureVideoPath}${videoName}.mp4`;
+  const filePath = `${FILE_PATHS.LECTURE_VIDEOS}${videoName}.mp4`;
 
   await FileSystem.deleteAsync(filePath);
 };
