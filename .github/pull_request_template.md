@@ -4,9 +4,9 @@
 
 <!-- Describe the change implemented in this pull request -->
 
-## User Story (if applicable)
+## User Story
 
-<!-- Reference to the user story in the backlog -->
+<!-- IF APPLICABLE, OTHERWISE REMOVE THIS SECTION. Reference to the user story in the backlog -->
 
 | Theme | Epic | Capacity | Feature | User Story |
 | ----- | ---- | -------- | ------- | ---------- |
@@ -15,6 +15,7 @@
 ## Checklist
 
 - [ ] The functionality meets the related user story or issue
+- [ ] I have followed and applied the Figma design (if applicable)
 - [ ] I have added at least two reviewers, with one of them being from another team
 - [ ] I have written or updated tests related to this change
 - [ ] I have updated the documentation related to this change (if applicable)
@@ -28,6 +29,6 @@
   - [ ] this branch is kept updated by running `git fetch && git rebase origin/dev` whenever another PR is merged
 - [ ] I will add the PR to the merge queue after it is approved
 
-## Screenshot (if applicable)
+## Screenshot
 
-<!-- Include screenshots or relevant logs -->
+<!-- IF APPLICABLE, OTHERWISE REMOVE THIS SECTION. Include screenshots or relevant logs -->
