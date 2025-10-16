@@ -1,0 +1,78 @@
+name: LDE Issue Report
+description: Report an issue with the LDE
+title: "[LDE Issue]: <short symptom>"
+labels: ["lde", "bug", "needs triage"]
+assignees:
+  - audio-engineer
+  - Alfenstein8
+  - Danar435
+  - SebastianMygind
+  - MadsHeilmann
+  - TexWO
+body:
+  - type: dropdown
+    attributes:
+      label: Operating System
+      options:
+        - Windows 10/11
+        - macOS (Intel)
+        - macos (Apple Silicon)
+        - Linux (specify below)
+        - Other (specify below)
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Operating System Details
+      placeholder: Ubuntu 24.04, nixOS, FreeBSD, Windows XP
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Environment
+      description: Paste the output of `node --version && java --version && npx expo-env-info` here.
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Prerequisites
+      options:
+        - label: |
+            I have searched existing issues (also closed) and Discord posts, and none of them matched my problem.
+          required: true
+        - label: |
+            I have switched to the newest version of the `dev` branch (`git switch dev && git fetch && git pull`) and
+            can confirm that the issue still exists.
+          required: true
+        - label: |
+            I have familiarized myself with the
+            [Getting Started](https://erasmusegalitarian.github.io/educado-docs/handbook/mobile/getting-started/) guide,
+            and made sure that I followed all steps.
+          required: true
+        - label: I ran `npx expo-doctor` and `npx expo install --check` and see no errors.
+          required: true
+        - label: I deleted `node_modules/` and ran `npm install`, and ran `npx expo run:android` again.
+          required: true
+        - label: I deleted `.expo/` and `android/`, and ran `npx expo run:android`.
+          required: true
+        - label: |
+            I have deleted and created a new emulator in Android Studio that follows the specs laid out in the
+            [Getting Started](https://erasmusegalitarian.github.io/educado-docs/handbook/mobile/getting-started/) guide,
+            and ran `npx expo run:android` again.
+          required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: What commands did you run? Paste them here.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual behavior
+      description: What did you see? Paste it here.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Attachments
+      description: If applicable, add screenshots or files to help explain your problem.
