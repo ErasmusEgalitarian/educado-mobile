@@ -47,12 +47,12 @@ export default function EnterNewPasswordScreen(props) {
     setShowPasswordFunction(!shouldShowPassword);
   };
 
-  const checkIfPasswordsMatch = (password, confirmPassword) => {
+  const checkIfPasswordsMatch = (password: string, confirmPassword: string) => {
     if (password === confirmPassword) {
       setConfirmPasswordAlert("");
     } else {
       // The passwords do not match
-      setConfirmPasswordAlert("Os campos de senha precisam ser iguais");
+      setConfirmPasswordAlert("Senhas não coincidem");
     }
   };
 
@@ -213,7 +213,10 @@ export default function EnterNewPasswordScreen(props) {
           }
         />
       </View>
+      <View className="mb-10">
       <FormFieldAlert label={confirmPasswordAlert} />
+      </View>
+      
       {/* Enter button */}
       <FormButton
         testId="resetPasswordButton"
