@@ -71,11 +71,11 @@ const BottomDrawer = ({
       />
 
       <View
-        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-8 py-10 shadow-2xl shadow-black"
+        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9 shadow-2xl shadow-black"
         style={{ height: windowHeight * 0.87, width: windowWidth * 1 }}
       >
-        <View className="mb-4 flex-row items-center justify-between">
-          <Text className="font-sans-semi-bold text-2xl text-textTitleGrayscale">
+        <View className="h-8 mr-6 flex-row items-center justify-between">
+          <Text className="font-sans-semi-bold text-3xl text-textTitleGrayscale mr-2">
             {course.title}
           </Text>
           <TouchableOpacity onPress={() => toggleModal()}>
@@ -87,7 +87,7 @@ const BottomDrawer = ({
           </TouchableOpacity>
         </View>
 
-        <View className="flex-column mb-4">
+        <View className="flex-column">
           <View className="flex-row flex-wrap items-start justify-start pb-2">
             <CardLabel
               title={Utility.determineCategory(course.category)}
@@ -116,7 +116,7 @@ const BottomDrawer = ({
                   size={13}
                   color={colors.surfaceDefaultGreen}
                 />
-                <Text className="flex-start pl-1 font-sans-bold text-xs text-surfaceDefaultGreen">
+                <Text className="flex-start pl-1 font-sans-bold text-s text-surfaceDefaultGreen">
                   Inscrição realizada
                 </Text>
               </View>
@@ -142,7 +142,7 @@ const BottomDrawer = ({
           {subscribed ? (
             <CourseButton course={course} onPress={navigateCourse}>
               <View className="flex-row items-center">
-                <Text className="mr-3 py-1 font-sans-bold text-lg text-surfaceSubtleGrayscale">
+                <Text className="mr-3 py-1 font-sans-bold text-xl text-surfaceSubtleGrayscale">
                   Continuar Curso
                 </Text>
                 <MaterialCommunityIcons
@@ -154,7 +154,7 @@ const BottomDrawer = ({
             </CourseButton>
           ) : (
             <CourseButton course={course} onPress={subscribeCourse}>
-              <Text className="p-1 font-sans-bold text-lg text-surfaceSubtleGrayscale">
+              <Text className="p-1 font-sans-bold text-xl text-surfaceSubtleGrayscale">
                 Inscreva-se agora
               </Text>
             </CourseButton>
