@@ -8,7 +8,6 @@ export const colors = {
   projectGray: "#A1ACB2",
   lightGray: "#E4E4E4",
   error: "#FF4949",
-  errorOpacity: "#FFDECC",
   success: "#4AA04A",
   disable: "#DDD",
   disabled: "#E4F2F5",
@@ -31,7 +30,7 @@ export const colors = {
   badgesPurple: "#C383F7",
   badgesBlue: "#54ADF1",
   unselectedStar: "#CBCAB8",
-  
+  semitransBG: "rgba(0,0,0,0.31)",
 } as const;
 
 export type ColorName = keyof typeof colors;

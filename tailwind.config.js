@@ -17,7 +17,6 @@ module.exports = {
       projectGray: "#A1ACB2",
       lightGray: "#E4E4E4",
       error: "#FF4949",
-      errorOpacity: "#FFDECC",
       success: "#4AA04A",
       disable: "#DDD",
       disabled: "#E4F2F5",
