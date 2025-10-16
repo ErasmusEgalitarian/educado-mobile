@@ -74,7 +74,7 @@ const BottomDrawer = ({
         className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9 shadow-2xl shadow-black"
         style={{ height: windowHeight * 0.87, width: windowWidth * 1 }}
       >
-        <View className="h-8 mr-6 flex-row items-center justify-between">
+        <View className="h-9 mr-6 flex-row items-center justify-between">
           <Text className="font-sans-semi-bold text-3xl text-textTitleGrayscale mr-2">
             {course.title}
           </Text>
