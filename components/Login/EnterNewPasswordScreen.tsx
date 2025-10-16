@@ -16,12 +16,19 @@ import ShowAlert from "../General/ShowAlert";
 import DialogNotification from "../General/DialogNotification";
 import PropTypes from "prop-types";
 
+interface EnterNewPasswordScreenProps {
+  hideModal: () => void
+  resetState: () => void
+  email: string
+  token: string
+}
+
 /**
  * Component for entering a new password in the resetPassword modal
  * @param {Object} props not used in this component as of now
  * @returns {React.Element} Modal component for entering new password
  */
-export default function EnterNewPasswordScreen(props) {
+export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -43,16 +50,16 @@ export default function EnterNewPasswordScreen(props) {
    * @param {Function} setShowPasswordFunction function for handling password visibility state
    * @param {boolean} shouldShowPassword boolean state for visibility of password
    */
-  const toggleShowPassword = (setShowPasswordFunction, shouldShowPassword) => {
+  const toggleShowPassword = (setShowPasswordFunction: (shouldShowPassword: boolean) => void, shouldShowPassword: boolean) => {
     setShowPasswordFunction(!shouldShowPassword);
   };
 
-  const checkIfPasswordsMatch = (password, confirmPassword) => {
+  const checkIfPasswordsMatch = (password: string, confirmPassword: string) => {
     if (password === confirmPassword) {
       setConfirmPasswordAlert("");
     } else {
       // The passwords do not match
-      setConfirmPasswordAlert("Os campos de senha precisam ser iguais");
+      setConfirmPasswordAlert("Senhas não coincidem");
     }
   };
 
@@ -77,7 +84,7 @@ export default function EnterNewPasswordScreen(props) {
    * @param {String} newPassword
    * @returns
    */
-  async function changePassword(email, token, newPassword) {
+  async function changePassword(email: string, token: string, newPassword: string) {
     if (!validateInput) {
       return;
     }
@@ -95,7 +102,7 @@ export default function EnterNewPasswordScreen(props) {
         props.hideModal();
         props.resetState();
       }, 2500);
-    } catch (error) {
+    } catch (error: any) {
       switch (error?.error?.code) {
         case "E0401":
           // No user exists with this email!
@@ -213,7 +220,10 @@ export default function EnterNewPasswordScreen(props) {
           }
         />
       </View>
+      <View className="mb-10">
       <FormFieldAlert label={confirmPasswordAlert} />
+      </View>
+      
       {/* Enter button */}
       <FormButton
         testId="resetPasswordButton"

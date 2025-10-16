@@ -28,7 +28,7 @@ interface ResetPasswordProps {
  * - onModalClose: Function to do when modal closes
  */
 export default function ResetPassword(props: ResetPasswordProps) {
-  const emailAlertMessage = "Não existe nenhum usuário com este email!";
+  const emailAlertMessage = "Email não localizado";
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [emailSent, setEmailSent] = useState(false);
@@ -37,6 +37,7 @@ export default function ResetPassword(props: ResetPasswordProps) {
   const [tokenAlert, setTokenAlert] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
   /**
    * Function to display an alert to the user
@@ -47,22 +48,21 @@ export default function ResetPassword(props: ResetPasswordProps) {
     setPasswordResetAlert(message);
     setIsSuccess(status);
   }
-
-  useEffect(() => {
-    if (email === "") {
-      displayErrorAlert("", false);
-      return;
-    }
-
-    const validationError = validateEmail(email);
-    displayErrorAlert(validationError, false);
-  }, [email]);
-
+  
   /**
    * Function to send mail to user with code to reset password
    * @param {String} email
    */
   async function sendEmail(email: string) {
+    const validationError = validateEmail(email);
+    if (validationError) {
+      displayErrorAlert(validationError, false);
+      setEmailError(true);
+      return;
+    }
+
+    setEmailError(false);
+
     const obj = {
       email,
     };
@@ -78,6 +78,7 @@ export default function ResetPassword(props: ResetPasswordProps) {
           case "E0401":
             // No user exists with this email!
             displayErrorAlert(emailAlertMessage, false);
+            setEmailError(true);
             break;
 
           case "E0406":
@@ -123,6 +124,7 @@ export default function ResetPassword(props: ResetPasswordProps) {
           case "E0401":
             // No user exists with this email!
             displayErrorAlert(emailAlertMessage, false);
+            setEmailError(true);
             break;
 
           case "E0404":
@@ -132,7 +134,7 @@ export default function ResetPassword(props: ResetPasswordProps) {
 
           case "E0405":
             // Incorrect code!
-            setTokenAlert("Código incorreto!");
+            setTokenAlert("Código inválido");
             break;
 
           default:
@@ -175,10 +177,15 @@ export default function ResetPassword(props: ResetPasswordProps) {
                 placeholder="useremail@gmail.com"
                 label="E-mail"
                 required={true}
-                onChangeText={(email) => setEmail(email)}
+                onChangeText={(email) => {
+                  setEmail(email);
+                  setEmailError(false);
+                  displayErrorAlert("", false);
+                }}
                 keyboardType="email-address"
                 testId="emailInput"
                 value={email} 
+                error={emailError}
                 />
                 <FormFieldAlert
                 testId="emailAlert"
