@@ -176,7 +176,7 @@ const CourseOverviewScreen = ({
       {/* Back Button */}
       <TouchableOpacity
         className="absolute left-5 top-10 z-10 pr-3"
-        onPress={() => navigation.navigate(("Meus cursos") as never)}
+        onPress={() => navigation.navigate("Meus cursos" as never)}
       >
         <MaterialCommunityIcons
           name="chevron-left"
