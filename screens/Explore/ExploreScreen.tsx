@@ -111,7 +111,7 @@ export const ExploreScreen = () => {
                                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                             }
                         >
-                          <View className="overflow-y-auto mt-8">
+                          <View className="overflow-visible mt-8">
                               {filteredCourses
                                   .reverse()
                                   .map((course, index) => (
