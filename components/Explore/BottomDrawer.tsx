@@ -117,7 +117,7 @@ const BottomDrawer = ({
 
           <View>
             {subscribed ? (
-              <View className="mb-1 w-full flex-row">
+              <View className="mb-1 w-full items-center  flex-row">
                 <MaterialCommunityIcons
                   name="check-circle"
                   size={13}
