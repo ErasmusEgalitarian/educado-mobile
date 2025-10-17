@@ -81,14 +81,14 @@ const BottomDrawer = ({
           elevation: 10,
         }}
       >
-        <View className="h-9 mr-6 flex-row items-center justify-between">
+        <View className="h-9 flex-row items-center justify-between">
           <Text className="font-medium text-3xl text-textTitleGrayscale mr-2">
             {course.title}
           </Text>
           <TouchableOpacity onPress={() => toggleModal()}>
             <MaterialCommunityIcons
               name={"chevron-down"}
-              size={25}
+              size={28}
               color={colors.textTitleGrayscale}
             />
           </TouchableOpacity>
