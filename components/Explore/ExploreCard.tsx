@@ -56,7 +56,7 @@ export const ExploreCard = ({
             </View>
           </View>
 
-          <View className="h-1 w-full border-b-[1px] border-surfaceDisabledGrayscale pt-2 opacity-50"></View>
+          <View className="h-1 w-full border-b-[1px] border-surfaceDisabledGrayscale pt-3 opacity-50"></View>
 
           <View className="h-[0.5] w-full pt-2" />
           <View className="w-full flex-row items-start justify-between">
