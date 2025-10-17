@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { View, ScrollView, RefreshControl } from "react-native";
-import FilterNavigationBar from "@/components/Explore/FilterNavigationBar";
+import { FilterNavigationBar } from "@/components/Explore/FilterNavigationBar";
 import { ExploreCard } from "@/components/Explore/ExploreCard";
 import { getCourseList, getSubCourseList } from "@/services/storage-service";
 import { useNavigation } from "@react-navigation/native";

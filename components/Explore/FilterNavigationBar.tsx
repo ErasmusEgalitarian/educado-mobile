@@ -1,10 +1,9 @@
 import { useState } from "react";
 import SearchBar from "@/components/Explore/SearchBar";
-import { View, Pressable } from "react-native";
+import { View, Pressable, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { categories } from "@/components/Explore/categories";
 import { colors } from "@/theme/colors";
-import Text from "@/components/General/Text";
 
 /**
  * FilterNavBar component displays a search bar and a list of categories.
@@ -13,17 +12,17 @@ import Text from "@/components/General/Text";
  * @returns {JSX.Element} - Rendered component
  */
 type FilterNavigationBarProps = {
-  onChangeText?: (text: string) => void;
-  onCategoryChange?: (category: string) => void;
+  onChangeText: (text: string) => void;
+  onCategoryChange: (category: string) => void;
   searchPlaceholder?: string;
 };
 
-const FilterNavigationBar = ({
+export const FilterNavigationBar = ({
   onChangeText = () => {},
   onCategoryChange = () => {},
   searchPlaceholder,
 }: FilterNavigationBarProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
 
   const handleCategorySelect = (category: string) => {
@@ -36,7 +35,7 @@ const FilterNavigationBar = ({
     onChangeText(text);
   };
 
-  const getCatagoryItemStyle = (isSelected: boolean) => ({
+  const getCategoryItemStyle = (isSelected: boolean) => ({
     backgroundColor: isSelected
       ? colors.borderDarkerCyan
       : colors.surfaceSubtleCyan,
@@ -73,7 +72,7 @@ const FilterNavigationBar = ({
                 key={category.label}
                 onPress={() => handleCategorySelect(category.label)}
                 className="mr-2 items-center justify-center rounded-lg border px-3 py-1"
-                style={getCatagoryItemStyle(isSelected)}
+                style={getCategoryItemStyle(isSelected)}
               >
                 <Text
                   className="text-s font-montserrat-bold"
@@ -89,5 +88,3 @@ const FilterNavigationBar = ({
     </View>
   );
 };
-
-export default FilterNavigationBar;
