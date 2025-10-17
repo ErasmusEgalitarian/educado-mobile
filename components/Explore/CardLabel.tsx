@@ -26,7 +26,7 @@ export const CardLabel = ({
   return (
     <View className="flex-row items-center justify-start">
       <MaterialCommunityIcons name={icon} size={12} color={color} />
-      <Text className={`pl-1 ${font}`}  style={{ color: color }}>
+      <Text className={`pl-1 ${font}`} style={{ color: color }}>
         {title}
       </Text>
     </View>

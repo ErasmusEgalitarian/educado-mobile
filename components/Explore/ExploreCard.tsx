@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {CardLabel} from "@/components/Explore/CardLabel";
+import { CardLabel } from "@/components/Explore/CardLabel";
 import CustomRating from "@/components/Explore/CustomRating";
 import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
@@ -32,15 +32,17 @@ export const ExploreCard = ({
   };
 
   return isPublished ? (
-    <View className="mb-4 mx-1 p-5 rounded-lg overflow-visible" style={{
-      shadowColor: colors.textTitleGrayscale,
-      shadowOpacity: 0.25,
-      shadowRadius: 10,
-      backgroundColor: colors.surfaceSubtleGrayscale,
-      elevation: 2,
-    }}>
+    <View
+      className="mx-1 mb-4 overflow-visible rounded-lg p-5"
+      style={{
+        shadowColor: colors.textTitleGrayscale,
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
+        backgroundColor: colors.surfaceSubtleGrayscale,
+        elevation: 2,
+      }}
+    >
       <View>
-
         <View className="flex-col items-center">
           <View className="w-full flex-row items-center justify-between">
             <View className="flex-row items-center">
@@ -49,7 +51,7 @@ export const ExploreCard = ({
                 size={24}
                 color={colors.textTitleGrayscale}
               />
-              <Text className="h-6 ml-2 mr-9 font-sans-bold text-xl text-textTitleGrayscale">
+              <Text className="font-sans-bold ml-2 mr-9 h-6 text-xl text-textTitleGrayscale">
                 {course.title}
               </Text>
             </View>
@@ -84,7 +86,7 @@ export const ExploreCard = ({
                   onPress={handleToggleBottomSheet}
                   className="flex-row items-center border-b border-surfaceDefaultCyan px-1"
                 >
-                  <Text className="mr-1 font-semibold text-sm text-surfaceDefaultCyan">
+                  <Text className="mr-1 text-sm font-semibold text-surfaceDefaultCyan">
                     saiba mais
                   </Text>
                   <MaterialCommunityIcons

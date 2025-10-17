@@ -15,7 +15,11 @@ export interface CourseButtonProps {
  * @param children - The React element(s) to render inside the button
  * @returns {JSX.Element} - Rendered component
  */
-export const CourseButton = ({ course, onPress, children } : CourseButtonProps)  => {
+export const CourseButton = ({
+  course,
+  onPress,
+  children,
+}: CourseButtonProps) => {
   return (
     <View className="">
       <Pressable
@@ -27,5 +31,3 @@ export const CourseButton = ({ course, onPress, children } : CourseButtonProps) 
     </View>
   );
 };
-
-

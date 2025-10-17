@@ -57,11 +57,8 @@ export const FilterNavigationBar = ({
         />
       </View>
 
-      <View className="z-10 mt-1 -mr-8">
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        >
+      <View className="z-10 -mr-8 mt-1">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {categories.map((category) => {
             const isSelected = selectedCategory === category.label;
             return (

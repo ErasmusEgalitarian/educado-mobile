@@ -4,7 +4,7 @@ import {
   View,
   useWindowDimensions,
   TouchableOpacity,
-  Text
+  Text,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CardLabel } from "@/components/Explore/CardLabel";
@@ -66,7 +66,7 @@ const BottomDrawer = ({
         className="flex-1"
         style={{
           backgroundColor: colors.surfaceSubtleCyan,
-          opacity: 0.5
+          opacity: 0.5,
         }}
       />
 
@@ -82,7 +82,7 @@ const BottomDrawer = ({
         }}
       >
         <View className="h-9 flex-row items-center justify-between">
-          <Text className="font-medium text-3xl text-textTitleGrayscale mr-2">
+          <Text className="mr-2 text-3xl font-medium text-textTitleGrayscale">
             {course.title}
           </Text>
           <TouchableOpacity onPress={() => toggleModal()}>
@@ -117,13 +117,13 @@ const BottomDrawer = ({
 
           <View>
             {subscribed ? (
-              <View className="mb-1 w-full items-center  flex-row">
+              <View className="mb-1 w-full flex-row items-center">
                 <MaterialCommunityIcons
                   name="check-circle"
                   size={13}
                   color={colors.surfaceDefaultGreen}
                 />
-                <Text className="flex-start pl-1 font-semibold text-s text-surfaceDefaultGreen">
+                <Text className="flex-start text-s pl-1 font-semibold text-surfaceDefaultGreen">
                   Inscrição realizada
                 </Text>
               </View>
@@ -149,7 +149,7 @@ const BottomDrawer = ({
           {subscribed ? (
             <CourseButton course={course} onPress={navigateCourse}>
               <View className="flex-row items-center">
-                <Text className="mr-3 py-1 font-sans-bold text-xl text-surfaceSubtleGrayscale">
+                <Text className="font-sans-bold mr-3 py-1 text-xl text-surfaceSubtleGrayscale">
                   Continuar Curso
                 </Text>
                 <MaterialCommunityIcons
@@ -161,7 +161,7 @@ const BottomDrawer = ({
             </CourseButton>
           ) : (
             <CourseButton course={course} onPress={subscribeCourse}>
-              <Text className="p-1 font-sans-bold text-xl text-surfaceSubtleGrayscale">
+              <Text className="font-sans-bold p-1 text-xl text-surfaceSubtleGrayscale">
                 Inscreva-se agora
               </Text>
             </CourseButton>

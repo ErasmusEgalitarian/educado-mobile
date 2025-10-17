@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CourseScreen from "../../screens/Courses/CourseScreen";
 import DownloadScreen from "../../screens/Download/DownloadScreen";
-import { ExploreScreen } from "../../screens/Explore/ExploreScreen"
+import { ExploreScreen } from "../../screens/Explore/ExploreScreen";
 import EduScreen from "../../screens/EduChatbot/EduScreen";
 import ProfileComponent from "../../screens/Profile/Profile";
 import EditProfileScreen from "../../screens/Profile/EditProfileScreen";

@@ -20,15 +20,19 @@ const InfoBoxItem = ({ title, icon, className }: InfoBoxItemProps) => {
     <View
       className={`flex-row items-center justify-start py-3 ${className ?? ""}`}
     >
-      <MaterialCommunityIcons name={icon} size={20} color={colors.textCaptionGrayscale} />
-      <Text className="pl-2 font-sans text-s text-projectBlack">{title}</Text>
+      <MaterialCommunityIcons
+        name={icon}
+        size={20}
+        color={colors.textCaptionGrayscale}
+      />
+      <Text className="text-s pl-2 font-sans text-projectBlack">{title}</Text>
     </View>
   );
 };
 
 const InfoBox = ({ course }: { course: Course }) => {
   return (
-    <View className="w-full flex-col rounded-2xl border border-solid border-grayScale px-4 py-1">
+    <View className="border-grayScale w-full flex-col rounded-2xl border border-solid px-4 py-1">
       <InfoBoxItem
         title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos,\n exercícios, leituras complementares)`}
         icon="clock-outline"
