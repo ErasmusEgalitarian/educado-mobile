@@ -65,17 +65,17 @@ export const ExploreCard = ({
                 <CardLabel
                   title={Utility.determineCategory(course.category)}
                   icon={Utility.determineIcon(course.category)}
-                  font="font-semibold text-xs"
+                  font="font-sans-bold text-sm"
                 />
                 <CardLabel
                   title={Utility.formatHours(course.estimatedHours)}
                   icon={"clock-outline"}
-                  font="font-semibold text-xs"
+                  font="font-sans-bold text-sm"
                 />
                 <CardLabel
                   title={Utility.getDifficultyLabel(course.difficulty)}
                   icon={"book-multiple-outline"}
-                  font="font-semibold text-xs"
+                  font="font-sans-bold text-sm"
                 />
               </View>
               <View className="h-1.25 opacity-50" />
@@ -86,7 +86,7 @@ export const ExploreCard = ({
                   onPress={handleToggleBottomSheet}
                   className="flex-row items-center border-b border-surfaceDefaultCyan px-1"
                 >
-                  <Text className="mr-1 font-semibold text-s text-surfaceDefaultCyan">
+                  <Text className="mr-1 font-semibold text-sm text-surfaceDefaultCyan">
                     saiba mais
                   </Text>
                   <MaterialCommunityIcons
