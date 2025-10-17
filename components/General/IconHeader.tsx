@@ -14,7 +14,7 @@ export interface IconHeaderProps {
 const IconHeader = ({ title, description }: IconHeaderProps) => {
   return (
     <>
-      <View className="flex flex-row items-center pb-2 pl-6 pt-[20%]">
+      <View className="flex flex-row items-center pb-2">
         <Image
           source={require("../../assets/images/singleIcon.png")}
           alt="Icon"

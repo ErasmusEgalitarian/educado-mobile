@@ -96,6 +96,7 @@ export const ExploreScreen = () => {
                 <OfflineScreen />
             ) : (
                 <BaseScreen>
+                  <View className="pt-28 px-8 overflow-visible">
                     <IconHeader
                       title={"Explorar cursos"}
                     />
@@ -125,6 +126,7 @@ export const ExploreScreen = () => {
                           </View>
                         </ScrollView>
                     </View>
+                  </View>
                 </BaseScreen>
             )}
         </>

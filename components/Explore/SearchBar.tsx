@@ -23,7 +23,7 @@ const SearchBar = ({
   placeholder = "Search...",
 }: SearchBarProps) => {
   return (
-    <View className="relative mx-2.5 mb-2.5 flex-row items-center rounded-medium border-[1px] border-surfaceLighterCyan bg-surfaceSubtleGrayscale px-4">
+    <View className="relative mb-2.5 flex-row items-center rounded-medium border-[1px] border-surfaceLighterCyan bg-surfaceSubtleGrayscale px-4">
       <TextInput
         placeholder={"Buscar curso"}
         placeholderTextColor={colors.textCaptionGrayscale}

@@ -53,7 +53,7 @@ const FilterNavigationBar = ({
 
   return (
     <View>
-      <View className="z-10 px-2">
+      <View className="z-10">
         <SearchBar
           searchText={searchText}
           onSearchChange={handleSearchInputChange}
@@ -61,32 +61,29 @@ const FilterNavigationBar = ({
         />
       </View>
 
-      <View className="z-10 pb-4 pl-2 pr-2 mt-1">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex items-center px-2 py-1">
-            <View className="flex-row overflow-x-auto">
-              {categories.map((category) => {
-                const isSelected = selectedCategory === category.label;
-                return (
-                  <Pressable
-                    key={category.label}
-                    onPress={() => handleCategorySelect(category.label)}
-                    className="mr-2 items-center justify-center rounded-lg border-[1px] border-projectGray px-2 py-2"
-                    style={{ ...getCatagoryItemStyle(isSelected) }}
-                  >
-                    <Text
-                      className="text-s font-montserrat-bold"
-                      style={{
-                        ...getCategoryTextStyle(isSelected),
-                      }}
-                    >
-                      {category.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
+      <View className="z-10 mt-1 -mr-8">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          {categories.map((category) => {
+            const isSelected = selectedCategory === category.label;
+            return (
+              <Pressable
+                key={category.label}
+                onPress={() => handleCategorySelect(category.label)}
+                className="mr-2 items-center justify-center rounded-lg border px-3 py-2"
+                style={getCatagoryItemStyle(isSelected)}
+              >
+                <Text
+                  className="text-s font-montserrat-bold"
+                  style={getCategoryTextStyle(isSelected)}
+                >
+                  {category.label}
+                </Text>
+              </Pressable>
+            );
+          })}
         </ScrollView>
       </View>
     </View>
