@@ -135,7 +135,7 @@ const BottomDrawer = ({
 
         <View className="w-full border-b-[1px] border-surfaceDisabledGrayscale opacity-50" />
 
-        <ScrollView className="inner-shadow my-4 max-h-24 w-full">
+        <ScrollView className="inner-shadow my-4 max-h-40 w-full">
           <Text className="flex-start w-full font-sans text-xl">
             {course.description}
           </Text>
