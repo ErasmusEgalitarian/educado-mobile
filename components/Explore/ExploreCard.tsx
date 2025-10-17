@@ -77,7 +77,6 @@ export const ExploreCard = ({
                   font="font-sans-bold text-sm"
                 />
               </View>
-              <View className="h-1.25 opacity-50" />
               <CustomRating rating={course.rating} />
 
               <View className="w-full flex-row justify-end">

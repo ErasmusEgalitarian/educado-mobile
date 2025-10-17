@@ -50,12 +50,12 @@ const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
 
   return noRating ? (
     <View className="flex-row items-start justify-start">
-      <Text className="pl-1 text-sm font-sans text-textDisabledGrayscale">
+      <Text className="pl-1 pt-2 text-sm font-sans text-textDisabledGrayscale">
         Ainda sem avaliações
       </Text>
     </View>
   ) : (
-    <View className="flex-row items-center justify-start">
+    <View className="flex-row pt-2 items-center justify-start">
       {ratingIcons.map((icon, index) => (
         <MaterialCommunityIcons
           key={index}
