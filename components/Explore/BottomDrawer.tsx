@@ -39,7 +39,6 @@ const BottomDrawer = ({
 
   const navigation = useNavigation<NavigationProp<BottomDrawerNavParams>>();
 
-  const subscribeCourse = (course: Course) => {
   const subscribeCourse = async (course: Course) => {
     toggleModal();
     await subscribe(course.courseId);
