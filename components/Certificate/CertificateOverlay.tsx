@@ -1,8 +1,8 @@
-import * as Utility from "../../services/utils";
+import * as Utility from "@/services/utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity } from "react-native";
-import {CardLabel} from "@/components/Explore/CardLabel";
-import PropTypes from "prop-types";
+import { CardLabel } from "@/components/Explore/CardLabel";
+//import PropTypes from "prop-types";
 
 const CertificateOverlay = ({ certificate, handleVisualizarClick }) => {
   const {
@@ -54,6 +54,7 @@ const CertificateOverlay = ({ certificate, handleVisualizarClick }) => {
     </View>
   );
 };
+/*
 CertificateOverlay.propTypes = {
   certificate: PropTypes.shape({
     courseName: PropTypes.string.isRequired,
@@ -63,5 +64,5 @@ CertificateOverlay.propTypes = {
   }).isRequired,
   handleVisualizarClick: PropTypes.func.isRequired,
 };
-
+*/
 export default CertificateOverlay;

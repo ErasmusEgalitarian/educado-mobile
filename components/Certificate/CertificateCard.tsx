@@ -6,14 +6,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import ToastNotification from "../General/ToastNotification";
-import * as Utility from "../../services/utils";
+import ToastNotification from "@/components/General/ToastNotification";
+import * as Utility from "@/services/utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import CertificateTemplate from "./CertificateTemplate";
-import CertificatePopup from "./CertificatePopup";
-import CertificateOverlay from "./CertificateOverlay";
-import {CardLabel} from "@/components/Explore/CardLabel";
+import CertificateTemplate from "@/components/Certificate/CertificateTemplate";
+import CertificatePopup from "@/components/Certificate/CertificatePopup";
+import CertificateOverlay from "@/components/Certificate/CertificateOverlay";
+import { CardLabel } from "@/components/Explore/CardLabel";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 
