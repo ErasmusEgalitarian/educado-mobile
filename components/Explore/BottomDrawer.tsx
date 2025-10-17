@@ -73,7 +73,7 @@ const BottomDrawer = ({
       <View
         className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9"
         style={{
-          height: windowHeight * 0.87,
+          height: windowHeight * 0.91,
           width: windowWidth,
           shadowColor: colors.textTitleGrayscale,
           shadowOpacity: 1,
