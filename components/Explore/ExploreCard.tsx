@@ -61,7 +61,7 @@ export const ExploreCard = ({
           <View className="h-[0.5] w-full pt-2" />
           <View className="w-full flex-row items-start justify-between">
             <View className="w-full flex-col items-start justify-between">
-              <View className="flex-col items-start justify-start space-y-2 pb-2">
+              <View className="flex-col items-start justify-start space-y-2 pb-0">
                 <CardLabel
                   title={Utility.determineCategory(course.category)}
                   icon={Utility.determineIcon(course.category)}
