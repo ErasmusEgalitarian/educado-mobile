@@ -23,7 +23,6 @@ export const FilterNavigationBar = ({
   searchPlaceholder,
 }: FilterNavigationBarProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [searchText, setSearchText] = useState<string>("");
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
@@ -31,7 +30,6 @@ export const FilterNavigationBar = ({
   };
 
   const handleSearchInputChange = (text: string) => {
-    setSearchText(text);
     onChangeText(text);
   };
 
@@ -54,7 +52,6 @@ export const FilterNavigationBar = ({
     <View>
       <View className="z-10">
         <SearchBar
-          searchText={searchText}
           onSearchChange={handleSearchInputChange}
           placeholder={searchPlaceholder}
         />

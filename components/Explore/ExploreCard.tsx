@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {CardLabel} from "@/components/Explore/CardLabel";
 import CustomRating from "@/components/Explore/CustomRating";
 import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
-import Text from "@/components/General/Text";
 import BottomDrawer from "@/components/Explore/BottomDrawer";
 import type { Course } from "@/types/course";
 

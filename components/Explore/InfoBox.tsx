@@ -1,6 +1,5 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Text from "@/components/General/Text";
 import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
 import type { ComponentProps } from "react";

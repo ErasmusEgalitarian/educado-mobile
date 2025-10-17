@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Text from "@/components/General/Text";
 import { colors } from "@/theme/colors";
 /**
  * CustomRating component displays a star rating based on a number

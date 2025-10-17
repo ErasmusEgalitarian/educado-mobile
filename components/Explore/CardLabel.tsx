@@ -1,7 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { colors } from "@/theme/colors";
-import Text from "@/components/General/Text";
 
 interface CardLabelProps {
   title: string;
