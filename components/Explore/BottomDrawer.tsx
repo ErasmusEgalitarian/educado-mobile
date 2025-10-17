@@ -71,8 +71,15 @@ const BottomDrawer = ({
       />
 
       <View
-        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9 shadow-2xl shadow-black"
-        style={{ height: windowHeight * 0.87, width: windowWidth * 1 }}
+        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9"
+        style={{
+          height: windowHeight * 0.87,
+          width: windowWidth,
+          shadowColor: colors.textTitleGrayscale,
+          shadowOpacity: 1,
+          shadowRadius: 12,
+          elevation: 10,
+        }}
       >
         <View className="h-9 mr-6 flex-row items-center justify-between">
           <Text className="font-sans-semi-bold text-3xl text-textTitleGrayscale mr-2">

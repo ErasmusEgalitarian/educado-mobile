@@ -33,8 +33,15 @@ export const ExploreCard = ({
   };
 
   return isPublished ? (
-    <View>
-      <View className="mb-4 p-4 rounded-lg overflow-visible bg-surfaceSubtleGrayscale">
+    <View className="mb-4 mx-1 p-5 rounded-lg overflow-visible" style={{
+      shadowColor: colors.textTitleGrayscale,
+      shadowOpacity: 0.25,
+      shadowRadius: 10,
+      backgroundColor: colors.surfaceSubtleGrayscale,
+      elevation: 3,
+    }}>
+      <View>
+
         <View className="flex-col items-center">
           <View className="w-full flex-row items-center justify-between">
             <View className="flex-row items-center">
