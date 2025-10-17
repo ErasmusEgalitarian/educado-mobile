@@ -34,7 +34,7 @@ export const ExploreCard = ({
 
   return isPublished ? (
     <View>
-      <View className="mx-4 mb-4 overflow-hidden rounded-lg bg-surfaceSubtleGrayscale p-6 shadow-2xl">
+      <View className="mb-4 p-4 rounded-lg overflow-visible bg-surfaceSubtleGrayscale">
         <View className="flex-col items-center">
           <View className="w-full flex-row items-center justify-between">
             <View className="flex-row items-center">
