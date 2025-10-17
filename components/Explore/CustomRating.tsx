@@ -22,7 +22,7 @@ const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
   const [noRating, setNoRating] = useState(false);
 
   useEffect(() => {
-    const fullStars = Math.floor(rating);
+    const fullStars = Math.floor(rating ?? 0);
     const halfStar = rating % 1 !== 0;
 
     if (rating !== 0) {
@@ -68,7 +68,7 @@ const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
         className="pl-1 font-sans-bold text-sm"
         style={{ color: colors.surfaceYellow }}
       >
-        {rating.toFixed(1)}
+        {rating?.toFixed(1)}
       </Text>
     </View>
   );

@@ -15,9 +15,8 @@ interface CardLabelProps {
  * @param icon - The icon of the label.
  * @param color - The color of the label and icon.
  * @param font - Styling of font, such as size and weight.
- * @returns {TSX.Element} - Returns a JSX element.
+ * @returns {JSX.Element} - Returns a JSX element.
  */
-
 export const CardLabel = ({
   title,
   icon,

@@ -40,9 +40,10 @@ const BottomDrawer = ({
   const navigation = useNavigation<NavigationProp<BottomDrawerNavParams>>();
 
   const subscribeCourse = (course: Course) => {
+  const subscribeCourse = async (course: Course) => {
     toggleModal();
-    subscribe(course.courseId);
-    addCourseToStudent(course.courseId);
+    await subscribe(course.courseId);
+    await addCourseToStudent(course.courseId);
     navigation.navigate("Subscribed", {
       course: course,
     });
@@ -99,19 +100,19 @@ const BottomDrawer = ({
             <CardLabel
               title={Utility.determineCategory(course.category)}
               icon={Utility.determineIcon(course.category)}
-              color={colors.grayScale}
+              color={colors.textCaptionGrayscale}
             />
             <View className="mb-1 w-2.5" />
             <CardLabel
               title={Utility.formatHours(course.estimatedHours)}
               icon={"clock"}
-              color={colors.grayScale}
+              color={colors.textCaptionGrayscale}
             />
             <View className="mb-1 w-2.5" />
             <CardLabel
               title={Utility.getDifficultyLabel(course.difficulty)}
               icon={"equalizer"}
-              color={colors.grayScale}
+              color={colors.textCaptionGrayscale}
             />
           </View>
 
