@@ -1,3 +1,5 @@
+// We need to use useCallback due to the useFocusEffect hook
+// eslint-disable-next-line no-restricted-imports
 import { useEffect, useState, useCallback } from "react";
 import {
   View,
@@ -5,25 +7,20 @@ import {
   Alert,
   Image,
   TouchableOpacity,
+  TextInputProps,
 } from "react-native";
-import Text from "../../components/General/Text";
-import ProfileNameCircle from "../../components/Profile/ProfileNameCircle";
-import FormButton from "../../components/General/Forms/FormButton";
-import ChangePasswordModal from "../../components/ProfileSettings/ChangePasswordModal";
-import FormTextField from "../../components/General/Forms/FormTextField";
+import { Text } from "react-native";
+import { ProfileNameCircle } from "@/components/Profile/ProfileNameCircle";
+import FormButton from "@/components/General/Forms/FormButton";
 import {
   deletePhoto,
   deleteUser,
   getStudentInfo,
   updateUserFields,
-} from "../../api/user-api";
-import BackButton from "../../components/General/BackButton";
+} from "@/api/user-api";
+import BackButton from "@/components/General/BackButton";
 import { useNavigation } from "@react-navigation/native";
-import {
-  validateEmail,
-  validateName,
-} from "../../components/General/validation";
-import FormFieldAlert from "../../components/General/Forms/FormFieldAlert";
+import { validateEmail, validateName } from "@/components/General/validation";
 import {
   getUserInfo,
   setUserInfo,
@@ -32,17 +29,61 @@ import {
   updateStudentInfo,
   getLoginToken,
   getUserId,
-} from "../../services/storage-service";
-import ShowAlert from "../../components/General/ShowAlert";
-import errorSwitch from "../../components/General/error-switch";
+} from "@/services/storage-service";
+import ShowAlert from "@/components/General/ShowAlert";
+import errorSwitch from "@/components/General/error-switch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+import { TextInput } from "react-native";
+
+interface ProfileInputProps extends TextInputProps {
+  label: string;
+  required: boolean;
+  error: string;
+  testId: string;
+}
+
+const ProfileInput = ({
+  label,
+  required,
+  error,
+  testId,
+  ...props
+}: ProfileInputProps) => (
+  <View className="mb-8">
+    {}
+    <Text className="body-bold mb-1 ml-[10px] text-greyscaleTexticonBody">
+      {label}
+      {required ? <Text className="text-surfaceDefaultRed">*</Text> : null}
+    </Text>
+
+    {}
+    <TextInput
+      accessibilityLabel={testId}
+      placeholderTextColor="#8FA0AA"
+      className={`h-[59px] w-[326px] self-center rounded-[8px] border bg-surfaceSubtleGrayscale px-[16px] py-[10px] text-[16px] text-greyscaleTexticonBody ${
+        error ? "border-surfaceDefaultRed" : "border-surfaceDisabledGrayscale"
+      }`}
+      {...props}
+    />
+
+    {}
+    {!!error && (
+      <Text className="mt-1 text-[14px] text-surfaceDefaultRed">{error}</Text>
+    )}
+  </View>
+);
+
+interface ChangedFields {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
 
 /**
  * Edit profile screen
- * @returns {React.Element} Component for the edit profile screen
  */
-export default function EditProfileScreen() {
+const EditProfileScreen = () => {
   const [id, setId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -50,7 +91,7 @@ export default function EditProfileScreen() {
   const [fetchedFirstName, setFetchedFirstName] = useState("");
   const [fetchedLastName, setFetchedLastName] = useState("");
   const [fetchedEmail, setFetchedEmail] = useState("");
-  const [changedFields, setChangedFields] = useState({});
+  const [changedFields, setChangedFields] = useState<ChangedFields>({});
   const [emailAlert, setEmailAlert] = useState("");
   const [firstNameAlert, setFirstNameAlert] = useState("");
   const [lastNameAlert, setLastNameAlert] = useState("");
@@ -93,16 +134,13 @@ export default function EditProfileScreen() {
   /**
    * Validates the input fields
    */
-  function validateInput() {
-    return (
-      firstNameAlert === "" &&
-      lastNameAlert === "" &&
-      emailAlert === "" &&
-      (changedFields.firstName !== undefined ||
-        changedFields.lastName !== undefined ||
-        changedFields.email !== undefined)
-    );
-  }
+  const validateInput = () =>
+    firstNameAlert === "" &&
+    lastNameAlert === "" &&
+    emailAlert === "" &&
+    (changedFields.firstName !== undefined ||
+      changedFields.lastName !== undefined ||
+      changedFields.email !== undefined);
 
   /**
    * Fetches the user profile
@@ -195,8 +233,10 @@ export default function EditProfileScreen() {
     try {
       const LOGIN_TOKEN = await getJWT();
       const USER_INFO = "@userInfo";
-      await AsyncStorage.multiRemove([LOGIN_TOKEN, USER_INFO]);
+
+      await AsyncStorage.multiRemove([LOGIN_TOKEN!, USER_INFO]);
       await deleteUser(id, LOGIN_TOKEN);
+      // @ts-expect-error The error will disappear when we migrate to Expo Router
       navigation.navigate("LoginStack");
     } catch (error) {
       ShowAlert(errorSwitch(error));
@@ -205,9 +245,12 @@ export default function EditProfileScreen() {
 
   const removeImage = async () => {
     setPhoto("");
-    var profile = getStudentInfo();
-    updateStudentInfo({ ...profile, photo: "" });
     const userId = await getUserId();
+
+    const profile = await getStudentInfo(userId);
+
+    void updateStudentInfo({ ...profile, photo: "" });
+
     await deletePhoto(userId, await getLoginToken());
   };
 
@@ -215,39 +258,50 @@ export default function EditProfileScreen() {
     <SafeAreaView className="bg-secondary">
       <View className="h-full">
         <View>
-          <View className="relative mx-4 mb-6 mt-12">
+          <View className="relative mx-4 mb-6 mt-12 flex flex-row items-center justify-center">
             {/* Back button */}
-            <BackButton onPress={() => navigation.navigate("ProfileHome")} />
+            <BackButton
+              // @ts-expect-error The error will disappear when we migrate to Expo Router
+              onPress={() => navigation.navigate("ProfileHome")}
+              className="absolute left-0"
+            />
 
             {/* Title */}
-            <Text className="font-sans-bold w-full text-center text-xl">
-              Editar perfil
+            <Text className="-ml-40 font-sans text-[20px] leading-[26px] text-textTitleGrayscale">
+              Editar Perfil
             </Text>
           </View>
 
-          <View className="flex w-screen flex-row justify-evenly px-6">
+          <View className="flex flex-row items-center justify-center gap-[30px] px-[30px] py-[30px]">
             {/* Profile image */}
             {photo ? (
               <Image
                 source={{ uri: photo }}
-                className="h-24 w-24 rounded-full"
+                className="h-[80px] w-[80px] rounded-[60px] border-[3px] border-surfaceSubtleGrayscale bg-surfaceLighterCyan"
               />
             ) : (
-              <ProfileNameCircle
-                firstName={fetchedFirstName}
-                lastName={fetchedLastName}
-              />
+              <View className="h-[80px] w-[80px] items-center justify-center overflow-hidden rounded-[60px] bg-surfaceLighterCyan">
+                <ProfileNameCircle
+                  firstName={fetchedFirstName}
+                  lastName={fetchedLastName}
+                  className="border-[3px] border-surfaceSubtleGrayscale bg-surfaceLighterCyan"
+                />
+              </View>
             )}
             {/* Edit image */}
-            <View className="flex flex-col items-center justify-evenly">
-              <FormButton
-                className="py-2"
+            <View className="flex flex-col items-center justify-center gap-[8px]">
+              <TouchableOpacity
+                className="h-[40px] w-[180px] items-center justify-center self-center rounded-[8px] border-[2px] border-surfaceDefaultCyan bg-surfaceSubtleGrayscale"
+                // @ts-expect-error The error will disappear when we migrate to Expo Router
                 onPress={() => navigation.navigate("Camera")}
               >
-                Trocar imagem
-              </FormButton>
+                <Text className="text-greyscaleTexticonBody text-body-bold">
+                  Trocar Imagem
+                </Text>
+              </TouchableOpacity>
+
               <TouchableOpacity onPress={removeImage}>
-                <Text className="text-primary_custom underline">
+                <Text className="text-center text-[18px] leading-[22px] text-cyanBlue underline">
                   Remover imagem
                 </Text>
               </TouchableOpacity>
@@ -256,69 +310,70 @@ export default function EditProfileScreen() {
         </View>
 
         <View className="flex w-screen flex-col px-8 pt-8">
-          <View className="mb-8">
-            <FormTextField
-              label="Nome"
-              required={true}
-              placeholder="Insira sua nome"
-              value={firstName}
-              onChangeText={(firstName) => {
-                setFirstName(firstName);
-                validateName(firstName);
-              }}
-              testId="firstName"
-            ></FormTextField>
-            <FormFieldAlert label={firstNameAlert} testId="firstNameAlert" />
-          </View>
-          <View className="mb-8">
-            <FormTextField
-              label="Sobrenome"
-              required={true}
-              placeholder="Insira sua sobrenome"
-              value={lastName}
-              onChangeText={(lastName) => {
-                setLastName(lastName);
-                validateName(lastName);
-              }}
-              testId="lastName"
-            ></FormTextField>
-            <FormFieldAlert label={lastNameAlert} testId="lastNameAlert" />
-          </View>
-          <View className="mb-12">
-            <FormTextField
-              label="E-mail"
-              required={true}
-              placeholder="Insira sua e-mail"
-              value={email}
-              keyboardType="email-address"
-              onChangeText={async (email) => {
-                setEmail(email);
-                validateEmail(email);
-              }}
-              testId="email"
-            ></FormTextField>
-            <FormFieldAlert label={emailAlert} testId="emailAlert" />
-          </View>
+          <ProfileInput
+            label="Nome"
+            required
+            testId="firstName"
+            placeholder="Insira sua nome"
+            value={firstName}
+            onChangeText={(v) => {
+              setFirstName(v);
+              validateName(v);
+            }}
+            autoCapitalize="words"
+            error={firstNameAlert}
+          />
+          <ProfileInput
+            label="Sobrenome"
+            required
+            testId="lastName"
+            placeholder="Insira sua sobrenome"
+            value={lastName}
+            onChangeText={(v) => {
+              setLastName(v);
+              validateName(v);
+            }}
+            autoCapitalize="words"
+            error={lastNameAlert}
+          />
+          <ProfileInput
+            label="E-mail"
+            required
+            testId="email"
+            placeholder="Insira sua e-mail"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={(v) => {
+              setEmail(v);
+              validateEmail(v);
+            }}
+            error={emailAlert}
+          />
+        </View>
 
-          {/* Change password */}
-          <ChangePasswordModal />
+        <View className="pt-12">
+          <FormButton
+            className={`h-[50px] w-[326px] items-center justify-center self-center rounded-[8px] ${
+              !validateInput() ? "bg-[#A0C1C7]" : "bg-primary_custom"
+            }`}
+            onPress={saveUserInfo}
+            disabled={!validateInput()}
+            style={{ opacity: 1 }}
+          >
+            Salvar alterações
+          </FormButton>
 
-          <View className="flex flex-row items-center justify-between pt-12">
-            <Text
-              className="text-sm text-primary_custom underline"
-              onPress={() => deleteAccountAlert()}
-            >
-              Excluir minha conta
-            </Text>
-            <FormButton
-              onPress={() => saveUserInfo()}
-              disabled={!validateInput()}
-            >
-              Salvar
-            </FormButton>
-          </View>
+          <Text
+            className="mt-4 text-center text-surfaceDefaultRed underline text-body-bold"
+            onPress={deleteAccountAlert}
+          >
+            Excluir minha conta
+          </Text>
         </View>
       </View>
     </SafeAreaView>
   );
-}
+};
+
+export default EditProfileScreen;

@@ -6,30 +6,28 @@ import {
   RefreshControl,
   ScrollView,
   View,
+  Text,
 } from "react-native";
-import Text from "../../components/General/Text";
-import * as StorageService from "../../services/storage-service";
-import CourseCard from "../../components/Courses/CourseCard/CourseCard";
-import IconHeader from "../../components/General/IconHeader";
-import { shouldUpdate } from "../../services/utils";
-import ToastNotification from "../../components/General/ToastNotification";
-import LoadingScreen from "../../components/Loading/LoadingScreen";
-import NetworkStatusObserver from "../../hooks/NetworkStatusObserver";
+import * as StorageService from "@/services/storage-service";
+import CourseCard from "@/components/Courses/CourseCard/CourseCard";
+import IconHeader from "@/components/General/IconHeader";
+import { shouldUpdate } from "@/services/utils";
+import ToastNotification from "@/components/General/ToastNotification";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
+import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import errorSwitch from "../../components/General/error-switch";
-import ShowAlert from "../../components/General/ShowAlert";
-import Tooltip from "../../components/Onboarding/Tooltip";
-import { getStudentInfo } from "../../services/storage-service";
-import ProfileStatsBox from "../../components/Profile/ProfileStatsBox";
-import OfflineScreen from "../Offline/OfflineScreen";
+import errorSwitch from "@/components/General/error-switch";
+import ShowAlert from "@/components/General/ShowAlert";
+import Tooltip from "@/components/Onboarding/Tooltip";
+import { getStudentInfo } from "@/services/storage-service";
+import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
+import OfflineScreen from "@/screens/Offline/OfflineScreen";
+import { Course } from "@/types/course";
+import { StudentInfo } from "@/types/student";
+import { t } from "@/i18n";
 
-/**
- * Course screen component that displays a list of courses.
- * @component
- * @returns {JSX.Element} The course screen component.
- */
-export default function CourseScreen() {
-  const [courses, setCourses] = useState([]);
+const CourseScreen = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
   const [courseLoaded, setCourseLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
@@ -37,16 +35,18 @@ export default function CourseScreen() {
   const [studentLevel, setStudentLevel] = useState(0);
   const [studentPoints, setStudentPoints] = useState(0);
   const navigation = useNavigation();
-  const [isVisible, setIsVisible] = useState(false);
 
   /**
    * Asynchronous function that loads the courses from storage and updates the state.
    * @returns {void}
    */
-  async function loadCourses() {
+  const loadCourses = async () => {
     const courseData = await StorageService.getSubCourseList();
     if (shouldUpdate(courses, courseData)) {
-      if (courseData.length !== 0 && Array.isArray(courseData)) {
+      const hasValidCourseData =
+        courseData && Array.isArray(courseData) && courseData.length > 0;
+
+      if (hasValidCourseData) {
         setCourses(courseData);
         setCourseLoaded(true);
       } else {
@@ -55,7 +55,7 @@ export default function CourseScreen() {
       }
     }
     setLoading(false);
-  }
+  };
 
   // When refreshing the loadCourses function is called
   const onRefresh = () => {
@@ -70,8 +70,9 @@ export default function CourseScreen() {
       const fetchedStudent = await getStudentInfo();
 
       if (fetchedStudent !== null) {
-        setStudentLevel(fetchedStudent.level);
-        setStudentPoints(fetchedStudent.points);
+        const studentData = fetchedStudent as StudentInfo;
+        setStudentLevel(studentData.level || 0);
+        setStudentPoints(studentData.points || 0);
       }
     } catch (error) {
       ShowAlert(errorSwitch(error));
@@ -80,10 +81,12 @@ export default function CourseScreen() {
 
   useEffect(() => {
     // this makes sure loadCourses is called when the screen is focused
-    return navigation.addListener("focus", () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       loadCourses();
       fetchStudentData();
     });
+    return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
   useEffect(() => {
@@ -111,10 +114,10 @@ export default function CourseScreen() {
       {!isOnline ? (
         <OfflineScreen />
       ) : courseLoaded ? (
-        <View height="100%">
+        <View className="h-full">
           <IconHeader
-            title="Bem Vindo!"
-            description="Aqui você encontra todos os cursos em que você está inscrito!"
+            title={t("course.welcome-title")}
+            description={t("course.welcome-description")}
           />
 
           {/* Render stats box with level and progress bar only */}
@@ -123,6 +126,8 @@ export default function CourseScreen() {
               level={studentLevel || 0}
               points={studentPoints || 0}
               drawProgressBarOnly={true}
+              studyStreak={undefined}
+              leaderboardPosition={undefined}
             />
           </View>
 
@@ -140,14 +145,12 @@ export default function CourseScreen() {
       ) : (
         <View className="items-center justify-center bg-secondary">
           <Tooltip
-            isVisible={isVisible}
             position={{
               top: -150,
               left: 95,
               right: 5,
               bottom: 24,
             }}
-            setIsVisible={setIsVisible}
             text="Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito."
             tailSide="right"
             tailPosition="20%"
@@ -164,22 +167,30 @@ export default function CourseScreen() {
           <View className="items-center justify-center gap-10 py-10">
             <View className="h-auto w-full items-center justify-center px-10">
               <Image source={require("../../assets/images/no-courses.png")} />
-              <Text className="font-sans-bold pb-4 pt-4 text-center text-subheading leading-[29.26] text-projectBlack">
-                Comece agora
+              <Text
+                className="pb-4 pt-4 text-center text-subheading leading-[29.26] text-projectBlack"
+                style={{ fontFamily: "sans-bold" }}
+              >
+                {t("course.get-started")}
               </Text>
-              <Text className="font-montserrat text-center text-body text-projectBlack">
-                Você ainda não se increveu em nenhum curso. Acesse a página
-                Explore e use a busca para encontrar cursos do seu interesse.
+              <Text
+                className="text-center text-body text-projectBlack"
+                style={{ fontFamily: "montserrat" }}
+              >
+                {t("course.no-courses-message")}
               </Text>
             </View>
             <View>
               <Pressable
                 testID="exploreButton"
                 className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
-                onPress={() => navigation.navigate("Explorar")}
+                onPress={() => navigation.navigate("Explorar" as never)}
               >
-                <Text className="font-sans-bold text-center text-body text-projectWhite">
-                  Explorar cursos
+                <Text
+                  className="text-center text-body text-projectWhite"
+                  style={{ fontFamily: "sans-bold" }}
+                >
+                  {t("course.explore-courses")}
                 </Text>
               </Pressable>
             </View>
@@ -188,4 +199,6 @@ export default function CourseScreen() {
       )}
     </>
   );
-}
+};
+
+export default CourseScreen;

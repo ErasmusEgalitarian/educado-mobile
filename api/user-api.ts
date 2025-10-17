@@ -1,5 +1,7 @@
 import axios, { isAxiosError } from "axios";
 import * as FileSystem from "expo-file-system";
+import { StudentInfo } from "@/types/student";
+import { Component } from "@/types/component";
 
 const url = process.env.EXPO_PUBLIC_BACK_END_HOST;
 
@@ -105,7 +107,7 @@ export const updateUserFields = async (
 };
 
 export const updateUserPassword = async (
-  userId: any,
+  userId: string,
   oldPassword: string,
   newPassword: string,
   token: string | null,
@@ -137,8 +139,8 @@ export const updateUserPassword = async (
 
 export const completeComponent = async (
   userId: string,
-  comp: any,
-  isComplete: any,
+  comp: Component,
+  isComplete: boolean,
   points: number,
   token: string | null,
 ) => {
@@ -164,7 +166,9 @@ export const completeComponent = async (
   }
 };
 
-export const getStudentInfo = async (userId: string | null | undefined) => {
+export const getStudentInfo = async (
+  userId: string | null | undefined,
+): Promise<StudentInfo> => {
   try {
     const res = await client.get(`/api/students/${userId}/info`);
     return res.data;
@@ -268,7 +272,7 @@ export const deletePhoto = async (
  * Function to send mail to user with code to reset password
  * @param {Object} email should contain an email, to receive a reset password message
  */
-export const sendResetPasswordEmail = async (email: { email: any }) => {
+export const sendResetPasswordEmail = async (email: { email: string }) => {
   try {
     const res = await client.post("/api/auth/reset-password-request", email);
     return res.data;
@@ -288,8 +292,8 @@ export const sendResetPasswordEmail = async (email: { email: any }) => {
  * - token
  */
 export const validateResetPasswordCode = async (obj: {
-  email: any;
-  token: any;
+  email: string;
+  token: string;
 }) => {
   try {
     const res = await client.post("/api/auth/reset-password-code", obj);
@@ -311,9 +315,9 @@ export const validateResetPasswordCode = async (obj: {
  * - newPassword
  */
 export const enterNewPassword = async (obj: {
-  email: any;
-  token: any;
-  newPassword: any;
+  email: string;
+  token: string;
+  newPassword: string;
 }) => {
   try {
     const res = await client.patch("/api/auth/reset-password", obj);

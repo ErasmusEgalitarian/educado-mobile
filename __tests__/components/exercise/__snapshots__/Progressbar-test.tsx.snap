@@ -1,0 +1,367 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CustomProgressBar /> Displays 0% for no progress 1`] = `
+<View
+  className="flex-row items-center justify-around"
+>
+  <View
+    animated={true}
+    animationConfig={
+      {
+        "bounciness": 0,
+      }
+    }
+    animationType="spring"
+    indeterminate={false}
+    indeterminateAnimationDuration={1000}
+    onLayout={[Function]}
+    progress={0}
+    style={
+      [
+        {
+          "backgroundColor": "#D8EFF3",
+          "borderColor": "#35A1B1",
+          "borderRadius": 8,
+          "borderWidth": 0,
+          "overflow": "hidden",
+          "width": 750,
+        },
+        undefined,
+      ]
+    }
+    useNativeDriver={false}
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "backgroundColor": "#35A1B1",
+          "height": 133.4,
+          "transform": [
+            {
+              "translateX": -2.842170943040401e-14,
+            },
+            {
+              "translateX": -375,
+            },
+            {
+              "scaleX": 0.0001,
+            },
+          ],
+        }
+      }
+    />
+  </View>
+  <Text
+    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+  >
+    0
+    %
+  </Text>
+</View>
+`;
+
+exports[`<CustomProgressBar /> Displays 25% 1`] = `
+<View
+  className="flex-row items-center justify-around"
+>
+  <View
+    animated={true}
+    animationConfig={
+      {
+        "bounciness": 0,
+      }
+    }
+    animationType="spring"
+    indeterminate={false}
+    indeterminateAnimationDuration={1000}
+    onLayout={[Function]}
+    progress={0.25}
+    style={
+      [
+        {
+          "backgroundColor": "#D8EFF3",
+          "borderColor": "#35A1B1",
+          "borderRadius": 8,
+          "borderWidth": 0,
+          "overflow": "hidden",
+          "width": 750,
+        },
+        undefined,
+      ]
+    }
+    useNativeDriver={false}
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "backgroundColor": "#35A1B1",
+          "height": 133.4,
+          "transform": [
+            {
+              "translateX": -2.842170943040401e-14,
+            },
+            {
+              "translateX": -281.25,
+            },
+            {
+              "scaleX": 0.250075,
+            },
+          ],
+        }
+      }
+    />
+  </View>
+  <Text
+    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+  >
+    25
+    %
+  </Text>
+</View>
+`;
+
+exports[`<CustomProgressBar /> Displays 50% 1`] = `
+<View
+  className="flex-row items-center justify-around"
+>
+  <View
+    animated={true}
+    animationConfig={
+      {
+        "bounciness": 0,
+      }
+    }
+    animationType="spring"
+    indeterminate={false}
+    indeterminateAnimationDuration={1000}
+    onLayout={[Function]}
+    progress={0.5}
+    style={
+      [
+        {
+          "backgroundColor": "#D8EFF3",
+          "borderColor": "#35A1B1",
+          "borderRadius": 8,
+          "borderWidth": 0,
+          "overflow": "hidden",
+          "width": 750,
+        },
+        undefined,
+      ]
+    }
+    useNativeDriver={false}
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "backgroundColor": "#35A1B1",
+          "height": 133.4,
+          "transform": [
+            {
+              "translateX": -2.842170943040401e-14,
+            },
+            {
+              "translateX": -187.5,
+            },
+            {
+              "scaleX": 0.50005,
+            },
+          ],
+        }
+      }
+    />
+  </View>
+  <Text
+    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+  >
+    50
+    %
+  </Text>
+</View>
+`;
+
+exports[`<CustomProgressBar /> Displays 100% for full progress 1`] = `
+<View
+  className="flex-row items-center justify-around"
+>
+  <View
+    animated={true}
+    animationConfig={
+      {
+        "bounciness": 0,
+      }
+    }
+    animationType="spring"
+    indeterminate={false}
+    indeterminateAnimationDuration={1000}
+    onLayout={[Function]}
+    progress={1}
+    style={
+      [
+        {
+          "backgroundColor": "#D8EFF3",
+          "borderColor": "#35A1B1",
+          "borderRadius": 8,
+          "borderWidth": 0,
+          "overflow": "hidden",
+          "width": 750,
+        },
+        undefined,
+      ]
+    }
+    useNativeDriver={false}
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "backgroundColor": "#35A1B1",
+          "height": 133.4,
+          "transform": [
+            {
+              "translateX": -2.842170943040401e-14,
+            },
+            {
+              "translateX": 0,
+            },
+            {
+              "scaleX": 1,
+            },
+          ],
+        }
+      }
+    />
+  </View>
+  <Text
+    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+  >
+    100
+    %
+  </Text>
+</View>
+`;
+
+exports[`<CustomProgressBar /> Limits display to 0% for negative progress 1`] = `
+<View
+  className="flex-row items-center justify-around"
+>
+  <View
+    animated={true}
+    animationConfig={
+      {
+        "bounciness": 0,
+      }
+    }
+    animationType="spring"
+    indeterminate={false}
+    indeterminateAnimationDuration={1000}
+    onLayout={[Function]}
+    progress={0}
+    style={
+      [
+        {
+          "backgroundColor": "#D8EFF3",
+          "borderColor": "#35A1B1",
+          "borderRadius": 8,
+          "borderWidth": 0,
+          "overflow": "hidden",
+          "width": 750,
+        },
+        undefined,
+      ]
+    }
+    useNativeDriver={false}
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "backgroundColor": "#35A1B1",
+          "height": 133.4,
+          "transform": [
+            {
+              "translateX": -2.842170943040401e-14,
+            },
+            {
+              "translateX": -375,
+            },
+            {
+              "scaleX": 0.0001,
+            },
+          ],
+        }
+      }
+    />
+  </View>
+  <Text
+    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+  >
+    0
+    %
+  </Text>
+</View>
+`;
+
+exports[`<CustomProgressBar /> Limits display to 100% for excess progress 1`] = `
+<View
+  className="flex-row items-center justify-around"
+>
+  <View
+    animated={true}
+    animationConfig={
+      {
+        "bounciness": 0,
+      }
+    }
+    animationType="spring"
+    indeterminate={false}
+    indeterminateAnimationDuration={1000}
+    onLayout={[Function]}
+    progress={1}
+    style={
+      [
+        {
+          "backgroundColor": "#D8EFF3",
+          "borderColor": "#35A1B1",
+          "borderRadius": 8,
+          "borderWidth": 0,
+          "overflow": "hidden",
+          "width": 750,
+        },
+        undefined,
+      ]
+    }
+    useNativeDriver={false}
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "backgroundColor": "#35A1B1",
+          "height": 133.4,
+          "transform": [
+            {
+              "translateX": -2.842170943040401e-14,
+            },
+            {
+              "translateX": 0,
+            },
+            {
+              "scaleX": 1,
+            },
+          ],
+        }
+      }
+    />
+  </View>
+  <Text
+    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+  >
+    100
+    %
+  </Text>
+</View>
+`;

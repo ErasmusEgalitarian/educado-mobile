@@ -1,70 +1,104 @@
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Text from "../General/Text";
-import PropTypes from "prop-types";
+import { Shadow } from "react-native-shadow-2";
+import { t } from "@/i18n";
+type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
-/**
- * A component that displays a section card with collapsible content.
- * @param {Object} section - The section object containing the section data.
- * @param {Number} progress - The progress containing the student's progress.
- * @param {Function} onPress - The callback function to navigate
- * @returns {JSX.Element} - The SectionCard component.
- */
-export default function SectionCard({ section, progress, onPress }) {
-  const isComplete = progress === section.components.length;
-  const inProgress = 0 < progress && progress < section.components.length;
-  const progressText = isComplete
-    ? "Concluído"
-    : inProgress
-      ? "Em progresso"
-      : "Não iniciado";
-  const progressTextColor = isComplete ? "text-success" : "text-projectBlack";
-
-  return (
-    <View>
-      <TouchableOpacity
-        className="shadow-opacity-[0.3] elevation-[8] mx-[18] mb-[15] overflow-hidden rounded-lg border-[1px] border-lightGray bg-secondary shadow-lg"
-        onPress={onPress}
-      >
-        <View className="flex-row items-center justify-between px-[25] py-[15]">
-          <View>
-            <Text className="font-montserrat-bold mb-2 text-[16px] text-projectBlack">
-              {section.title}
-            </Text>
-
-            <View className="flex-row items-center">
-              <Text
-                className={`font-montserrat text-[14px] ${progressTextColor}`}
-              >
-                {/* progress */}
-                {progress}/{section.components.length} {progressText}
-              </Text>
-              <View className="ml-2">
-                {isComplete && (
-                  <MaterialCommunityIcons
-                    testID={"check-circle"}
-                    name={"check-circle"}
-                    size={14}
-                    color="green"
-                  />
-                )}
-              </View>
-            </View>
-          </View>
-          <MaterialCommunityIcons
-            testID="chevron-right"
-            name="chevron-right"
-            size={25}
-            color="gray"
-          />
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
+export interface SectionCardProps {
+  numOfEntries: number;
+  title: string;
+  progress: number;
+  onPress: () => void;
+  icon: Icons;
+  disabled?: boolean;
+  disabledIcon?: Icons;
+  disableProgressNumbers?: boolean;
 }
 
-SectionCard.propTypes = {
-  section: PropTypes.object,
-  progress: PropTypes.number,
-  onPress: PropTypes.func,
+/**
+ * Section card.
+ *
+ * @param numOfEntries
+ * @param title
+ * @param progress
+ * @param onPress
+ * @param disabled
+ * @param icon
+ * @param disabledIcon
+ * @param disableProgressNumbers
+ */
+export const SectionCard = ({
+  numOfEntries,
+  title,
+  progress,
+  onPress,
+  disabled,
+  icon,
+  disabledIcon,
+  disableProgressNumbers,
+}: SectionCardProps) => {
+  disableProgressNumbers ??= false;
+  const isComplete = progress === numOfEntries;
+  const inProgress = 0 < progress && progress < numOfEntries;
+  const progressText = isComplete
+    ? t("course.completed-up")
+    : inProgress
+      ? t("course.in-progress")
+      : t("course.not-started");
+  const progressTextColor = isComplete
+    ? "text-success"
+    : disabled
+      ? "text-greyscaleTexticonDisabled"
+      : "text-greyscaleTexticonSubtitle";
+  disabledIcon = disabledIcon ?? "lock-outline";
+
+  return (
+    <View className="mx-[18] mb-[20]">
+      <Shadow
+        startColor="#28363E14"
+        distance={6}
+        offset={[0, 3]}
+        style={{ width: "100%" }}
+      >
+        <TouchableOpacity
+          className={!disabled ? "bg-surfaceSubtleGrayscale" : "bg-disabled"}
+          style={{ borderRadius: 15, transform: [{ scale: 1.02 }] }}
+          onPress={onPress}
+          disabled={disabled}
+        >
+          <View className="flex-row items-center justify-between px-[25] py-[15]">
+            <View>
+              <Text className="mb-2 text-greyscaleTexticonBody text-body-regular">
+                {title}
+              </Text>
+
+              <View className="flex-row items-center">
+                <Text className={`text-subtitle-regular ${progressTextColor}`}>
+                  {disableProgressNumbers
+                    ? ""
+                    : `${String(progress)}/${String(numOfEntries)} `}
+                  {progressText}
+                </Text>
+              </View>
+            </View>
+            {disabled ? (
+              <MaterialCommunityIcons
+                testID="chevron-right"
+                name={disabledIcon}
+                size={25}
+                color="gray" //grayscale primary caption
+              />
+            ) : (
+              <MaterialCommunityIcons
+                testID="chevron-right"
+                name={icon}
+                size={25}
+                color="gray" // greyscale primary subtle
+              />
+            )}
+          </View>
+        </TouchableOpacity>
+      </Shadow>
+    </View>
+  );
 };

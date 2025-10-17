@@ -1,49 +1,59 @@
+import type { ReactElement } from "react";
 import { useState, useEffect } from "react";
-import { Alert, View, TouchableOpacity, Image } from "react-native";
-import Text from "../../components/General/Text";
-import * as StorageService from "../../services/storage-service";
-import SectionCard from "../../components/Section/SectionCard";
+import { Alert, View, TouchableOpacity, Image, Text } from "react-native";
+import * as StorageService from "@/services/storage-service";
+import { unsubscribe } from "@/services/storage-service";
+import { SectionCard } from "@/components/Section/SectionCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import CustomProgressBar from "../../components/Exercise/CustomProgressBar";
-import SubscriptionCancelButton from "../../components/Section/CancelSubscriptionButton";
-import { unsubscribe } from "../../services/storage-service";
-import PropTypes from "prop-types";
-import {
-  checkProgressCourse,
-  checkProgressSection,
-} from "../../services/utils";
-import ContinueSectionButton from "../../components/Section/ContinueSectionButton";
-import Tooltip from "../../components/Onboarding/Tooltip";
-import ImageNotFound from "../../assets/images/imageNotFound.png";
-import DownloadCourseButton from "../../components/Courses/CourseCard/DownloadCourseButton";
-import { getBucketImage } from "../../api/api";
+import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
+import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptionButton";
+import { checkProgressCourse, checkProgressSection } from "@/services/utils";
+import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
+import Tooltip from "@/components/Onboarding/Tooltip";
+import ImageNotFound from "@/assets/images/imageNotFound.png";
+import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
+import { getBucketImage } from "@/api/api";
+import type { Course } from "@/types/course";
+import type { Section } from "@/types/section";
+import { Shadow } from "react-native-shadow-2";
+import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
 
-export default function CourseOverviewScreen({ route }) {
-  CourseOverviewScreen.propTypes = {
-    route: PropTypes.object,
+export interface CourseOverviewScreenProps {
+  route: {
+    params: {
+      course: Course;
+    };
   };
+}
+
+/**
+ * Course overview screen.
+ *
+ * @param route
+ */
+const CourseOverviewScreen = ({
+  route,
+}: CourseOverviewScreenProps): ReactElement => {
   const { course } = route.params;
   const navigation = useNavigation();
-  const [sections, setSections] = useState(null);
+  const [sections, setSections] = useState<null | Section[]>(null);
   const [studentProgress, setStudentProgress] = useState(0);
-  const [sectionProgress, setSectionProgress] = useState({});
-  const [currentSection, setCurrentSection] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [coverImage, setCoverImage] = useState(null);
+  const [sectionProgress, setSectionProgress] = useState<
+    Record<string, number>
+  >({});
+  const [currentSection, setCurrentSection] = useState<Section | null>(null);
+  const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<unknown | null>(null);
 
-  async function loadSections(id) {
-    const sectionData = await StorageService.getSectionList(id);
+  const loadSections = async (id: string, signal: AbortSignal) => {
+    const sectionData = await StorageService.getSectionList(id, signal);
     setSections(sectionData);
-  }
-
-  const checkProgress = async () => {
-    const progress = await checkProgressCourse(course.courseId);
-    setStudentProgress(progress);
   };
 
-  const checkProgressInSection = async (sectionId) => {
+  const checkProgressInSection = async (sectionId: string) => {
     const completed = await checkProgressSection(sectionId);
     setSectionProgress((prevProgress) => ({
       ...prevProgress,
@@ -52,25 +62,23 @@ export default function CourseOverviewScreen({ route }) {
   };
 
   useEffect(() => {
-    let componentIsMounted = true;
+    const abortController = new AbortController();
 
-    async function loadData() {
-      await loadSections(course.courseId);
-    }
+    const loadData = async () => {
+      await loadSections(course.courseId, abortController.signal);
+    };
 
-    if (componentIsMounted) {
-      loadData();
-    }
+    void loadData();
 
     return () => {
-      componentIsMounted = false;
+      abortController.abort();
     };
-  }, []);
+  }, [course.courseId]);
 
   useEffect(() => {
     if (sections) {
       sections.forEach((section) => {
-        checkProgressInSection(section.sectionId);
+        void checkProgressInSection(section.sectionId);
       });
     }
   }, [sections]);
@@ -81,70 +89,86 @@ export default function CourseOverviewScreen({ route }) {
         const completedComponents = sectionProgress[section.sectionId] || 0;
         return completedComponents < section.components.length;
       });
-      setCurrentSection(incompleteSection);
+      setCurrentSection(incompleteSection ?? null);
     }
   }, [sectionProgress, sections]);
 
   useEffect(() => {
-    const update = navigation.addListener("focus", () => {
-      checkProgress();
+    const checkProgress = async () => {
+      const progress = await checkProgressCourse(course.courseId);
+      setStudentProgress(progress);
+    };
+
+    return navigation.addListener("focus", () => {
+      void checkProgress();
+
       if (sections) {
         sections.forEach((section) => {
-          checkProgressInSection(section.sectionId);
+          void checkProgressInSection(section.sectionId);
         });
       }
     });
-    return update;
-  }, [navigation]);
+  }, [navigation, sections, course.courseId]);
 
   useEffect(() => {
-    if (!coverImage && course) {
+    if (!coverImage) {
       const fetchImage = async () => {
         try {
           const image = await getBucketImage(course.courseId + "_c");
-          if (typeof image === "string") {
-            setCoverImage(image);
-          } else {
-            throw new Error();
-          }
+          setCoverImage(image);
         } catch (error) {
+          setImageError(error);
           console.error(error);
         }
       };
-      fetchImage();
-    }
-  }, [course]);
 
-  const unsubAlert = () =>
-    Alert.alert("Cancelar subscrição", "Tem certeza?", [
+      void fetchImage();
+    }
+  }, [course, coverImage]);
+
+  const unsubAlert = () => {
+    Alert.alert(t("course.cancel-subscription"), t("general.confirmation"), [
       {
-        text: "Não",
+        text: t("general.no"),
         style: "cancel",
       },
       {
-        text: "Sim",
+        text: t("general.yes"),
         onPress: () => {
-          unsubscribe(course.courseId);
+          void unsubscribe(course.courseId);
+
           setTimeout(() => {
-            navigation.navigate("Meus cursos");
+            navigation.navigate("Meus cursos" as never);
           }, 300);
         },
       },
     ]);
+  };
 
   const navigateToCurrentSection = () => {
     if (currentSection) {
-      navigation.navigate("Components", {
-        section: currentSection,
-        parsedCourse: course,
-      });
+      navigation.navigate(
+        ...([
+          "Components",
+          {
+            section: currentSection,
+            parsedCourse: course,
+          },
+        ] as never),
+      );
     }
   };
-  const navigateToSpecifiedSection = (section) => {
-    navigation.navigate("Section", {
-      course: course,
-      section: section,
-    });
+
+  const navigateToSpecifiedSection = (section: Section) => {
+    navigation.navigate(
+      ...([
+        "Section",
+        {
+          course: course,
+          section: section,
+        },
+      ] as never),
+    );
   };
 
   return (
@@ -152,92 +176,96 @@ export default function CourseOverviewScreen({ route }) {
       {/* Back Button */}
       <TouchableOpacity
         className="absolute left-5 top-10 z-10 pr-3"
-        onPress={() => navigation.navigate("Meus cursos")}
+        onPress={() => navigation.navigate("Meus cursos" as never)}
       >
         <MaterialCommunityIcons
           name="chevron-left"
-          style={{ backgroundColor: "rgba(255,255,255,0.5)", borderRadius: 50 }}
-          size={25}
-          color="black"
+          style={{ backgroundColor: colors.lightGray, borderRadius: 50 }}
+          size={30}
+          color={colors.projectBlack}
         />
       </TouchableOpacity>
-      <ScrollView className="bg-secondary" showsVerticalScrollIndicator={false}>
-        <View className="flex flex-row flex-wrap justify-between bg-secondary">
-          <View className="flex w-full items-center">
-            <View className="flex w-full items-center justify-between">
-              {coverImage ? (
-                <Image
-                  class="h-full max-w-full"
-                  source={{ uri: coverImage }}
-                  style={{ width: "100%", height: 296, resizeMode: "cover" }}
-                />
-              ) : (
-                <Image class="h-full max-w-full" source={ImageNotFound} />
-              )}
-            </View>
-            <View className="mt-[-10%] flex w-[293px] rounded-xl bg-projectWhite p-[14px]">
-              <View className="flex flex-row justify-between">
-                {/* Course Title */}
-                <Text className="line-height-[29px] font-montserrat-bold max-w-[80%] text-[24px]">
-                  {course.title}
-                </Text>
-                {/* TODO: Button to download course should be implemented */}
-                <DownloadCourseButton course={course} disabled={true} />
-              </View>
-              {/* Progress Bar */}
-              <View className="flex h-6 justify-center rounded-sm border-y-[1px] border-lightGray">
-                <CustomProgressBar
-                  width={63}
-                  progress={studentProgress}
-                  height={1}
-                  displayLabel={false}
-                ></CustomProgressBar>
-              </View>
+      <ScrollView
+        className="bg-surfaceSubtleGrayscale"
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="flex w-full items-center">
+          <View className="flex w-full items-center justify-between">
+            {!imageError && coverImage ? (
+              <Image
+                source={{ uri: coverImage }}
+                style={{ width: "100%", height: 296, resizeMode: "cover" }}
+              />
+            ) : (
+              <Image source={ImageNotFound} />
+            )}
+          </View>
+          <View className="mt-[-15%]">
+            <Shadow startColor="#28363E14" distance={6} offset={[0, 3]}>
+              <View
+                className="flex w-[293px] bg-surfaceSubtleGrayscale p-[16px]"
+                style={{ borderRadius: 15, transform: [{ scale: 1.02 }] }}
+              >
+                <View className="flex flex-row justify-between">
+                  {/* Course Title */}
+                  <Text className="max-w-[85%] pb-[8px] text-h3-sm-regular">
+                    {course.title}
+                  </Text>
+                  {/* TODO: Button to download course should be implemented */}
+                  <DownloadCourseButton course={course} disabled={true} />
+                </View>
+                {/* Progress Bar */}
+                <View className="flex justify-center rounded-sm border-y-[1px] border-lightGray p-[8px]">
+                  <CustomProgressBar
+                    width={65}
+                    progress={studentProgress}
+                    height={1}
+                    displayLabel={false}
+                  ></CustomProgressBar>
+                </View>
 
-              <View className="flex w-full flex-row items-center justify-between">
-                <View className="flex flex-row">
-                  <MaterialCommunityIcons
-                    name="crown-circle"
-                    size={20}
-                    color="orange"
-                  />
-                  {/* TODO: Points should be implemented */}
-                  <Text>?? pontos</Text>
-                </View>
-                <MaterialCommunityIcons
-                  name="circle-small"
-                  size={30}
-                  color="gray"
-                />
-                <View className="flex flex-row">
-                  <MaterialCommunityIcons
-                    name="lightning-bolt"
-                    size={20}
-                    color="orange"
-                  />
-                  <Text>{studentProgress}% concluído</Text>
+                <View className="flex w-full flex-row items-center justify-between pt-[8px]">
+                  <View className="flex flex-row">
+                    <MaterialCommunityIcons
+                      name="crown-circle"
+                      size={20}
+                      color="orange"
+                    />
+                    {/* TODO: Points should be implemented */}
+                    <Text className="text-caption-sm-regular">
+                      ?? {t("course.points")}
+                    </Text>
+                  </View>
+                  <View className="flex flex-row">
+                    <MaterialCommunityIcons
+                      name="lightning-bolt"
+                      size={20}
+                      color="orange"
+                    />
+                    <Text className="text-caption-sm-regular">
+                      {studentProgress}% {t("course.completed-low")}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
+            </Shadow>
           </View>
         </View>
-        <View className="my-6 flex items-center px-4">
+        <View className="my-6 flex items-center px-[25px]">
           {/* Navigate to Current Section Button */}
           <ContinueSectionButton onPress={navigateToCurrentSection} />
         </View>
         {/* Conditionally render the sections if they exist */}
         {sections ? (
           sections.length === 0 ? null : (
-            <View className="flex-[1] flex-col bg-secondary">
+            <View className="flex-[1] flex-col">
               <Tooltip
-                isVisible={isVisible}
                 position={{
                   top: -30,
                   left: 70,
                   right: 30,
                   bottom: 24,
                 }}
-                setIsVisible={setIsVisible}
                 text={
                   "Essa é a página do seu curso. É aqui que você vai acessar as aulas e acompanhar seu progresso."
                 }
@@ -253,10 +281,14 @@ export default function CourseOverviewScreen({ route }) {
                     sectionProgress[section.sectionId] || 0;
                   return (
                     <SectionCard
+                      numOfEntries={section.components.length}
+                      title={section.title}
+                      icon="chevron-right"
                       key={i}
-                      section={section}
                       progress={completedComponents}
-                      onPress={() => navigateToSpecifiedSection(section)}
+                      onPress={() => {
+                        navigateToSpecifiedSection(section);
+                      }}
                     ></SectionCard>
                   );
                 })}
@@ -264,11 +296,10 @@ export default function CourseOverviewScreen({ route }) {
             </View>
           )
         ) : null}
-      </ScrollView>
-      <View className="bg-secondary">
-        {/* Unsubscribe Button */}
         <SubscriptionCancelButton onPress={unsubAlert} />
-      </View>
+      </ScrollView>
     </>
   );
-}
+};
+
+export default CourseOverviewScreen;

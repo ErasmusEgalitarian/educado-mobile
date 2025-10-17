@@ -1,7 +1,7 @@
 import { View, TouchableOpacity } from "react-native";
 import Text from "../General/Text";
 import { Icon } from "@rneui/base";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
 
 /**

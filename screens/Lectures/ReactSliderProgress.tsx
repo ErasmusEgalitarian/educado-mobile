@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import Slider from "@react-native-community/slider";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import { convertMsToTime } from "../../services/utils";
 import PropTypes from "prop-types";
 

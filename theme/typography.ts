@@ -1,5 +1,8 @@
+import plugin from "tailwindcss/plugin";
+import { CSSRuleObject } from "tailwindcss/types/config";
+
 /**
- * Font family keys taken from tailwind.config.js.
+ * Font family keys taken from tailwind.config.ts.
  */
 export type FontFamilyKey =
   | "mont-400"
@@ -11,19 +14,19 @@ export type FontFamilyKey =
   | "mont-700-italic"
   | "mont-800";
 
-type TypoToken = {
+interface TypoToken {
   fontFamilyKey: FontFamilyKey;
   fontSize: number;
   lineHeight: number;
   caps?: boolean;
-};
+}
 
 /**
  * Typography style configuration. All configuration is based on the typography tokens from the Figma design system.
  *
  * Convention: typo-{role}-{size?}-{weight}{-italic?}{-caps?}
  */
-export const textStyle = {
+export const textStyle: Record<string, TypoToken> = {
   // H1
   "h1-sm-medium": { fontFamilyKey: "mont-500", fontSize: 34, lineHeight: 44.2 },
   "h1-sm-bold": { fontFamilyKey: "mont-700", fontSize: 34, lineHeight: 44.2 },
@@ -118,34 +121,28 @@ export const textStyle = {
   },
   "alert-message": { fontFamilyKey: "mont-400", fontSize: 8, lineHeight: 10.4 },
   hint: { fontFamilyKey: "mont-400", fontSize: 8, lineHeight: 10.4 },
-} as const satisfies Record<string, TypoToken>;
+} as const;
 
-export type TextStyle = keyof typeof textStyle;
+export type TextStyleName = keyof typeof textStyle;
 
-export const textStyleToUtility = (textStyle: TextStyle) =>
-  `typo-${textStyle}` as const;
+export const typographyPlugin = plugin(({ addUtilities, theme }) => {
+  const fontFamilies = theme("fontFamily") as Record<string, string[]>;
 
-export type Tone =
-  | "default"
-  | "inverse"
-  | "muted"
-  | "danger"
-  | "success"
-  | "link";
+  const utilities = Object.entries(textStyle).reduce(
+    (acc, [name, styles]) => {
+      const fontStack = fontFamilies[styles.fontFamilyKey]?.join(", ");
 
-export const toneToUtility: Record<Tone, string> = {
-  default: "text-projectBlack",
-  inverse: "text-projectWhite",
-  muted: "text-projectGray",
-  danger: "text-error",
-  success: "text-success",
-  link: "text-cyanBlue underline",
-};
+      acc[`.text-${name}`] = {
+        fontFamily: fontStack,
+        fontSize: `${styles.fontSize}px`,
+        lineHeight: `${styles.lineHeight}px`,
+        ...(styles.caps ? { textTransform: "uppercase" } : {}),
+      };
 
-export type Align = "left" | "center" | "right";
+      return acc;
+    },
+    {} as Record<string, CSSRuleObject>,
+  );
 
-export const alignToUtility: Record<Align, string> = {
-  left: "",
-  center: "text-center",
-  right: "text-right",
-};
+  addUtilities(utilities);
+});

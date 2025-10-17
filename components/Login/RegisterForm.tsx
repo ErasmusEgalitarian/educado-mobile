@@ -19,7 +19,7 @@ import errorSwitch from "../General/error-switch";
 import { useNavigation } from "@react-navigation/native";
 import DialogNotification from "../General/DialogNotification";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import tailwindConfig from "../../tailwind.config.js";
+import tailwindConfig from "@/tailwind.config";
 import { setUserInfo, setJWT } from "../../services/storage-service";
 
 /**

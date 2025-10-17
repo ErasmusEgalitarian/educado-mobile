@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import PropTypes from "prop-types";
 import { completeComponent, handleLastComponent } from "../../services/utils";
 import { useNavigation } from "@react-navigation/native";
+import tailwindConfig from "@/tailwind.config";
 
 /*
 Description:	This screen is displayed when the student is doing an exercise.
@@ -36,7 +37,6 @@ const ExerciseScreen = ({
   onContinue,
   handleStudyStreak,
 }) => {
-  const tailwindConfig = require("../../tailwind.config.js");
   const projectColors = tailwindConfig.theme.colors;
   const navigation = useNavigation();
 

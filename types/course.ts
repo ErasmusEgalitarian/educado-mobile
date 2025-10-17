@@ -1,3 +1,5 @@
+export type CourseStatus = "draft" | "published" | "archived";
+
 export interface Course {
   title: string;
   courseId: string;
@@ -7,12 +9,13 @@ export interface Course {
   dateUpdated: string;
   difficulty: number;
   published: boolean;
-  status: string;
+  status: CourseStatus;
   rating: number;
   feedbackOptions: string;
   topFeedbackOptions: string;
+  dateOfDownload: string;
 }
 
-export interface ApiCourse extends Omit<Course, 'courseId'> {
+export interface ApiCourse extends Omit<Course, "courseId"> {
   _id: string;
 }

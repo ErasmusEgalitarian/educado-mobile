@@ -5,5 +5,39 @@
   "courses": "Cursos",
   "explore": "Explorar",
   "edu": "Edu",
-  "profile": "Perfil"
+  "profile": "Perfil",
+  "api": {
+    "courses": "Falha ao carregar cursos",
+    "audio": "Erro ao enviar áudio",
+    "rate": "Acalme-se! Muitas solicitações",
+    "try-again": "Erro: Tente novamente"
+  },
+  "general": {
+    "yes": "Sim",
+    "no": "Não",
+    "confirmation": "Tem certeza?"
+  },
+  "course": {
+    "start": "Começar curso",
+    "course-title": "Título do curso",
+    "completed-up": "Concluído",
+    "completed-low": "concluído",
+    "points": "pontos",
+    "withdraw": "Retirar curso",
+    "cancel-subscription": "Cancelar subscrição",
+    "in-progress": "Em progresso",
+    "not-started": "Não iniciado",
+    "duration": "Duração",
+    "welcome-title": "Bem Vindo!",
+    "welcome-description": "Aqui você encontra todos os cursos em que você está inscrito!",
+    "get-started": "Comece agora",
+    "no-courses-message": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.",
+    "explore-courses": "Explorar cursos"
+  },
+  "edu-screen": {
+    "header": "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo",
+    "loading": "Edu está pensando",
+    "placeholder": "Pesquise aqui",
+    "unknown-error": "Erro: Erro desconhecido"
+  }
 }

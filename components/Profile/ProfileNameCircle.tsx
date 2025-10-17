@@ -1,26 +1,40 @@
 import { View } from "react-native";
-import Text from "../General/Text";
-import PropTypes from "prop-types";
+import { Text } from "react-native";
+
+export interface ProfileNameCircleProps {
+  firstName: string;
+  lastName: string;
+  className?: string;
+  textClassName?: string;
+}
 
 /**
- * Component for showing an alert below a form field
- * @param {Object} props should contain the following properties:
- * - firstName: String
- * - lastName: String
- * @returns {React.Element} JSX element for showing alerts
+ * Component for showing an alert below a form field.
+ *
+ * @param firstName
+ * @param lastName
+ * @param className
+ * @param textClassName
  */
-export default function ProfileNameCircle(props) {
-  ProfileNameCircle.propTypes = {
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-  };
-
+export const ProfileNameCircle = ({
+  firstName,
+  lastName,
+  className,
+  textClassName,
+}: ProfileNameCircleProps) => {
   return (
-    <View className="aspect-square grid h-24 w-24 items-center justify-center rounded-full bg-profileCircle">
-      <Text className="bg-white mt-2 text-center text-5xl font-bold text-projectWhite">
-        {props.firstName.charAt(0).toUpperCase()}
-        {props.lastName.charAt(0).toUpperCase()}
+    <View
+      className={`aspect-square h-24 w-24 items-center justify-center rounded-full ${className ?? ""}`}
+    >
+      <Text
+        className={`mt-2 text-center text-5xl font-bold text-projectWhite ${textClassName ?? ""}`}
+      >
+        {firstName.charAt(0).toUpperCase()}
+        {lastName.charAt(0).toUpperCase()}
       </Text>
     </View>
   );
-}
+};
+
+// For legacy purposes
+export default ProfileNameCircle;

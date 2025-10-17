@@ -1,21 +1,34 @@
 import { useState } from "react";
 import { Alert, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
-import { sendAudioToChatbot } from "../../api/api";
+import { sendAudioToChatbot } from "@/api/api";
 import { Icon } from "@rneui/themed";
-import PropTypes from "prop-types";
+import { AudioResponse } from "@/types/ai";
+import { Course } from "@/types/course";
 
-export default function RecordingButton({ onAudioResponse, onLock, courses }) {
-  const [recording, setRecording] = useState(null);
+export interface RecordingButtonProps {
+  onAudioResponse: (audioResponse: AudioResponse) => void;
+  onLock?: (isLocked: boolean) => void;
+  courses: Course[];
+}
+
+export const RecordingButton = ({
+  onAudioResponse,
+  onLock,
+  courses,
+}: RecordingButtonProps) => {
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
 
   const startRecording = async () => {
     try {
       const { status } = await Audio.requestPermissionsAsync();
+
       if (status !== "granted") {
         Alert.alert(
           "Permission Denied",
           "Audio recording permission is required.",
         );
+
         return;
       }
 
@@ -25,10 +38,12 @@ export default function RecordingButton({ onAudioResponse, onLock, courses }) {
       });
 
       const recordingInstance = new Audio.Recording();
+
       await recordingInstance.prepareToRecordAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY,
       );
       await recordingInstance.startAsync();
+
       setRecording(recordingInstance);
 
       if (onLock) {
@@ -36,6 +51,7 @@ export default function RecordingButton({ onAudioResponse, onLock, courses }) {
       }
     } catch (error) {
       console.error("Failed to start recording", error);
+
       if (onLock) {
         onLock(false);
       }
@@ -47,12 +63,19 @@ export default function RecordingButton({ onAudioResponse, onLock, courses }) {
       if (recording) {
         await recording.stopAndUnloadAsync();
         const uri = recording.getURI();
+
+        if (!uri) {
+          console.error("Recording URI is null");
+
+          return;
+        }
+
         setRecording(null);
 
         console.log("Recording saved at:", uri);
 
-        // Send the audio to the chatbot
         const result = await sendAudioToChatbot(uri, courses);
+
         // Notify parent that recording has stopped
         if (onLock) {
           onLock(false);
@@ -62,6 +85,7 @@ export default function RecordingButton({ onAudioResponse, onLock, courses }) {
       }
     } catch (error) {
       console.error("Failed to stop recording", error);
+
       if (onLock) {
         onLock(false);
       }
@@ -82,19 +106,4 @@ export default function RecordingButton({ onAudioResponse, onLock, courses }) {
       />
     </TouchableOpacity>
   );
-}
-
-RecordingButton.propTypes = {
-  onAudioResponse: PropTypes.func, // Must be a function and is required
-  onLock: PropTypes.func, // Optional function
-  courses: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      category: PropTypes.string,
-      rating: PropTypes.number,
-      description: PropTypes.string,
-      estimatedHours: PropTypes.number,
-      difficulty: PropTypes.number,
-    }),
-  ),
 };
