@@ -2,7 +2,7 @@ import { TextInput, View } from "react-native";
 import Text from "@/components/General/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import colors from "@/theme/colors";
+import { colors } from "@/theme/colors";
 
 interface SearchBarProps {
   searchText?: string;

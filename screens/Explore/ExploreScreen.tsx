@@ -9,7 +9,7 @@ import { shouldUpdate, determineCategory } from "@/services/utils";
 import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
 import OfflineScreen from "@/screens/Offline/OfflineScreen";
 import { Course } from "@/types/course";
-import BaseScreen from "@/components/General/BaseScreen";
+import { BaseScreen } from "@/components/General/BaseScreen";
 
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.

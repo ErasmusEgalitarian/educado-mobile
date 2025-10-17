@@ -3,7 +3,7 @@ import SearchBar from "@/components/Explore/SearchBar";
 import { View, Pressable } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { categories } from "@/components/Explore/categories";
-import colors from "@/theme/colors";
+import { colors } from "@/theme/colors";
 import Text from "@/components/General/Text";
 
 /**

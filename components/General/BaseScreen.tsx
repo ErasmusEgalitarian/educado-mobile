@@ -8,7 +8,7 @@ interface BaseScreenProps {
 }
 
 export const BaseScreen = ({ children, className }: BaseScreenProps) => {
-  const mergedClasses = ["flex-1 bg-secondary", className].join(" ");
+  const mergedClasses = ["flex-1 bg-surfaceSubtleCyan", className].join(" ");
 
   return (
     <AlertNotificationRoot>
