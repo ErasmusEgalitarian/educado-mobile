@@ -65,14 +65,17 @@ export const ExploreCard = ({
                 <CardLabel
                   title={Utility.determineCategory(course.category)}
                   icon={Utility.determineIcon(course.category)}
+                  font="font-semibold text-xs"
                 />
                 <CardLabel
                   title={Utility.formatHours(course.estimatedHours)}
                   icon={"clock-outline"}
+                  font="font-semibold text-xs"
                 />
                 <CardLabel
                   title={Utility.getDifficultyLabel(course.difficulty)}
                   icon={"book-multiple-outline"}
+                  font="font-semibold text-xs"
                 />
               </View>
               <View className="h-1.25 opacity-50" />
