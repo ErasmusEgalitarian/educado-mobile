@@ -38,7 +38,7 @@ export const ExploreCard = ({
       shadowOpacity: 0.25,
       shadowRadius: 10,
       backgroundColor: colors.surfaceSubtleGrayscale,
-      elevation: 3,
+      elevation: 2,
     }}>
       <View>
 
