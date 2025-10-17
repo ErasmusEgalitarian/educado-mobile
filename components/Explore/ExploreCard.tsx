@@ -48,7 +48,7 @@ export const ExploreCard = ({
               <MaterialCommunityIcons
                 name="chart-bar-stacked"
                 size={24}
-                color="#141B1F"
+                color={colors.textTitleGrayscale}
               />
               <Text className="h-6 ml-2 mr-9 font-sans-bold text-xl text-textTitleGrayscale">
                 {course.title}
