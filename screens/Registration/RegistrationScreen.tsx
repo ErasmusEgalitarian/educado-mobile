@@ -20,18 +20,21 @@ const RegistrationScreen = () => {
     useRoute<RouteProp<{ params: LoginScreenRouteParams }, "params">>();
   const previousScreen = route.params?.previousScreen || "WelcomeStack";
 
-  useEffect(() => {
+  const checkLoginToken = async () => {
     try {
-      // TODO: the function called has an error that allows it to return 'undefined'
-      // @ts-ignore
-      const isValid: boolean = await StorageService.isLoginTokenValid();
+      const isValid = await StorageService.isLoginTokenValid();
       if (isValid) {
         navigation.navigate("HomeStack");
       }
     } catch (error) {
       console.log("Failed to fetch the login token from storage\n" + error);
     }
-  }, [navigation]);
+  };
+
+  useEffect(() => {
+    checkLoginToken();
+  }, []);
+
 
   return (
     <SafeAreaView className="flex-1 justify-start bg-secondary">
