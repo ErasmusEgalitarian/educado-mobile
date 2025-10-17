@@ -123,7 +123,7 @@ const BottomDrawer = ({
                   size={13}
                   color={colors.surfaceDefaultGreen}
                 />
-                <Text className="flex-start text-s pl-1 font-semibold text-surfaceDefaultGreen">
+                <Text className="flex-start pl-1 text-sm font-semibold text-surfaceDefaultGreen">
                   Inscrição realizada
                 </Text>
               </View>

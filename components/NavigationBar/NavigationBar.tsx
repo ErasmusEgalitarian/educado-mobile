@@ -1,22 +1,22 @@
 import { useState, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import CourseScreen from "../../screens/Courses/CourseScreen";
-import DownloadScreen from "../../screens/Download/DownloadScreen";
-import { ExploreScreen } from "../../screens/Explore/ExploreScreen";
-import EduScreen from "../../screens/EduChatbot/EduScreen";
-import ProfileComponent from "../../screens/Profile/Profile";
-import EditProfileScreen from "../../screens/Profile/EditProfileScreen";
-import CertificateScreen from "../../screens/Certificate/CertificateScreen";
+import CourseScreen from "@/screens/Courses/CourseScreen";
+import DownloadScreen from "@/screens/Download/DownloadScreen";
+import { ExploreScreen } from "@/screens/Explore/ExploreScreen";
+import EduScreen from "@/screens/EduChatbot/EduScreen";
+import ProfileComponent from "@/screens/Profile/Profile";
+import EditProfileScreen from "@/screens/Profile/EditProfileScreen";
+import CertificateScreen from "@/screens/Certificate/CertificateScreen";
 import { Icon } from "@rneui/themed";
 import { Platform, Keyboard } from "react-native";
-import tailwindConfig from "@/tailwind.config";
+import { colors } from "@/theme/colors";
 
 const Tab = createBottomTabNavigator();
 
 const ProfileStack = createNativeStackNavigator();
 
-function ProfileStackScreen() {
+const ProfileStackScreen = () => {
   return (
     <ProfileStack.Navigator initialRouteName="ProfileHome">
       <ProfileStack.Screen
@@ -49,7 +49,7 @@ function ProfileStackScreen() {
       />
     </ProfileStack.Navigator>
   );
-}
+};
 
 /**
  * This component is used to display the navigation bar at the bottom of the screen.
@@ -57,7 +57,7 @@ function ProfileStackScreen() {
  *
  *
  */
-export default function NavigationBar() {
+export const NavigationBar = () => {
   const [keyboardStatus, setKeyboardStatus] = useState(0);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function NavigationBar() {
       initialRouteName={"Central"}
       screenOptions={{
         tabBarActiveTintColor: "black",
-        tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
+        tabBarActiveBackgroundColor: colors.cyanBlue,
         tabBarLabelStyle: {
           fontSize: keyboardStatus === 1 ? 0 : 14, // Hide text when keyboard is open
         },
@@ -124,7 +124,7 @@ export default function NavigationBar() {
         name="Meus cursos"
         component={CourseScreen}
         options={{
-          tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
+          tabBarActiveBackgroundColor: colors.cyanBlue,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon
@@ -142,7 +142,7 @@ export default function NavigationBar() {
         name="Explorar"
         component={ExploreScreen}
         options={{
-          tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
+          tabBarActiveBackgroundColor: colors.cyanBlue,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon
@@ -160,7 +160,7 @@ export default function NavigationBar() {
         name="Edu"
         component={EduScreen}
         options={{
-          tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
+          tabBarActiveBackgroundColor: colors.cyanBlue,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon
@@ -178,7 +178,7 @@ export default function NavigationBar() {
         name="Perfil"
         component={ProfileStackScreen}
         options={{
-          tabBarActiveBackgroundColor: tailwindConfig.theme.colors.cyanBlue,
+          tabBarActiveBackgroundColor: colors.cyanBlue,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon
@@ -194,4 +194,4 @@ export default function NavigationBar() {
       />
     </Tab.Navigator>
   );
-}
+};

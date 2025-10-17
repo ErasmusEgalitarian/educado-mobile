@@ -119,7 +119,7 @@ const CertificateCard = ({ certificate }: CertificateCardProps) => {
       <CertificatePopup visible={popupVisible} onClose={handleClosePopup}>
         <View className="flex flex-col justify-between">
           <View className="flex flex-row items-center justify-between">
-            <Text className="text-black text-lg font-medium">
+            <Text className="text-black text-body-regular">
               {certificate.courseName}
             </Text>
             <TouchableOpacity onPress={handleClosePopup}>
@@ -178,7 +178,7 @@ const CertificateCard = ({ certificate }: CertificateCardProps) => {
                       size={24}
                       color={"white"}
                     />
-                    <Text className="font-montserrat-bold ml-2 text-center text-lg text-projectWhite">
+                    <Text className="ml-2 text-center text-projectWhite text-body-bold">
                       Baixar PDF
                     </Text>
                   </>

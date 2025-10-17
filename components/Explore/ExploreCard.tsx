@@ -86,7 +86,7 @@ export const ExploreCard = ({
                   onPress={handleToggleBottomSheet}
                   className="flex-row items-center border-b border-surfaceDefaultCyan px-1"
                 >
-                  <Text className="mr-1 text-sm font-semibold text-surfaceDefaultCyan">
+                  <Text className="mr-1 text-surfaceDefaultCyan text-caption-sm-semibold">
                     saiba mais
                   </Text>
                   <MaterialCommunityIcons
