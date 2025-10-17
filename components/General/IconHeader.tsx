@@ -20,7 +20,7 @@ const IconHeader = ({ title, description }: IconHeaderProps) => {
           alt="Icon"
           className="mr-4 h-7 w-7"
         />
-        <Text className="font-montserrat text-[24px] font-bold leading-[24px] tracking-[0px]">
+        <Text className="font-montserrat text-[24px] font-montserrat-bold leading-[24px] tracking-[0px]">
           {title}
         </Text>
       </View>

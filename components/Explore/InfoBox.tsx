@@ -22,7 +22,7 @@ const InfoBoxItem = ({ title, icon, className }: InfoBoxItemProps) => {
       className={`flex-row items-center justify-start py-2 ${className ?? ""}`}
     >
       <MaterialCommunityIcons name={icon} size={20} color={colors.grayScale} />
-      <Text className="pl-2 font-sans text-sm text-projectBlack">{title}</Text>
+      <Text className="pl-2 font-sans text-s text-projectBlack">{title}</Text>
     </View>
   );
 };

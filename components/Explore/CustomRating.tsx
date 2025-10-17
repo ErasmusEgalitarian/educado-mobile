@@ -51,7 +51,7 @@ const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
 
   return noRating ? (
     <View className="flex-row items-start justify-start">
-      <Text className="pl-1 text-s text-textDisabledGrayscale">
+      <Text className="pl-1 text-s font-sans text-textDisabledGrayscale">
         Ainda sem avaliações
       </Text>
     </View>
@@ -66,7 +66,7 @@ const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
         />
       ))}
       <Text
-        className="pl-1 font-sans-bold text-s"
+        className="pl-1 font-semibold text-s"
         style={{ color: colors.surfaceYellow }}
       >
         {rating.toFixed(1)}

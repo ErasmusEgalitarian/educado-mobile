@@ -1,4 +1,5 @@
 import { TextInput, View } from "react-native";
+import Text from "@/components/General/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "@/theme/colors";
@@ -27,7 +28,7 @@ const SearchBar = ({
         placeholder={"Buscar curso"}
         placeholderTextColor={colors.textCaptionGrayscale}
         onChangeText={onSearchChange}
-        className="pr-35 flex-1 py-1 font-sans-semi-bold text-sm text-grayScale"
+        className="pr-35 flex-1 py-1 font-semibold text-sm text-grayScale"
       />
       <MaterialCommunityIcons
         name="magnify"

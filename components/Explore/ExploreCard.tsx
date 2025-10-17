@@ -74,9 +74,9 @@ export const ExploreCard = ({
               <View className="w-full flex-row justify-end">
                 <TouchableOpacity
                   onPress={handleToggleBottomSheet}
-                  className="flex-row items-center border-b border-surfaceDefaultCyan px-1 py-0.5"
+                  className="flex-row items-center border-b border-surfaceDefaultCyan px-1"
                 >
-                  <Text className="mr-1 font-sans-semi-bold text-xs text-surfaceDefaultCyan">
+                  <Text className="mr-1 font-semibold text-s text-surfaceDefaultCyan">
                     saiba mais
                   </Text>
                   <MaterialCommunityIcons
