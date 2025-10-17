@@ -82,7 +82,7 @@ const BottomDrawer = ({
         }}
       >
         <View className="h-9 mr-6 flex-row items-center justify-between">
-          <Text className="font-sans-semi-bold text-3xl text-textTitleGrayscale mr-2">
+          <Text className="font-medium text-3xl text-textTitleGrayscale mr-2">
             {course.title}
           </Text>
           <TouchableOpacity onPress={() => toggleModal()}>
@@ -123,7 +123,7 @@ const BottomDrawer = ({
                   size={13}
                   color={colors.surfaceDefaultGreen}
                 />
-                <Text className="flex-start pl-1 font-sans-bold text-s text-surfaceDefaultGreen">
+                <Text className="flex-start pl-1 font-semibold text-s text-surfaceDefaultGreen">
                   Inscrição realizada
                 </Text>
               </View>
