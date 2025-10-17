@@ -133,8 +133,8 @@ const RegisterForm = () => {
 
     const obj = {
       firstName: name.trim(),
-      // TODO: once backend is setup and api call are handled properly, the last name shoult be removed
-      lastName: "NO LAST NAME SHOULD BE HERE!",
+      // TODO: once backend is setup and api call are handled properly, the last name should be removed
+      lastName: "TODOFIX",
       email: email.toLowerCase(),
       password: password,
     };
