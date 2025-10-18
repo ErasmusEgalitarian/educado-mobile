@@ -1,0 +1,33 @@
+{
+  "name": "@educado/eslint-config-educado",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepublishOnly": "tsup",
+    "build": "tsup",
+    "tsc:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@educado/eslint-plugin-educado": "^1.0.0",
+    "eslint-plugin-react-native": "^5.0.0"
+  },
+  "peerDependencies": {
+    "eslint": ">= 9",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0"
+  }
+}
