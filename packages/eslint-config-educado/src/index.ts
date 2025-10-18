@@ -1,17 +1,13 @@
-module.exports = {
-  root: true,
-  extends: ["expo", "eslint:recommended", "prettier"],
-  plugins: ["prefer-arrow-functions"],
-  parser: "@typescript-eslint/parser",
-  settings: {
-    "import/resolver": {
-      typescript: {
-        project: "./tsconfig.json",
-      },
-    },
+import eslintPluginEducado from "@educado/eslint-plugin-educado";
+import eslintPluginReactNative from "eslint-plugin-react-native";
+
+const recommended = {
+  name: "educado/recommended",
+  plugins: {
+    "eslint-plugin-educado": eslintPluginEducado,
+    "eslint-plugin-react-native": eslintPluginReactNative,
   },
   rules: {
-    "prefer-arrow-functions/prefer-arrow-functions": ["error"],
     "no-restricted-imports": [
       "error",
       {
@@ -58,15 +54,6 @@ module.exports = {
         ],
       },
     ],
-    "no-restricted-syntax": [
-      "error",
-      {
-        selector:
-          "JSXAttribute[name.name='className'] Literal[value=/\\bfont-(bold|medium|semibold|montserrat(?:-bold|-semi-bold)?|sans-bold)\\b/]",
-        message:
-          "Don't use legacy typography classes. Use our typography preset utility classes instead (e.g., 'text-h1-sm-bold')",
-      },
-    ],
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -86,10 +73,12 @@ module.exports = {
         format: ["strictCamelCase"],
       },
     ],
-    "@typescript-eslint/no-explicit-any": "error",
+    "eslint-plugin-react-native/no-inline-styles": "error",
   },
-  env: {
-    browser: true,
-    node: true,
+};
+
+export default {
+  configs: {
+    recommended: [recommended],
   },
 };

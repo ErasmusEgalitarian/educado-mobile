@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ci-report-problems.mjs" type="NodeJSConfigurationType" application-parameters="files-changed.json eslint-report.json tsc-report.json" nameIsGenerated="true" path-to-js-file="scripts/ci-report-problems.mjs" working-dir="$PROJECT_DIR$/">
+    <method v="2" />
+  </configuration>
+</component>

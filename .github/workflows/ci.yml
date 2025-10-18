@@ -72,12 +72,11 @@ jobs:
 
           echo "FILES_CHANGED_JSON=$PWD/files-changed.json" >>"$GITHUB_ENV"
       - name: Run ESLint
-        run: npm run lint -- -f json -o eslint-report.json || true
+        run: npm run lint:ci
       - name: Run tsc
-        run: node ./scripts/ci-tsc-report.mjs > tsc-report.json || true
+        run: npm run tsc:ci
       - name: Report
-        run: |
-          node ./scripts/ci-report-problems.mjs "$FILES_CHANGED_JSON" eslint-report.json tsc-report.json
+        run: npm run ci:report "$FILES_CHANGED_JSON" eslint-report.json tsc-report.json
       - name: Run Tests
         run: npm run test:ci
       - name: Decide Build
