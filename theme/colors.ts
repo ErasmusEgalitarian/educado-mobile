@@ -40,6 +40,7 @@ export const colors = {
 
   // Text
   textLabelCyan: "#246670",
+  textLabelDefault: "#35A1B1",
 
   // ******************
   // ***** green ******
@@ -49,6 +50,8 @@ export const colors = {
   surfaceLighterGreen: "#C6F27E",
   surfaceDefaultGreen: "#70A31F",
   surfaceDarkerGreen: "#3A5313",
+  surfaceDarker: "#246670",
+  surfaceLighter: "#D8EFF3",
 
   // Border
   borderSubtleGreen: "#E6FAC8",

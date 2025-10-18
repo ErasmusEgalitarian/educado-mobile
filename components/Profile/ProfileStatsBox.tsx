@@ -1,31 +1,23 @@
 import { Fragment } from "react";
 import { View, Text, Image } from "react-native";
+import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
+import { colors } from "@/theme/colors";
 
-import CustomProgressBar from "../Exercise/CustomProgressBar";
-import PropTypes from "prop-types";
+type Props = {
+  studyStreak?: number;
+  points: number;
+  leaderboardPosition?: number;
+  level: number;
+  drawProgressBarOnly: boolean;
+};
 
 const ProfileStatsBox = ({
-  studyStreak,
+  studyStreak = 0,
   points,
-  leaderboardPosition,
+  leaderboardPosition = 0,
   level,
   drawProgressBarOnly,
-}) => {
-  // Props
-  ProfileStatsBox.propTypes = {
-    studyStreak: PropTypes.number, // Optional, not provided if drawProgressBarOnly = true
-    points: PropTypes.number.isRequired,
-    leaderboardPosition: PropTypes.number, // Optional, not provided if drawProgressBarOnly = true
-    level: PropTypes.number.isRequired,
-    drawProgressBarOnly: PropTypes.bool.isRequired,
-  };
-
-  // Default values for optional props
-  ProfileStatsBox.defaultProps = {
-    studyStreak: 0,
-    leaderboardPosition: 0,
-  };
-
+}: Props) => {
   // Calculate remaining points to next level-up (every 100 points)
   const pointsToNextLevel = 100 - (points % 100);
 
@@ -44,9 +36,10 @@ const ProfileStatsBox = ({
             <View className="h-16 w-24 flex-1 flex-col items-center rounded-lg bg-badgesGreen py-2">
               <Image source={require("../../assets/images/profileFlame.png")} />
               <Text
-                className="font-sans-bold mt-2 text-projectWhite"
+                className="text-caption-lg-bold mt-2"
                 numberOfLines={1}
                 adjustsFontSizeToFit
+                style={{ color: colors.surfaceSubtleGrayscale }}
               >
                 {studyStreak} dia seguido
               </Text>
@@ -57,9 +50,10 @@ const ProfileStatsBox = ({
               <Image source={require("../../assets/images/profileCoin.png")} />
 
               <Text
-                className="font-sans-bold mt-2 text-projectWhite"
+                className="text-caption-lg-bold mt-2"
                 numberOfLines={1}
                 adjustsFontSizeToFit
+                style={{ color: colors.surfaceSubtleGrayscale }}
               >
                 {points} pontos
               </Text>
@@ -71,9 +65,10 @@ const ProfileStatsBox = ({
                 source={require("../../assets/images/profileLightning.png")}
               />
               <Text
-                className="font-sans-bold mt-2 text-projectWhite"
+                className="text-caption-lg-bold mt-2"
                 numberOfLines={1}
                 adjustsFontSizeToFit
+                style={{ color: colors.surfaceSubtleGrayscale }}
               >
                 {leaderboardPosition}º posição
               </Text>
@@ -87,12 +82,14 @@ const ProfileStatsBox = ({
 
       {/* Level and progress bar */}
       <View className="mb-2 flex flex-row justify-between">
-        <Text className="font-sans-bold text-primary_custom">
+        <Text
+          className="caption-lg-semibold"
+          style={{ color: colors.textLabelDefault }}
+        >
           Nível {level}
         </Text>
         <CustomProgressBar
-          className="flex flex-row"
-          progress={levelProgressPercentage}
+          progress={[levelProgressPercentage, 0, 0]}
           width={65}
           height={1}
           displayLabel={false}
@@ -102,13 +99,13 @@ const ProfileStatsBox = ({
       {/* Remaining points to next level-up */}
       <View>
         <Text
-          className="font-montserrat text-primary_custom"
+          className="text-caption-sm-regular"
           numberOfLines={2}
           adjustsFontSizeToFit
+          style={{ color: colors.textLabelCyan }}
         >
-          Faltam apenas{" "}
-          <Text style={{ fontWeight: "bold" }}>{pointsToNextLevel} pts.</Text>{" "}
-          para você mudar de nível, continue estudando para chegar lá 🥳
+          Faltam apenas <Text>{pointsToNextLevel} pts.</Text> para você mudar de
+          nível, continue estudando para chegar lá 🥳
         </Text>
       </View>
     </View>
