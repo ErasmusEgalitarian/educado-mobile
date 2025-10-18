@@ -93,7 +93,7 @@ jobs:
 
             for f in $files_changed; do
               case "$f" in
-              app.json | eas.json | package.json | package-lock.json)
+              app.json | eas.json)
                 need=true
                 ;;
               esac
