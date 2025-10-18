@@ -11,6 +11,7 @@
     "build:config": "npm -w @educado/eslint-config-educado run build",
     "build:packages": "npm run build:plugin && npm run build:config",
     "build:plugin": "npm -w @educado/eslint-plugin-educado run build",
+    "ci:local": "ts-node ./scripts/ci-local.ts",
     "ci:report": "node ./scripts/ci-report-problems.mjs",
     "format": "prettier -w .",
     "format:check": "prettier -c .",

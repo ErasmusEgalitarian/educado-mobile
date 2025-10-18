@@ -52,3 +52,4 @@ tsc-report.json
 .direnv/
 .envrc
 summary.md
+var/
