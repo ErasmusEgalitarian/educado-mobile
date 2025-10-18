@@ -1,9 +1,9 @@
-name: LDE Issue Report
+name: LDE issue report
 description: Report an issue with the LDE
 title: "[LDE Issue]: <short symptom>"
 type: Support
 labels: ["lde", "bug", "needs triage", "help wanted"]
-projects: ErasmusEgalitarian/17
+projects: ["ErasmusEgalitarian/17"]
 assignees:
   - audio-engineer
   - Alfenstein8
