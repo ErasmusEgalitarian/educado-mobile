@@ -4,9 +4,9 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   Keyboard,
+  Text,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import Text from "@/components/General/Text";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ReactNode } from "react";
@@ -45,7 +45,7 @@ const EducadoModal = (props: EducadoModalProps) => {
                 contentContainerStyle={{ flexGrow: 1 }}
               >
                 <View className="flex flex-row items-center justify-between px-[10%] mb-4">
-                  <Text className="text-2xl font-semibold">{props.title ?? ""}</Text>
+                  <Text className="text-h2-sm-bold">{props.title ?? ""}</Text>
                   <Pressable onPress={props.closeModal}>
                     <Entypo name="chevron-down" size={24} />
                   </Pressable>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { loginUser } from "@/api/user-api";
 import FormTextField from "@/components/General/Forms/FormTextField";
@@ -8,7 +8,6 @@ import PasswordEye from "@/components/General/Forms/PasswordEye";
 import ResetPassword from "@/components/Login/ResetPassword";
 import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
 import { removeEmojis } from "@/components/General/validation";
-import Text from "@/components/General/Text";
 import ShowAlert from "@/components/General/ShowAlert";
 
 // Services
