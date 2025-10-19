@@ -3,7 +3,6 @@ import patterns from "@/assets/validation/patterns";
 /**
  * Function for validating the password input. It checks if the password contains any emojis and if so it does not change the password state variable.
  * @param passwordInput input in password field
- * @param currentPasword current password state variable
  * @returns either the password state variable or the confirm password state variable depending on the confirm parameter
  */
 export const removeEmojis = (passwordInput: string) => {

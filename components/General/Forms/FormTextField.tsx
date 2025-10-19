@@ -1,5 +1,4 @@
-import { View, TextInput, KeyboardTypeOptions } from "react-native";
-import Text from "@/components/General/Text";
+import { View, TextInput, KeyboardTypeOptions, Text } from "react-native";
 
 interface PropTypes {
   autoComplete?:

@@ -1,6 +1,5 @@
 import { TouchableOpacity } from "react-native";
-import { View } from "react-native";
-import Text from "@/components/General/Text";
+import { View, Text } from "react-native";
 
 interface PropTypes {
   children: string;
@@ -34,7 +33,7 @@ const FormButton = (props: PropTypes) => {
         >
           <Text
             className={
-              "text-center font-sans-bold text-body " +
+              "text-center h4-sm-bold" +
               (props.disabled ? "text-[#809CAD]" : "text-projectWhite")
             }
           >

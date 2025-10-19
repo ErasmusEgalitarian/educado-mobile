@@ -1,10 +1,9 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { useState } from "react";
 import FormTextField from "@/components/General/Forms/FormTextField";
 import FormButton from "@/components/General/Forms/FormButton";
 import EducadoModal from "@/components/General/EducadoModal";
 import EnterNewPasswordScreen from "@/components/Login/EnterNewPasswordScreen";
-import Text from "@/components/General/Text";
 import {
   sendResetPasswordEmail,
   validateResetPasswordCode,
@@ -162,7 +161,6 @@ const ResetPassword = (props: ResetPasswordProps) => {
     <EducadoModal
       modalVisible={props.modalVisible}
       closeModal={props.onModalClose}
-      id="EducadoModal"
       title="Redefinição de senha"
     >
       <View className="my-8 px-10">

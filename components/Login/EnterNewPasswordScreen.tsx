@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import FormTextField from "../General/Forms/FormTextField";
 import FormButton from "../General/Forms/FormButton";
 import PasswordEye from "../General/Forms/PasswordEye";
@@ -10,7 +10,6 @@ import {
   validatePasswordContainsLetter,
   validatePasswordLength,
 } from "../General/validation";
-import Text from "../General/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ShowAlert from "../General/ShowAlert";
 import DialogNotification from "../General/DialogNotification";
@@ -227,7 +226,7 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
       <View className="mb-10">
       <FormFieldAlert label={confirmPasswordAlert} />
       </View>
-      
+
       {/* Enter button */}
       <FormButton
         testId="resetPasswordButton"
@@ -237,7 +236,7 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
         Entrar
       </FormButton>
 
-      
+
     </View>
   );
 }
