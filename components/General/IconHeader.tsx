@@ -11,7 +11,7 @@ type Props = {
  * @param {description} - Optional description below header
  * @returns {JSX.Element} The IconHeader component.
  */
-const IconHeader = ({ title, description }: Props) => {
+const IconHeader = ({ title }: Props) => {
   return (
     <>
       <View className="flex flex-row items-center pb-2">
@@ -20,13 +20,10 @@ const IconHeader = ({ title, description }: Props) => {
           alt="Icon"
           className="mr-4 h-7 w-7"
         />
-        <Text className="text-h2-sm-medium text-textTitleGrayscale">
+        <Text className="text-textTitleGrayscale text-h2-sm-bold">
           {title}
         </Text>
       </View>
-      <Text className="text-h2-sm-medium px-6 pb-4 pl-6 text-sm">
-        {description}
-      </Text>
     </>
   );
 };
