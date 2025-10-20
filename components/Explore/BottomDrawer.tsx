@@ -2,9 +2,9 @@ import { colors } from "@/theme/colors";
 import {
   Modal,
   View,
-  useWindowDimensions,
   TouchableOpacity,
   Text,
+  StyleSheet
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CardLabel } from "@/components/Explore/CardLabel";
@@ -13,22 +13,21 @@ import { CourseButton } from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { subscribe, addCourseToStudent } from "@/services/storage-service";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { InfoBox } from "@/components/Explore/InfoBox";
 import type { Course } from "@/types/course";
 import { t } from "@/i18n";
 
 export interface BottomDrawerProps {
-  toggleModal: () => void;
+  toggleModal: () => void | Promise<void>;
   course: Course;
   drawerState: boolean;
   subscribed: boolean;
 }
 
-type BottomDrawerNavParams = {
-  Subscribed: { course: Course };
-  CourseOverview: { course: Course };
-};
+const styles = StyleSheet.create({
+  shadow: { elevation: 10 }
+})
 
 export const BottomDrawer = ({
   toggleModal,
@@ -36,24 +35,19 @@ export const BottomDrawer = ({
   drawerState,
   subscribed,
 }: BottomDrawerProps) => {
-  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
 
-  const navigation = useNavigation<NavigationProp<BottomDrawerNavParams>>();
+  const navigation = useNavigation();
 
-  const subscribeCourse = async (course: Course) => {
+  const subscribeCourse = async () => {
     toggleModal();
     await subscribe(course.courseId);
     await addCourseToStudent(course.courseId);
-    navigation.navigate("Subscribed", {
-      course: course,
-    });
+    navigation.navigate("Subscribed");
   };
 
-  const navigateCourse = (course: Course) => {
+  const navigateCourse = () => {
     toggleModal();
-    navigation.navigate("CourseOverview", {
-      course: course,
-    });
+    navigation.navigate("CourseOverview");
   };
 
   return (
@@ -61,32 +55,21 @@ export const BottomDrawer = ({
       animationType="slide"
       transparent={true}
       visible={drawerState}
-      onRequestClose={() => toggleModal()}
+      onRequestClose={() => { toggleModal(); }}
     >
       <View
-        className="flex-1"
-        style={{
-          backgroundColor: colors.surfaceSubtleCyan,
-          opacity: 0.5,
-        }}
+        className="flex-1 bg-surfaceSubtleCyan opacity-50"
       />
 
       <View
-        className="flex-start absolute bottom-0 h-full w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9"
-        style={{
-          height: windowHeight * 0.91,
-          width: windowWidth,
-          shadowColor: colors.textTitleGrayscale,
-          shadowOpacity: 1,
-          shadowRadius: 12,
-          elevation: 10,
-        }}
+        className="flex-start absolute bottom-0 h-[91%] w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9"
+        style={styles.shadow}
       >
         <View className="h-9 flex-row items-center justify-between">
-          <Text className="mr-2 text-3xl font-medium text-textTitleGrayscale">
+          <Text className="mr-2 text-h2-3xl-medium text-textTitleGrayscale">
             {course.title}
           </Text>
-          <TouchableOpacity onPress={() => toggleModal()}>
+          <TouchableOpacity onPress={() => { toggleModal(); }}>
             <MaterialCommunityIcons
               name={"chevron-down"}
               size={28}
@@ -124,7 +107,7 @@ export const BottomDrawer = ({
                   size={13}
                   color={colors.surfaceDefaultGreen}
                 />
-                <Text className="flex-start pl-1 text-sm font-semibold text-surfaceDefaultGreen">
+                <Text className="flex-start pl-1 text-label-sm-semibold text-surfaceDefaultGreen">
                   {t("course.registered")}
                 </Text>
               </View>
@@ -137,7 +120,7 @@ export const BottomDrawer = ({
         <View className="w-full border-b-[1px] border-surfaceDisabledGrayscale opacity-50" />
 
         <ScrollView className="inner-shadow my-4 max-h-40 w-full">
-          <Text className="flex-start w-full font-sans text-xl">
+          <Text className="flex-start w-full text-h4-sm-regular">
             {course.description}
           </Text>
         </ScrollView>
@@ -150,7 +133,7 @@ export const BottomDrawer = ({
           {subscribed ? (
             <CourseButton course={course} onPress={navigateCourse}>
               <View className="flex-row items-center">
-                <Text className="font-sans-bold mr-3 py-1 text-xl text-surfaceSubtleGrayscale">
+                <Text className="mr-3 py-1 text-h4-sm-bold text-surfaceSubtleGrayscale">
                   {t("course.continue")}
                 </Text>
                 <MaterialCommunityIcons
@@ -162,7 +145,7 @@ export const BottomDrawer = ({
             </CourseButton>
           ) : (
             <CourseButton course={course} onPress={subscribeCourse}>
-              <Text className="font-sans-bold p-1 text-xl text-surfaceSubtleGrayscale">
+              <Text className="p-1 text-h4-sm-bold text-surfaceSubtleGrayscale">
                 {t("course.signup")}
               </Text>
             </CourseButton>
