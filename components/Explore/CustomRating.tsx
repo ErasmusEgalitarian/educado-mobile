@@ -12,40 +12,32 @@ export interface CustomRatingProps {
   rating?: number;
 }
 
-const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
-  const [ratingIcons, setRatingIcons] = useState(
-    Array(5).fill({
-      icon: "star-outline",
-      color: colors.surfaceYellow,
-    }),
-  );
+export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
+  const [ratingIcons, setRatingIcons] = useState<
+    { icon: string; color: string }[]
+  >([]);
   const [noRating, setNoRating] = useState(false);
 
   useEffect(() => {
+    if (rating === 0) {
+      setNoRating(true);
+      setRatingIcons([]);
+      return;
+    }
     const fullStars = Math.floor(rating ?? 0);
     const halfStar = rating % 1 !== 0;
 
-    if (rating !== 0) {
-      const newRatingIcons = ratingIcons.map((icon, index) => {
-        if (index < fullStars) {
-          return { icon: "star", color: colors.surfaceYellow };
-        } else if (index === fullStars && halfStar) {
-          return {
-            icon: "star-half-full",
-            color: colors.surfaceYellow,
-          };
-        } else {
-          return {
-            icon: "star-outline",
-            color: colors.surfaceYellow,
-          };
-        }
-      });
+    const newRatingIcons = Array.from({ length: 5 }, (_, index) => {
+      if (index < fullStars) {
+        return { icon: "star", color: colors.surfaceYellow };
+      } else if (index === fullStars && halfStar) {
+        return { icon: "star-half-full", color: colors.surfaceYellow };
+      } else {
+        return { icon: "star-outline", color: colors.surfaceYellow };
+      }
+    });
 
-      setRatingIcons(newRatingIcons);
-    } else {
-      setNoRating(true);
-    }
+    setRatingIcons(newRatingIcons);
   }, [rating]);
 
   return noRating ? (
@@ -73,5 +65,3 @@ const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
     </View>
   );
 };
-
-export default CustomRating;
