@@ -8,13 +8,13 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CardLabel } from "@/components/Explore/CardLabel";
-import CustomRating from "@/components/Explore/CustomRating";
+import { CustomRating } from "@/components/Explore/CustomRating";
 import { CourseButton } from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { subscribe, addCourseToStudent } from "@/services/storage-service";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import InfoBox from "@/components/Explore/InfoBox";
+import { InfoBox } from "@/components/Explore/InfoBox";
 import type { Course } from "@/types/course";
 
 export interface BottomDrawerProps {
@@ -29,7 +29,7 @@ type BottomDrawerNavParams = {
   CourseOverview: { course: Course };
 };
 
-const BottomDrawer = ({
+export const BottomDrawer = ({
   toggleModal,
   course,
   drawerState,
@@ -171,5 +171,3 @@ const BottomDrawer = ({
     </Modal>
   );
 };
-
-export default BottomDrawer;

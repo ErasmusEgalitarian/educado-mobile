@@ -3,7 +3,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { colors } from "@/theme/colors";
 
-interface SearchBarProps {
+export interface SearchBarProps {
   searchText?: string;
   onSearchChange?: (text: string) => void;
   placeholder?: string;
@@ -15,7 +15,7 @@ interface SearchBarProps {
  * @param placeholder - The placeholder text for the search bar.
  * @returns {JSX.Element} - Returns a JSX element.
  */
-const SearchBar = ({
+export const SearchBar = ({
   onSearchChange = () => {},
   placeholder = "Buscar curso",
 }: SearchBarProps) => {
@@ -35,5 +35,3 @@ const SearchBar = ({
     </View>
   );
 };
-
-export default SearchBar;

@@ -9,7 +9,7 @@ import SectionScreen from "@/screens/Section/SectionScreen";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import WelcomeScreen from "@/screens/Welcome/WelcomeScreen";
 import CompleteSectionScreen from "@/screens/Section/CompleteSectionScreen";
-import NavigationBar from "@/components/NavigationBar/NavigationBar";
+import { NavigationBar } from "@/components/NavigationBar/NavigationBar";
 import ComponentSwipeScreen from "@/screens/Lectures/ComponentSwipeScreen";
 import ErrorScreen from "@/screens/Errors/ErrorScreen";
 import CourseScreen from "@/screens/Courses/CourseScreen";

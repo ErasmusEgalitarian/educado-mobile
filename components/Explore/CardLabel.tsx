@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
 import { colors } from "@/theme/colors";
 
-interface CardLabelProps {
+export interface CardLabelProps {
   title: string;
   icon: keyof typeof MaterialCommunityIcons.glyphMap;
   color?: string;

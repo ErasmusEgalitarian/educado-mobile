@@ -2,13 +2,13 @@ import { useState } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CardLabel } from "@/components/Explore/CardLabel";
-import CustomRating from "@/components/Explore/CustomRating";
+import { CustomRating } from "@/components/Explore/CustomRating";
 import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
-import BottomDrawer from "@/components/Explore/BottomDrawer";
+import { BottomDrawer } from "@/components/Explore/BottomDrawer";
 import type { Course } from "@/types/course";
 
-interface ExploreCardProps {
+export interface ExploreCardProps {
   course: Course;
   isPublished: boolean;
   subscribed: boolean;

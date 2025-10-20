@@ -30,7 +30,7 @@ const InfoBoxItem = ({ title, icon, className }: InfoBoxItemProps) => {
   );
 };
 
-const InfoBox = ({ course }: { course: Course }) => {
+export const InfoBox = ({ course }: { course: Course }) => {
   return (
     <View className="border-grayScale w-full flex-col rounded-2xl border border-solid px-4 py-1">
       <InfoBoxItem
@@ -58,5 +58,3 @@ const InfoBox = ({ course }: { course: Course }) => {
     </View>
   );
 };
-
-export default InfoBox;

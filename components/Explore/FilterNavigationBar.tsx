@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SearchBar from "@/components/Explore/SearchBar";
+import { SearchBar } from "@/components/Explore/SearchBar";
 import { View, Pressable, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { categories } from "@/components/Explore/categories";
