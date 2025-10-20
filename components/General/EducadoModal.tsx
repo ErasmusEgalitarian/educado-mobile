@@ -41,9 +41,7 @@ const EducadoModal = (props: EducadoModalProps) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="bg-projectWhite h-[90%] rounded-t-3xl pt-10">
               <AlertNotificationRoot>
-              <KeyboardAwareScrollView
-                contentContainerStyle={{ flexGrow: 1 }}
-              >
+              <KeyboardAwareScrollView>
                 <View className="flex flex-row items-center justify-between px-[10%] mb-4">
                   <Text className="text-h2-sm-bold">{props.title ?? ""}</Text>
                   <Pressable onPress={props.closeModal}>

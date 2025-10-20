@@ -31,8 +31,6 @@ interface PropTypes {
     | "new-password"
     | "one-time-code"
     | "organization"
-    | "postal-code"
-    | "street-address"
     | "url"
     | undefined;
   bordered?: boolean;
@@ -52,19 +50,14 @@ const FormTextField = (props: PropTypes) => {
     <View>
       <View className="flex flex-row">
         {/* Text size above input fields on login and registration */}
-        <Text className={"ml-2 text-lg"}>{props.label ?? ""}</Text>
-
-        {/* Text size for red asterisks (fields required) */}
-        <Text className={"ml-1 text-lg text-error"}>
-          {props.required ? "*" : ""}
-        </Text>
+        <Text className={"ml-2 text-body-regular"}>{props.label ?? ""}</Text>
       </View>
       <View className="">
         {/* Various properties for text input fields */}
         <TextInput
-          className={`w-full rounded-lg bg-projectWhite py-4 pl-[10px] text-base ${
+          className={`w-full rounded-lg bg-surfaceSubtleGrayscale py-4 pl-[10px] text-subtitle-regular ${
             props.bordered && !props.error ? "border border-projectGray" : ""
-          } ${props.error ? "border border-error bg-errorTheSecond" : ""}`}
+          } ${props.error ? "border border-b-borderDefaultRed bg-surfaceSubtleRed" : ""}`}
           placeholder={props.placeholder ?? ""} // Placeholder text to be displayed
           keyboardType={props.keyboardType} // Keyboard type (e.g. numeric, email-address, etc.)
           autoComplete={props.autoComplete} // Whether to enable auto-completion

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { loginUser, registerUser } from "@/api/user-api";
 import FormTextField from "@/components/General/Forms/FormTextField";
 import FormButton from "@/components/General/Forms/FormButton";
@@ -14,21 +14,19 @@ import {
   validateEmail,
   validateName,
 } from "@/components/General/validation";
-import Text from "@/components/General/Text";
 import errorSwitch from "@/components/General/error-switch";
 import { useNavigation } from "@react-navigation/native";
 import DialogNotification from "@/components/General/DialogNotification";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import colors from "@/theme/colors";
+import { colors } from "@/theme/colors";
 import { setUserInfo, setJWT } from "@/services/storage-service";
+import {UserInfo} from "@/types/user";
 
 /**
  * Component for registering a new account in the system, used in the register screen
  */
 const RegisterForm = () => {
-  const tailwindColors = colors;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
 
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -126,7 +124,7 @@ const RegisterForm = () => {
   /**
    * Function for registering a new user in the database
    */
-  const register = async (name: string, email: string, password: string) => {
+  const register = (name: string, email: string, password: string): void => {
     if (!isAllInputValid) {
       return;
     }
@@ -140,14 +138,15 @@ const RegisterForm = () => {
     };
 
     try {
-
-      await registerUser(obj)
-        .then(async (response) => {
+      registerUser(obj)
+        .then(async (response: {baseUser: {_id: string, user: UserInfo}}) => {
           // Save user info in storage
           // TODO: Refactor backend to get the same response as on login
-          const userInfo = {
+          const userInfo: UserInfo = {
             id: response.baseUser._id,
-            ...response.baseUser,
+            firstName: response.baseUser.user.firstName,
+            lastName: response.baseUser.user.lastName,
+            email: response.baseUser.user.email
           };
           await setUserInfo(userInfo);
         })
@@ -155,7 +154,7 @@ const RegisterForm = () => {
           // logs in the user, if no errors occur, navigates to home screen and sets token
           await loginFromRegister(obj);
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
           ShowAlert(errorSwitch(error));
         });
     } catch (e) {
@@ -172,14 +171,16 @@ const RegisterForm = () => {
   const loginFromRegister = async (obj: {email: string, password: string}) => {
     try {
       await loginUser(obj)
-        .then((response) => {
-          setJWT(response.accessToken);
+        .then( async (response: {accessToken: string}) => {
+          await setJWT(response.accessToken);
           DialogNotification("success", "Usuário cadastrado! Cantando em...");
           setTimeout(() => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             navigation.navigate("HomeStack");
           }, 2500);
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
           console.log(error);
         });
     } catch (e) {
@@ -194,7 +195,6 @@ const RegisterForm = () => {
           <FormTextField
             label="Nome" // name
             value={name}
-            testId="firstNameInput"
             placeholder="Nome Sobrenome"
             required={true}
             onChangeText={(firstName) => {
@@ -206,12 +206,11 @@ const RegisterForm = () => {
         <View className="mb-2 flex-none">
           <FormTextField
             label="Email"
-            testId="emailInput"
             value={email}
             placeholder="useremail@gmail.com"
             keyboardType="email-address"
             required={true}
-            onChangeText={async (email) => {
+            onChangeText={(email: string): void => {
               setEmail(email);
               validateEmail(email);
             }}
@@ -219,7 +218,7 @@ const RegisterForm = () => {
           />
           {/*Only render if there is error, otherwise there will be an empty area for nothing.*/}
           {emailAlert ? (
-            <FormFieldAlert label={emailAlert} testId="emailAlert" />
+            <FormFieldAlert label={emailAlert} success={emailAlert === ""} />
           ) : (
             <></>
           )}
@@ -228,19 +227,19 @@ const RegisterForm = () => {
           <View>
             <FormTextField
               label="Senha" //Password
-              testId="passwordInput"
               value={password}
               placeholder="********"
-              placeholderTextColor={tailwindColors.projectGray}
               secureTextEntry={!showPassword}
               required={true}
               onChangeText={(inputPassword: string) => {
                 setPassword(removeEmojis(inputPassword));
               }}
-              error={password !== "" && !(passwordContainsLetter && passwordLengthValid)}
+              error={
+                password !== "" &&
+                !(passwordContainsLetter && passwordLengthValid)
+              }
             />
             <PasswordEye
-              testId="passwordEye"
               showPasswordIcon={!showPassword}
               toggleShowPassword={toggleShowPassword}
             />
@@ -248,7 +247,6 @@ const RegisterForm = () => {
 
           <View className="mt-1 h-6 flex-row justify-start">
             <Text
-              testId="passwordLengthAlert"
               className={
                 "text-sm" +
                 (password === ""
@@ -265,14 +263,13 @@ const RegisterForm = () => {
                 <MaterialCommunityIcons
                   name="check"
                   size={20}
-                  color={tailwindColors.success}
+                  color={colors.surfaceDefaultGreen}
                 />
               ) : null}
             </View>
           </View>
           <View className="h-6 flex-row justify-start">
             <Text
-              testId="passwordLetterAlert"
               className={
                 "text-sm" +
                 (password === ""
@@ -290,7 +287,7 @@ const RegisterForm = () => {
                 <MaterialCommunityIcons
                   name="check"
                   size={20}
-                  color={tailwindColors.success}
+                  color={colors.surfaceDefaultGreen}
                 />
               ) : null}
             </View>
@@ -301,7 +298,6 @@ const RegisterForm = () => {
             <FormTextField
               label="Confirmar senha" // Confirm password
               value={confirmPassword}
-              testId="confirmPasswordInput"
               onChangeText={(inputConfirmPassword: string) => {
                 setConfirmPassword(removeEmojis(inputConfirmPassword));
               }}
@@ -311,21 +307,23 @@ const RegisterForm = () => {
               error={confirmPasswordAlert !== ""}
             />
             <PasswordEye
-              testId="confirmPasswordEye"
               showPasswordIcon={!showConfirmPassword}
               toggleShowPassword={toggleShowConfirmPassword}
             />
           </View>
-          <FormFieldAlert label={confirmPasswordAlert} testId="confirmPasswordAlert" />
+          <FormFieldAlert
+            label={confirmPasswordAlert} success={confirmPasswordAlert === ""}
+          />
         </View>
         {/* Register */}
-        <View className="bg-primary mt-auto flex-none">
+        <View className="mt-auto flex-none">
           <FormButton
-            onPress={() => register(name, email, password)}
-            testId="registerButton"
+            onPress={() => {
+              register(name, email, password);
+            }}
             disabled={!isAllInputValid}
           >
-            Cadastrar
+            Entrar
           </FormButton>
         </View>
       </AlertNotificationRoot>

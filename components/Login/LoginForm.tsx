@@ -9,17 +9,23 @@ import ResetPassword from "@/components/Login/ResetPassword";
 import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
 import { removeEmojis } from "@/components/General/validation";
 import ShowAlert from "@/components/General/ShowAlert";
+import { UserInfo } from "@/types/user";
 
 // Services
 import { setUserInfo, setJWT } from "@/services/storage-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+interface ApiError {
+  error: {
+    code: string;
+    message?: string;
+  };
+}
 /**
  * Login form component for login screen containing email and password input fields and a login button.
  */
 const LoginForm = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const navigation = useNavigation<any>(); // TODO: Find a way to avoid using 'any' here
+  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -28,7 +34,7 @@ const LoginForm = () => {
   // State variable to track password visibility
   const [showPassword, setShowPassword] = useState(false);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<void> => {
     //Reset alerts
     setEmailAlert("");
     setPasswordAlert("");
@@ -42,15 +48,22 @@ const LoginForm = () => {
 
     // Await the response from the backend API for login
     await loginUser(obj)
-      .then(async (response) => {
+      .then(async (response: {accessToken: string, userInfo: UserInfo}) => {
         // Set login token in AsyncStorage and navigate to home screen
         await setJWT(response.accessToken);
         await setUserInfo({ ...response.userInfo });
         await AsyncStorage.setItem("loggedIn", "true");
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         navigation.navigate("HomeStack");
       })
-      .catch((error) => {
-        switch (error?.error?.code) {
+      .catch((error: unknown) => {
+        const objectError = typeof error === "object" && error !== null && "error" in error;
+        if (!(objectError)) {
+          return;
+        }
+        const apiError = error as ApiError;
+        switch (apiError.error.code) {
           case "E0004": //E0004
             // No user exists with this email!
             setEmailAlert("Insira um E-mail válido");
@@ -87,23 +100,21 @@ const LoginForm = () => {
     <View>
       <View className="mb-1">
         <FormTextField
-          // eslint-disable-next-line
-          testId="emailInput"
           placeholder="Insira sua e-mail"
-          onChangeText={(email) => setEmail(email)}
+          onChangeText={(email: string) => {
+            setEmail(email);
+          }}
           label="E-mail"
           required={false}
           keyboardType="email-address"
           bordered={true}
           error={emailAlert !== ""}
         />
-        <FormFieldAlert testId="emailAlert" label={emailAlert} />
+        <FormFieldAlert success={emailAlert === ""} label={emailAlert} />
       </View>
 
       <View className="relative">
         <FormTextField
-          // eslint-disable-next-line
-          testId="passwordInput"
           placeholder="Insira sua senha" // Type your password
           value={password}
           onChangeText={(inputPassword) => {
@@ -116,18 +127,18 @@ const LoginForm = () => {
           error={passwordAlert !== ""}
         />
         <PasswordEye
-          testId="passwordEye"
           showPasswordIcon={showPassword}
           toggleShowPassword={toggleShowPassword}
         />
-        <FormFieldAlert testId="passwordAlert" label={passwordAlert} />
+        <FormFieldAlert success={passwordAlert === ""} label={passwordAlert} />
       </View>
 
       <View>
-        {/* TODO: tilføj onPress til nedenstående; reset password */}
         <Text
-          className={"mb-20 text-right text-lg text-textGrey underline"}
-          onPress={() => setModalVisible(true)}
+          className={"text-textSubtitleGrayscale mb-20 text-right text-h4-sm-regular underline"}
+          onPress={() => {
+            setModalVisible(true);
+          }}
         >
           {/* reset your password? */}
           Esqueceu a senha?
@@ -135,10 +146,10 @@ const LoginForm = () => {
       </View>
       {/* Enter */}
       <FormButton
-        testId="loginButton"
-        onPress={() => login(email, password)}
+        onPress={() => {
+          void login(email, password);
+        }}
         disabled={!(password.length > 0 && email.length > 0)}
-        className="mt-4"
       >
         Entrar
       </FormButton>
@@ -146,9 +157,8 @@ const LoginForm = () => {
         <ResetPassword
           modalVisible={modalVisible}
           onModalClose={closeModal}
-          testId="resetPasswordModal"
           // Reset password
-          title="Redefinir senha"
+          title={"Redefinir senha"}
         />
       </View>
     </View>

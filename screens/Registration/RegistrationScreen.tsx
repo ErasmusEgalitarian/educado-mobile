@@ -1,43 +1,39 @@
 import { useEffect } from "react";
-import { View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { View, TouchableWithoutFeedback, Keyboard, Text } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import RegisterForm from "@/components/Login/RegisterForm";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LogoBackButton from "@/components/Login/LogoBackButton";
-import Text from "@/components/General/Text";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as StorageService from "@/services/storage-service";
 
 const RegistrationScreen = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
 
-  type LoginScreenRouteParams = {
-    previousScreen?: string;
-  };
-
-  const route =
-    useRoute<RouteProp<{ params: LoginScreenRouteParams }, "params">>();
-  const previousScreen = route.params?.previousScreen || "WelcomeStack";
 
   const checkLoginToken = async () => {
     try {
       const isValid = await StorageService.isLoginTokenValid();
       if (isValid) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         navigation.navigate("HomeStack");
       }
-    } catch (error) {
-      console.log("Failed to fetch the login token from storage\n" + error);
+    } catch (error: unknown) {
+      const tokenError: string = error as string;
+      console.log(
+        "Failed to fetch the login token from storage\n" + tokenError,
+      );
     }
   };
 
   useEffect(() => {
-    checkLoginToken();
+    void checkLoginToken();
   }, []);
 
 
   return (
-    <SafeAreaView className="flex-1 justify-start bg-secondary">
+    <SafeAreaView className="flex-1 justify-start bg-surfaceSubtleCyan">
       <KeyboardAwareScrollView
         className="flex-1"
         resetScrollToCoords={{ x: 0, y: 0 }}
@@ -46,24 +42,26 @@ const RegistrationScreen = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View>
             <View className="mt-10">
-              <LogoBackButton navigationPlace={previousScreen} />
+              <LogoBackButton navigationPlace={"WelcomeScreen"} />
             </View>
             <View className="mx-6">
               <View className="mt-8">
                 <RegisterForm />
               </View>
               <View className="flex-row items-end justify-center">
-                <Text className="text-lg leading-5 text-projectBlack">
+                <Text className="text-h4-sm-regular text-textBodyGrayscale">
                   {/* Already have an account? */}
                   Já possui conta?
                 </Text>
                 <Text
-                  testId="loginNav"
                   className={
-                    "left-1 text-lg leading-5 text-profileCircle underline"
+                    "left-1 text-h4-sm-regular text-textCaptionGrayscale underline"
                   }
-                  onPress={() =>
-                    navigation.navigate("Login", { previousScreen: "Register" })
+                  onPress={() => {
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-expect-error
+                      navigation.navigate("Login", { previousScreen: "Register", });
+                    }
                   }
                 >
                   {/* Log in now */}
