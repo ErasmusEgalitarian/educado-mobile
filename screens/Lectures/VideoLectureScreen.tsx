@@ -1,15 +1,25 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Pressable, TouchableOpacity, Alert } from "react-native";
-import Text from "../../components/General/Text";
-import VideoActions from "../../components/Lectures/VideoActions";
+import { View, Pressable, TouchableOpacity, Alert, Text } from "react-native";
+import VideoActions from "@/components/Lectures/VideoActions";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomExpoVideoPlayer from "../../components/Lectures/CustomExpoVideoPlayer";
-import ReactSliderProgress from "./ReactSliderProgress";
+import CustomExpoVideoPlayer from "@/components/Lectures/CustomExpoVideoPlayer";
+import ReactSliderProgress from "@/screens/Lectures/ReactSliderProgress";
 import PropTypes from "prop-types";
 import { Icon } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import { completeComponent, handleLastComponent } from "../../services/utils";
-import { getVideoURL } from "../../services/storage-service";
+import { completeComponent, handleLastComponent } from "@/services/utils";
+import { getVideoURL } from "@/services/storage-service";
+import { Lecture} from "@/types/lecture";
+import { Course } from "@/types/course";
+import { AVPlaybackStatus } from "expo-av";
+
+interface VideoLectureScreenProps {
+  lectureObject: Lecture;
+  courseObject: Course;
+  isLastSlide: boolean;
+  onContinue: () => void;
+  handleStudyStreak: () => void;
+}
 
 const VideoLectureScreen = ({
   lectureObject,
@@ -17,14 +27,14 @@ const VideoLectureScreen = ({
   isLastSlide,
   onContinue,
   handleStudyStreak,
-}) => {
+} : VideoLectureScreenProps)  => {
   const navigation = useNavigation();
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [positionMillis, setPositionMillis] = useState(0);
   const [durationMillis, setDurationMillis] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
-  const [videoUrl, setVideoUrl] = useState(null);
+  const [videoUrl, setVideoUrl] = useState<null | string>(null);
   const [showPlayPauseIcon, setShowPlayPauseIcon] = useState(false);
   const [currentResolution, setCurrentResolution] = useState("360");
   const [allResolutions] = useState(["1080", "720", "480", "360"]);
@@ -33,7 +43,7 @@ const VideoLectureScreen = ({
   useEffect(() => {
     const fetchVideoUrl = async () => {
       try {
-        const url = await getVideoURL(lectureObject.video, currentResolution);
+        const url = await getVideoURL(lectureObject.content, currentResolution);
         if (!url) {
           throw new Error("Video URL is null");
         }
@@ -49,7 +59,7 @@ const VideoLectureScreen = ({
       }
     };
     fetchVideoUrl();
-  }, [lectureObject.video, currentResolution]);
+  }, [lectureObject.content, currentResolution]);
 
   const onStatusUpdate = (status) => {
     setPositionMillis(status.positionMillis || 0);

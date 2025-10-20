@@ -1,11 +1,25 @@
 import { forwardRef } from "react";
-import PropTypes from "prop-types";
-import { View, StyleSheet, Dimensions } from "react-native";
-import { Video } from "expo-av";
-import tailwindConfig from "@/tailwind.config";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { AVPlaybackStatus, ResizeMode, Video } from "expo-av";
+import { colors } from "@/theme/colors";
+
+interface CustomExpoVideoPlayerProps {
+  onStatusUpdate: (status: AVPlaybackStatus) => void;
+  videoUrl: string;
+  isMuted?: boolean;
+  isPlaying?: boolean;
+}
 
 const CustomExpoVideoPlayer = forwardRef(
-  ({ onStatusUpdate, videoUrl, isMuted = false, isPlaying = true }, ref) => {
+  (
+    {
+      onStatusUpdate,
+      videoUrl,
+      isMuted = false,
+      isPlaying = true,
+    }: CustomExpoVideoPlayerProps,
+    ref,
+  ) => {
     const screenWidth = Dimensions.get("window").width;
     const screenHeight = Dimensions.get("window").height;
 
@@ -13,7 +27,7 @@ const CustomExpoVideoPlayer = forwardRef(
       container: {
         flex: 1,
         justifyContent: "center",
-        backgroundColor: tailwindConfig.theme.colors.black,
+        backgroundColor: colors.projectBlack,
       },
       video: {
         alignSelf: "center",
@@ -33,7 +47,7 @@ const CustomExpoVideoPlayer = forwardRef(
           volume={1.0}
           rate={1.0}
           isMuted={isMuted}
-          resizeMode="cover"
+          resizeMode={ResizeMode.COVER}
           shouldPlay={isPlaying}
           isLooping={true}
           onPlaybackStatusUpdate={onStatusUpdate}
@@ -45,12 +59,5 @@ const CustomExpoVideoPlayer = forwardRef(
 );
 
 CustomExpoVideoPlayer.displayName = "CustomExpoVideoPlayer";
-
-CustomExpoVideoPlayer.propTypes = {
-  onStatusUpdate: PropTypes.func,
-  videoUrl: PropTypes.string,
-  isMuted: PropTypes.bool,
-  isPlaying: PropTypes.bool,
-};
 
 export default CustomExpoVideoPlayer;
