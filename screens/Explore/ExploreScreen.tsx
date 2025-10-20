@@ -32,7 +32,7 @@ export const ExploreScreen = () => {
    * @async
    * @returns {Promise<void>} State is updated, nothing is returned.
    */
-  const loadCourses = async (): Promise<void> => {
+  const loadCourses = async () => {
     const [courseData, subData] = await Promise.all([
       getCourseList(),
       getSubCourseList(),
@@ -52,9 +52,9 @@ export const ExploreScreen = () => {
   };
 
   useEffect(() => {
-    return navigation.addListener("focus", async () => {
+    return navigation.addListener("focus",  () => {
       console.log("Explore screen focused");
-      await loadCourses();
+      void loadCourses();
     });
   });
 
@@ -103,7 +103,7 @@ export const ExploreScreen = () => {
             <IconHeader title={t("course.explore-courses")} />
             <View className="mt-8">
               <FilterNavigationBar
-                onChangeText={(text) => handleFilter(text)}
+                onChangeText={(text) => { handleFilter(text); }}
                 onCategoryChange={handleCategoryFilter}
               />
               <ScrollView
@@ -111,7 +111,7 @@ export const ExploreScreen = () => {
                 refreshControl={
                   <RefreshControl
                     refreshing={refreshing}
-                    onRefresh={onRefresh}
+                    onRefresh={ () => void onRefresh() }
                   />
                 }
               >
