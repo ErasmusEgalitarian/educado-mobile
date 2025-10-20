@@ -13,7 +13,7 @@ import type { Course } from "@/types/course";
 import { t } from "@/i18n";
 
 export interface BottomDrawerProps {
-  toggleModal: () => void | Promise<void>;
+  toggleModal: () => void;
   course: Course;
   drawerState: boolean;
   subscribed: boolean;
@@ -31,15 +31,17 @@ export const BottomDrawer = ({
 }: BottomDrawerProps) => {
   const navigation = useNavigation();
 
-  const subscribeCourse = async () => {
+  const subscribeCourse = () => {
     toggleModal();
-    await subscribe(course.courseId);
-    await addCourseToStudent(course.courseId);
+    void subscribe(course.courseId);
+    void addCourseToStudent(course.courseId);
+    // @ts-expect-error Will be refactored when we move to Expo Router
     navigation.navigate("Subscribed");
   };
 
   const navigateCourse = () => {
     toggleModal();
+    // @ts-expect-error Will be refactored when we move to Expo Router
     navigation.navigate("CourseOverview");
   };
 
