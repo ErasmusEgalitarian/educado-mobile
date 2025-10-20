@@ -1,32 +1,20 @@
 import { useState } from "react";
-import { View, Keyboard } from "react-native";
+import { View, Keyboard, Text, TouchableWithoutFeedback } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import LoginForm from "@/components/Login/LoginForm";
 import LogoBackButton from "@/components/Login/LogoBackButton";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableWithoutFeedback } from "react-native";
-import Text from "@/components/General/Text";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import * as StorageService from "@/services/storage-service";
-import { useFocusEffect } from "@react-navigation/native";
 
 /**
  * Login screen component containing a login form and possibilities of resetting password or registering a new user.
  */
 const Login = () => {
   const [loading, setLoading] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const navigation = useNavigation<any>();
-
-  type LoginScreenRouteParams = {
-    previousScreen?: string;
-  };
-
-  const route =
-    useRoute<RouteProp<{ params: LoginScreenRouteParams }, "params">>();
-  const previousScreen = route.params?.previousScreen || "WelcomeStack";
+  const navigation = useNavigation();
 
   /**
    * TODO: Refactor error to use new error handling system
@@ -40,6 +28,8 @@ const Login = () => {
       if (isValid) {
         await StorageService.updateStoredCourses();
         await AsyncStorage.setItem("loggedIn", "true");
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         navigation.navigate("HomeStack");
       } else {
         setLoading(false);
@@ -51,11 +41,11 @@ const Login = () => {
   };
 
   useFocusEffect(() => {
-    checkLoginToken();
+    void checkLoginToken();
   });
 
   return (
-    <SafeAreaView className="flex-1 justify-start bg-secondary">
+    <SafeAreaView className="flex-1 justify-start bg-surfaceSubtleCyan">
       {loading ? (
         <LoadingScreen />
       ) : (
@@ -67,7 +57,7 @@ const Login = () => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
               <View className="mt-10">
-                <LogoBackButton navigationPlace={previousScreen} />
+                <LogoBackButton navigationPlace={"WelcomeStack"} />
               </View>
               <View className="mx-6">
                 {/* Login form */}
@@ -76,17 +66,17 @@ const Login = () => {
                 </View>
                 {/* Register button */}
                 <View className="flex-col items-center">
-                  <Text className="mr-1 text-lg text-textGrey">
+                  <Text className="mr-1 text-h4-sm-regular text-textSubtitleGrayscale">
                     {/* Dont have an account yet? */}
                     Ainda não tem conta?
                   </Text>
                   <Text
-                    testId="registerNav"
-                    className={"left-1 text-lg text-projectBlack underline"}
-                    onPress={() =>
-                      navigation.navigate("Register", {
-                        previousScreen: "Login",
-                      })
+                    className={"left-1 text-h4-sm-regular text-textTitleGrayscale underline"}
+                    onPress={() => {
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-expect-error
+                      navigation.navigate("Register", { previousScreen: "Login",}
+                      )}
                     }
                   >
                     {/* Sign up now */}

@@ -1,21 +1,13 @@
-import { TouchableOpacity } from "react-native";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
 interface PropTypes {
   children: string;
   disabled?: boolean;
   onPress?: () => void;
   style?: object[];
-  type?: "primary_custom" | "error" | "warning";
 }
 
 const FormButton = (props: PropTypes) => {
-  // Put this here for possible custom styling
-  const typeStyles = {
-    primary_custom: "bg-primaryCustom",
-    error: "bg-error",
-    warning: "bg-yellow",
-  };
 
   return (
     <>
@@ -23,19 +15,16 @@ const FormButton = (props: PropTypes) => {
         <TouchableOpacity
           className={
             "rounded-xl px-4 py-3 " +
-            (typeStyles[props.type ?? "primary_custom"] ??
-              typeStyles.primary_custom) +
-            (props.disabled ? "text-[#809CAD]! bg-[#C1CFD7]" : "")
+            (props.disabled ? "bg-surfaceDisabledGrayscale" : "bg-surfaceDefaultCyan")
           }
           style={props.style ?? null}
           onPress={props.onPress}
           disabled={props.disabled}
         >
           <Text
-            className={
-              "text-center h4-sm-bold" +
-              (props.disabled ? "text-[#809CAD]" : "text-projectWhite")
-            }
+            className={"text-body-bold text-center " +
+              (props.disabled ? "text-greyscaleTexticonDisabled" : "text-textNegativeGrayscale")
+          }
           >
             {props.children}
           </Text>

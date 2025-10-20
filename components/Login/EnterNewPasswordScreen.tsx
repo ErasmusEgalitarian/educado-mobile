@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
-import FormTextField from "../General/Forms/FormTextField";
-import FormButton from "../General/Forms/FormButton";
-import PasswordEye from "../General/Forms/PasswordEye";
-import { enterNewPassword } from "../../api/user-api";
-import FormFieldAlert from "../General/Forms/FormFieldAlert";
+import FormTextField from "@/components/General/Forms/FormTextField";
+import FormButton from "@/components/General/Forms/FormButton";
+import PasswordEye from "@/components/General/Forms/PasswordEye";
+import { enterNewPassword } from "@/api/user-api";
+import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
 import {
   removeEmojis,
   validatePasswordContainsLetter,
   validatePasswordLength,
-} from "../General/validation";
+} from "@/components/General/validation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import ShowAlert from "../General/ShowAlert";
-import DialogNotification from "../General/DialogNotification";
-import PropTypes from "prop-types";
+import ShowAlert from "@/components/General/ShowAlert";
+import DialogNotification from "@/components/General/DialogNotification";
 
 interface EnterNewPasswordScreenProps {
   hideModal: () => void
@@ -22,10 +21,16 @@ interface EnterNewPasswordScreenProps {
   token: string
 }
 
+interface ApiError {
+  error: {
+    code: string;
+    message?: string;
+  };
+}
+
 /**
  * Component for entering a new password in the resetPassword modal
  * @param {Object} props not used in this component as of now
- * @returns {React.Element} Modal component for entering new password
  */
 export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -69,12 +74,12 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
     const lengthValid = validatePasswordLength(newPassword);
     setPasswordLengthValid(lengthValid);
     checkIfPasswordsMatch(newPassword, confirmPassword);
-  }, [newPassword]);
+  }, [confirmPassword, newPassword]);
 
   // password input alerts
   useEffect(() => {
     checkIfPasswordsMatch(newPassword, confirmPassword);
-  }, [confirmPassword]);
+  }, [confirmPassword, newPassword]);
 
   /**
    * Function for changing the password
@@ -83,8 +88,8 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
    * @param {String} newPassword
    * @returns
    */
-  async function changePassword(email: string, token: string, newPassword: string) {
-    if (!validateInput) {
+   const changePassword = async (email: string, token: string, newPassword: string) => {
+    if (!validateInput()) {
       return;
     }
 
@@ -101,8 +106,13 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
         props.hideModal();
         props.resetState();
       }, 2500);
-    } catch (error: any) {
-      switch (error?.error?.code) {
+    } catch (error: unknown) {
+      const objectError = typeof error === "object" && error !== null && "error" in error;
+      if (!(objectError)) {
+        return;
+      }
+      const apiError = error as ApiError;
+      switch (apiError.error.code) {
         case "E0401":
           // No user exists with this email!
           setPasswordAlert("Não existe nenhum usuário com este email!");
@@ -128,7 +138,7 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
   }
 
   // Function to validate the input
-  function validateInput() {
+  const validateInput = () => {
     // Check if passwords are empty
     isPasswordsEmpty = newPassword === "" && confirmPassword === "";
     // Check if password contains a letter and is at least 8 characters long
@@ -137,45 +147,48 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
     return (
       !isPasswordsEmpty && passwordRequirements && confirmPasswordAlert === ""
     );
-  }
+  };
 
   return (
     <View>
       <View>
         <FormTextField
           placeholder="••••••••"
-          onChangeText={(password) => setNewPassword(removeEmojis(password))}
-          id="password"
+          onChangeText={(password) => {
+            setNewPassword(removeEmojis(password));
+          }}
           label="Nova senha"
           required={true}
           bordered={true}
           secureTextEntry={!showPassword}
           passwordGuidelines={true}
-          testId="passwordInput"
           value={newPassword}
-          error={newPassword !== "" && !(passwordContainsLetter && passwordLengthValid)}
+          error={
+            newPassword !== "" &&
+            !(passwordContainsLetter && passwordLengthValid)
+          }
         />
         <PasswordEye
-          id="showPasswordEye"
           showPasswordIcon={!showPassword}
-          toggleShowPassword={() =>
-            toggleShowPassword(setShowPassword, showPassword)
-          }
+          toggleShowPassword={() => {
+            toggleShowPassword(setShowPassword, showPassword);
+          }}
         />
       </View>
       <View className="mt-1 h-6 flex-row justify-start">
         <Text
-          testId="passwordLengthAlert"
           className={
-            "text-sm" + (newPassword === "" ? " text-projectGray" : (
-              passwordLengthValid ? " text-success" : " text-error"
-            ))
+            "text-sm" +
+            (newPassword === ""
+              ? " text-projectGray"
+              : passwordLengthValid
+                ? " text-success"
+                : " text-error")
           }
         >
           {/** Minimum 8 characters */}
           Mínimo 8 caracteres
         </Text>
-
 
         <View className="-translate-y-1 flex-row items-center">
           {passwordLengthValid ? (
@@ -185,11 +198,13 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
       </View>
       <View className="h-6 flex-row justify-start">
         <Text
-          testId="passwordLetterAlert"
           className={
-            "text-sm" + (newPassword === "" ? " text-projectGray" : (
-              passwordContainsLetter ? " text-success" : " text-error"
-            ))
+            "text-sm" +
+            (newPassword === ""
+              ? " text-projectGray"
+              : passwordContainsLetter
+                ? " text-success"
+                : " text-error")
           }
         >
           {/* Must contain at least one letter */}
@@ -201,49 +216,45 @@ export default function EnterNewPasswordScreen(props: EnterNewPasswordScreenProp
           ) : null}
         </View>
       </View>
-      <FormFieldAlert label={passwordAlert} />
+      <FormFieldAlert label={passwordAlert}  success={passwordAlert === ""}/>
       <View className="mt-[24px]">
         <FormTextField
           placeholder="••••••••" // Confirm your password
           bordered={true}
-          onChangeText={(confirmPassword) =>
-            setConfirmPassword(removeEmojis(confirmPassword))
+          onChangeText={(confirmPassword) => {
+              setConfirmPassword(removeEmojis(confirmPassword));
+            }
           }
           label="Confirmar nova senha" // Confirm new password
           required={true}
           secureTextEntry={!showConfirmPassword}
-          testId="confirmPasswordInput"
           value={confirmPassword}
           error={confirmPasswordAlert !== ""}
         />
         <PasswordEye
           showPasswordIcon={!showConfirmPassword}
-          toggleShowPassword={() =>
-            toggleShowPassword(setShowConfirmPassword, showConfirmPassword)
+          toggleShowPassword={() => {
+              toggleShowPassword(setShowConfirmPassword, showConfirmPassword);
+            }
           }
         />
       </View>
       <View className="mb-10">
-      <FormFieldAlert label={confirmPasswordAlert} />
+        <FormFieldAlert
+          label={confirmPasswordAlert}
+          success={confirmPasswordAlert === ""}
+        />
       </View>
 
       {/* Enter button */}
       <FormButton
-        testId="resetPasswordButton"
-        onPress={() => changePassword(props.email, props.token, newPassword)}
+        onPress={() => {
+          void changePassword(props.email, props.token, newPassword);
+        }}
         disabled={!validateInput()}
       >
         Entrar
       </FormButton>
-
-
     </View>
   );
 }
-
-EnterNewPasswordScreen.propTypes = {
-  email: PropTypes.string,
-  hideModal: PropTypes.func,
-  resetState: PropTypes.func,
-  token: PropTypes.string,
-};

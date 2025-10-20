@@ -15,7 +15,15 @@ import ShowAlert from "@/components/General/ShowAlert";
 
 interface ResetPasswordProps {
   modalVisible: boolean,
-  onModalClose:  () => void;
+  onModalClose:  () => void,
+  title: string,
+}
+
+interface ApiError {
+  error: {
+    code: string;
+    message?: string;
+  };
 }
 
 /**
@@ -67,12 +75,17 @@ const ResetPassword = (props: ResetPasswordProps) => {
 
     setButtonLoading(true);
     await sendResetPasswordEmail(obj)
-      .then(async () => {
+      .then(() => {
         setEmailSent(true);
         ToastNotification("success", "E-mail enviado!"); //email sent!
       })
-      .catch((error) => {
-        switch (error?.error?.code) {
+      .catch((error: unknown) => {
+        const objectError = typeof error === "object" && error !== null && "error" in error;
+        if (!(objectError)) {
+          return;
+        }
+        const apiError = error as ApiError;
+        switch (apiError.error.code) {
           case "E0401":
             // No user exists with this email!
             displayErrorAlert(emailAlertMessage, false);
@@ -107,18 +120,23 @@ const ResetPassword = (props: ResetPasswordProps) => {
    * @param {String} token
    */
 
-  const validateCode = async (email: string, token: string) => {
+  const validateCode = async (email: string, token: string): Promise<void> => {
     const obj = {
       email,
       token,
     };
 
     await validateResetPasswordCode(obj)
-      .then(async () => {
+      .then(() => {
         setCodeEntered(true);
       })
-      .catch((error) => {
-        switch (error?.error?.code) {
+      .catch((error: unknown) => {
+        const objectError = typeof error === "object" && error !== null && "error" in error;
+        if (!(objectError)) {
+          return;
+        }
+        const apiError = error as ApiError;
+        switch (apiError.error.code) {
           case "E0401":
             // No user exists with this email!
             displayErrorAlert(emailAlertMessage, false);
@@ -166,67 +184,70 @@ const ResetPassword = (props: ResetPasswordProps) => {
       <View className="my-8 px-10">
         {!codeEntered ? (
           <View>
-
             {!emailSent && (
-            <View>
-              <FormTextField
-                bordered={true}
-                placeholder="useremail@gmail.com"
-                label="E-mail"
-                required={true}
-                onChangeText={(email) => {
-                  setEmail(email);
-                  setEmailError(false);
-                  displayErrorAlert("", false);
-                }}
-                keyboardType="email-address"
-                testId="emailInput"
-                value={email}
-                error={emailError}
+              <View>
+                <FormTextField
+                  bordered={true}
+                  placeholder="useremail@gmail.com"
+                  label="E-mail"
+                  required={true}
+                  onChangeText={(email) => {
+                    setEmail(email);
+                    setEmailError(false);
+                    displayErrorAlert("", false);
+                  }}
+                  keyboardType="email-address"
+                  value={email}
+                  error={emailError}
                 />
                 <FormFieldAlert
-                testId="emailAlert"
-                label={passwordResetAlert}
-                success={isSuccess}
+                  label={passwordResetAlert}
+                  success={isSuccess}
                 />
               </View>
             )}
 
-
             <View className="mt-[40px]">
               {emailSent ? (
                 <View>
-                  <Text className="mb-[10px] text-center text-lg">
+                  <Text className="mb-[10px] text-center text-h4-sm-regular">
                     {/* We have sent a code to your mail to reset your password,
                      please enter the code you have received below: */}
-                    Enviamos um código para o seu email de redefinição de senha, por favor, insira o mesmo abaixo
+                    Enviamos um código para o seu email de redefinição de senha,
+                    por favor, insira o mesmo abaixo
                   </Text>
                   <FormTextField
                     bordered={true}
                     placeholder="XXXX"
-                    onChangeText={(token) => setToken(token)}
-                    testId="tokenInput"
+                    onChangeText={(token) => {
+                      setToken(token);
+                    }}
                     value={token}
                     error={tokenAlert !== ""}
                   />
-                  <FormFieldAlert testId="tokenAlert" label={tokenAlert} />
+                  <FormFieldAlert success={tokenAlert === ""} label={tokenAlert} />
                   {/* Continue button */}
                   <View className="mb-[24px] mt-[40px]">
                     <FormButton
-                      onPress={() => validateCode(email, token)}
-                      testId="validateCodeBtn"
+                      onPress={() => {
+                        void validateCode(email, token);
+                      }}
                       disabled={!codeInputValid(token)}
                     >
-                      {buttonLoading ? "Validando código..." : "Verificar Codigo"}
+                      {buttonLoading
+                        ? "Validando código..."
+                        : "Verificar Codigo"}
                     </FormButton>
                   </View>
-                  <View className="mx-10 flex-column items-center justify-center ">
+                  <View className="flex-column mx-10 items-center justify-center">
                     {/* Did not receieve the code? */}
                     <Text>O código não chegou?</Text>
                     {/* Resend code*/}
                     <Text
                       className="underline"
-                      onPress={() => sendEmail(email)}
+                      onPress={() => {
+                        void sendEmail(email);
+                      }}
                     >
                       Reenviar código
                     </Text>
@@ -235,8 +256,9 @@ const ResetPassword = (props: ResetPasswordProps) => {
               ) : (
                 <FormButton
                   // Send code
-                  onPress={() => sendEmail(email)}
-                  testId="resetPasswordButton"
+                  onPress={() => {
+                    void sendEmail(email);
+                  }}
                   disabled={
                     passwordResetAlert !== "" || email === "" || buttonLoading
                   }

@@ -10,9 +10,9 @@ const FormFieldAlert = (props: { label: string; success: boolean }) => {
   return (
     <View className="flex-row items-center">
       {props.success? (
-        <Text className="caption-sm-regular text-success">{props.label}</Text>
+        <Text className="text-h4-sm-regular text-surfaceDefaultGreen">{props.label}</Text>
       ) : (
-        <Text className="caption-sm-regular text-error">{props.label}</Text>
+        <Text className="text-h4-sm-regular text-textLabelRed">{props.label}</Text>
       )}
     </View>
   );

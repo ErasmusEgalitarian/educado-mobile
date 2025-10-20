@@ -1,5 +1,4 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import PropTypes from "prop-types";
 import { Pressable } from "react-native";
 
 interface PasswordEyeProps {
@@ -26,8 +25,3 @@ export default function PasswordEye(props: PasswordEyeProps) {
     </Pressable>
   );
 }
-
-PasswordEye.propTypes = {
-  showPasswordIcon: PropTypes.bool,
-  toggleShowPassword: PropTypes.func,
-};

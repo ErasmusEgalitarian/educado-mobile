@@ -52,7 +52,7 @@ export const validateEmail = (email: string): string => {
  * @param wordForName (e.g. 'Nome' or 'Sobrenome')
  * @returns error message if name is invalid, empty string otherwise
  */
-export const validateName = (name: string, wordForName: string = "Nome"): string => {
+export const validateName = (name: string, wordForName = "Nome"): string => {
   if (name.length > 50) {
     // Check this number
     return `${wordForName} muito longo`; // Name too long
