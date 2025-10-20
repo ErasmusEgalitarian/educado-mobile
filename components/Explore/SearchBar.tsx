@@ -1,7 +1,7 @@
 import { TextInput, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
 
 export interface SearchBarProps {
   searchText?: string;
@@ -17,7 +17,7 @@ export interface SearchBarProps {
  */
 export const SearchBar = ({
   onSearchChange = () => {},
-  placeholder = "Buscar curso",
+  placeholder = t("search-course"),
 }: SearchBarProps) => {
   return (
     <View className="relative mb-2.5 flex-row items-center rounded-medium border-[1px] border-surfaceLighterCyan bg-surfaceSubtleGrayscale px-4">

@@ -7,6 +7,7 @@ import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
 import { BottomDrawer } from "@/components/Explore/BottomDrawer";
 import type { Course } from "@/types/course";
+import { t } from "@/i18n";
 
 export interface ExploreCardProps {
   course: Course;
@@ -87,7 +88,7 @@ export const ExploreCard = ({
                   className="flex-row items-center border-b border-surfaceDefaultCyan px-1"
                 >
                   <Text className="mr-1 text-surfaceDefaultCyan text-caption-sm-semibold">
-                    saiba mais
+                    {t("learn-more")}
                   </Text>
                   <MaterialCommunityIcons
                     name="chevron-double-right"

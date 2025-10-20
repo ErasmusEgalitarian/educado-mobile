@@ -16,6 +16,7 @@ import { subscribe, addCourseToStudent } from "@/services/storage-service";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { InfoBox } from "@/components/Explore/InfoBox";
 import type { Course } from "@/types/course";
+import { t } from "@/i18n";
 
 export interface BottomDrawerProps {
   toggleModal: () => void;
@@ -124,7 +125,7 @@ export const BottomDrawer = ({
                   color={colors.surfaceDefaultGreen}
                 />
                 <Text className="flex-start pl-1 text-sm font-semibold text-surfaceDefaultGreen">
-                  Inscrição realizada
+                  {t("course.registered")}
                 </Text>
               </View>
             ) : null}
@@ -150,7 +151,7 @@ export const BottomDrawer = ({
             <CourseButton course={course} onPress={navigateCourse}>
               <View className="flex-row items-center">
                 <Text className="font-sans-bold mr-3 py-1 text-xl text-surfaceSubtleGrayscale">
-                  Continuar Curso
+                  {t("course.continue")}
                 </Text>
                 <MaterialCommunityIcons
                   name="play-circle-outline"
@@ -162,7 +163,7 @@ export const BottomDrawer = ({
           ) : (
             <CourseButton course={course} onPress={subscribeCourse}>
               <Text className="font-sans-bold p-1 text-xl text-surfaceSubtleGrayscale">
-                Inscreva-se agora
+                {t("course.signup")}
               </Text>
             </CourseButton>
           )}

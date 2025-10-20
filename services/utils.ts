@@ -7,6 +7,7 @@ import "intl/locale-data/jsonp/en-GB"; // Import the locale you need
 import { generateCertificate } from "@/services/certificate-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { Component } from "@/types/component";
+import { t } from "@/i18n";
 
 // Local utility types that reflect student progress structure used throughout utils
 type ProgressComponent = Component & {
@@ -37,13 +38,13 @@ type StudentProgress = {
 const getDifficultyLabel = (lvl: number): string => {
   switch (lvl) {
     case 1:
-      return "Iniciante";
+      return t("difficulty.beginner");
     case 2:
-      return "Intermediário";
+      return t("difficulty.intermediate");
     case 3:
-      return "Avançado";
+      return t("difficulty.advanced");
     default:
-      return "Iniciante";
+      return t("difficulty.beginner");
   }
 };
 
@@ -74,15 +75,15 @@ const convertMsToTime = (ms: number): string => {
 const determineCategory = (category: string): string => {
   switch (category) {
     case "personal finance":
-      return "Finanças pessoais";
+      return t("categories.finance");
     case "health and workplace safety":
-      return "Saúde e segurança no trabalho";
+      return t("categories.health");
     case "sewing":
-      return "Costura";
+      return t("categories.sewing");
     case "electronics":
-      return "Eletrônica";
+      return t("categories.electronics");
     default:
-      return "Outro";
+      return t("categories.other");
   }
 };
 
@@ -197,13 +198,13 @@ const shouldUpdate = (
 const formatHours = (number: number): string => {
   // Checking if it is not a number and if it is negative
   if (typeof number !== "number" || isNaN(number) || number <= 0) {
-    return "- Hora";
+    return `- ${t("general.hour")}`;
   }
 
   if (number <= 1) {
-    return `${number} Hora`;
+    return `${number} ${t("general.hour")}`;
   } else {
-    return `${number} Horas`;
+    return `${number} ${t("general.hours")}`;
   }
 };
 

@@ -4,6 +4,7 @@ import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
 import type { ComponentProps } from "react";
 import type { Course } from "@/types/course";
+import { t } from "@/i18n";
 
 type MaterialCommunityIconName = ComponentProps<
   typeof MaterialCommunityIcons
@@ -34,24 +35,27 @@ export const InfoBox = ({ course }: { course: Course }) => {
   return (
     <View className="border-grayScale w-full flex-col rounded-2xl border border-solid px-4 py-1">
       <InfoBoxItem
-        title={`${Utility.formatHours(course.estimatedHours)} de conteúdo (vídeos,\n exercícios, leituras complementares)`}
+        title={`${Utility.formatHours(course.estimatedHours)} ${t("info-box.hours")}`}
         icon="clock-outline"
       />
       <InfoBoxItem
-        title={`Curso de Nível ${Utility.getDifficultyLabel(course.difficulty)}`}
+        title={`${t("info-box.level")} ${Utility.getDifficultyLabel(course.difficulty)}`}
         icon="book-multiple-outline"
       />
       <InfoBoxItem
-        title="Certificado de Conclusão"
+        title={t("info-box.certificate")}
         icon="certificate-outline"
       />
-      <InfoBoxItem title="Início imediato" icon="clock-fast" />
       <InfoBoxItem
-        title="Acesso total por 1 ano"
+        title={t("info-box.start")}
+        icon="clock-fast"
+      />
+      <InfoBoxItem
+        title={t("info-box.access-time")}
         icon="calendar-month-outline"
       />
       <InfoBoxItem
-        title="Assista onde e quando quiser! "
+        title={t("info-box.portability")}
         icon="cellphone-link"
         className="mb-0"
       />

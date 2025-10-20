@@ -10,6 +10,7 @@ import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
 import OfflineScreen from "@/screens/Offline/OfflineScreen";
 import { Course } from "@/types/course";
 import { BaseScreen } from "@/components/General/BaseScreen";
+import { t } from "@/i18n";
 
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.
@@ -99,7 +100,7 @@ export const ExploreScreen = () => {
       ) : (
         <BaseScreen>
           <View className="overflow-visible px-8 pt-28">
-            <IconHeader title={"Explorar cursos"} />
+            <IconHeader title={t("course.explore-courses")} />
             <View className="mt-8">
               <FilterNavigationBar
                 onChangeText={(text) => handleFilter(text)}

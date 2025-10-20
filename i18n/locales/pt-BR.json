@@ -16,6 +16,8 @@
     "yes": "Sim",
     "no": "Não",
     "confirmation": "Tem certeza?"
+    "hour": "Hora",
+    "hours": "Horas"
   },
   "course": {
     "start": "Começar curso",
@@ -23,6 +25,7 @@
     "completed-up": "Concluído",
     "completed-low": "concluído",
     "points": "pontos",
+    "registered": "Inscrição realizada",
     "withdraw": "Retirar curso",
     "cancel-subscription": "Cancelar subscrição",
     "in-progress": "Em progresso",
@@ -33,6 +36,31 @@
     "get-started": "Comece agora",
     "no-courses-message": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.",
     "explore-courses": "Explorar cursos"
+    "continue": "Continuar Curso",
+    "signup": "Inscrevar-se agora"
+  },
+  "search-course": "Buscar curso",
+  "learn-more": "saiba mais",
+  "no-reviews": "Ainda sem avaliações",
+  "difficulty": {
+    "beginner": "Iniciante",
+    "intermediate": "Intermediário",
+    "advanced": "Avançado"
+  },
+  "categories": {
+    "finance": "Finanças pessoais",
+    "health": "Saúde e segurança no trabalho",
+    "sewing": "Costura",
+    "electronics": "Eletrônica",
+    "other": "Outro"
+  },
+  "info-box": {
+    "hours": "de conteúdo (vídeos,\n exercícios, leituras complementares)",
+    "level": "Curso de Nível",
+    "certificate": "Certificado de Conclusão",
+    "start": "Início imediato",
+    "access-time": "Acesso total por 1 ano",
+    "portability": "Assista onde e quando quiser!"
   },
   "edu-screen": {
     "header": "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo",

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
 /**
  * CustomRating component displays a star rating based on a number
  * @param rating - Number between 0 and 5
@@ -43,7 +44,7 @@ export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
   return noRating ? (
     <View className="flex-row items-start justify-start">
       <Text className="pl-1 pt-2 font-sans text-sm text-textDisabledGrayscale">
-        Ainda sem avaliações
+        {t("no-reviews")}
       </Text>
     </View>
   ) : (

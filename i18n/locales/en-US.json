@@ -16,12 +16,15 @@
     "yes": "Yes",
     "no": "No",
     "confirmation": "Are you sure?"
+    "hour": "Hour",
+    "hours": "Hours"
   },
   "course": {
     "start": "Start course",
     "completed-up": "Completed",
     "completed-low": "completed",
     "points": "points",
+    "registered": "Registration completed",
     "withdraw": "Withdraw from course",
     "cancel-subscription": "Cancel subscription",
     "in-progress": "In progress",
@@ -33,6 +36,31 @@
     "get-started": "Get Started",
     "no-courses-message": "You haven't enrolled in any courses yet. Go to the Explore page and use the search to find courses of your interest.",
     "explore-courses": "Explore courses"
+    "continue":  "Continue Course",
+    "signup": "Sign up now"
+  },
+  "search-course": "Search for a course",
+  "learn-more": "learn more",
+  "no-reviews": "No reviews yet",
+  "difficulty": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "categories": {
+    "finance": "Personal finance",
+    "health": "Health and safety at work",
+    "sewing": "Sewing",
+    "electronics": "Electronics",
+    "other": "Other"
+  },
+  "info-box": {
+    "hours": "content (videos,\nexercises, supplementary readings)",
+    "level": "Course level",
+    "certificate": "Certificate of Completion",
+    "start": "Immediate start",
+    "access-time": "Full access for 1 year",
+    "portability": "Watch wherever and whenever you want!"
   },
   "edu-screen": {
     "header": "My name is Edu, and I'm here to help you navigate this app",
