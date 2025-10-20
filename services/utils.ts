@@ -93,7 +93,9 @@ const determineCategory = (category: string): string => {
  * @param {string} category - The category of the course.
  * @returns {string} The icon name corresponding to the given category.
  */
-const determineIcon = (category: string): keyof typeof MaterialCommunityIcons.glyphMap => {
+const determineIcon = (
+  category: string,
+): keyof typeof MaterialCommunityIcons.glyphMap => {
   switch (category) {
     case "personal finance":
       return "finance";

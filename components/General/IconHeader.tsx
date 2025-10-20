@@ -1,8 +1,8 @@
 import { View, ImageSourcePropType, Image, Text } from "react-native";
 
 interface Props {
-  title?: string,
-  description?: string
+  title?: string;
+  description?: string;
 }
 
 const iconSource: ImageSourcePropType = require("../../assets/images/singleIcon.png");
@@ -17,11 +17,7 @@ const IconHeader = ({ title, description }: Props) => {
   return (
     <>
       <View className="flex flex-row items-center pb-2">
-        <Image
-          source={iconSource}
-          alt="Icon"
-          className="mr-4 h-7 w-7"
-        />
+        <Image source={iconSource} alt="Icon" className="mr-4 h-7 w-7" />
         <Text className="text-textTitleGrayscale text-h2-sm-bold">{title}</Text>
       </View>
     </>

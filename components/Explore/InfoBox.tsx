@@ -26,14 +26,17 @@ const InfoBoxItem = ({ label, icon, className }: InfoBoxItemProps) => {
         size={20}
         color={colors.textCaptionGrayscale}
       />
-      <Text className="text-label-sm-regular pl-2 text-textTitleGrayscale"> {label} </Text>
+      <Text className="text-label-sm-regular pl-2 text-textTitleGrayscale">
+        {" "}
+        {label}{" "}
+      </Text>
     </View>
   );
 };
 
 export const InfoBox = ({ course }: { course: Course }) => {
   return (
-    <View className="border-textCaptionGrayscale w-full flex-col rounded-2xl border px-4 py-1">
+    <View className="w-full flex-col rounded-2xl border border-textCaptionGrayscale px-4 py-1">
       <InfoBoxItem
         label={`${Utility.formatHours(course.estimatedHours)} ${t("info-box.hours")}`}
         icon="clock-outline"
@@ -46,10 +49,7 @@ export const InfoBox = ({ course }: { course: Course }) => {
         label={t("info-box.certificate")}
         icon="certificate-outline"
       />
-      <InfoBoxItem
-        label={t("info-box.start")}
-        icon="clock-fast"
-      />
+      <InfoBoxItem label={t("info-box.start")} icon="clock-fast" />
       <InfoBoxItem
         label={t("info-box.access-time")}
         icon="calendar-month-outline"

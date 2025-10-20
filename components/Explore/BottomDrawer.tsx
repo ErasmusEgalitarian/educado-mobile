@@ -1,11 +1,5 @@
 import { colors } from "@/theme/colors";
-import {
-  Modal,
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet
-} from "react-native";
+import { Modal, View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CardLabel } from "@/components/Explore/CardLabel";
 import { CustomRating } from "@/components/Explore/CustomRating";
@@ -26,8 +20,8 @@ export interface BottomDrawerProps {
 }
 
 const styles = StyleSheet.create({
-  shadow: { elevation: 10 }
-})
+  shadow: { elevation: 10 },
+});
 
 export const BottomDrawer = ({
   toggleModal,
@@ -35,7 +29,6 @@ export const BottomDrawer = ({
   drawerState,
   subscribed,
 }: BottomDrawerProps) => {
-
   const navigation = useNavigation();
 
   const subscribeCourse = async () => {
@@ -55,21 +48,25 @@ export const BottomDrawer = ({
       animationType="slide"
       transparent={true}
       visible={drawerState}
-      onRequestClose={() => { toggleModal(); }}
+      onRequestClose={() => {
+        toggleModal();
+      }}
     >
-      <View
-        className="flex-1 bg-surfaceSubtleCyan opacity-50"
-      />
+      <View className="flex-1 bg-surfaceSubtleCyan opacity-50" />
 
       <View
         className="flex-start absolute bottom-0 h-[91%] w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9"
         style={styles.shadow}
       >
         <View className="h-9 flex-row items-center justify-between">
-          <Text className="mr-2 text-h2-3xl-medium text-textTitleGrayscale">
+          <Text className="text-h2-3xl-medium mr-2 text-textTitleGrayscale">
             {course.title}
           </Text>
-          <TouchableOpacity onPress={() => { toggleModal(); }}>
+          <TouchableOpacity
+            onPress={() => {
+              toggleModal();
+            }}
+          >
             <MaterialCommunityIcons
               name={"chevron-down"}
               size={28}
@@ -107,7 +104,7 @@ export const BottomDrawer = ({
                   size={13}
                   color={colors.surfaceDefaultGreen}
                 />
-                <Text className="flex-start pl-1 text-label-sm-semibold text-surfaceDefaultGreen">
+                <Text className="flex-start text-label-sm-semibold pl-1 text-surfaceDefaultGreen">
                   {t("course.registered")}
                 </Text>
               </View>
@@ -133,7 +130,7 @@ export const BottomDrawer = ({
           {subscribed ? (
             <CourseButton course={course} onPress={navigateCourse}>
               <View className="flex-row items-center">
-                <Text className="mr-3 py-1 text-h4-sm-bold text-surfaceSubtleGrayscale">
+                <Text className="mr-3 py-1 text-surfaceSubtleGrayscale text-h4-sm-bold">
                   {t("course.continue")}
                 </Text>
                 <MaterialCommunityIcons
@@ -145,7 +142,7 @@ export const BottomDrawer = ({
             </CourseButton>
           ) : (
             <CourseButton course={course} onPress={subscribeCourse}>
-              <Text className="p-1 text-h4-sm-bold text-surfaceSubtleGrayscale">
+              <Text className="p-1 text-surfaceSubtleGrayscale text-h4-sm-bold">
                 {t("course.signup")}
               </Text>
             </CourseButton>

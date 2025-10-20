@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet
-} from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CardLabel } from "@/components/Explore/CardLabel";
 import { CustomRating } from "@/components/Explore/CustomRating";
@@ -23,9 +18,9 @@ export interface ExploreCardProps {
 const styles = StyleSheet.create({
   shadow: {
     backgroundColor: colors.surfaceSubtleGrayscale,
-    elevation: 2
-  }
-})
+    elevation: 2,
+  },
+});
 
 /**
  * This component is used to display a course card.
@@ -59,7 +54,7 @@ export const ExploreCard = ({
                 size={24}
                 color={colors.textTitleGrayscale}
               />
-              <Text className="ml-2 mr-9 h-6 text-subtitle-bold text-textTitleGrayscale">
+              <Text className="text-subtitle-bold ml-2 mr-9 h-6 text-textTitleGrayscale">
                 {course.title}
               </Text>
             </View>

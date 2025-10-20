@@ -25,7 +25,7 @@ export const SearchBar = ({
         placeholder={placeholder}
         placeholderTextColor={colors.textCaptionGrayscale}
         onChangeText={onSearchChange}
-        className="pr-35 text-textCaptionGrayscale flex-1 py-1 text-label-sm-semibold"
+        className="pr-35 text-label-sm-semibold flex-1 py-1 text-textCaptionGrayscale"
       />
       <MaterialCommunityIcons
         name="magnify"

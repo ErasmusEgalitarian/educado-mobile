@@ -64,7 +64,9 @@ export const FilterNavigationBar = ({
             return (
               <Pressable
                 key={category.label}
-                onPress={() => { handleCategorySelect(category.label); }}
+                onPress={() => {
+                  handleCategorySelect(category.label);
+                }}
                 className="mr-2 items-center justify-center rounded-lg border px-3 py-2"
                 style={getCategoryItemStyle(isSelected)}
               >

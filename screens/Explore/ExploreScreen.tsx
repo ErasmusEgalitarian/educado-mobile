@@ -52,7 +52,7 @@ export const ExploreScreen = () => {
   };
 
   useEffect(() => {
-    return navigation.addListener("focus",  () => {
+    return navigation.addListener("focus", () => {
       console.log("Explore screen focused");
       void loadCourses();
     });
@@ -103,7 +103,9 @@ export const ExploreScreen = () => {
             <IconHeader title={t("course.explore-courses")} />
             <View className="mt-8">
               <FilterNavigationBar
-                onChangeText={(text) => { handleFilter(text); }}
+                onChangeText={(text) => {
+                  handleFilter(text);
+                }}
                 onCategoryChange={handleCategoryFilter}
               />
               <ScrollView
@@ -111,7 +113,7 @@ export const ExploreScreen = () => {
                 refreshControl={
                   <RefreshControl
                     refreshing={refreshing}
-                    onRefresh={ () => void onRefresh() }
+                    onRefresh={() => void onRefresh()}
                   />
                 }
               >
