@@ -59,7 +59,7 @@ export const BottomDrawer = ({
         style={styles.shadow}
       >
         <View className="h-9 flex-row items-center justify-between">
-          <Text className="text-h2-3xl-medium mr-2 text-textTitleGrayscale">
+          <Text className="mr-2 text-textTitleGrayscale text-h2-3xl-medium">
             {course.title}
           </Text>
           <TouchableOpacity
@@ -104,7 +104,7 @@ export const BottomDrawer = ({
                   size={13}
                   color={colors.surfaceDefaultGreen}
                 />
-                <Text className="flex-start text-label-sm-semibold pl-1 text-surfaceDefaultGreen">
+                <Text className="flex-start pl-1 text-surfaceDefaultGreen text-label-sm-semibold">
                   {t("course.registered")}
                 </Text>
               </View>

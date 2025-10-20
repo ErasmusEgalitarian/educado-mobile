@@ -26,7 +26,7 @@ const InfoBoxItem = ({ label, icon, className }: InfoBoxItemProps) => {
         size={20}
         color={colors.textCaptionGrayscale}
       />
-      <Text className="text-label-sm-regular pl-2 text-textTitleGrayscale">
+      <Text className="pl-2 text-textTitleGrayscale text-label-sm-regular">
         {" "}
         {label}{" "}
       </Text>
