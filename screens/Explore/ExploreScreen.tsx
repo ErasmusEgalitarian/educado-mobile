@@ -69,7 +69,7 @@ export const ExploreScreen = () => {
   };
 
   const handleCategoryFilter = (category: string) => {
-    if (category === "Todos") {
+    if (category === t("categories.all")) {
       setSelectedCategory(""); // Set selectedCategory to null to show all items
     } else {
       setSelectedCategory(category); // Set selectedCategory to the selected category label
