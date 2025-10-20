@@ -53,3 +53,5 @@ tsc-report.json
 .envrc
 summary.md
 var/
+.mise.local.toml
+mise.local.toml
