@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CourseScreen from "@/screens/Courses/CourseScreen";
@@ -9,11 +8,10 @@ import ProfileComponent from "@/screens/Profile/Profile";
 import EditProfileScreen from "@/screens/Profile/EditProfileScreen";
 import CertificateScreen from "@/screens/Certificate/CertificateScreen";
 import { Icon } from "@rneui/themed";
-import { Platform, Keyboard } from "react-native";
+import { Platform, Text } from "react-native";
 import { colors } from "@/theme/colors";
 
 const Tab = createBottomTabNavigator();
-
 const ProfileStack = createNativeStackNavigator();
 
 const ProfileStackScreen = () => {
@@ -53,40 +51,25 @@ const ProfileStackScreen = () => {
 
 /**
  * This component is used to display the navigation bar at the bottom of the screen.
- * @returns {JSX.Element} - Returns a JSX element.
- *
- *
+ * @returns - Returns a JSX element.
  */
 export const NavigationBar = () => {
-  const [keyboardStatus, setKeyboardStatus] = useState(0);
-
-  useEffect(() => {
-    console.log("Setting up keyboard listeners");
-
-    const toggleSubscription = Keyboard.addListener("keyboardDidShow", () => {
-      setKeyboardStatus((prevStatus) => {
-        const newStatus = prevStatus === 0 ? 1 : 0;
-        console.log(`Keyboard toggle triggered, status set to: ${newStatus}`);
-        return newStatus;
-      });
-    });
-
-    return () => {
-      console.log("Cleaning up keyboard listeners");
-      toggleSubscription.remove();
-    };
-  }, []);
-
   return (
     <Tab.Navigator
-      testID="navBar"
       initialRouteName={"Central"}
-      screenOptions={{
-        tabBarActiveTintColor: "black",
-        tabBarActiveBackgroundColor: colors.cyanBlue,
-        tabBarLabelStyle: {
-          fontSize: keyboardStatus === 1 ? 0 : 14, // Hide text when keyboard is open
-        },
+      screenOptions={({ route }) => ({
+        tabBarActiveTintColor: colors.surfaceDarker,
+        tabBarInactiveTintColor: colors.surfaceDefaultGrayscale,
+        tabBarLabel: ({ focused, color }) => (
+          <Text
+            className={
+              focused ? "text-caption-lg-bold" : "text-caption-lg-regular"
+            }
+            style={{ color }}
+          >
+            {route.name}
+          </Text>
+        ),
         tabBarStyle: {
           backgroundColor: "white",
           height: "10%",
@@ -118,13 +101,12 @@ export const NavigationBar = () => {
           paddingBottom: "2%",
           paddingTop: "1%",
         },
-      }}
+      })}
     >
       <Tab.Screen
         name="Meus cursos"
         component={CourseScreen}
         options={{
-          tabBarActiveBackgroundColor: colors.cyanBlue,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon
@@ -134,15 +116,12 @@ export const NavigationBar = () => {
               color={color}
             />
           ),
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "grey",
         }}
       />
       <Tab.Screen
         name="Explorar"
         component={ExploreScreen}
         options={{
-          tabBarActiveBackgroundColor: colors.cyanBlue,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon
@@ -152,15 +131,12 @@ export const NavigationBar = () => {
               color={color}
             />
           ),
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "grey",
         }}
       />
       <Tab.Screen
         name="Edu"
         component={EduScreen}
         options={{
-          tabBarActiveBackgroundColor: colors.cyanBlue,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon
@@ -170,15 +146,12 @@ export const NavigationBar = () => {
               color={color}
             />
           ),
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "grey",
         }}
       />
       <Tab.Screen
         name="Perfil"
         component={ProfileStackScreen}
         options={{
-          tabBarActiveBackgroundColor: colors.cyanBlue,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon
@@ -188,8 +161,6 @@ export const NavigationBar = () => {
               color={color}
             />
           ),
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "grey",
         }}
       />
     </Tab.Navigator>

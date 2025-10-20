@@ -15,3 +15,9 @@ declare module "*.jpg" {
 }
 
 declare module "*.svg";
+
+declare module "eslint-config-expo/flat.js" {
+  import type { Config } from "@eslint/core";
+  const config: Config[];
+  export default config;
+}

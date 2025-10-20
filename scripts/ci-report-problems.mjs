@@ -5,7 +5,7 @@ const [, , filesChangedJsonPath, eslintReportJsonPath, tscReportJsonPath] =
   process.argv;
 
 const appRoot = process.cwd();
-const gitHubStepSummaryPath = process.env.GITHUB_STEP_SUMMARY;
+const gitHubStepSummaryPath = process.env.GITHUB_STEP_SUMMARY ?? "summary.md";
 const gitHubServerUrl = process.env.GITHUB_SERVER_URL;
 const gitHubRepository = process.env.GITHUB_REPOSITORY;
 const gitHubSha = process.env.GITHUB_SHA;
@@ -70,6 +70,21 @@ try {
   // ignore
 }
 
+const getTopFilesByProblems = (problems, limit = 15) => {
+  const fileCount = {};
+
+  for (const problem of problems) {
+    fileCount[problem.file] = (fileCount[problem.file] || 0) + 1;
+  }
+
+  return Object.entries(fileCount)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit);
+};
+
+const topEslintFiles = getTopFilesByProblems(allEslintProblems);
+const topTscFiles = getTopFilesByProblems(allTscProblems);
+
 const eslintProblemsChanged = allEslintProblems.filter((problem) =>
   filesChanged.has(problem.file),
 );
@@ -79,7 +94,11 @@ const tscProblemsChanged = allTscProblems.filter((problem) =>
 );
 
 const escapeMarkdown = (s = "") =>
-  String(s).replace(/\|/g, "\\|").replace(/\r?\n/g, " ").replace(/\s\s+/g, " ");
+  String(s)
+    .replace(/\|/g, "\\|")
+    .replace(/\r?\n/g, " ")
+    .replace(/\s\s+/g, " ")
+    .replace(/_/g, "\\_");
 
 const buildTable = (headers, rows) => {
   const header = `| ${headers.join(" | ")} |`;
@@ -131,16 +150,37 @@ const filesChangedDetailsSummary = () => {
   push("\n</details>\n");
 };
 
+const buildTopFilesSection = (title, topFiles) => {
+  push(`\n#### ${title}\n`);
+
+  if (!topFiles.length) {
+    push("No problems found.");
+
+    return;
+  }
+
+  const rows = topFiles.map(([file, count]) => {
+    const url = linkToFile(file);
+
+    return [`[${file}](${url})`, count];
+  });
+
+  push(buildTable(["File", "Problems"], rows));
+};
+
 push("# ESLint/tsc Report 🚀\n");
-push("## Stats\n");
+push("## Stats 📈\n");
 push("### Files Changed\n");
 push(`- Files changed: ${filesChanged.size}`);
 push(`- ESLint problems: ${eslintProblemsChanged.length}`);
 push(`- tsc problems: ${tscProblemsChanged.length}`);
 filesChangedDetailsSummary();
+
 push("### All Files\n");
 push(`- ESLint problems: ${allEslintProblems.length}`);
 push(`- tsc problems: ${allTscProblems.length}`);
+buildTopFilesSection("Top 15 ESLint Sinners 😈", topEslintFiles);
+buildTopFilesSection("Top 15 tsc Sinners 😈", topTscFiles);
 
 buildSection("ESLint", eslintProblemsChanged);
 buildSection("tsc", tscProblemsChanged);

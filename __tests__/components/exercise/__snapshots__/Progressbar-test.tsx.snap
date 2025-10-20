@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<CustomProgressBar /> Displays 0% for no progress 1`] = `
+exports[`<CustomProgressBar /> Displays 0% for no progress (0/10) 1`] = `
 <View
   className="flex-row items-center justify-around"
 >
@@ -20,7 +20,7 @@ exports[`<CustomProgressBar /> Displays 0% for no progress 1`] = `
       [
         {
           "backgroundColor": "#D8EFF3",
-          "borderColor": "#35A1B1",
+          "borderColor": "#246670",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -35,7 +35,7 @@ exports[`<CustomProgressBar /> Displays 0% for no progress 1`] = `
       collapsable={false}
       style={
         {
-          "backgroundColor": "#35A1B1",
+          "backgroundColor": "#246670",
           "height": 133.4,
           "transform": [
             {
@@ -53,15 +53,21 @@ exports[`<CustomProgressBar /> Displays 0% for no progress 1`] = `
     />
   </View>
   <Text
-    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+    className="caption-sm-regular px-5 text-center text-projectBlack"
+    style={
+      {
+        "color": "#628397",
+      }
+    }
   >
     0
-    %
+    /
+    10
   </Text>
 </View>
 `;
 
-exports[`<CustomProgressBar /> Displays 25% 1`] = `
+exports[`<CustomProgressBar /> Displays 25% (2/8) 1`] = `
 <View
   className="flex-row items-center justify-around"
 >
@@ -81,7 +87,7 @@ exports[`<CustomProgressBar /> Displays 25% 1`] = `
       [
         {
           "backgroundColor": "#D8EFF3",
-          "borderColor": "#35A1B1",
+          "borderColor": "#246670",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -96,7 +102,7 @@ exports[`<CustomProgressBar /> Displays 25% 1`] = `
       collapsable={false}
       style={
         {
-          "backgroundColor": "#35A1B1",
+          "backgroundColor": "#246670",
           "height": 133.4,
           "transform": [
             {
@@ -114,15 +120,21 @@ exports[`<CustomProgressBar /> Displays 25% 1`] = `
     />
   </View>
   <Text
-    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+    className="caption-sm-regular px-5 text-center text-projectBlack"
+    style={
+      {
+        "color": "#628397",
+      }
+    }
   >
-    25
-    %
+    2
+    /
+    8
   </Text>
 </View>
 `;
 
-exports[`<CustomProgressBar /> Displays 50% 1`] = `
+exports[`<CustomProgressBar /> Displays 50% (5/10) 1`] = `
 <View
   className="flex-row items-center justify-around"
 >
@@ -142,7 +154,7 @@ exports[`<CustomProgressBar /> Displays 50% 1`] = `
       [
         {
           "backgroundColor": "#D8EFF3",
-          "borderColor": "#35A1B1",
+          "borderColor": "#246670",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -157,7 +169,7 @@ exports[`<CustomProgressBar /> Displays 50% 1`] = `
       collapsable={false}
       style={
         {
-          "backgroundColor": "#35A1B1",
+          "backgroundColor": "#246670",
           "height": 133.4,
           "transform": [
             {
@@ -175,15 +187,21 @@ exports[`<CustomProgressBar /> Displays 50% 1`] = `
     />
   </View>
   <Text
-    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+    className="caption-sm-regular px-5 text-center text-projectBlack"
+    style={
+      {
+        "color": "#628397",
+      }
+    }
   >
-    50
-    %
+    5
+    /
+    10
   </Text>
 </View>
 `;
 
-exports[`<CustomProgressBar /> Displays 100% for full progress 1`] = `
+exports[`<CustomProgressBar /> Displays 100% for full progress (10/10) 1`] = `
 <View
   className="flex-row items-center justify-around"
 >
@@ -203,7 +221,7 @@ exports[`<CustomProgressBar /> Displays 100% for full progress 1`] = `
       [
         {
           "backgroundColor": "#D8EFF3",
-          "borderColor": "#35A1B1",
+          "borderColor": "#246670",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -218,7 +236,7 @@ exports[`<CustomProgressBar /> Displays 100% for full progress 1`] = `
       collapsable={false}
       style={
         {
-          "backgroundColor": "#35A1B1",
+          "backgroundColor": "#246670",
           "height": 133.4,
           "transform": [
             {
@@ -236,15 +254,21 @@ exports[`<CustomProgressBar /> Displays 100% for full progress 1`] = `
     />
   </View>
   <Text
-    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+    className="caption-sm-regular px-5 text-center text-projectBlack"
+    style={
+      {
+        "color": "#628397",
+      }
+    }
   >
-    100
-    %
+    10
+    /
+    10
   </Text>
 </View>
 `;
 
-exports[`<CustomProgressBar /> Limits display to 0% for negative progress 1`] = `
+exports[`<CustomProgressBar /> Limits display to 0% for negative progress (-2/10) 1`] = `
 <View
   className="flex-row items-center justify-around"
 >
@@ -264,7 +288,7 @@ exports[`<CustomProgressBar /> Limits display to 0% for negative progress 1`] = 
       [
         {
           "backgroundColor": "#D8EFF3",
-          "borderColor": "#35A1B1",
+          "borderColor": "#246670",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -279,7 +303,7 @@ exports[`<CustomProgressBar /> Limits display to 0% for negative progress 1`] = 
       collapsable={false}
       style={
         {
-          "backgroundColor": "#35A1B1",
+          "backgroundColor": "#246670",
           "height": 133.4,
           "transform": [
             {
@@ -297,15 +321,21 @@ exports[`<CustomProgressBar /> Limits display to 0% for negative progress 1`] = 
     />
   </View>
   <Text
-    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+    className="caption-sm-regular px-5 text-center text-projectBlack"
+    style={
+      {
+        "color": "#628397",
+      }
+    }
   >
-    0
-    %
+    -2
+    /
+    10
   </Text>
 </View>
 `;
 
-exports[`<CustomProgressBar /> Limits display to 100% for excess progress 1`] = `
+exports[`<CustomProgressBar /> Limits display to 100% for excess progress (15/10) 1`] = `
 <View
   className="flex-row items-center justify-around"
 >
@@ -325,7 +355,7 @@ exports[`<CustomProgressBar /> Limits display to 100% for excess progress 1`] = 
       [
         {
           "backgroundColor": "#D8EFF3",
-          "borderColor": "#35A1B1",
+          "borderColor": "#246670",
           "borderRadius": 8,
           "borderWidth": 0,
           "overflow": "hidden",
@@ -340,7 +370,7 @@ exports[`<CustomProgressBar /> Limits display to 100% for excess progress 1`] = 
       collapsable={false}
       style={
         {
-          "backgroundColor": "#35A1B1",
+          "backgroundColor": "#246670",
           "height": 133.4,
           "transform": [
             {
@@ -358,10 +388,16 @@ exports[`<CustomProgressBar /> Limits display to 100% for excess progress 1`] = 
     />
   </View>
   <Text
-    className="font-montserrat-bold px-5 text-center text-caption-medium text-projectBlack"
+    className="caption-sm-regular px-5 text-center text-projectBlack"
+    style={
+      {
+        "color": "#628397",
+      }
+    }
   >
-    100
-    %
+    15
+    /
+    10
   </Text>
 </View>
 `;

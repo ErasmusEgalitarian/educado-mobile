@@ -5,10 +5,11 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
-  View,
   Text,
+  View,
 } from "react-native";
 import * as StorageService from "@/services/storage-service";
+import { getStudentInfo } from "@/services/storage-service";
 import CourseCard from "@/components/Courses/CourseCard/CourseCard";
 import IconHeader from "@/components/General/IconHeader";
 import { shouldUpdate } from "@/services/utils";
@@ -19,7 +20,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import errorSwitch from "@/components/General/error-switch";
 import ShowAlert from "@/components/General/ShowAlert";
 import Tooltip from "@/components/Onboarding/Tooltip";
-import { getStudentInfo } from "@/services/storage-service";
 import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
 import OfflineScreen from "@/screens/Offline/OfflineScreen";
 import { Course } from "@/types/course";
@@ -40,7 +40,7 @@ const CourseScreen = () => {
    * Asynchronous function that loads the courses from storage and updates the state.
    * @returns {void}
    */
-  const loadCourses = async () => {
+  const loadCourses = async (): Promise<void> => {
     const courseData = await StorageService.getSubCourseList();
     if (shouldUpdate(courses, courseData)) {
       const hasValidCourseData =
@@ -81,13 +81,12 @@ const CourseScreen = () => {
 
   useEffect(() => {
     // this makes sure loadCourses is called when the screen is focused
-    const unsubscribe = navigation.addListener("focus", () => {
-      loadCourses();
-      fetchStudentData();
+    return navigation.addListener("focus", () => {
+      void loadCourses();
+      void fetchStudentData();
     });
-    return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation]);
+  }, [navigation, courses]);
 
   useEffect(() => {
     const logged = async () => {
@@ -125,9 +124,9 @@ const CourseScreen = () => {
             <ProfileStatsBox
               level={studentLevel || 0}
               points={studentPoints || 0}
+              studyStreak={0}
+              leaderboardPosition={0}
               drawProgressBarOnly={true}
-              studyStreak={undefined}
-              leaderboardPosition={undefined}
             />
           </View>
 
@@ -157,7 +156,7 @@ const CourseScreen = () => {
             uniqueKey="Courses"
             uniCodeChar="📚"
           />
-          <View className="pb-16 pt-24">
+          <View className="pb-16 pt-24 shadow-md">
             <Image
               source={require("../../assets/images/logo.png")}
               className="items-center justify-center"
@@ -184,7 +183,8 @@ const CourseScreen = () => {
               <Pressable
                 testID="exploreButton"
                 className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
-                onPress={() => navigation.navigate("Explorar" as never)}
+                // @ts-expect-error Will be refactored when we move to Expo Router
+                onPress={() => navigation.navigate("Explorar")}
               >
                 <Text
                   className="text-center text-body text-projectWhite"

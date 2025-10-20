@@ -1,18 +1,40 @@
 /** Utility functions used in Explore and Course screens **/
-import * as StorageService from "./storage-service";
-import * as userApi from "../api/user-api";
-import * as api from "../api/api";
+import * as StorageService from "@/services/storage-service";
+import * as userApi from "@/api/user-api";
+import * as api from "@/api/api";
 import "intl";
 import "intl/locale-data/jsonp/en-GB"; // Import the locale you need
-import { generateCertificate } from "./certificate-service";
+import { generateCertificate } from "@/services/certificate-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import type { Component } from "@/types/component";
+
+// Local utility types that reflect student progress structure used throughout utils
+type ProgressComponent = Component & {
+  compId: string;
+  isComplete: boolean;
+  isFirstAttempt?: boolean;
+};
+
+type ProgressSection = {
+  sectionId: string;
+  components: ProgressComponent[];
+};
+
+type ProgressCourse = {
+  courseId: string;
+  sections: ProgressSection[];
+};
+
+type StudentProgress = {
+  courses: ProgressCourse[];
+};
 
 /**
  * Converts a numeric difficulty level to a human-readable label.
  * @param {number} lvl - The difficulty level of the course.
  * @returns {string} The corresponding difficulty label in Portuguese.
  */
-export function getDifficultyLabel(lvl) {
+const getDifficultyLabel = (lvl: number): string => {
   switch (lvl) {
     case 1:
       return "Iniciante";
@@ -23,33 +45,33 @@ export function getDifficultyLabel(lvl) {
     default:
       return "Iniciante";
   }
-}
+};
 
 /**
  * Converts milliseconds to time in the format 'MM:SS'.
- * @param ms - The number of milliseconds to convert.
+ * @param {number} ms - The number of milliseconds to convert.
  * @returns {string} - The time in the format 'MM:SS'.
  */
-export const convertMsToTime = (ms) => {
+const convertMsToTime = (ms: number): string => {
   if (ms < 0) {
     return "00:00";
   }
 
-  let seconds = Math.floor((ms / 1000) % 60);
-  let minutes = Math.floor(ms / (1000 * 60));
+  const seconds = Math.floor((ms / 1000) % 60);
+  const minutes = Math.floor(ms / (1000 * 60));
 
-  seconds = seconds < 10 ? "0" + seconds : seconds;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
+  const mm = String(minutes).padStart(2, "0");
+  const ss = String(seconds).padStart(2, "0");
 
-  return `${minutes}:${seconds}`;
+  return `${mm}:${ss}`;
 };
 
 /**
  * Maps an English course category to its Portuguese equivalent.
- * @param category - The category of the course in English.
+ * @param {string} category - The category of the course in English.
  * @returns {string} - The translated category label in Portuguese.
  */
-export function determineCategory(category) {
+const determineCategory = (category: string): string => {
   switch (category) {
     case "personal finance":
       return "Finanças pessoais";
@@ -60,17 +82,16 @@ export function determineCategory(category) {
     case "electronics":
       return "Eletrônica";
     default:
-      "other";
       return "Outro";
   }
-}
+};
 
 /**
  * Determines the appropriate icon name for a given course category.
  * @param {string} category - The category of the course.
  * @returns {string} The icon name corresponding to the given category.
  */
-export function determineIcon(category) {
+const determineIcon = (category: string): string => {
   switch (category) {
     case "personal finance":
       return "finance";
@@ -83,14 +104,14 @@ export function determineIcon(category) {
     default:
       return "bookshelf";
   }
-}
+};
 
 /**
  * Formats a date string into a standardized date format.
  * @param {string} courseDate - The date the course was last updated in ISO format.
  * @returns {string} The formatted date in 'YYYY/MM/DD' format.
  */
-export function getUpdatedDate(courseDate) {
+const getUpdatedDate = (courseDate: string): string => {
   const date = new Date(courseDate);
 
   // Get the year, month, day, hours, and minutes from the Date object
@@ -100,7 +121,7 @@ export function getUpdatedDate(courseDate) {
 
   // Format the date and time in the desired format
   return `${year}/${month}/${day}`;
-}
+};
 
 /**
  * Calculates the complete difference in days between two dates, ignoring the time of day.
@@ -110,7 +131,7 @@ export function getUpdatedDate(courseDate) {
  * @returns {number} - The complete difference in days between the two specified dates.
  * @throws {Error} - Throws an error if specified dates are invalid or not instances of Date.
  */
-export function differenceInDays(startDate, endDate) {
+const differenceInDays = (startDate: Date, endDate: Date): number => {
   // Instance check
   if (!(startDate instanceof Date) || !(endDate instanceof Date))
     throw new Error("startDate/endDate is not a Date instance!");
@@ -132,44 +153,48 @@ export function differenceInDays(startDate, endDate) {
   );
 
   // Calculate the difference in milliseconds, and convert it to days
-  const differenceInMs = endDateMidnight - startDateMidnight;
+  const differenceInMs =
+    endDateMidnight.getTime() - startDateMidnight.getTime();
   const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
 
   return differenceInDays;
-}
+};
 
 /**
  * Determines if the two arrays of courses are different and require an update.
- * @param {Array} courses1 - The first array of courses, typically representing the current state.
- * @param {Array} courses2 - The second array of courses, typically representing the new fetched data.
+ * @param {Array<number>} courses1 - The first array of courses, typically representing the current state.
+ * @param {Array<number>} courses2 - The second array of courses, typically representing the new fetched data.
  * @returns {boolean} - Returns true if the two arrays are different and an update is required, otherwise false.
  */
-export function shouldUpdate(courses1, courses2) {
+const shouldUpdate = (
+  courses1: { courseId: string }[],
+  courses2: { courseId: string }[] | null,
+): boolean => {
   // If both arrays are empty, they are equal, but should still update
-  if (courses1.length === 0 && courses2.length === 0) {
+  if (courses1.length === 0 && (courses2?.length ?? 0) === 0) {
     return true;
   }
 
   // If the lengths are different, they are not equal
-  if (courses1.length !== courses2.length) {
+  if (courses2 === null || courses1.length !== courses2.length) {
     return true;
   }
 
   // If the IDs are different, they are not equal
   for (let i = 0; i < courses1.length; i++) {
-    if (courses1[i].id !== courses2[i].id) {
+    if (courses1[i].courseId !== courses2[i].courseId) {
       return true;
     }
   }
   return false;
-}
+};
 
 /**
  * Returns a string with the number and the correct form of "Hora/Horas" in Portuguese.
  * @param {number} number - The number of hours.
  * @returns {string} A string combining the number and either "Hora" (singular) or "Horas" (plural). Returns "- Hora" for non-numeric or negative inputs.
  */
-export function formatHours(number) {
+const formatHours = (number: number): string => {
   // Checking if it is not a number and if it is negative
   if (typeof number !== "number" || isNaN(number) || number <= 0) {
     return "- Hora";
@@ -180,9 +205,9 @@ export function formatHours(number) {
   } else {
     return `${number} Horas`;
   }
-}
+};
 
-export function formatDate(dateString) {
+const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
     return "Invalid date";
@@ -192,12 +217,16 @@ export function formatDate(dateString) {
     month: "2-digit",
     year: "numeric",
   }).format(date);
-}
-
-export async function completeComponent(comp, courseId, isComplete) {
+};
+const completeComponent = async (
+  comp: ProgressComponent,
+  courseId: string,
+  isComplete: boolean,
+) => {
   // Retrieve the user info object and parse it from JSON
-  const studentInfo = await StorageService.getStudentInfo();
-  const sectionId = comp.parentSection;
+  const studentInfo =
+    (await StorageService.getStudentInfo()) as unknown as StudentProgress;
+  const sectionId = comp.parentSection as string;
 
   if (!getComponent(studentInfo, courseId, sectionId, comp._id)) {
     throw new Error("Component not found");
@@ -233,23 +262,24 @@ export async function completeComponent(comp, courseId, isComplete) {
   StorageService.updateStudentInfo(updatedStudent);
 
   return { points, updatedStudent };
-}
+};
 
-export function isCourseCompleted(student) {
-  return student.courses.some(
-    (course) => checkProgressCourse(course.Id) === 100,
-  );
-}
-
-export function isSectionCompleted(student, sectionId) {
+const isCourseCompleted = (student: StudentProgress): boolean => {
+  // A course is considered completed if all components in all sections are complete
   return student.courses.some((course) =>
-    course.sections.some(
-      (section) => section.sectionId == sectionId && section.isComplete,
+    course.sections.every((section) =>
+      section.components.every((component) => component.isComplete === true),
     ),
   );
-}
+};
 
-export function isComponentCompleted(student, compId) {
+const isSectionCompleted = (student: StudentProgress, sectionId: string) => {
+  return student.courses.some((course) =>
+    course.sections.some((section) => section.sectionId === sectionId),
+  );
+};
+
+const isComponentCompleted = (student: StudentProgress, compId: string) => {
   return student.courses.some((course) =>
     course.sections.some((section) =>
       section.components.some(
@@ -257,9 +287,9 @@ export function isComponentCompleted(student, compId) {
       ),
     ),
   );
-}
+};
 
-function isFirstAttemptExercise(student, compId) {
+const isFirstAttemptExercise = (student: StudentProgress, compId: string) => {
   return student.courses.some((course) =>
     course.sections.some((section) =>
       section.components.some(
@@ -267,12 +297,15 @@ function isFirstAttemptExercise(student, compId) {
       ),
     ),
   );
-}
+};
 
-// Returns the students progress of a course in percentage
-export async function checkProgressCourse(courseId) {
+// Returns the students progress of a course in percentage, and also returns completed and total components
+const checkProgressCourse = async (
+  courseId: string,
+): Promise<[number, number, number]> => {
   try {
-    const student = await StorageService.getStudentInfo();
+    const student =
+      (await StorageService.getStudentInfo()) as unknown as StudentProgress;
     const sections = await StorageService.getSectionList(courseId);
 
     let totalComponents = 0;
@@ -281,32 +314,32 @@ export async function checkProgressCourse(courseId) {
     for (let i = 0; i < sections.length; i++) {
       totalComponents += sections[i].components.length;
       for (let j = 0; j < sections[i].components.length; j++) {
-        if (isComponentCompleted(student, sections[i].components[j].compId)) {
+        if (isComponentCompleted(student, sections[i].components[j].compId!)) {
           progress++;
         }
       }
     }
 
-    progress = (progress / totalComponents) * 100;
-    progress = Math.floor(progress); // Round down to the nearest integer
-
-    return progress;
-  } catch (e) {
-    return 0;
+    let progressProcent = (progress / totalComponents) * 100;
+    progressProcent = Math.floor(progressProcent); // Round down to the nearest integer
+    return [progressProcent, progress, totalComponents];
+  } catch {
+    return [0, 0, 0];
   }
-}
+};
 
 // Returns the students progress of a section
-export async function checkProgressSection(sectionId) {
-  const student = await StorageService.getStudentInfo();
+const checkProgressSection = async (sectionId: string): Promise<number> => {
+  const student =
+    (await StorageService.getStudentInfo()) as unknown as StudentProgress;
   const section = await StorageService.getSection(sectionId);
 
-  if (section.components !== 0) {
+  if (section && section.components.length !== 0) {
     const totalComponents = section.components.length;
     let progress = 0;
 
     for (let i = 0; i < totalComponents; i++) {
-      if (isComponentCompleted(student, section.components[i].compId)) {
+      if (isComponentCompleted(student, section.components[i].compId!)) {
         progress++;
       }
     }
@@ -315,30 +348,43 @@ export async function checkProgressSection(sectionId) {
   } else {
     return 0;
   }
-}
+};
 
-export function findCompletedCourse(student, courseId) {
-  return student.courses.find((course) => course.courseId == courseId);
-}
+const findCompletedCourse = (student: StudentProgress, courseId: string) => {
+  return student.courses.find((course) => course.courseId === courseId);
+};
 
-export function findCompletedSection(student, courseId, sectionId) {
+const findCompletedSection = (
+  student: StudentProgress,
+  courseId: string,
+  sectionId: string,
+) => {
   const course = findCompletedCourse(student, courseId);
 
-  return course?.sections.find((section) => section.sectionId == sectionId);
-}
+  return course?.sections.find((section) => section.sectionId === sectionId);
+};
 
-function getComponent(student, courseId, sectionId, componentId) {
-  const course = student.courses.find((course) => course.courseId == courseId);
+const getComponent = (
+  student: StudentProgress,
+  courseId: string,
+  sectionId: string,
+  componentId: string,
+) => {
+  const course = student.courses.find((course) => course.courseId === courseId);
   const section = course?.sections.find(
-    (section) => section.sectionId == sectionId,
+    (section) => section.sectionId === sectionId,
   );
 
   return section?.components.find(
-    (component) => component.compId == componentId,
+    (component) => component.compId === componentId,
   );
-}
+};
 
-export function findIndexOfUncompletedComp(student, courseId, sectionId) {
+const findIndexOfUncompletedComp = (
+  student: StudentProgress,
+  courseId: string,
+  sectionId: string,
+) => {
   const course = student.courses.find((course) => course.courseId === courseId);
 
   if (!course) {
@@ -365,9 +411,18 @@ export function findIndexOfUncompletedComp(student, courseId, sectionId) {
   }
 
   return section.components.findIndex((component) => !component.isComplete);
-}
+};
 
-export async function handleLastComponent(comp, course, navigation) {
+const handleLastComponent = async (
+  comp: ProgressComponent,
+  course: { courseId: string },
+  navigation: {
+    reset: (opts: {
+      index: number;
+      routes: { name: string; params?: Record<string, unknown> }[];
+    }) => void;
+  },
+) => {
   // Generate certificate
   const courseId = course.courseId;
   const userId = await StorageService.getUserId();
@@ -377,8 +432,11 @@ export async function handleLastComponent(comp, course, navigation) {
   const getCurrentCourse = await api.getCourse(course.courseId);
 
   // If the section is the last one, the course is completed
+  const courseWithSections = getCurrentCourse as unknown as {
+    sections: string[];
+  };
   const getLastSection =
-    getCurrentCourse.sections[getCurrentCourse.sections.length - 1];
+    courseWithSections.sections[courseWithSections.sections.length - 1];
 
   //Check if the section is the last one
   const isThisTheLastSection = getLastSection === comp.parentSection;
@@ -410,14 +468,38 @@ export async function handleLastComponent(comp, course, navigation) {
       ],
     });
   }
-}
+};
 
-export async function resetOnboarding(uniqueKeys) {
+const resetOnboarding = async (uniqueKeys: string[]) => {
   try {
-    const keysToRemove = uniqueKeys.map((key) => `tooltip_shown_${key}`);
+    const keysToRemove = uniqueKeys.map(
+      (key: string) => `tooltip_shown_${key}`,
+    );
     await AsyncStorage.multiRemove(keysToRemove);
     console.log("Removed keys:", keysToRemove);
   } catch (error) {
     console.error("Error removing keys:", error);
   }
-}
+};
+
+export {
+  getDifficultyLabel,
+  convertMsToTime,
+  determineCategory,
+  determineIcon,
+  getUpdatedDate,
+  differenceInDays,
+  shouldUpdate,
+  formatHours,
+  formatDate,
+  completeComponent,
+  isCourseCompleted,
+  isSectionCompleted,
+  checkProgressCourse,
+  checkProgressSection,
+  findCompletedCourse,
+  findCompletedSection,
+  findIndexOfUncompletedComp,
+  handleLastComponent,
+  resetOnboarding,
+};

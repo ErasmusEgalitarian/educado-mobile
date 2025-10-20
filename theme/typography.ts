@@ -1,5 +1,8 @@
 import plugin from "tailwindcss/plugin";
 import { CSSRuleObject } from "tailwindcss/types/config";
+// Prettier fails when an absolute path is used
+// eslint-disable-next-line no-restricted-imports
+import typographyTokensJson from "./typography.tokens.json";
 
 /**
  * Font family keys taken from tailwind.config.ts.
@@ -21,128 +24,37 @@ interface TypoToken {
   caps?: boolean;
 }
 
-/**
- * Typography style configuration. All configuration is based on the typography tokens from the Figma design system.
- *
- * Convention: typo-{role}-{size?}-{weight}{-italic?}{-caps?}
- */
-export const textStyle: Record<string, TypoToken> = {
-  // H1
-  "h1-sm-medium": { fontFamilyKey: "mont-500", fontSize: 34, lineHeight: 44.2 },
-  "h1-sm-bold": { fontFamilyKey: "mont-700", fontSize: 34, lineHeight: 44.2 },
+const textStyles = typographyTokensJson[
+  "text-styles"
+] as unknown as TypoToken[];
 
-  // H2
-  "h2-sm-regular": {
-    fontFamilyKey: "mont-400",
-    fontSize: 24,
-    lineHeight: 31.2,
-  },
-  "h2-sm-bold": { fontFamilyKey: "mont-700", fontSize: 24, lineHeight: 31.2 },
+export type TextStyleName = keyof typeof typographyTokensJson;
 
-  // H3
-  "h3-sm-regular": { fontFamilyKey: "mont-400", fontSize: 20, lineHeight: 26 },
-  "h3-sm-bold": { fontFamilyKey: "mont-700", fontSize: 20, lineHeight: 26 },
+export type TextStyle = (typeof typographyTokensJson)[TextStyleName];
 
-  // H4
-  "h4-sm-regular": {
-    fontFamilyKey: "mont-400",
-    fontSize: 18,
-    lineHeight: 23.4,
-  },
-  "h4-sm-bold": { fontFamilyKey: "mont-700", fontSize: 18, lineHeight: 23.4 },
+export const typographyPlugin = plugin((pluginApi) => {
+  const fontFamilies = pluginApi.theme("fontFamily");
 
-  // Body
-  "body-regular": { fontFamilyKey: "mont-400", fontSize: 18, lineHeight: 23.4 },
-  "body-bold": { fontFamilyKey: "mont-700", fontSize: 18, lineHeight: 23.4 },
-  "body-regular-italic": {
-    fontFamilyKey: "mont-400-italic",
-    fontSize: 18,
-    lineHeight: 23.4,
-  },
-  "body-bold-italic": {
-    fontFamilyKey: "mont-700-italic",
-    fontSize: 18,
-    lineHeight: 23.4,
-  },
+  if (!fontFamilies) {
+    throw new Error("Font families not found in theme");
+  }
 
-  // Subtitle
-  "subtitle-regular": {
-    fontFamilyKey: "mont-400",
-    fontSize: 16,
-    lineHeight: 20.8,
-  },
-  "subtitle-semibold": {
-    fontFamilyKey: "mont-600",
-    fontSize: 16,
-    lineHeight: 20.8,
-  },
-  "subtitle-regular-italic": {
-    fontFamilyKey: "mont-400-italic",
-    fontSize: 16,
-    lineHeight: 20.8,
-  },
-  "subtitle-semibold-italic": {
-    fontFamilyKey: "mont-600-italic",
-    fontSize: 16,
-    lineHeight: 20.8,
-  },
+  const utilities = Object.entries(textStyles).reduce<
+    Record<string, CSSRuleObject>
+  >((acc, [name, styles]) => {
+    const fontStack = (fontFamilies[styles.fontFamilyKey] as string[]).join(
+      ", ",
+    );
 
-  // Caption
-  "caption-sm-regular": {
-    fontFamilyKey: "mont-400",
-    fontSize: 12,
-    lineHeight: 15.6,
-  },
-  "caption-sm-semibold": {
-    fontFamilyKey: "mont-600",
-    fontSize: 12,
-    lineHeight: 20.8,
-  },
+    acc[`.text-${name}`] = {
+      fontFamily: fontStack,
+      fontSize: `${String(styles.fontSize)}px`,
+      lineHeight: `${String(styles.lineHeight)}px`,
+      ...(styles.caps ? { textTransform: "uppercase" } : {}),
+    };
 
-  // Footnote
-  "footnote-regular-caps": {
-    fontFamilyKey: "mont-400",
-    fontSize: 12,
-    lineHeight: 20.8,
-    caps: true,
-  },
-  "footnote-semibold-caps": {
-    fontFamilyKey: "mont-600",
-    fontSize: 12,
-    lineHeight: 20.8,
-    caps: true,
-  },
+    return acc;
+  }, {});
 
-  // Alert / hint
-  "alert-title-medium": {
-    fontFamilyKey: "mont-500",
-    fontSize: 10,
-    lineHeight: 13,
-  },
-  "alert-message": { fontFamilyKey: "mont-400", fontSize: 8, lineHeight: 10.4 },
-  hint: { fontFamilyKey: "mont-400", fontSize: 8, lineHeight: 10.4 },
-} as const;
-
-export type TextStyleName = keyof typeof textStyle;
-
-export const typographyPlugin = plugin(({ addUtilities, theme }) => {
-  const fontFamilies = theme("fontFamily") as Record<string, string[]>;
-
-  const utilities = Object.entries(textStyle).reduce(
-    (acc, [name, styles]) => {
-      const fontStack = fontFamilies[styles.fontFamilyKey]?.join(", ");
-
-      acc[`.text-${name}`] = {
-        fontFamily: fontStack,
-        fontSize: `${styles.fontSize}px`,
-        lineHeight: `${styles.lineHeight}px`,
-        ...(styles.caps ? { textTransform: "uppercase" } : {}),
-      };
-
-      return acc;
-    },
-    {} as Record<string, CSSRuleObject>,
-  );
-
-  addUtilities(utilities);
+  pluginApi.addUtilities(utilities);
 });

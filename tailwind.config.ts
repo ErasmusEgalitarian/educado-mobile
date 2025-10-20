@@ -12,6 +12,7 @@ export default {
     "./components/**/*.{ts,tsx}",
     "./screens/**/*.{ts,tsx}",
   ],
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   presets: [require("nativewind/preset")],
   theme: {
     colors,
@@ -47,8 +48,8 @@ export default {
     aspectRatio: false,
   },
   plugins: [
-    plugin(({ addUtilities }) => {
-      addUtilities({
+    plugin((pluginApi) => {
+      pluginApi.addUtilities({
         ".text-top": {
           textAlignVertical: "top",
         },

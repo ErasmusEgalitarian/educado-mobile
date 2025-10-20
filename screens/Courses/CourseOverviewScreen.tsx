@@ -7,7 +7,7 @@ import { SectionCard } from "@/components/Section/SectionCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import CustomProgressBar from "@/components/Exercise/CustomProgressBar";
+import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptionButton";
 import { checkProgressCourse, checkProgressSection } from "@/services/utils";
 import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
@@ -40,7 +40,7 @@ const CourseOverviewScreen = ({
   const { course } = route.params;
   const navigation = useNavigation();
   const [sections, setSections] = useState<null | Section[]>(null);
-  const [studentProgress, setStudentProgress] = useState(0);
+  const [studentProgress, setStudentProgress] = useState([0, 0, 0]);
   const [sectionProgress, setSectionProgress] = useState<
     Record<string, number>
   >({});
@@ -208,23 +208,23 @@ const CourseOverviewScreen = ({
               >
                 <View className="flex flex-row justify-between">
                   {/* Course Title */}
-                  <Text className="max-w-[85%] pb-[8px] text-h3-sm-regular">
+                  <Text className="h3-sm-regular max-w-[80%] text-[24px]">
                     {course.title}
                   </Text>
                   {/* TODO: Button to download course should be implemented */}
                   <DownloadCourseButton course={course} disabled={true} />
                 </View>
                 {/* Progress Bar */}
-                <View className="flex justify-center rounded-sm border-y-[1px] border-lightGray p-[8px]">
+                <View className="flex h-6 justify-center rounded-sm border-y-[1px] border-lightGray">
                   <CustomProgressBar
-                    width={65}
+                    width={63}
                     progress={studentProgress}
                     height={1}
                     displayLabel={false}
                   ></CustomProgressBar>
                 </View>
 
-                <View className="flex w-full flex-row items-center justify-between pt-[8px]">
+                <View className="flex w-full flex-row items-center justify-between">
                   <View className="flex flex-row">
                     <MaterialCommunityIcons
                       name="crown-circle"
@@ -232,19 +232,20 @@ const CourseOverviewScreen = ({
                       color="orange"
                     />
                     {/* TODO: Points should be implemented */}
-                    <Text className="text-caption-sm-regular">
-                      ?? {t("course.points")}
-                    </Text>
+                    <Text>?? pontos</Text>
                   </View>
+                  <MaterialCommunityIcons
+                    name="circle-small"
+                    size={30}
+                    color="gray"
+                  />
                   <View className="flex flex-row">
                     <MaterialCommunityIcons
                       name="lightning-bolt"
                       size={20}
                       color="orange"
                     />
-                    <Text className="text-caption-sm-regular">
-                      {studentProgress}% {t("course.completed-low")}
-                    </Text>
+                    <Text>{studentProgress[0]}% concluído</Text>
                   </View>
                 </View>
               </View>
