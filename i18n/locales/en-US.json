@@ -15,7 +15,7 @@
   "general": {
     "yes": "Yes",
     "no": "No",
-    "confirmation": "Are you sure?"
+    "confirmation": "Are you sure?",
     "hour": "Hour",
     "hours": "Hours"
   },
@@ -35,7 +35,7 @@
     "welcome-description": "Here you can find all the courses you are enrolled in!",
     "get-started": "Get Started",
     "no-courses-message": "You haven't enrolled in any courses yet. Go to the Explore page and use the search to find courses of your interest.",
-    "explore-courses": "Explore courses"
+    "explore-courses": "Explore courses",
     "continue":  "Continue Course",
     "signup": "Sign up now"
   },

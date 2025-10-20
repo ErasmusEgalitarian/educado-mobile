@@ -15,7 +15,7 @@
   "general": {
     "yes": "Sim",
     "no": "Não",
-    "confirmation": "Tem certeza?"
+    "confirmation": "Tem certeza?",
     "hour": "Hora",
     "hours": "Horas"
   },
@@ -35,7 +35,7 @@
     "welcome-description": "Aqui você encontra todos os cursos em que você está inscrito!",
     "get-started": "Comece agora",
     "no-courses-message": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.",
-    "explore-courses": "Explorar cursos"
+    "explore-courses": "Explorar cursos",
     "continue": "Continuar Curso",
     "signup": "Inscrevar-se agora"
   },
