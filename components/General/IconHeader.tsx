@@ -1,9 +1,11 @@
-import { View, Image, Text } from "react-native";
+import { View, ImageSourcePropType, Image, Text } from "react-native";
 
-type Props = {
-  title?: string;
-  description?: string;
-};
+interface Props {
+  title?: string,
+  description?: string
+}
+
+const iconSource: ImageSourcePropType = require("../../assets/images/singleIcon.png");
 
 /**
  * Custom header component with an icon and title.
@@ -11,12 +13,12 @@ type Props = {
  * @param {description} - Optional description below header
  * @returns {JSX.Element} The IconHeader component.
  */
-const IconHeader = ({ title }: Props) => {
+const IconHeader = ({ title, description }: Props) => {
   return (
     <>
       <View className="flex flex-row items-center pb-2">
         <Image
-          source={require("../../assets/images/singleIcon.png")}
+          source={iconSource}
           alt="Icon"
           className="mr-4 h-7 w-7"
         />
