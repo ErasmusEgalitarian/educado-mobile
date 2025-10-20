@@ -1,4 +1,4 @@
-import { t } from "@/i18n"
+import { t } from "@/i18n";
 
 export const categories = [
   { key: "category0", label: t("categories.all") },

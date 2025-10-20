@@ -20,9 +20,7 @@ const IconHeader = ({ title }: Props) => {
           alt="Icon"
           className="mr-4 h-7 w-7"
         />
-        <Text className="text-textTitleGrayscale text-h2-sm-bold">
-          {title}
-        </Text>
+        <Text className="text-textTitleGrayscale text-h2-sm-bold">{title}</Text>
       </View>
     </>
   );

@@ -46,10 +46,7 @@ export const InfoBox = ({ course }: { course: Course }) => {
         title={t("info-box.certificate")}
         icon="certificate-outline"
       />
-      <InfoBoxItem
-        title={t("info-box.start")}
-        icon="clock-fast"
-      />
+      <InfoBoxItem title={t("info-box.start")} icon="clock-fast" />
       <InfoBoxItem
         title={t("info-box.access-time")}
         icon="calendar-month-outline"
