@@ -25,10 +25,10 @@ export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
       setRatingIcons([]);
       return;
     }
-    const fullStars = Math.floor(rating ?? 0);
+    const fullStars = Math.floor(rating);
     const halfStar = rating % 1 !== 0;
 
-    const newRatingIcons = Array.from({ length: 5 }, (_, index) => {
+    const newRatingIcons = [...Array(5).keys()].map((index) => {
       if (index < fullStars) {
         return { icon: "star", color: colors.surfaceYellow };
       } else if (index === fullStars && halfStar) {
@@ -43,7 +43,7 @@ export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
 
   return noRating ? (
     <View className="flex-row items-start justify-start">
-      <Text className="pl-1 pt-2 font-sans text-sm text-textDisabledGrayscale">
+      <Text className="pl-1 pt-2 text-label-sm-regular text-textDisabledGrayscale">
         {t("no-reviews")}
       </Text>
     </View>
@@ -58,10 +58,10 @@ export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
         />
       ))}
       <Text
-        className="font-sans-bold pl-1 text-sm"
+        className="pl-1 text-caption-sm-bold"
         style={{ color: colors.surfaceYellow }}
       >
-        {rating?.toFixed(1)}
+        {rating.toFixed(1)}
       </Text>
     </View>
   );

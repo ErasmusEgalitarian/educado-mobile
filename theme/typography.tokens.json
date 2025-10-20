@@ -90,8 +90,13 @@
       "fontSize": 16,
       "lineHeight": 20.8
     },
+    "label-sm-regular": {
+      "fontFamilyKey": "mont-400",
+      "fontSize": 14,
+      "lineHeight": 20.8
+    },
     "label-sm-semibold": {
-      "fontFamilyKey": "mont-500",
+      "fontFamilyKey": "mont-600",
       "fontSize": 14,
       "lineHeight": 20.8
     },
@@ -107,6 +112,11 @@
     },
     "caption-sm-semibold": {
       "fontFamilyKey": "mont-600",
+      "fontSize": 12,
+      "lineHeight": 20.8
+    },
+    "caption-sm-bold": {
+      "fontFamilyKey": "mont-700",
       "fontSize": 12,
       "lineHeight": 20.8
     },

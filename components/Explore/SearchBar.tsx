@@ -16,7 +16,7 @@ export interface SearchBarProps {
  * @returns {JSX.Element} - Returns a JSX element.
  */
 export const SearchBar = ({
-  onSearchChange = () => {},
+  onSearchChange,
   placeholder = t("search-course"),
 }: SearchBarProps) => {
   return (
@@ -25,7 +25,7 @@ export const SearchBar = ({
         placeholder={placeholder}
         placeholderTextColor={colors.textCaptionGrayscale}
         onChangeText={onSearchChange}
-        className="pr-35 text-grayScale flex-1 py-1 text-sm font-semibold"
+        className="pr-35 text-textCaptionGrayscale flex-1 py-1 text-label-sm-semibold"
       />
       <MaterialCommunityIcons
         name="magnify"

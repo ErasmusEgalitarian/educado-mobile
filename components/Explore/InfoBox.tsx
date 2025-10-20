@@ -11,12 +11,12 @@ type MaterialCommunityIconName = ComponentProps<
 >["name"];
 
 export interface InfoBoxItemProps {
-  title: string;
+  label: string;
   icon: MaterialCommunityIconName;
   className?: string;
 }
 
-const InfoBoxItem = ({ title, icon, className }: InfoBoxItemProps) => {
+const InfoBoxItem = ({ label, icon, className }: InfoBoxItemProps) => {
   return (
     <View
       className={`flex-row items-center justify-start py-3 ${className ?? ""}`}
@@ -26,33 +26,36 @@ const InfoBoxItem = ({ title, icon, className }: InfoBoxItemProps) => {
         size={20}
         color={colors.textCaptionGrayscale}
       />
-      <Text className="text-s pl-2 font-sans text-projectBlack">{title}</Text>
+      <Text className="text-label-sm-regular pl-2 text-textTitleGrayscale"> {label} </Text>
     </View>
   );
 };
 
 export const InfoBox = ({ course }: { course: Course }) => {
   return (
-    <View className="border-grayScale w-full flex-col rounded-2xl border border-solid px-4 py-1">
+    <View className="border-textCaptionGrayscale w-full flex-col rounded-2xl border px-4 py-1">
       <InfoBoxItem
-        title={`${Utility.formatHours(course.estimatedHours)} ${t("info-box.hours")}`}
+        label={`${Utility.formatHours(course.estimatedHours)} ${t("info-box.hours")}`}
         icon="clock-outline"
       />
       <InfoBoxItem
-        title={`${t("info-box.level")} ${Utility.getDifficultyLabel(course.difficulty)}`}
+        label={`${t("info-box.level")} ${Utility.getDifficultyLabel(course.difficulty)}`}
         icon="book-multiple-outline"
       />
       <InfoBoxItem
-        title={t("info-box.certificate")}
+        label={t("info-box.certificate")}
         icon="certificate-outline"
       />
-      <InfoBoxItem title={t("info-box.start")} icon="clock-fast" />
       <InfoBoxItem
-        title={t("info-box.access-time")}
+        label={t("info-box.start")}
+        icon="clock-fast"
+      />
+      <InfoBoxItem
+        label={t("info-box.access-time")}
         icon="calendar-month-outline"
       />
       <InfoBoxItem
-        title={t("info-box.portability")}
+        label={t("info-box.portability")}
         icon="cellphone-link"
         className="mb-0"
       />

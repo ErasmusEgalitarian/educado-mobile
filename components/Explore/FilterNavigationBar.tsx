@@ -11,15 +11,15 @@ import { colors } from "@/theme/colors";
  * @param onCategoryChange - Callback function called when a category is selected.
  * @returns {JSX.Element} - Rendered component
  */
-type FilterNavigationBarProps = {
+interface FilterNavigationBarProps {
   onChangeText: (text: string) => void;
   onCategoryChange: (category: string) => void;
   searchPlaceholder?: string;
-};
+}
 
 export const FilterNavigationBar = ({
-  onChangeText = () => {},
-  onCategoryChange = () => {},
+  onChangeText,
+  onCategoryChange,
   searchPlaceholder,
 }: FilterNavigationBarProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -64,12 +64,12 @@ export const FilterNavigationBar = ({
             return (
               <Pressable
                 key={category.label}
-                onPress={() => handleCategorySelect(category.label)}
-                className="mr-2 items-center justify-center rounded-lg border px-3 py-1"
+                onPress={() => { handleCategorySelect(category.label); }}
+                className="mr-2 items-center justify-center rounded-lg border px-3 py-2"
                 style={getCategoryItemStyle(isSelected)}
               >
                 <Text
-                  className="text-s font-montserrat-bold"
+                  className="text-label-sm-bold"
                   style={getCategoryTextStyle(isSelected)}
                 >
                   {category.label}

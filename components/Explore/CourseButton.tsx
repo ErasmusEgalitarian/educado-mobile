@@ -23,7 +23,7 @@ export const CourseButton = ({
   return (
     <View className="">
       <Pressable
-        onPress={() => onPress(course)}
+        onPress={() => { onPress(course); }}
         className="flex w-full items-center justify-center rounded-2xl bg-surfaceDefaultCyan p-2"
       >
         {children}
