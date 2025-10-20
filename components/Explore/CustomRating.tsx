@@ -15,7 +15,7 @@ export interface CustomRatingProps {
 
 export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
   const [ratingIcons, setRatingIcons] = useState<
-    { icon: string; color: string }[]
+    { icon: keyof typeof MaterialCommunityIcons.glyphMap; color: string }[]
   >([]);
   const [noRating, setNoRating] = useState(false);
 

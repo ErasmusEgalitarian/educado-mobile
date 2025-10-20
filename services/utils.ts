@@ -8,6 +8,7 @@ import { generateCertificate } from "@/services/certificate-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { Component } from "@/types/component";
 import { t } from "@/i18n";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Local utility types that reflect student progress structure used throughout utils
 type ProgressComponent = Component & {
@@ -92,7 +93,7 @@ const determineCategory = (category: string): string => {
  * @param {string} category - The category of the course.
  * @returns {string} The icon name corresponding to the given category.
  */
-const determineIcon = (category: string): string => {
+const determineIcon = (category: string): keyof typeof MaterialCommunityIcons.glyphMap => {
   switch (category) {
     case "personal finance":
       return "finance";
