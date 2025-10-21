@@ -1,11 +1,12 @@
-import { View, ImageSourcePropType, Image, Text } from "react-native";
+import { View, Image, Text } from "react-native";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const iconSource: ImageSourcePropType = require("../../assets/images/singleIcon.png");
+//const iconSource = require("../../assets/images/singleIcon.png") as const;
+import iconSource from "../../assets/images/singleIcon.png";
 
 /**
  * Custom header component with an icon and title.

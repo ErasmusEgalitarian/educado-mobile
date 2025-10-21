@@ -36,13 +36,13 @@ export const BottomDrawer = ({
     void subscribe(course.courseId);
     void addCourseToStudent(course.courseId);
     // @ts-expect-error Will be refactored when we move to Expo Router
-    navigation.navigate("Subscribed");
+    navigation.navigate("Subscribed", { course: course });
   };
 
   const navigateCourse = () => {
     toggleModal();
     // @ts-expect-error Will be refactored when we move to Expo Router
-    navigation.navigate("CourseOverview");
+    navigation.navigate("CourseOverview", { course: course });
   };
 
   return (
