@@ -1,10 +1,11 @@
-import { View, TouchableOpacity, Image, SafeAreaView } from "react-native";
-import { BackgroundLinearGradient } from "../../constants/BackgroundLinearGradient";
-import WelcomeSlider from "../../components/Welcome/WelcomeSlider";
-import Text from "../../components/General/Text";
+import { View, Image, SafeAreaView, Text } from "react-native";
+import { BackgroundLinearGradient } from "@/constants/BackgroundLinearGradient";
+import WelcomeSlider from "@/components/Welcome/WelcomeSlider";
 import { useNavigation } from "@react-navigation/native";
+import FormButton from "@/components/General/Forms/FormButton";
+import logo from "@/assets/images/logo.png";
 
-/* 
+/*
 Description: 	This is the welcome screen that is shown when the user opens the app for the first time.
 				It is a slider that explains the app and its features. It also has a button to login and a button to register.
 				When the user clicks on the login button, it is redirected to the login screen.
@@ -20,7 +21,7 @@ export default function WelcomeScreen() {
         <View className="flex flex-col items-center justify-center">
           <View className="mb-[20%] flex pt-[30%]">
             <Image
-              source={require("../../assets/images/logo.png")}
+              source={logo}
               className="h-[25.54] w-[175.88]"
             />
           </View>
@@ -31,39 +32,33 @@ export default function WelcomeScreen() {
 
           <View className="justify-around">
             <View className="w-screen px-6">
-              {/* Replace with standard button */}
-              <TouchableOpacity
-                className="rounded-medium bg-primary_custom px-10 py-4"
+              <FormButton
                 onPress={() => {
-                  navigation.navigate(
-                    "LoginStack",
-                    { screen: "Register" },
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-expect-error
+                  navigation.navigate("LoginStack",
+                    { screen: "Login" },
                     { previousScreen: "Welcome" },
                   );
                 }}
               >
-                <Text className="font-sans-bold text-center text-body text-projectWhite">
-                  Cadastrer
-                </Text>
-              </TouchableOpacity>
+                Entrar
+              </FormButton>
             </View>
 
             <View className="flex-row justify-center">
-              <Text className="mr-1 text-base text-projectGray">
-                {/* Already have an account? */}
-                Já tem uma conta?
-              </Text>
               <Text
-                testId="loginNav"
-                className={"text-base text-projectBlack underline"}
-                onPress={() =>
-                  navigation.navigate("LoginStack", {
-                    previousScreen: "Welcome",
-                  })
+                className={"text-h4-sm-bold text-textSubtitleGrayscale underline"}
+                onPress={() => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-expect-error
+                    navigation.navigate("LoginStack",
+                    { screen: "Register" },
+                    { previousScreen: "Welcome" }); }
                 }
               >
-                {/* Login now */}
-                Entrar agora
+                {/* Register */}
+                Cadastrar
               </Text>
             </View>
           </View>

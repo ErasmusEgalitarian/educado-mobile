@@ -60,7 +60,8 @@
     "borderDefaultMagenta": "#BD3DA2",
     "borderDarkerMagenta": "#70245F",
     "textLabelMagenta": "#70245F",
-    "surfaceYellow": "#F1CC4F"
+    "surfaceYellow": "#F1CC4F",
+    "modalOpacityBlue": "#E4F2F5"
   },
   "old-colors": {
     "bgprimary_custom": "#35A1B1",

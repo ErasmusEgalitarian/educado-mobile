@@ -31,19 +31,16 @@ const EducadoModal = (props: EducadoModalProps) => {
     <Modal
       visible={props.modalVisible}
       animationType="slide"
-      className="border-black border-8"
       transparent={true}
     >
       <TouchableWithoutFeedback onPress={props.closeModal}>
-
-        {/* ERROR BG IS PLACEHOLDER UNTILL BLACK OPACITY COLOUR WORKS!!! */}
-        <View className="flex-1 justify-end bg-semitransBG">
+        <View className="flex-1 justify-end bg-surfaceDefaultRed">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View className="bg-projectWhite h-[90%] rounded-t-3xl pt-10">
+            <View className="bg-surfaceSubtleCyan h-[90%] rounded-t-3xl pt-10">
               <AlertNotificationRoot>
               <KeyboardAwareScrollView>
                 <View className="flex flex-row items-center justify-between px-[10%] mb-4">
-                  <Text className="text-h2-sm-bold">{props.title ?? ""}</Text>
+                  <Text className="text-h2-sm-bold">{props.title}</Text>
                   <Pressable onPress={props.closeModal}>
                     <Entypo name="chevron-down" size={24} />
                   </Pressable>

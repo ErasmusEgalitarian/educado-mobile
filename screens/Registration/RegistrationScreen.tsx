@@ -42,7 +42,7 @@ const RegistrationScreen = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View>
             <View className="mt-10">
-              <LogoBackButton navigationPlace={"WelcomeScreen"} />
+              <LogoBackButton navigationPlace={"HomeStack"} />
             </View>
             <View className="mx-6">
               <View className="mt-8">
