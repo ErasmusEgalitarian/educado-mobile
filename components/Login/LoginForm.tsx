@@ -113,7 +113,7 @@ const LoginForm = () => {
         <FormFieldAlert success={emailAlert === ""} label={emailAlert} />
       </View>
 
-      <View className="relative">
+      <View className="relative mb-5">
         <FormTextField
           placeholder="Insira sua senha" // Type your password
           value={password}

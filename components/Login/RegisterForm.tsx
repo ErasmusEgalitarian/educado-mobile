@@ -197,6 +197,7 @@ const RegisterForm = () => {
             value={name}
             placeholder="Nome Sobrenome"
             required={true}
+            bordered={true}
             onChangeText={(firstName) => {
               setName(firstName);
             }}
@@ -210,6 +211,7 @@ const RegisterForm = () => {
             placeholder="useremail@gmail.com"
             keyboardType="email-address"
             required={true}
+            bordered={true}
             onChangeText={(email: string): void => {
               setEmail(email);
               validateEmail(email);
@@ -231,6 +233,7 @@ const RegisterForm = () => {
               placeholder="********"
               secureTextEntry={!showPassword}
               required={true}
+              bordered={true}
               onChangeText={(inputPassword: string) => {
                 setPassword(removeEmojis(inputPassword));
               }}
@@ -304,6 +307,7 @@ const RegisterForm = () => {
               placeholder="********" // Confirm your password
               secureTextEntry={!showConfirmPassword}
               required={true}
+              bordered={true}
               error={confirmPasswordAlert !== ""}
             />
             <PasswordEye
