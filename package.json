@@ -20,7 +20,7 @@
     "lint:ci": "npm run lint -- -f json -o eslint-report.json || true",
     "lint:fix": "eslint --fix .",
     "start": "expo start",
-    "test": "npm run plugin:test && jest",
+    "test": "npm run test:plugin && jest",
     "test:ci": "npm run test:packages && jest --ci --coverage",
     "test:coverage": "jest --coverage",
     "test:packages": "npm run test:plugin",
