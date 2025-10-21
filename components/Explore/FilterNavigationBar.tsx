@@ -4,6 +4,7 @@ import { View, Pressable, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { categories } from "@/components/Explore/categories";
 import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
 
 /**
  * FilterNavBar component displays a search bar and a list of categories.
@@ -22,7 +23,7 @@ export const FilterNavigationBar = ({
   onCategoryChange,
   searchPlaceholder,
 }: FilterNavigationBarProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>(t("categories.all"));
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
