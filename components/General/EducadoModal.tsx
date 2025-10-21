@@ -34,7 +34,7 @@ const EducadoModal = (props: EducadoModalProps) => {
       transparent={true}
     >
       <TouchableWithoutFeedback onPress={props.closeModal}>
-        <View className="flex-1 justify-end bg-surfaceDefaultRed">
+        <View className="flex-1 justify-end bg-modalOpacityBlue">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="bg-surfaceSubtleCyan h-[90%] rounded-t-3xl pt-10">
               <AlertNotificationRoot>

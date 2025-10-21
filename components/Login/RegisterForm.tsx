@@ -189,9 +189,9 @@ const RegisterForm = () => {
   };
 
   return (
-    <View className="mb-2 flex h-[78vh] flex-col">
+    <View className="mb-2 mt-8 flex h-[70vh] flex-col">
       <AlertNotificationRoot>
-        <View className="mb-2 flex-none">
+        <View className="mb-6 flex-none">
           <FormTextField
             label="Nome" // name
             value={name}
@@ -204,7 +204,7 @@ const RegisterForm = () => {
             error={nameAlert !== ""}
           />
         </View>
-        <View className="mb-2 flex-none">
+        <View className="mb-6 flex-none">
           <FormTextField
             label="Email"
             value={email}
@@ -271,7 +271,7 @@ const RegisterForm = () => {
               ) : null}
             </View>
           </View>
-          <View className="h-6 flex-row justify-start">
+          <View className="h-6 flex-row justify-start mb-6">
             <Text
               className={
                 "text-sm" +
@@ -296,7 +296,7 @@ const RegisterForm = () => {
             </View>
           </View>
         </View>
-        <View className="flex-none">
+        <View className="flex-none mb-2">
           <View className="relative">
             <FormTextField
               label="Confirmar senha" // Confirm password
