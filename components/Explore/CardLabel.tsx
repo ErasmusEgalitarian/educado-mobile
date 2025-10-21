@@ -32,3 +32,6 @@ export const CardLabel = ({
     </View>
   );
 };
+
+//For legacy purposes in CertificateOverlay and CertificateCard
+export default CardLabel;

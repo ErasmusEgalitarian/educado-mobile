@@ -6,14 +6,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import ToastNotification from "@/components/General/ToastNotification";
-import * as Utility from "@/services/utils";
+import ToastNotification from "../General/ToastNotification";
+import * as Utility from "../../services/utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import CertificateTemplate from "@/components/Certificate/CertificateTemplate";
-import CertificatePopup from "@/components/Certificate/CertificatePopup";
-import CertificateOverlay from "@/components/Certificate/CertificateOverlay";
-import { CardLabel } from "@/components/Explore/CardLabel";
+import CertificateTemplate from "./CertificateTemplate";
+import CertificatePopup from "./CertificatePopup";
+import CertificateOverlay from "./CertificateOverlay";
+import CardLabel from "../Explore/CardLabel";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 
@@ -119,7 +119,7 @@ const CertificateCard = ({ certificate }: CertificateCardProps) => {
       <CertificatePopup visible={popupVisible} onClose={handleClosePopup}>
         <View className="flex flex-col justify-between">
           <View className="flex flex-row items-center justify-between">
-            <Text className="text-black text-body-regular">
+            <Text className="text-black text-lg font-medium">
               {certificate.courseName}
             </Text>
             <TouchableOpacity onPress={handleClosePopup}>
@@ -178,7 +178,7 @@ const CertificateCard = ({ certificate }: CertificateCardProps) => {
                       size={24}
                       color={"white"}
                     />
-                    <Text className="ml-2 text-center text-projectWhite text-body-bold">
+                    <Text className="font-montserrat-bold ml-2 text-center text-lg text-projectWhite">
                       Baixar PDF
                     </Text>
                   </>

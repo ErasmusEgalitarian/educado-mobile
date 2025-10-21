@@ -135,3 +135,6 @@ export const ExploreScreen = () => {
     </>
   );
 };
+
+//For legacy purposes in App.tsx
+export default ExploreScreen;

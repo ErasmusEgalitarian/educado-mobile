@@ -1,8 +1,8 @@
-import * as Utility from "@/services/utils";
+import * as Utility from "../../services/utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity } from "react-native";
-import { CardLabel } from "@/components/Explore/CardLabel";
-//import PropTypes from "prop-types";
+import CardLabel from "../Explore/CardLabel";
+import PropTypes from "prop-types";
 
 const CertificateOverlay = ({ certificate, handleVisualizarClick }) => {
   const {
@@ -15,7 +15,9 @@ const CertificateOverlay = ({ certificate, handleVisualizarClick }) => {
   return (
     <View className="absolute bottom-0 left-0 right-0 h-1/2 rounded-lg bg-projectWhite px-2 opacity-95">
       <View className="relative mx-4 flex-col">
-        <Text className="text-black mt-2 text-body-regular">{courseName}</Text>
+        <Text className="text-black mt-2 text-lg font-medium">
+          {courseName}
+        </Text>
         <View className="border-gray h-1 w-full border-b-[1px] pt-1 opacity-20"></View>
         <View className="bg-gray-500 h-[0.5] w-full pt-2 opacity-50" />
         <View className="w-full flex-row items-start justify-between">
@@ -44,9 +46,7 @@ const CertificateOverlay = ({ certificate, handleVisualizarClick }) => {
         onPress={handleVisualizarClick}
       >
         <View className="mt-2 flex flex-row items-center justify-center">
-          <Text className="mr-1 text-primary_custom text-body-bold">
-            visualizar
-          </Text>
+          <Text className="mr-1 font-bold text-primary_custom">visualizar</Text>
           <MaterialCommunityIcons name={"eye"} size={13} color={"#166276"} />
         </View>
         <View className="w-[90px] border-b-[1px] border-primary_custom pt-[2px]"></View>
@@ -54,7 +54,6 @@ const CertificateOverlay = ({ certificate, handleVisualizarClick }) => {
     </View>
   );
 };
-/*
 CertificateOverlay.propTypes = {
   certificate: PropTypes.shape({
     courseName: PropTypes.string.isRequired,
@@ -64,5 +63,5 @@ CertificateOverlay.propTypes = {
   }).isRequired,
   handleVisualizarClick: PropTypes.func.isRequired,
 };
-*/
+
 export default CertificateOverlay;
