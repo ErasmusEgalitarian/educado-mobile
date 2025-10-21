@@ -8,7 +8,8 @@ concurrency:
   cancel-in-progress: true
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
+  issues: write
 jobs:
   ci:
     name: CI
@@ -19,6 +20,253 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Generate Token
+        if: ${{ github.event_name == 'pull_request' }}
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.EDUCADO_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.EDUCADO_BOT_PEM }}
+      - name: Get Project and Pull Request Data
+        if: ${{ github.event_name == 'pull_request' }}
+        id: project-pr-data
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          ORGANIZATION: ${{ github.repository_owner }}
+          PROJECT_NUMBER: 17
+        run: |
+          set -euo pipefail
+
+          gh api graphql \
+            -f org="$ORGANIZATION" \
+            -F number="$PROJECT_NUMBER" \
+            -f query='
+              query ($org: String!, $number: Int!) {
+                organization(login: $org) {
+                  projectV2(number: $number) {
+                    id
+                    fields(first: 50) {
+                      nodes {
+                        ... on ProjectV2Field {
+                          id
+                          name
+                        }
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ' >project-data.json
+
+          gh api graphql \
+            -f owner="$ORGANIZATION" \
+            -f repo="${{ github.event.repository.name }}" \
+            -F pr="${{ github.event.number }}" \
+            -f query='
+              query ($owner: String!, $repo: String!, $pr: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  pullRequest(number: $pr) {
+                    id
+                    commits(first: 250) {
+                      nodes {
+                        commit {
+                          authors(first: 10) {
+                            nodes {
+                              user {
+                                id
+                                login
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    closingIssuesReferences(first: 50) {
+                      nodes {
+                        id
+                        number
+                        repository {
+                          owner {
+                            login
+                          }
+                          name
+                        }
+                        projectItems(first: 20) {
+                          nodes {
+                            id
+                            project {
+                              id
+                              number
+                            }
+                          }
+                        }
+                      }
+                    }
+                    timelineItems(itemTypes: [CONNECTED_EVENT], first: 200) {
+                      nodes {
+                        ... on ConnectedEvent {
+                          subject {
+                            __typename
+                            ... on Issue {
+                              id
+                              number
+                              repository {
+                                owner {
+                                  login
+                                }
+                                name
+                              }
+                              projectItems(first: 20) {
+                                nodes {
+                                  id
+                                  project {
+                                    id
+                                    number
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ' >pr-data.json
+
+          pr_id="$(jq -r '.data.repository.pullRequest.id' pr-data.json)"
+
+          echo "pr_id=$pr_id" >>"$GITHUB_OUTPUT"
+      - name: Set Issue Statuses
+        if: ${{ github.event_name == 'pull_request' }}
+        id: set-issue-statuses
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          ITEM_STATUS: In Review
+        run: |
+          set -euo pipefail
+
+          project_id="$(jq -r '.data.organization.projectV2.id' project-data.json)"
+
+          jq --arg pid "$project_id" \
+            -r '[
+                # Commit closing keywords
+                (.data.repository.pullRequest.closingIssuesReferences.nodes[]?
+                .projectItems.nodes[]? | select(.project.id==$pid) | .id),
+
+                # PR Development sidebar
+                (.data.repository.pullRequest.timelineItems.nodes[]?
+                .subject?.projectItems?.nodes[]? | select(.project.id==$pid) | .id)
+                ]
+
+                | flatten | unique[]' pr-data.json >item-ids.txt || true
+
+          if [ ! -s item-ids.txt ]; then
+            echo "::notice::No Project $project_id items linked. Nothing to update."
+
+            exit 0
+          fi
+
+          status_field_id="$(
+            jq -r \
+              '.data.organization.projectV2.fields.nodes[]
+              | select(.name == "Status")
+              | .id' \
+              project-data.json
+          )"
+
+          in_review_option_id="$(
+            jq -r \
+              ".data.organization.projectV2.fields.nodes[]
+              | select(.name == \"Status\")
+              | .options[]
+              | select(.name == \"$ITEM_STATUS\")
+              | .id" \
+              project-data.json
+          )"
+
+          while read -r item_id; do
+            gh api graphql \
+              -f project="$project_id" \
+              -f status_field_id="$status_field_id" \
+              -f status_value="$in_review_option_id" \
+              -f item="$item_id" \
+              -f query='
+                mutation (
+                  $project: ID!
+                  $item: ID!
+                  $status_field_id: ID!
+                  $status_value: String!
+                ) {
+                  updateProjectV2ItemFieldValue(
+                    input: {
+                      projectId: $project
+                      itemId: $item
+                      fieldId: $status_field_id
+                      value: { singleSelectOptionId: $status_value }
+                    }
+                  ) {
+                    projectV2Item {
+                      id
+                    }
+                  }
+                }
+                '
+          done <item-ids.txt
+      - name: Set Assignees
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          set -euo pipefail
+
+          authors=("$(jq -r '.data.repository.pullRequest.commits.nodes[] | .commit.authors.nodes[] | .user?.id' pr-data.json | sort -u)")
+
+          author_ids=("${authors[@]:0:10}")
+
+          if [ "${#author_ids[@]}" -eq 0 ]; then
+            echo '::error::No authors found.'
+
+            exit 0
+          fi
+
+          args=()
+
+          for author_id in "${author_ids[@]}"; do
+            args+=(-f assigneeIds[]="$author_id")
+          done
+
+          gh api graphql \
+            -f assignableId="${{ steps.project-pr-data.outputs.pr_id }}" "${args[@]}" \
+            -f query='
+              mutation ($assignableId: ID!, $assigneeIds: [ID!]!) {
+                addAssigneesToAssignable(
+                  input: { assignableId: $assignableId, assigneeIds: $assigneeIds }
+                ) {
+                  assignable {
+                    __typename
+                    ... on PullRequest {
+                      id
+                    }
+                  }
+                }
+              }
+              '
+      - name: Clean Up Project and Pull Request Data
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          rm project-data.json
+          rm pr-data.json
+          rm item-ids.txt
       - name: Set Up Node.js
         uses: actions/setup-node@v5
         with:
