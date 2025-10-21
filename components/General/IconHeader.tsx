@@ -5,7 +5,6 @@ interface Props {
   description?: string;
 }
 
-//const iconSource = require("../../assets/images/singleIcon.png") as const;
 import iconSource from "../../assets/images/singleIcon.png";
 
 /**

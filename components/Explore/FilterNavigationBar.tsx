@@ -23,7 +23,9 @@ export const FilterNavigationBar = ({
   onCategoryChange,
   searchPlaceholder,
 }: FilterNavigationBarProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>(t("categories.all"));
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    t("categories.all"),
+  );
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
