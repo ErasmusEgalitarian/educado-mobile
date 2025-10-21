@@ -62,7 +62,7 @@ const ResetPassword = (props: ResetPasswordProps) => {
   const sendEmail = async (email: string) => {
     const validationError = validateEmail(email);
     if (validationError) {
-      displayErrorAlert(validationError, false);
+      displayErrorAlert(emailAlertMessage, false);
       setEmailError(true);
       return;
     }
