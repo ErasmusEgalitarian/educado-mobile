@@ -1,11 +1,10 @@
 import { View, Image, Text } from "react-native";
+import iconSource from "@/assets/images/singleIcon.png";
 
 interface Props {
   title?: string;
   description?: string;
 }
-
-import iconSource from "../../assets/images/singleIcon.png";
 
 /**
  * Custom header component with an icon and title.
