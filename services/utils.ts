@@ -231,7 +231,10 @@ const completeComponent = async (
   // Retrieve the user info object and parse it from JSON
   const studentInfo =
     (await StorageService.getStudentInfo()) as unknown as StudentProgress;
-  const sectionId = comp.parentSection!;
+  if (!comp.parentSection) {
+    throw new Error("Section ID not found");
+  }
+  const sectionId = comp.parentSection;
 
   if (!getComponent(studentInfo, courseId, sectionId, comp._id)) {
     throw new Error("Component not found");
@@ -241,11 +244,11 @@ const completeComponent = async (
   const userInfo = await StorageService.getUserInfo();
   const loginToken = await StorageService.getLoginToken();
 
-  const isFirstAttempt = isFirstAttemptExercise(studentInfo, comp._id);
-  const isCompComplete = isComponentCompleted(studentInfo, comp._id);
+  const isFirstAttempt: boolean = isFirstAttemptExercise(studentInfo, comp._id);
+  const isCompComplete: boolean = isComponentCompleted(studentInfo, comp._id);
 
   // If the exercise is present, but it's field "isComplete" is false, it means the user has answered wrong before and only gets 5 points.
-  const points =
+  const points: number =
     isFirstAttempt && !isCompComplete && isComplete
       ? 10
       : !isFirstAttempt && !isCompComplete && isComplete
@@ -259,10 +262,6 @@ const completeComponent = async (
     points,
     loginToken,
   );
-
-  if (!updatedStudent) {
-    throw new Error("Error completing component");
-  }
 
   await StorageService.updateStudentInfo(updatedStudent);
 
@@ -315,11 +314,10 @@ const checkProgressCourse = async (
 
     let totalComponents = 0;
     let progress = 0;
-
     for (const section of sections) {
       totalComponents += section.components.length;
       for (const comp of section.components) {
-        if (isComponentCompleted(student, comp.compId!)) {
+        if (comp.compId && isComponentCompleted(student, comp.compId)) {
           progress++;
         }
       }
@@ -340,11 +338,10 @@ const checkProgressSection = async (sectionId: string): Promise<number> => {
   const section = await StorageService.getSection(sectionId);
 
   if (section && section.components.length !== 0) {
-    const totalComponents = section.components.length;
     let progress = 0;
 
-    for (let i = 0; i < totalComponents; i++) {
-      if (isComponentCompleted(student, section.components[i].compId!)) {
+    for (const comp of section.components) {
+      if (comp.compId && isComponentCompleted(student, comp.compId)) {
         progress++;
       }
     }
