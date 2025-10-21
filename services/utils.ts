@@ -255,13 +255,13 @@ const completeComponent = async (
         ? 5
         : 0;
 
-  const updatedStudent: StudentInfo = await userApi.completeComponent(
+  const updatedStudent = (await userApi.completeComponent(
     userInfo.id,
     comp,
     isComplete,
     points,
     loginToken,
-  );
+  )) as StudentInfo;
 
   await StorageService.updateStudentInfo(updatedStudent);
 

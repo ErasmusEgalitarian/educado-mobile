@@ -13,9 +13,11 @@ export interface CustomRatingProps {
   rating?: number;
 }
 
+type RatingIcon = keyof typeof MaterialCommunityIcons.glyphMap;
+
 export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
   const [ratingIcons, setRatingIcons] = useState<
-    { icon: keyof typeof MaterialCommunityIcons.glyphMap; color: string }[]
+    { icon: RatingIcon; color: string }[]
   >([]);
   const [noRating, setNoRating] = useState(false);
 
@@ -28,14 +30,21 @@ export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 !== 0;
 
+    const iconMap: { full: RatingIcon; half: RatingIcon; empty: RatingIcon } = {
+      full: "star",
+      half: "star-half-full",
+      empty: "star-outline",
+    };
+
     const newRatingIcons = [...Array(5).keys()].map((index) => {
-      if (index < fullStars) {
-        return { icon: "star", color: colors.surfaceYellow };
-      } else if (index === fullStars && halfStar) {
-        return { icon: "star-half-full", color: colors.surfaceYellow };
-      } else {
-        return { icon: "star-outline", color: colors.surfaceYellow };
-      }
+      const icon: RatingIcon =
+        index < fullStars
+          ? iconMap.full
+          : index === fullStars && halfStar
+            ? iconMap.half
+            : iconMap.empty;
+
+      return { icon, color: colors.surfaceYellow };
     });
 
     setRatingIcons(newRatingIcons);
