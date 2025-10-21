@@ -37,7 +37,7 @@ const LectureScreen = ({
             courseObject={course}
             isLastSlide={isLastSlide}
             onContinue={onContinue}
-            handleStudyStreak={handleStudyStreak}
+            handleStudyStreak={() => void handleStudyStreak}
           />
         ) : (
           <TextImageLectureScreen
