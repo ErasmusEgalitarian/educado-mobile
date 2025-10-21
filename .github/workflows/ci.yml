@@ -229,11 +229,33 @@ jobs:
         run: |
           set -euo pipefail
 
-          authors=("$(jq -r '.data.repository.pullRequest.commits.nodes[] | .commit.authors.nodes[] | .user?.id' pr-data.json | sort -u)")
+          authors=()
 
-          author_ids=("${authors[@]:0:10}")
+          while IFS= read -r author; do
+            authors+=("$author")
+          done < <(jq -r '.data.repository.pullRequest.commits.nodes[] | .commit.authors.nodes[] | .user?.id' pr-data.json | sort -u)
 
-          if [ "${#author_ids[@]}" -eq 0 ]; then
+          assignable_users=()
+
+          while IFS= read -r assignable_user; do
+            assignable_users+=("$assignable_user")
+          done < <(gh api --paginate "/repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/assignees?per_page=100" --jq '.[].node_id' | sort -u)
+
+          declare -A ok=()
+
+          for id in "${assignable_users[@]}"; do
+            ok["$id"]=1
+          done
+
+          filtered_authors=()
+
+          for id in "${authors[@]}"; do
+            [[ -n "${ok[$id]:-}" ]] && filtered_authors+=("$id")
+          done
+
+          filtered_authors=("${filtered_authors[@]:0:10}")
+
+          if [ "${#filtered_authors[@]}" -eq 0 ]; then
             echo '::error::No authors found.'
 
             exit 0
@@ -241,8 +263,8 @@ jobs:
 
           args=()
 
-          for author_id in "${author_ids[@]}"; do
-            args+=(-f assigneeIds[]="$author_id")
+          for author_id in "${filtered_authors[@]}"; do
+            args+=(-f assigneeIds\[\]="$author_id")
           done
 
           gh api graphql \
