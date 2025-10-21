@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { Component } from "@/types/component";
 import { t } from "@/i18n";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StudentInfo } from "@/types/student";
 
 // Local utility types that reflect student progress structure used throughout utils
 type ProgressComponent = Component & {
@@ -17,19 +18,19 @@ type ProgressComponent = Component & {
   isFirstAttempt?: boolean;
 };
 
-type ProgressSection = {
+interface ProgressSection {
   sectionId: string;
   components: ProgressComponent[];
-};
+}
 
-type ProgressCourse = {
+interface ProgressCourse {
   courseId: string;
   sections: ProgressSection[];
-};
+}
 
-type StudentProgress = {
+interface StudentProgress {
   courses: ProgressCourse[];
-};
+}
 
 /**
  * Converts a numeric difficulty level to a human-readable label.
@@ -119,7 +120,7 @@ const getUpdatedDate = (courseDate: string): string => {
   const date = new Date(courseDate);
 
   // Get the year, month, day, hours, and minutes from the Date object
-  const year = date.getFullYear();
+  const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
   const day = date.getDate().toString().padStart(2, "0");
 
@@ -205,9 +206,9 @@ const formatHours = (number: number): string => {
   }
 
   if (number <= 1) {
-    return `${number} ${t("general.hour")}`;
+    return `${String(number)} ${t("general.hour")}`;
   } else {
-    return `${number} ${t("general.hours")}`;
+    return `${String(number)} ${t("general.hours")}`;
   }
 };
 
@@ -230,7 +231,7 @@ const completeComponent = async (
   // Retrieve the user info object and parse it from JSON
   const studentInfo =
     (await StorageService.getStudentInfo()) as unknown as StudentProgress;
-  const sectionId = comp.parentSection as string;
+  const sectionId = comp.parentSection!;
 
   if (!getComponent(studentInfo, courseId, sectionId, comp._id)) {
     throw new Error("Component not found");
@@ -251,7 +252,7 @@ const completeComponent = async (
         ? 5
         : 0;
 
-  const updatedStudent = await userApi.completeComponent(
+  const updatedStudent: StudentInfo = await userApi.completeComponent(
     userInfo.id,
     comp,
     isComplete,
@@ -263,7 +264,7 @@ const completeComponent = async (
     throw new Error("Error completing component");
   }
 
-  StorageService.updateStudentInfo(updatedStudent);
+  await StorageService.updateStudentInfo(updatedStudent);
 
   return { points, updatedStudent };
 };
@@ -272,7 +273,7 @@ const isCourseCompleted = (student: StudentProgress): boolean => {
   // A course is considered completed if all components in all sections are complete
   return student.courses.some((course) =>
     course.sections.every((section) =>
-      section.components.every((component) => component.isComplete === true),
+      section.components.every((component) => component.isComplete),
     ),
   );
 };
@@ -315,10 +316,10 @@ const checkProgressCourse = async (
     let totalComponents = 0;
     let progress = 0;
 
-    for (let i = 0; i < sections.length; i++) {
-      totalComponents += sections[i].components.length;
-      for (let j = 0; j < sections[i].components.length; j++) {
-        if (isComponentCompleted(student, sections[i].components[j].compId!)) {
+    for (const section of sections) {
+      totalComponents += section.components.length;
+      for (const comp of section.components) {
+        if (isComponentCompleted(student, comp.compId!)) {
           progress++;
         }
       }
@@ -407,7 +408,7 @@ const findIndexOfUncompletedComp = (
     return -1; // or any other appropriate value to indicate not found
   }
 
-  if (!section.components || section.components.length === 0) {
+  if (section.components.length === 0) {
     console.warn(
       `Section ${sectionId} in course ${courseId} has no components.`,
     );
@@ -430,7 +431,7 @@ const handleLastComponent = async (
   // Generate certificate
   const courseId = course.courseId;
   const userId = await StorageService.getUserId();
-  generateCertificate(courseId, userId);
+  await generateCertificate(courseId, userId);
 
   // get the full course from DB, to check what section we are in
   const getCurrentCourse = await api.getCourse(course.courseId);
