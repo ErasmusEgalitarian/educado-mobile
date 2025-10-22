@@ -37,7 +37,7 @@ exports[`Ensure that the button is rendered correctly 1`] = `
     }
   >
     <Text
-      className="font-sans-bold text-center text-body text-projectWhite"
+      className="text-center text-body-bold text-textNegativeGrayscale"
     />
   </View>
 </View>

@@ -5,7 +5,7 @@ exports[`Ensure that the alert is rendered correctly 1`] = `
   className="flex-row items-center"
 >
   <Text
-    className="mx-2 text-base text-error"
+    className="text-textLabelRed text-footnote-regular-caps"
   />
 </View>
 `;

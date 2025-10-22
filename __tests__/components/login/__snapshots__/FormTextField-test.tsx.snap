@@ -6,21 +6,18 @@ exports[`Ensure that the text field is rendered correctly 1`] = `
     className="flex flex-row"
   >
     <Text
-      className="ml-2 text-lg"
+      className="ml-2 text-body-regular"
     />
     <Text
-      className="ml-1 text-lg text-error"
+      className="ml-1 text-surfaceDefaultRed text-body-regular"
     />
   </View>
   <View
     className=""
   >
     <TextInput
-      autoComplete="off"
-      className="h-50 br-25 rounded-lg bg-projectWhite py-1 pl-[10px] text-base"
-      keyboardType="default"
-      onChangeText={null}
-      passwordGuidelines={false}
+      className="w-full rounded-lg bg-surfaceSubtleGrayscale py-4 pl-[10px] text-subtitle-regular  "
+      onChangeText={[Function]}
       placeholder=""
       secureTextEntry={false}
     />
