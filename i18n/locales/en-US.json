@@ -63,6 +63,9 @@
     "access-time": "Full access for 1 year",
     "portability": "Watch wherever and whenever you want!"
   },
+  "lesson": {
+    "continue": "Continue"
+  },
   "edu-screen": {
     "header": "My name is Edu, and I'm here to help you navigate this app",
     "loading": "Edu is thinking",

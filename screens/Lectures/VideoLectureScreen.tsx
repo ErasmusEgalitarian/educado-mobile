@@ -7,6 +7,8 @@ import { completeComponent, handleLastComponent } from "@/services/utils";
 import { getVideoURL } from "@/services/storage-service";
 import { Lecture } from "@/types/lecture";
 import { Course } from "@/types/course";
+import axios, { isAxiosError } from "axios";
+import { t } from "@/i18n";
 
 export interface VideoLectureScreenProps {
   lectureObject: Lecture;
@@ -29,25 +31,24 @@ const VideoLectureScreen = ({
 
   // Fetch video URL based on current resolution
   useEffect(() => {
-    const fetchVideoUrl = () => {
-      getVideoURL(lectureObject.content, currentResolution)
-        .then((url) => {
-          // Check if URL is a video
-          return fetch(url, { method: "HEAD" }).then((response) => {
-            const contentType: string | null =
-              response.headers.get("content-type");
-            if (!contentType?.startsWith("video/")) {
-              throw new Error("Invalid URL: " + url);
-            }
-            setVideoUrl(url);
-          });
-        })
-        .catch((error: unknown) => {
-          console.error(error);
+    const fetchVideoUrl = async () => {
+      try {
+        const url = await getVideoURL(lectureObject.content, currentResolution);
+        const response = await axios.get(url, { method: "HEAD" });
+        const contentType = response.headers["content-type"] as string | null;
+        if (!contentType?.startsWith("video/")) {
+          console.error(`Invalid URL: ${url}`);
           setVideoUrl(null);
-        });
+          return;
+        }
+        setVideoUrl(url);
+      } catch (error) {
+        if (isAxiosError(error)) {
+          console.error(error.message);
+        }
+      }
     };
-    fetchVideoUrl();
+    void fetchVideoUrl();
   }, [lectureObject.content, currentResolution]);
 
   const handleContinuePress = async () => {
@@ -67,11 +68,7 @@ const VideoLectureScreen = ({
         );
       }
     } else {
-      if (typeof onContinue === "function") {
-        onContinue(); // Advance to the next slide
-      } else {
-        console.warn("onContinue prop is not provided or not a function.");
-      }
+      onContinue(); // Advance to the next slide
     }
   };
 
@@ -109,14 +106,14 @@ const VideoLectureScreen = ({
       </View>
 
       {/* Continue button */}
-      <View className="w-100 mb-8 px-6">
+      <View className="w-100 mb-8 bg-surfaceSubtleCyan px-6">
         <TouchableOpacity
           className="flex-row items-center justify-center rounded-medium bg-surfaceDefaultCyan px-10 py-4"
           onPress={() => void handleContinuePress()}
         >
           <View className="flex-row items-center">
             <Text className="text-center text-surfaceSubtleGrayscale text-body-bold">
-              Continuar
+              {t("lesson.continue")}
             </Text>
             <Icon
               className="ml-8"

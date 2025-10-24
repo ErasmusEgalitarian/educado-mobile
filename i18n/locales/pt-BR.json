@@ -63,6 +63,9 @@
     "access-time": "Acesso total por 1 ano",
     "portability": "Assista onde e quando quiser!"
   },
+  "lesson": {
+    "continue": "Continuar"
+  },
   "edu-screen": {
     "header": "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo",
     "loading": "Edu está pensando",
