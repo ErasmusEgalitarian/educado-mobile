@@ -28,7 +28,10 @@ const textStyles = typographyTokensJson[
   "text-styles"
 ] as unknown as TypoToken[];
 
-type TextPreset = Extract<keyof (typeof typographyTokensJson)["text-styles"], string | number>;
+type TextPreset = Extract<
+  keyof (typeof typographyTokensJson)["text-styles"],
+  string | number
+>;
 export type TextClass = `text-${TextPreset}`;
 
 export type TextStyleName = keyof typeof typographyTokensJson;

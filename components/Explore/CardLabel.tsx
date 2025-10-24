@@ -19,11 +19,11 @@ export interface CardLabelProps {
  * @returns {JSX.Element} - Returns a JSX element.
  */
 export const CardLabel = ({
-                            title,
-                            icon,
-                            color = "textCaptionGrayscale",
-                            font = "text-caption-sm-regular",
-                          }: CardLabelProps) => {
+  title,
+  icon,
+  color = "textCaptionGrayscale",
+  font = "text-caption-sm-regular",
+}: CardLabelProps) => {
   return (
     <View className="flex-row items-center justify-start">
       <MaterialCommunityIcons name={icon} size={12} color={colors[color]} />
