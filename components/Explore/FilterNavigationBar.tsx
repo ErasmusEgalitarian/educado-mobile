@@ -74,7 +74,7 @@ export const FilterNavigationBar = ({
                 style={getCategoryItemStyle(isSelected)}
               >
                 <Text
-                  className="text-label-sm-bold"
+                  className="text-subtitle-regular"
                   style={getCategoryTextStyle(isSelected)}
                 >
                   {category.label}

@@ -15,11 +15,6 @@
       "fontSize": 24,
       "lineHeight": 31.2
     },
-    "h2-3xl-medium": {
-      "fontFamilyKey": "mont-500",
-      "fontSize": 24,
-      "lineHeight": 31.2
-    },
     "h2-sm-bold": {
       "fontFamilyKey": "mont-700",
       "fontSize": 24,
@@ -75,11 +70,6 @@
       "fontSize": 16,
       "lineHeight": 20.8
     },
-    "subtitle-bold": {
-      "fontFamilyKey": "mont-700",
-      "fontSize": 16,
-      "lineHeight": 20.8
-    },
     "subtitle-regular-italic": {
       "fontFamilyKey": "mont-400-italic",
       "fontSize": 16,
@@ -90,18 +80,13 @@
       "fontSize": 16,
       "lineHeight": 20.8
     },
-    "label-sm-regular": {
+    "caption-lg-regular": {
       "fontFamilyKey": "mont-400",
       "fontSize": 14,
       "lineHeight": 20.8
     },
-    "label-sm-semibold": {
+    "caption-lg-semibold": {
       "fontFamilyKey": "mont-600",
-      "fontSize": 14,
-      "lineHeight": 20.8
-    },
-    "label-sm-bold": {
-      "fontFamilyKey": "mont-700",
       "fontSize": 14,
       "lineHeight": 20.8
     },
@@ -112,11 +97,6 @@
     },
     "caption-sm-semibold": {
       "fontFamilyKey": "mont-600",
-      "fontSize": 12,
-      "lineHeight": 20.8
-    },
-    "caption-sm-bold": {
-      "fontFamilyKey": "mont-700",
       "fontSize": 12,
       "lineHeight": 20.8
     },
