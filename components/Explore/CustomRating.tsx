@@ -52,7 +52,7 @@ export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
 
   return noRating ? (
     <View className="flex-row items-start justify-start">
-      <Text className="pl-1 pt-2 text-textDisabledGrayscale text-caption-lg-regular">
+      <Text className="pl-1 pt-2 text-textDisabledGrayscale text-caption-sm-regular">
         {t("no-reviews")}
       </Text>
     </View>
