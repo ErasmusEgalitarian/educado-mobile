@@ -30,7 +30,7 @@ const textStyles = typographyTokensJson[
 
 type TextPreset = Extract<
   keyof (typeof typographyTokensJson)["text-styles"],
-  string | number
+  string
 >;
 export type TextClass = `text-${TextPreset}`;
 

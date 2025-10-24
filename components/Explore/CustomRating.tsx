@@ -3,6 +3,8 @@ import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
+import type { Icon } from "@/types/icon";
+
 /**
  * CustomRating component displays a star rating based on a number
  * @param rating - Number between 0 and 5
@@ -13,11 +15,9 @@ export interface CustomRatingProps {
   rating?: number;
 }
 
-type RatingIcon = keyof typeof MaterialCommunityIcons.glyphMap;
-
 export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
   const [ratingIcons, setRatingIcons] = useState<
-    { icon: RatingIcon; color: string }[]
+    { icon: Icon; color: string }[]
   >([]);
   const [noRating, setNoRating] = useState(false);
 
@@ -30,14 +30,14 @@ export const CustomRating = ({ rating = 0 }: CustomRatingProps) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 !== 0;
 
-    const iconMap: { full: RatingIcon; half: RatingIcon; empty: RatingIcon } = {
+    const iconMap: { full: Icon; half: Icon; empty: Icon } = {
       full: "star",
       half: "star-half-full",
       empty: "star-outline",
     };
 
     const newRatingIcons = [...Array(5).keys()].map((index) => {
-      const icon: RatingIcon =
+      const icon: Icon =
         index < fullStars
           ? iconMap.full
           : index === fullStars && halfStar
