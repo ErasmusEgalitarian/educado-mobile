@@ -57,7 +57,7 @@ export const BottomDrawer = ({
       <View className="flex-1 bg-surfaceSubtleCyan opacity-50" />
 
       <View
-        className="flex-start absolute bottom-0 h-[91%] w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan px-9 py-9"
+        className="flex-start absolute bottom-0 h-[91%] w-full justify-between rounded-t-[40px] bg-surfaceSubtleCyan p-9"
         style={styles.shadow}
       >
         <View className="h-9 flex-row items-center justify-between">
@@ -78,41 +78,43 @@ export const BottomDrawer = ({
         </View>
 
         <View className="flex-column">
-          <View className="flex-row flex-wrap items-start justify-start pb-2">
+          <View className="flex-column flex-wrap items-start justify-start pb-2">
             <CardLabel
               title={Utility.determineCategory(course.category)}
               icon={Utility.determineIcon(course.category)}
-              color={colors.textCaptionGrayscale}
+              font="text-caption-sm-regular"
+              color="textCaptionGrayscale"
             />
             <View className="mb-1 w-2.5" />
             <CardLabel
               title={Utility.formatHours(course.estimatedHours)}
               icon={"clock"}
-              color={colors.textCaptionGrayscale}
+              font="text-caption-sm-regular"
+              color="textCaptionGrayscale"
             />
             <View className="mb-1 w-2.5" />
             <CardLabel
               title={Utility.getDifficultyLabel(course.difficulty)}
               icon={"equalizer"}
-              color={colors.textCaptionGrayscale}
+              font="text-caption-sm-regular"
+              color="textCaptionGrayscale"
             />
           </View>
 
           <View>
             {subscribed ? (
-              <View className="mb-1 w-full flex-row items-center">
+              <View className="w-full flex-row items-center">
                 <MaterialCommunityIcons
                   name="check-circle"
                   size={13}
                   color={colors.surfaceDefaultGreen}
                 />
-                <Text className="flex-start pl-1 text-surfaceDefaultGreen text-caption-lg-semibold">
+                <Text className="flex-start pl-1 text-surfaceDefaultGreen text-caption-sm-regular">
                   {t("course.registered")}
                 </Text>
               </View>
             ) : null}
           </View>
-          <View className="mb-1 w-2.5" />
           <CustomRating rating={course.rating} />
         </View>
 

@@ -21,7 +21,7 @@ export const CourseButton = ({
   children,
 }: CourseButtonProps) => {
   return (
-    <View className="">
+    <View>
       <Pressable
         onPress={() => {
           onPress(course);

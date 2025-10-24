@@ -61,6 +61,7 @@ export const ExploreCard = ({
           </View>
 
           <View className="h-1 w-full border-b-[1px] border-surfaceDisabledGrayscale pt-3 opacity-50"></View>
+          <View className="h-1 w-full border-b-[1px] border-surfaceDisabledGrayscale pt-3 opacity-50"/>
 
           <View className="h-[0.5] w-full pt-2" />
           <View className="w-full flex-row items-start justify-between">
@@ -69,17 +70,20 @@ export const ExploreCard = ({
                 <CardLabel
                   title={Utility.determineCategory(course.category)}
                   icon={Utility.determineIcon(course.category)}
-                  font="font-sans-bold text-sm"
+                  font="text-caption-sm-regular"
+                  color="textCaptionGrayscale"
                 />
                 <CardLabel
                   title={Utility.formatHours(course.estimatedHours)}
                   icon={"clock-outline"}
-                  font="font-sans-bold text-sm"
+                  font="text-caption-sm-regular"
+                  color="textCaptionGrayscale"
                 />
                 <CardLabel
                   title={Utility.getDifficultyLabel(course.difficulty)}
                   icon={"book-multiple-outline"}
-                  font="font-sans-bold text-sm"
+                  font="text-caption-sm-regular"
+                  color="textCaptionGrayscale"
                 />
               </View>
               <CustomRating rating={course.rating} />

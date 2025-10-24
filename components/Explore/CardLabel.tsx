@@ -1,12 +1,13 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
-import { colors } from "@/theme/colors";
+import { colors, NewColorNames } from "@/theme/colors";
+import { TextClass } from "@/theme/typography";
 
 export interface CardLabelProps {
   title: string;
   icon: keyof typeof MaterialCommunityIcons.glyphMap;
-  color?: string;
-  font?: string;
+  color?: NewColorNames;
+  font?: TextClass;
 }
 
 /**
@@ -18,17 +19,15 @@ export interface CardLabelProps {
  * @returns {JSX.Element} - Returns a JSX element.
  */
 export const CardLabel = ({
-  title,
-  icon,
-  color = colors.textCaptionGrayscale,
-  font = "font-semibold text-s",
-}: CardLabelProps) => {
+                            title,
+                            icon,
+                            color = "textCaptionGrayscale",
+                            font = "text-caption-sm-regular",
+                          }: CardLabelProps) => {
   return (
     <View className="flex-row items-center justify-start">
-      <MaterialCommunityIcons name={icon} size={12} color={color} />
-      <Text className={`pl-1 ${font}`} style={{ color: color }}>
-        {title}
-      </Text>
+      <MaterialCommunityIcons name={icon} size={12} color={colors[color]} />
+      <Text className={`pl-1 ${font} text-${color}`}>{title}</Text>
     </View>
   );
 };

@@ -2,13 +2,9 @@ import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
-import type { ComponentProps } from "react";
+import type { MaterialCommunityIconName } from "@/types/MaterialCommunityIconName";
 import type { Course } from "@/types/course";
 import { t } from "@/i18n";
-
-type MaterialCommunityIconName = ComponentProps<
-  typeof MaterialCommunityIcons
->["name"];
 
 export interface InfoBoxItemProps {
   label: string;
@@ -26,9 +22,8 @@ const InfoBoxItem = ({ label, icon, className }: InfoBoxItemProps) => {
         size={20}
         color={colors.textCaptionGrayscale}
       />
-      <Text className="pl-2 text-textTitleGrayscale text-label-sm-regular">
-        {" "}
-        {label}{" "}
+      <Text className="pl-2 text-textTitleGrayscale text-caption-lg-regular">
+        {label}
       </Text>
     </View>
   );
