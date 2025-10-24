@@ -72,12 +72,14 @@ export const ExploreCard = ({
                   font="text-caption-sm-regular"
                   color="textCaptionGrayscale"
                 />
+                <View className="mb-1 w-2.5" />
                 <CardLabel
                   title={Utility.formatHours(course.estimatedHours)}
                   icon={"clock-outline"}
                   font="text-caption-sm-regular"
                   color="textCaptionGrayscale"
                 />
+                <View className="mb-1 w-2.5" />
                 <CardLabel
                   title={Utility.getDifficultyLabel(course.difficulty)}
                   icon={"book-multiple-outline"}
