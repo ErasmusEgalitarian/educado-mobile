@@ -1,35 +1,24 @@
 import { View, Image, Text } from "react-native";
-import { colors } from "@/theme/colors";
+import iconSource from "@/assets/images/singleIcon.png";
 
-type Props = {
+interface Props {
   title?: string;
   description?: string;
-};
+}
 
 /**
  * Custom header component with an icon and title.
  * @param {string} title - The title to display next to the icon.
+ * @param {description} - Optional description below header
  * @returns {JSX.Element} The IconHeader component.
  */
 const IconHeader = ({ title, description }: Props) => {
   return (
     <>
-      <View className="flex flex-row items-center pb-2 pl-6 pt-[20%]">
-        <Image
-          source={require("../../assets/images/singleIcon.png")}
-          alt="Icon"
-          className="mr-2 h-8 w-8"
-        />
-        <Text
-          className="text-h2-sm-medium"
-          style={{ color: colors.textTitleGrayscale }}
-        >
-          {title}
-        </Text>
+      <View className="flex flex-row items-center pb-2">
+        <Image source={iconSource} alt="Icon" className="mr-4 h-7 w-7" />
+        <Text className="text-textTitleGrayscale text-h2-sm-bold">{title}</Text>
       </View>
-      <Text className="text-h2-sm-medium px-6 pb-4 pl-6 text-sm">
-        {description}
-      </Text>
     </>
   );
 };

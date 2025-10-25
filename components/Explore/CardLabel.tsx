@@ -1,30 +1,37 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
-import PropTypes from "prop-types";
+import { colors, NewColorNames } from "@/theme/colors";
+import { TextClass } from "@/theme/typography";
+import type { Icon } from "@/types/icon";
+
+export interface CardLabelProps {
+  title: string;
+  icon: Icon;
+  color?: NewColorNames;
+  font?: TextClass;
+}
 
 /**
  * This component is used to display a label in a course card.
  * @param title - The text of the label.
  * @param icon - The icon of the label.
  * @param color - The color of the label and icon.
- * @param time - Boolean value to determine to render the time label.
+ * @param font - Styling of font, such as size and weight.
  * @returns {JSX.Element} - Returns a JSX element.
  */
-const CardLabel = ({ title, icon, color = "gray" }) => {
+export const CardLabel = ({
+  title,
+  icon,
+  color = "textCaptionGrayscale",
+  font = "text-caption-sm-regular",
+}: CardLabelProps) => {
   return (
     <View className="flex-row items-center justify-start">
-      <MaterialCommunityIcons name={icon} size={13} color={color} />
-      <Text className="pl-1 text-sm" style={{ color: color }}>
-        {title}
-      </Text>
+      <MaterialCommunityIcons name={icon} size={12} color={colors[color]} />
+      <Text className={`pl-1 ${font} text-${color}`}>{title}</Text>
     </View>
   );
 };
 
-CardLabel.propTypes = {
-  title: PropTypes.string,
-  icon: PropTypes.string,
-  color: PropTypes.string,
-};
-
+//For legacy purposes in CertificateOverlay and CertificateCard
 export default CardLabel;

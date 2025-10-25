@@ -80,6 +80,16 @@
       "fontSize": 16,
       "lineHeight": 20.8
     },
+    "caption-lg-regular": {
+      "fontFamilyKey": "mont-400",
+      "fontSize": 14,
+      "lineHeight": 20.8
+    },
+    "caption-lg-semibold": {
+      "fontFamilyKey": "mont-600",
+      "fontSize": 14,
+      "lineHeight": 20.8
+    },
     "caption-sm-regular": {
       "fontFamilyKey": "mont-400",
       "fontSize": 12,

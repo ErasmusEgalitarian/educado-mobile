@@ -1,9 +1,10 @@
 import { useState } from "react";
-import SearchBar from "./SearchBar";
-import { View, Text, Pressable } from "react-native";
+import { SearchBar } from "@/components/Explore/SearchBar";
+import { View, Pressable, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { categories } from "./categories";
-import PropTypes from "prop-types";
+import { categories } from "@/components/Explore/categories";
+import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
 
 /**
  * FilterNavBar component displays a search bar and a list of categories.
@@ -11,71 +12,78 @@ import PropTypes from "prop-types";
  * @param onCategoryChange - Callback function called when a category is selected.
  * @returns {JSX.Element} - Rendered component
  */
-function FilterNavigationBar({
+interface FilterNavigationBarProps {
+  onChangeText: (text: string) => void;
+  onCategoryChange: (category: string) => void;
+  searchPlaceholder?: string;
+}
+
+export const FilterNavigationBar = ({
   onChangeText,
   onCategoryChange,
   searchPlaceholder,
-}) {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [searchText, setSearchText] = useState("");
+}: FilterNavigationBarProps) => {
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    t("categories.all"),
+  );
 
-  const handleCategorySelect = (category) => {
+  const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
     onCategoryChange(category);
   };
 
-  const handleSearchInputChange = (text) => {
-    setSearchText(text);
+  const handleSearchInputChange = (text: string) => {
     onChangeText(text);
   };
 
+  const getCategoryItemStyle = (isSelected: boolean) => ({
+    backgroundColor: isSelected
+      ? colors.borderDarkerCyan
+      : colors.surfaceSubtleCyan,
+    borderColor: isSelected
+      ? colors.borderDarkerCyan
+      : colors.borderDefaultGrayscale,
+  });
+
+  const getCategoryTextStyle = (isSelected: boolean) => ({
+    color: isSelected
+      ? colors.textNegativeGrayscale
+      : colors.textCaptionGrayscale,
+  });
+
   return (
     <View>
-      <View className="z-10 p-2">
+      <View className="z-10">
         <SearchBar
-          searchText={searchText}
           onSearchChange={handleSearchInputChange}
           placeholder={searchPlaceholder}
         />
       </View>
 
-      <View className="z-10 pb-4 pl-2 pr-2">
+      <View className="z-10 -mr-8 mt-1">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex items-center p-2">
-            <View className="flex-row overflow-x-auto">
-              {categories.map((category) => (
-                <Pressable
-                  key={category.label}
-                  onPress={() => handleCategorySelect(category.label)}
-                  className={`${
-                    selectedCategory === category.label
-                      ? "bg-primary_custom"
-                      : "border-2"
-                  } mr-2 items-center justify-center rounded-lg border-[1px] border-projectGray px-2 py-2`}
+          {categories.map((category) => {
+            const isSelected = selectedCategory === category.label;
+            return (
+              <Pressable
+                key={category.label}
+                onPress={() => {
+                  handleCategorySelect(category.label);
+                }}
+                className="mr-2 items-center justify-center rounded-lg border px-3 py-2"
+                style={getCategoryItemStyle(isSelected)}
+              >
+                <Text
+                  className="text-subtitle-regular"
+                  style={getCategoryTextStyle(isSelected)}
                 >
-                  <Text
-                    className={`${
-                      selectedCategory === category.label
-                        ? "font-bold text-projectWhite"
-                        : "text-projectGray"
-                    }`}
-                  >
-                    {category.label}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-          </View>
+                  {category.label}
+                </Text>
+              </Pressable>
+            );
+          })}
         </ScrollView>
       </View>
     </View>
   );
-}
-
-FilterNavigationBar.propTypes = {
-  onChangeText: PropTypes.func,
-  onCategoryChange: PropTypes.func,
-  searchPlaceholder: PropTypes.string,
 };
-
-export default FilterNavigationBar;

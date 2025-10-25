@@ -28,6 +28,12 @@ const textStyles = typographyTokensJson[
   "text-styles"
 ] as unknown as TypoToken[];
 
+type TextPreset = Extract<
+  keyof (typeof typographyTokensJson)["text-styles"],
+  string
+>;
+export type TextClass = `text-${TextPreset}`;
+
 export type TextStyleName = keyof typeof typographyTokensJson;
 
 export type TextStyle = (typeof typographyTokensJson)[TextStyleName];
