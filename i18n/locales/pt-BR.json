@@ -17,7 +17,8 @@
     "no": "Não",
     "confirmation": "Tem certeza?",
     "hour": "Hora",
-    "hours": "Horas"
+    "hours": "Horas",
+    "error": "Erro"
   },
   "course": {
     "start": "Começar curso",
@@ -37,7 +38,8 @@
     "no-courses-message": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.",
     "explore-courses": "Explorar cursos",
     "continue": "Continuar Curso",
-    "signup": "Inscrevar-se agora"
+    "signup": "Inscrevar-se agora",
+    "fail": "Não foi possível concluir o curso. Por favor, tente novamente mais tarde."
   },
   "search-course": "Buscar curso",
   "learn-more": "saiba mais",
@@ -62,6 +64,10 @@
     "start": "Início imediato",
     "access-time": "Acesso total por 1 ano",
     "portability": "Assista onde e quando quiser!"
+  },
+  "lesson": {
+    "continue": "Continuar",
+    "video-error": "Não foi possível obter o URL do vídeo. Por favor, tente novamente."
   },
   "edu-screen": {
     "header": "Meu nome é Edu, e estou aqui para ajudá-lo a navegar neste aplicativo",

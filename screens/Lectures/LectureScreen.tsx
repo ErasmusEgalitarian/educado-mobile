@@ -1,62 +1,57 @@
-import { useState, useEffect } from "react";
 import { View } from "react-native";
-import VideoLectureScreen from "./VideoLectureScreen";
-import TextImageLectureScreen from "./TextImageLectureScreen";
-import PropTypes from "prop-types";
-import Text from "../../components/General/Text";
+import { VideoLecture } from "@/components/Lectures/VideoLecture";
+import TextImageLectureScreen from "@/screens/Lectures/TextImageLectureScreen";
+import { Lecture } from "@/types/lecture";
+import { Course } from "@/types/course";
 
-const LectureScreen = ({
+interface LectureScreenProps {
+  lectureObject: Lecture;
+  courseObject: Course;
+  isLastSlide: boolean;
+  onContinue: () => void;
+  handleStudyStreak: () => Promise<void>;
+}
+
+/**
+ * TODO: Move to `components/Lectures` and rename to `Lecture`.
+ *
+ * @param lectureObject - The lecture object containing the lecture data.
+ * @param courseObject - The course object containing the course data.
+ * @param isLastSlide - A boolean indicating whether this is the last slide of the lecture.
+ * @param onContinue - A function to be called when the continue button is pressed.
+ * @param handleStudyStreak - A function to handle the study streak.
+ */
+export const LectureScreen = ({
   lectureObject,
   courseObject,
   isLastSlide,
   onContinue,
   handleStudyStreak,
-}) => {
-  const [course, setCourse] = useState(courseObject);
-  const [lecture, setLecture] = useState(lectureObject);
-
-  useEffect(() => {
-    setLecture(lectureObject);
-    setCourse(courseObject);
-  }, [lectureObject, courseObject]);
-
+}: LectureScreenProps) => {
   return (
-    <View className="flex-1 bg-projectWhite">
-      {lecture && course ? (
-        <View className="flex-1 flex-col">
-          {lecture.video ? (
-            <VideoLectureScreen
-              lectureObject={lecture}
-              courseObject={course}
-              isLastSlide={isLastSlide}
-              onContinue={onContinue}
-              handleStudyStreak={handleStudyStreak}
-            />
-          ) : (
-            <TextImageLectureScreen
-              lectureObject={lecture}
-              courseObject={course}
-              isLastSlide={isLastSlide}
-              onContinue={onContinue}
-              handleStudyStreak={handleStudyStreak}
-            />
-          )}
-        </View>
-      ) : (
-        <View className="h-full w-full items-center justify-center align-middle">
-          <Text className="ml-[10] text-[25px] font-bold">Loading...</Text>
-        </View>
-      )}
+    <View className="flex-1">
+      <View className="flex-1 flex-col">
+        {lectureObject.contentType === "video" ? (
+          <VideoLecture
+            lecture={lectureObject}
+            course={courseObject}
+            isLastSlide={isLastSlide}
+            onContinue={onContinue}
+            handleStudyStreak={() => void handleStudyStreak}
+          />
+        ) : (
+          <TextImageLectureScreen
+            lectureObject={lectureObject}
+            courseObject={courseObject}
+            isLastSlide={isLastSlide}
+            onContinue={onContinue}
+            handleStudyStreak={handleStudyStreak}
+          />
+        )}
+      </View>
     </View>
   );
 };
 
-LectureScreen.propTypes = {
-  lectureObject: PropTypes.object.isRequired,
-  courseObject: PropTypes.object.isRequired,
-  isLastSlide: PropTypes.bool.isRequired,
-  onContinue: PropTypes.func.isRequired,
-  handleStudyStreak: PropTypes.func.isRequired,
-};
-
+// TODO: For legacy import in ComponentSwipeScreen. Remove when ComponentSwipeScreen is updated.
 export default LectureScreen;
