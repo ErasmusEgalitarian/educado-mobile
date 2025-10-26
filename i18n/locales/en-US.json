@@ -17,7 +17,8 @@
     "no": "No",
     "confirmation": "Are you sure?",
     "hour": "Hour",
-    "hours": "Hours"
+    "hours": "Hours",
+    "error": "Error"
   },
   "course": {
     "start": "Start course",
@@ -37,7 +38,8 @@
     "no-courses-message": "You haven't enrolled in any courses yet. Go to the Explore page and use the search to find courses of your interest.",
     "explore-courses": "Explore courses",
     "continue": "Continue Course",
-    "signup": "Sign up now"
+    "signup": "Sign up now",
+    "fail": "Failed to complete the course. Please try again later."
   },
   "search-course": "Search for a course",
   "learn-more": "learn more",
@@ -64,7 +66,8 @@
     "portability": "Watch wherever and whenever you want!"
   },
   "lesson": {
-    "continue": "Continue"
+    "continue": "Continue",
+    "video-error": "Failed to fetch video URL. Please try again."
   },
   "edu-screen": {
     "header": "My name is Edu, and I'm here to help you navigate this app",
