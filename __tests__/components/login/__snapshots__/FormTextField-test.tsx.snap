@@ -3,7 +3,7 @@
 exports[`Ensure that the text field is rendered correctly 1`] = `
 <View>
   <View
-    className="flex flex-row"
+    className="relative flex flex-row flex-wrap"
   >
     <Text
       className="ml-2 text-body-regular"
@@ -11,10 +11,6 @@ exports[`Ensure that the text field is rendered correctly 1`] = `
     <Text
       className="ml-1 text-surfaceDefaultRed text-body-regular"
     />
-  </View>
-  <View
-    className=""
-  >
     <TextInput
       className="w-full rounded-lg bg-surfaceSubtleGrayscale py-4 pl-[10px] text-subtitle-regular  "
       onChangeText={[Function]}
