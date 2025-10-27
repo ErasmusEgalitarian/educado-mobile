@@ -1,7 +1,7 @@
 import renderer from "react-test-renderer";
 import FormTextField from "../../../components/General/Forms/FormTextField";
 
-jest.mock('@expo/vector-icons/Ionicons', () => {
+jest.mock("@expo/vector-icons/Ionicons", () => {
   return () => null;
 });
 
