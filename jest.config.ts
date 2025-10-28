@@ -16,7 +16,6 @@ const config: Config = {
     "<rootDir>/__tests__/screens/section/SectionScreen-test.tsx",
     "<rootDir>/__tests__/services/NetworkStatusService-test.tsx",
     "<rootDir>/__tests__/components/exercise/ExerciseInfo-test.tsx",
-    "<rootDir>/__tests__/components/login/FormTextField-test.tsx",
     "<rootDir>/__tests__/components/exercise/Progressbar-test.tsx",
     "<rootDir>/__tests__/components/login/FormFieldAlert-test.tsx",
     "<rootDir>/__tests__/components/login/FormButton-test.tsx",

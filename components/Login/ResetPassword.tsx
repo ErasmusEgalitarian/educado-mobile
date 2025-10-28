@@ -13,17 +13,11 @@ import { validateEmail } from "@/components/General/validation";
 import ToastNotification from "@/components/General/ToastNotification";
 import ShowAlert from "@/components/General/ShowAlert";
 import { isAxiosError } from "axios";
+import { ApiError } from "@/types/ApiError";
 
 interface ResetPasswordProps {
   modalVisible: boolean;
   onModalClose: () => void;
-}
-
-interface ApiError {
-  error: {
-    code: string;
-    message?: string;
-  };
 }
 
 /**

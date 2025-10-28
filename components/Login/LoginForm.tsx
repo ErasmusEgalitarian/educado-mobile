@@ -9,18 +9,12 @@ import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
 import { removeEmojis } from "@/components/General/validation";
 import ShowAlert from "@/components/General/ShowAlert";
 import { UserInfo } from "@/types/user";
+import { ApiError } from "@/types/ApiError";
 
 // Services
 import { setUserInfo, setJWT } from "@/services/storage-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isAxiosError } from "axios";
-
-interface ApiError {
-  error: {
-    code: string;
-    message?: string;
-  };
-}
 /**
  * Login form component for login screen containing email and password input fields and a login button.
  */
