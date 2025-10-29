@@ -302,6 +302,7 @@ jobs:
         run: npx expo-doctor
       - name: Run Prettier
         run: npm run format:check
+
       - name: Get Files Changed (PR)
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v8
@@ -322,6 +323,7 @@ jobs:
             await fs.writeFile(outPath, JSON.stringify(paths, null, 2));
 
             core.exportVariable("FILES_CHANGED_JSON", outPath);
+
       - name: Get Files Changed (Merge Group)
         if: ${{ github.event_name == 'merge_group' }}
         run: |
@@ -341,6 +343,22 @@ jobs:
             jq -Rsc 'split("\n")[:-1]' >files-changed.json
 
           echo "FILES_CHANGED_JSON=$PWD/files-changed.json" >>"$GITHUB_ENV"
+
+      - name: Check if Changelog Changed
+        id: changelog_check
+        run: |
+          set -euo pipefail
+
+          if [ -f "$FILES_CHANGED_JSON" ] && jq -e '.[] | select(. == "CHANGELOG.md")' "$FILES_CHANGED_JSON" >/dev/null; then
+            echo "Changelog.md changed"
+            echo "changelog_changed=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "Changelog.md not changed"
+            echo "changelog_changed=false" >>"$GITHUB_OUTPUT"
+
+            # uncomment to fail if changelog not changed
+            # exit 1
+          fi
       - name: Run ESLint
         run: npm run lint:ci
       - name: Run tsc
