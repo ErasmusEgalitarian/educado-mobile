@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.blackchakers.eml"
@@ -67,13 +69,17 @@
         "expo-localization",
         {
           "supportedLocales": {
-            "android": ["en-US", "pt-BR"]
+            "android": [
+              "en-US",
+              "pt-BR"
+            ]
           }
         }
       ]
     ],
     "extra": {
       "JWT_SECRET": "test",
+      "STRAPI_TOKEN": "put token here",
       "eas": {
         "projectId": "33029e48-261a-46db-a3d6-211aa40139f0"
       }

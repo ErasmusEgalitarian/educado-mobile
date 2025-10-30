@@ -25,6 +25,7 @@ import OfflineScreen from "@/screens/Offline/OfflineScreen";
 import { Course } from "@/types/course";
 import { StudentInfo } from "@/types/student";
 import { t } from "@/i18n";
+import { CourseService } from "@/api/backend";
 
 const CourseScreen = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -57,6 +58,17 @@ const CourseScreen = () => {
     setLoading(false);
   };
 
+  useEffect(()=>{
+    const run = async () => {
+      const courses = await CourseService.courseGetCourses(['title'], {
+        populate: ['course_categories'],
+      })
+      console.log({ courses: courses.data })
+    }
+    run()
+  }, [])
+
+
   // When refreshing the loadCourses function is called
   const onRefresh = () => {
     setRefreshing(true);
@@ -70,7 +82,7 @@ const CourseScreen = () => {
       const fetchedStudent = await getStudentInfo();
 
       if (fetchedStudent !== null) {
-        const studentData = fetchedStudent as StudentInfo;
+        const studentData = fetchedStudent;
         setStudentLevel(studentData.level || 0);
         setStudentPoints(studentData.points || 0);
       }
@@ -184,7 +196,7 @@ const CourseScreen = () => {
                 testID="exploreButton"
                 className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
                 // @ts-expect-error Will be refactored when we move to Expo Router
-                onPress={() => navigation.navigate("Explorar")}
+                onPress={() => { navigation.navigate("Explorar"); }}
               >
                 <Text
                   className="text-center text-body text-projectWhite"

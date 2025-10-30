@@ -14,6 +14,8 @@ import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { t } from "@/i18n";
 import { Course } from "@/types/course";
 import courseTitleIcon from "@/assets/images/course-title-icon.png";
+import { CourseService } from "@/api/backend";
+import { useApi } from "@/api/config/useAPI";
 
 type ProgressTuple = [number, number, number];
 
@@ -26,9 +28,9 @@ interface CourseCardProps {
   isOnline: boolean;
 }
 
-type RootStackParamList = {
+interface RootStackParamList {
   CourseOverview: { course: Course };
-};
+}
 
 const CourseCard = ({ course, isOnline }: CourseCardProps) => {
   const [downloaded, setDownloaded] = useState(false);
@@ -112,7 +114,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
                 <MaterialCommunityIcons
                   size={18}
                   name={
-                    determineIcon(course.category) as MaterialCommunityIconName
+                    determineIcon(course.category)
                   }
                   color={colors.textCaptionGrayscale}
                 />
