@@ -1,0 +1,16 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "expo",
+      "bootstrap-sha": "6acd967b0bf7192edb6145aa2f6762d2a2cf3980",
+      "extra-files": [
+        "package.json",
+        {
+          "type": "json",
+          "path": "app.json",
+          "jsonpath": "$.expo.version"
+        }
+      ]
+    }
+  }
+}
