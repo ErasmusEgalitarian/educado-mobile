@@ -20,8 +20,6 @@ jobs:
       upload_url: ${{ steps.release-please.outputs.upload_url }}
       releases_created: ${{ steps.release-please.outputs.releases_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
-      pr: ${{ steps.release-please.outputs.pr }}
-      prs_created: ${{ steps.release-please.outputs.prs_created }}
     steps:
       - name: Generate Token
         id: generate-token
@@ -94,38 +92,27 @@ jobs:
           files: |
             android/app/build/outputs/apk/release/app-release.apk
             android/app/build/outputs/bundle/release/app-release.aab
-      - name: Delete Release Branch
+      - name: Delete Release Branches
         uses: actions/github-script@v7
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
           script: |
-            const branches = new Set();
-            const parseBranches = (raw) => {
-              if (!raw) return;
-              try {
-                const parsed = JSON.parse(raw);
-                if (Array.isArray(parsed)) {
-                  parsed.forEach((item) => {
-                    if (item?.headBranch) branches.add(item.headBranch);
-                  });
-                } else if (parsed?.headBranch) {
-                  branches.add(parsed.headBranch);
-                }
-              } catch (error) {
-                core.warning(`Unable to parse release branch data: ${error.message}`);
+            const prefix = 'heads/release-please--branches--';
+            const refs = await github.paginate(
+              github.rest.git.listMatchingRefs,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: prefix,
               }
-            };
+            );
 
-            parseBranches(process.env.RELEASE_PR);
-            parseBranches(process.env.RELEASE_PRS);
-
-            if (!branches.size) {
-              core.info('No release PR branches reported; skipping cleanup.');
+            if (!refs.length) {
+              core.info('No release-please branches found to delete.');
               return;
             }
 
-            for (const branch of branches) {
-              const ref = `heads/${branch}`;
+            for (const { ref } of refs) {
               try {
                 await github.rest.git.deleteRef({
                   owner: context.repo.owner,
@@ -135,12 +122,9 @@ jobs:
                 core.info(`Deleted ${ref}`);
               } catch (error) {
                 if (error.status === 404 || error.status === 422) {
-                  core.info(`Branch ${ref} not found, skipping cleanup.`);
+                  core.info(`Branch ${ref} already absent, skipping.`);
                 } else {
                   throw error;
                 }
               }
             }
-        env:
-          RELEASE_PR: ${{ needs.release-please.outputs.pr }}
-          RELEASE_PRS: ${{ needs.release-please.outputs.prs_created }}
