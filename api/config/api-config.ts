@@ -18,7 +18,7 @@ const configureApiClient = () => {
   if (apiToken != undefined) {
     OpenAPI.TOKEN = apiToken;
   } else {
-    window.alert(
+    console.error(
       "Warning: VITE_STRAPI_API_TOKEN is not set in environment variables. API requests may fail.",
     );
     throw new Error(

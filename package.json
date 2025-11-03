@@ -32,7 +32,7 @@
     "tsc:check:packages": "npm run tsc:check:plugin && npm run tsc:check:config",
     "tsc:check:plugin": "npm -w @educado/eslint-plugin-educado run tsc:check",
     "tsc:ci": "node ./scripts/ci-tsc-report.mjs > tsc-report.json || true",
-    "generate-strapi-client": "openapi --input ./api/openapi/strapi-spec.json --output ./api/backend --client axios"
+    "generate-strapi-client": "openapi --input ./api/openapi/strapi-spec.json --output ./api/backend --client fetch"
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
