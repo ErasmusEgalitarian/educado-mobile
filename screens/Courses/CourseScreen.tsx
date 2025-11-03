@@ -142,63 +142,37 @@ const CourseScreen = () => {
           </ScrollView>
         </View>
       ) : (
-        <View className="items-center justify-center bg-secondary">
-          <Tooltip
-            position={{
-              top: -150,
-              left: 95,
-              right: 5,
-              bottom: 24,
-            }}
-            text="Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito."
-            tailSide="right"
-            tailPosition="20%"
-            uniqueKey="Courses"
-            uniCodeChar="📚"
-          />
-          <View className="pb-16 pt-24 shadow-md">
-            <Image
-              source={require("../../assets/images/logo.png")}
-              className="items-center justify-center"
-            />
-          </View>
-
-          <View className="items-center justify-center gap-10 py-10">
-            <View className="h-auto w-full items-center justify-center px-10">
-              <Image source={require("../../assets/images/no-courses.png")} />
-              <Text
-                className="pb-4 pt-4 text-center text-subheading leading-[29.26] text-projectBlack"
-                style={{ fontFamily: "sans-bold" }}
-              >
-                {t("course.get-started")}
-              </Text>
-              <Text
-                className="text-center text-body text-projectBlack"
-                style={{ fontFamily: "montserrat" }}
-              >
-                {t("course.no-courses-message")}
-              </Text>
-            </View>
-            <View>
-              <Pressable
-                testID="exploreButton"
-                className="rounded-r-8 h-auto w-full items-center justify-center rounded-md bg-primary_custom px-20 py-4"
-                // @ts-expect-error Will be refactored when we move to Expo Router
-                onPress={() => navigation.navigate("Explorar")}
-              >
-                <Text
-                  className="text-center text-body text-projectWhite"
-                  style={{ fontFamily: "sans-bold" }}
-                >
-                  {t("course.explore-courses")}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
+    <View className="justify-center px-1 pt-6">
+      <View className="mb-20 mt-14 self-center">
+        <Image
+          source={require("../../assets/images/logo.png")}
+          className="h-[25.54] w-[175.88]"
+        />
+      </View>
+      <View className="items-center">
+        <Image source={require("../../assets/images/no-courses.png")} />
+        <Text className="font-montserrat-semi-bold text-center text-[24px]">
+          {"\n"}Comece agora
+        </Text>
+        <Text className="font-montserrat text-center text-body px-8">
+          {"\n"}Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.
+        </Text>
+      </View>
+      <View className="items-center pt-6">
+        <Pressable
+          testID={"noCoursesExploreButton"}
+          className="flex w-full items-center justify-center bg-surfaceDefaultCyan rounded-2xl p-4"
+          onPress={() => navigation.navigate("Explorar")}
+        >
+          {/* Click to explore courses */}
+          <Text className="font-sans-bold text-center text-body text-projectWhite">
+            Explora Cursos
+          </Text>
+        </Pressable>
+      </View>
+    </View>
       )}
     </>
   );
 };
-
 export default CourseScreen;
