@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
-import FormTextField from "@/components/General/Forms/FormTextField";
-import FormButton from "@/components/General/Forms/FormButton";
+import { FormTextField } from "@/components/General/Forms/FormTextField";
+import { FormButton } from "@/components/General/Forms/FormButton";
 import { enterNewPassword } from "@/api/user-api";
-import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
+import { FormFieldAlert } from "@/components/General/Forms/FormFieldAlert";
 import {
   removeEmojis,
   validatePasswordContainsLetter,
@@ -13,7 +13,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogNotification from "@/components/General/DialogNotification";
 import { isAxiosError } from "axios";
 import ShowAlert from "@/components/General/ShowAlert";
-import { ApiError } from "@/types/ApiError";
+import { ApiError } from "@/api/legacy-api";
 
 interface EnterNewPasswordScreenProps {
   hideModal: () => void;
@@ -23,8 +23,12 @@ interface EnterNewPasswordScreenProps {
 }
 
 /**
- * Component for entering a new password in the resetPassword modal
- * @param {Object} props not used in this component as of now
+ * Component for entering a new password in the resetPassword modal.
+ *
+ * @param hideModal - Function to hide the modal.
+ * @param resetState - Function to reset the state.
+ * @param email - Email of the user.
+ * @param token - Token for the reset password.
  */
 const EnterNewPasswordScreen = ({
   hideModal,

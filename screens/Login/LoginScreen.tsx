@@ -20,7 +20,6 @@ const Login = () => {
    * TODO: Refactor error to use new error handling system
    * Function for checking if a login token is stored in async local storage (i.e. if the user is already logged in)
    * If a token is found, the user is redirected to the home screen.
-   *
    */
   const checkLoginToken = async () => {
     try {

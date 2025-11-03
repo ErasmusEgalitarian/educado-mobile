@@ -2,21 +2,20 @@ import { useState } from "react";
 import { View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { loginUser } from "@/api/user-api";
-import FormTextField from "@/components/General/Forms/FormTextField";
-import FormButton from "@/components/General/Forms/FormButton";
+import { FormTextField } from "@/components/General/Forms/FormTextField";
+import { FormButton } from "@/components/General/Forms/FormButton";
 import { ResetPassword } from "@/components/Login/ResetPassword";
-import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
+import { FormFieldAlert } from "@/components/General/Forms/FormFieldAlert";
 import { removeEmojis } from "@/components/General/validation";
 import ShowAlert from "@/components/General/ShowAlert";
 import { UserInfo } from "@/types/user";
-import { ApiError } from "@/types/ApiError";
-
-// Services
 import { setUserInfo, setJWT } from "@/services/storage-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isAxiosError } from "axios";
+import { ApiError } from "@/api/legacy-api";
+
 /**
- * Login form component for login screen containing email and password input fields and a login button.
+ * Login form component for the login screen containing email and password input fields and a login button.
  */
 const LoginForm = () => {
   const navigation = useNavigation();

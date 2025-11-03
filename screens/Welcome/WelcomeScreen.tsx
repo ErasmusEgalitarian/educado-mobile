@@ -2,17 +2,16 @@ import { View, Image, SafeAreaView, Text } from "react-native";
 import { BackgroundLinearGradient } from "@/constants/BackgroundLinearGradient";
 import WelcomeSlider from "@/components/Welcome/WelcomeSlider";
 import { useNavigation } from "@react-navigation/native";
-import FormButton from "@/components/General/Forms/FormButton";
+import { FormButton } from "@/components/General/Forms/FormButton";
 import logo from "@/assets/images/logo.png";
 
-/*
-Description: 	This is the welcome screen that is shown when the user opens the app for the first time.
-				It is a slider that explains the app and its features. It also has a button to login and a button to register.
-				When the user clicks on the login button, it is redirected to the login screen.
-				When the user clicks on the register button, it is redirected to the register screen.
-*/
-
-export default function WelcomeScreen() {
+/**
+ * This is the welcome screen shown when the user opens the app for the first time. It is a slider that explains the app
+ * and its features. It also has a button to login and a button to register. When the user clicks on the login-button,
+ * it is redirected to the login screen. When the user clicks on the register button, it is redirected to the register
+ * screen.
+ */
+const WelcomeScreen = () => {
   const navigation = useNavigation();
 
   return (
@@ -68,4 +67,6 @@ export default function WelcomeScreen() {
       </SafeAreaView>
     </BackgroundLinearGradient>
   );
-}
+};
+
+export default WelcomeScreen;

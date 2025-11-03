@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { loginUser, registerUser } from "@/api/user-api";
-import FormTextField from "@/components/General/Forms/FormTextField";
-import FormButton from "@/components/General/Forms/FormButton";
+import { FormTextField } from "@/components/General/Forms/FormTextField";
+import { FormButton } from "@/components/General/Forms/FormButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ShowAlert from "@/components/General/ShowAlert";
-import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
+import { FormFieldAlert } from "@/components/General/Forms/FormFieldAlert";
 import {
   removeEmojis,
   validatePasswordContainsLetter,

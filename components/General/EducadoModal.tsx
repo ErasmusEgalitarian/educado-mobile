@@ -19,12 +19,12 @@ interface EducadoModalProps {
 }
 
 /**
+ * The Educado modal component.
  *
- * @param {Object} props Possible properties:
- * - modalVisible: Boolean declaring if modal is visible
- * - closeModal: Function for closing modal
- * - title: String for modal title
- * @returns
+ * @param children - Components rendered as children.
+ * @param modalVisible - Boolean declaring if modal is visible.
+ * @param closeModal - Function for closing modal.
+ * @param title - String for modal title.
  */
 export const EducadoModal = ({
   children,

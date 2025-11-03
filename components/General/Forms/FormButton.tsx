@@ -1,18 +1,18 @@
 import { View, Text, TouchableOpacity } from "react-native";
 
-interface FormButtonTypes {
+interface FormButtonProps {
   children: string;
   disabled?: boolean;
   onPress?: () => void;
   style?: object[];
 }
 
-const FormButton = ({
+export const FormButton = ({
   children,
   disabled,
   onPress,
   style,
-}: FormButtonTypes) => {
+}: FormButtonProps) => {
   return (
     <>
       <View>

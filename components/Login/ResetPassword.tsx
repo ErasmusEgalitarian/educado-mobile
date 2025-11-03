@@ -1,19 +1,19 @@
 import { View, Text } from "react-native";
 import { useState } from "react";
-import FormTextField from "@/components/General/Forms/FormTextField";
-import FormButton from "@/components/General/Forms/FormButton";
+import { FormTextField } from "@/components/General/Forms/FormTextField";
+import { FormButton } from "@/components/General/Forms/FormButton";
 import { EducadoModal } from "@/components/General/EducadoModal";
 import EnterNewPasswordScreen from "@/components/Login/EnterNewPasswordScreen";
 import {
   sendResetPasswordEmail,
   validateResetPasswordCode,
 } from "@/api/user-api";
-import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
+import { FormFieldAlert } from "@/components/General/Forms/FormFieldAlert";
 import { validateEmail } from "@/components/General/validation";
 import ToastNotification from "@/components/General/ToastNotification";
 import ShowAlert from "@/components/General/ShowAlert";
 import { isAxiosError } from "axios";
-import { ApiError } from "@/types/ApiError";
+import { ApiError } from "@/api/legacy-api";
 
 interface ResetPasswordProps {
   modalVisible: boolean;
@@ -21,11 +21,10 @@ interface ResetPasswordProps {
 }
 
 /**
- * Component to create modal (popup) that prompts user for
- * email and code from email to reset password
- * @param {Object} props Should contain the following properties
- * - modalVisible: Boolean to show if modal should be visible
- * - onModalClose: Function to do when modal closes
+ * Component to create a modal (popup) that prompts the user for email and code from email to reset password.
+ *
+ * @param modalVisible - Boolean to show if modal should be visible.
+ * @param onModalClose - Function to do when modal closes.
  */
 export const ResetPassword = ({
   modalVisible,

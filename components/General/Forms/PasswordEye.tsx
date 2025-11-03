@@ -5,13 +5,14 @@ interface PasswordEyeProps {
   showPasswordIcon: boolean;
   toggleShowPassword: () => void;
 }
+
 /**
- * Icon component for the eye besides passwords to toggle if text can be seen by user
- * @param {Object} props Should contain the following properties
- * - showPasswordIcon: Boolean
- * - toggleShowPassword: Function
+ * Icon component for the eye besides passwords to toggle if the user can see text.
+ *
+ * @param showPasswordIcon - Whether the password eye is open or closed.
+ * @param toggleShowPassword - Toggles the password visibility.
  */
-const PasswordEye = ({
+export const PasswordEye = ({
   showPasswordIcon,
   toggleShowPassword,
 }: PasswordEyeProps) => {
