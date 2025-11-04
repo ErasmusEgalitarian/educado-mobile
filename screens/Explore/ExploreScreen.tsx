@@ -148,7 +148,6 @@ const ExploreScreen = () => {
                     .map((course) => course.courseId)
                     .includes(course.courseId)}
                   course={course}
-                  highlighted={false}
                 />
               ))}
             </View>
