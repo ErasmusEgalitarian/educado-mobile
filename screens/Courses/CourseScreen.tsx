@@ -131,14 +131,14 @@ const CourseScreen = () => {
         <View className="justify-center">
           <View className="items-center pt-24">
             <Image source={require("../../assets/images/no-courses.png")} />
-            <Text className="text-h2-sm-regular text-center text-[24px] mt-2">
+            <Text className="text-h2-sm-regular text-center text-[24px] pt-4">
               {t("welcome-page.header")}
             </Text>
-            <Text className="text-body-regular text-center px-6 mt-2">
+            <Text className="text-body-regular text-center px-6 pt-4">
               {t("welcome-page.description")}
             </Text>
           </View>
-          <View className="items-center pt-6 px-6">
+          <View className="items-center pt-8 px-6">
             <Pressable
               testID={"noCoursesExploreButton"}
               className="flex w-full items-center justify-center bg-surfaceDefaultCyan rounded-2xl p-4"
