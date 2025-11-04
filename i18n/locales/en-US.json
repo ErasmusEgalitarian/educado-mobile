@@ -74,5 +74,9 @@
     "loading": "Edu is thinking",
     "placeholder": "Pesquise aqui",
     "unknown-error": "Error: Unknown error"
+  },
+  "welcome-page": {
+    "header": "Start Now!",
+    "description": "You haven't signed up for any courses yet. Go to the Explore page and use the search to find courses that interest you.",
   }
 }

@@ -74,5 +74,9 @@
     "loading": "Edu está pensando",
     "placeholder": "Pesquise aqui",
     "unknown-error": "Erro: Erro desconhecido"
+  },
+  "welcome-page": {
+    "header": "Comece agora!",
+    "description": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse."
   }
 }

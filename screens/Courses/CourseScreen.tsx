@@ -25,6 +25,7 @@ import OfflineScreen from "@/screens/Offline/OfflineScreen";
 import { Course } from "@/types/course";
 import { StudentInfo } from "@/types/student";
 import { t } from "@/i18n";
+import {BaseScreen} from "@/components/General/BaseScreen";
 
 const CourseScreen = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -106,37 +107,39 @@ const CourseScreen = () => {
   }, []);
 
   return (
-    <View className="justify-center px-1 pt-6">
-      <View className="mb-20 mt-14 self-center">
-        <Image
-          source={require("../../assets/images/logo.png")}
-          className="h-[25.54] w-[175.88]"
-        />
-      </View>
-      <View className="justify-center pt-6">
-        <View className="items-center pt-20">
-          <Image source={require("../../assets/images/no-courses.png")} />
-          <Text className="font-montserrat-semi-bold text-center text-[24px]">
-            {"\n"}Comece agora
-          </Text>
-          <Text className="font-montserrat text-center text-body px-8">
-            {"\n"}Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.
-          </Text>
+    <BaseScreen>
+      <View className="justify-center px-1 pt-6">
+        <View className="mb-20 mt-14 self-center">
+          <Image
+            source={require("../../assets/images/logo.png")}
+            className="h-[25.54] w-[175.88]"
+          />
         </View>
-        <View className="items-center pt-6 px-6">
-          <Pressable
-            testID={"noCoursesExploreButton"}
-            className="flex w-full items-center justify-center bg-surfaceDefaultCyan rounded-2xl p-4"
-            onPress={() => navigation.navigate("Explorar")}
-          >
-            {/* Click to explore courses */}
-            <Text className="font-sans-bold text-center text-body text-projectWhite">
-              Explora Cursos
+        <View className="justify-center pt-6">
+          <View className="items-center pt-20">
+            <Image source={require("../../assets/images/no-courses.png")} />
+            <Text className="text-h2-sm-regular text-center text-[24px]">
+              {"\n"}{t("welcome-page.header")}
             </Text>
-          </Pressable>
+            <Text className="text-body-regular text-center px-6">
+              {"\n"}{t("welcome-page.description")}
+            </Text>
+          </View>
+          <View className="items-center pt-6 px-6">
+            <Pressable
+              testID={"noCoursesExploreButton"}
+              className="flex w-full items-center justify-center bg-surfaceDefaultCyan rounded-2xl p-4"
+              onPress={() => navigation.navigate("Explorar")}
+            >
+              {/* Click to explore courses */}
+              <Text className="text-body-bold text-center text-surfaceSubtleGrayscale">
+                {t("course.explore-courses")}
+              </Text>
+            </Pressable>
+          </View>
         </View>
       </View>
-    </View>
+    </BaseScreen>
   );
 };
 export default CourseScreen;
