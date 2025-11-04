@@ -29,7 +29,7 @@ jobs:
           private-key: ${{ secrets.EDUCADO_BOT_PEM }}
       - name: Release Please Action
         id: release-please
-        uses: googleapis/release-please-action@v4.4.0
+        uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38
         with:
           token: ${{ steps.generate-token.outputs.token }}
           manifest-file: .release-please-manifest.json
@@ -73,7 +73,7 @@ jobs:
           java-version: 17
           distribution: temurin
       - name: Set Up Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2
       - name: Generate Token
         id: generate-token
         uses: actions/create-github-app-token@v2
