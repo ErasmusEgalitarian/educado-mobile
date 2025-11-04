@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View } from "react-native";
+import { useEffect, PropsWithChildren, useState } from "react";
+import { RefreshControl, ScrollView, View, Text } from "react-native";
 import { FilterNavigationBar } from "@/components/Explore/FilterNavigationBar";
 import { ExploreCard } from "@/components/Explore/ExploreCard";
 import IconHeader from "@/components/General/IconHeader";
@@ -12,7 +12,36 @@ import {
   useSubscribedCourses,
 } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
-import { Course } from "@/types";
+import { Course } from "@/types/index";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "@/theme/colors";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
+const RecommendationBadge = ({ children }: PropsWithChildren) => {
+  return (
+    <View className="relative my-3">
+      <View className="absolute -top-3 right-3 z-10 overflow-hidden rounded-xl shadow-lg">
+        <LinearGradient
+          colors={[
+            colors.surfaceLighterCyan,
+            colors.surfaceDefaultCyan,
+            colors.surfaceDefaultCyan,
+          ]}
+          locations={[0, 0.55, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          className="px-4 py-2"
+        >
+          <Text className="font-caption-sm-semibold text-surfaceSubtleCyan">
+            <MaterialCommunityIcons name="license" size={12} color="white" />
+            {"  " + t("course.best-rating")}
+          </Text>
+        </LinearGradient>
+      </View>
+      {children}
+    </View>
+  );
+};
 
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.
@@ -100,15 +129,16 @@ const ExploreScreen = () => {
           >
             <View className="mt-8 overflow-visible">
               {recommendedCourseId >= 0 && (
-                <ExploreCard
-                  key={recommendedCourse.courseId}
-                  isPublished={recommendedCourse.status === "published"}
-                  subscribed={subscriptions
-                    .map((course) => course.courseId)
-                    .includes(recommendedCourse.courseId)}
-                  course={recommendedCourse}
-                  highlighted={true}
-                />
+                <RecommendationBadge>
+                  <ExploreCard
+                    key={recommendedCourse.courseId}
+                    isPublished={recommendedCourse.status === "published"}
+                    subscribed={subscriptions
+                      .map((course) => course.courseId)
+                      .includes(recommendedCourse.courseId)}
+                    course={recommendedCourse}
+                  />
+                </RecommendationBadge>
               )}
               {filteredCourses.reverse().map((course, index) => (
                 <ExploreCard
