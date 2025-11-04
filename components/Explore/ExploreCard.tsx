@@ -13,6 +13,7 @@ export interface ExploreCardProps {
   course: Course;
   isPublished: boolean;
   subscribed: boolean;
+  highlighted: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -33,6 +34,7 @@ export const ExploreCard = ({
   course,
   isPublished,
   subscribed,
+  highlighted,
 }: ExploreCardProps) => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
 
@@ -51,7 +53,7 @@ export const ExploreCard = ({
             <View className="flex-row items-center">
               <MaterialCommunityIcons
                 name="chart-bar-stacked"
-                size={24}
+                size={highlighted ? 24 : 48}
                 color={colors.textTitleGrayscale}
               />
               <Text className="ml-2 mr-9 h-6 text-textTitleGrayscale text-subtitle-semibold">

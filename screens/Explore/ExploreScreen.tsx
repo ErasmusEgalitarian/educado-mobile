@@ -74,6 +74,8 @@ const ExploreScreen = () => {
     return <LoadingScreen />;
   }
 
+  const recommendedCourse = filteredCourses[1];
+
   return (
     <BaseScreen>
       <View className="overflow-visible px-8 pt-28">
@@ -92,6 +94,15 @@ const ExploreScreen = () => {
             }
           >
             <View className="mt-8 overflow-visible">
+              <ExploreCard
+                key={recommendedCourse.courseId}
+                isPublished={recommendedCourse.status === "published"}
+                subscribed={subscriptions
+                  .map((course) => course.courseId)
+                  .includes(recommendedCourse.courseId)}
+                course={recommendedCourse}
+                highlighted={true}
+              />
               {filteredCourses.reverse().map((course, index) => (
                 <ExploreCard
                   key={index}
@@ -100,6 +111,7 @@ const ExploreScreen = () => {
                     .map((course) => course.courseId)
                     .includes(course.courseId)}
                   course={course}
+                  highlighted={false}
                 />
               ))}
             </View>
