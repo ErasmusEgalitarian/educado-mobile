@@ -109,6 +109,19 @@ const CourseScreen = () => {
   return (
     <BaseScreen>
       <View className="justify-center px-1 pt-6">
+        <Tooltip
+          position={{
+            top: -150,
+            left: 95,
+            right: 5,
+            bottom: 24,
+          }}
+          text="Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito."
+          tailSide="right"
+          tailPosition="20%"
+          uniqueKey="Courses"
+          uniCodeChar="📚"
+        />
         <View className="mb-20 mt-14 self-center">
           <Image
             source={require("../../assets/images/logo.png")}

@@ -161,7 +161,7 @@ const getTailStyles = (side, position) => {
           left: position,
           borderTopWidth: 0,
           borderBottomWidth: heightSize,
-          borderBottomColor: "#166276",
+          borderBottomColor: "#E4CCFF",
         },
       };
     case "right":
@@ -172,7 +172,7 @@ const getTailStyles = (side, position) => {
           top: position,
           borderRightWidth: 0,
           borderLeftWidth: heightSize,
-          borderLeftColor: "#166276",
+          borderLeftColor: "#E4CCFF",
           borderTopWidth: baseSize / 2,
           borderBottomWidth: baseSize / 2,
           borderTopColor: "transparent",
@@ -187,7 +187,7 @@ const getTailStyles = (side, position) => {
           top: position,
           borderLeftWidth: 0,
           borderRightWidth: heightSize,
-          borderRightColor: "#166276",
+          borderRightColor: "#E4CCFF",
           borderTopWidth: baseSize / 2,
           borderBottomWidth: baseSize / 2,
           borderTopColor: "transparent",
@@ -204,7 +204,7 @@ const getTailStyles = (side, position) => {
           left: position,
           borderBottomWidth: 0,
           borderTopWidth: heightSize,
-          borderTopColor: "#166276",
+          borderTopColor: "#E4CCFF",
         },
       };
   }
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   tooltip: {
-    backgroundColor: "#166276",
+    backgroundColor: "#E4CCFF",
     padding: 10,
     borderRadius: 10,
     position: "relative",
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     height: 155,
   },
   tooltipText: {
-    color: "#FFFFFF",
+    color: "#28363E",
     fontSize: 18,
     marginBottom: 5,
     marginTop: 0,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     right: 10,
   },
   tooltipFooterText: {
-    color: "#FFFFFF",
+    color: "#28363E",
     fontSize: 16,
     textDecorationLine: "underline",
   },
@@ -249,7 +249,12 @@ const styles = StyleSheet.create({
     width: 0,
     height: 0,
     zIndex: 1000,
+    borderTopColor: "#E4CCFF",
+    borderBottomColor: "#E4CCFF",
+    borderLeftColor: "#E4CCFF",
+    borderRightColor: "#E4CCFF",
   },
+
   unicodeCharacter: {
     position: "absolute",
     top: 5,
