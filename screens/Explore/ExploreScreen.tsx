@@ -90,7 +90,9 @@ const ExploreScreen = () => {
         !selectedCategory ||
         determineCategory(course.category) === selectedCategory;
 
-      return titleMatchesSearch && categoryMatchesFilter;
+      const isPublished = course.status === "published";
+
+      return titleMatchesSearch && categoryMatchesFilter && isPublished;
     });
 
     setFilteredCourses(filteredCourses.reverse());
@@ -128,7 +130,6 @@ const ExploreScreen = () => {
                 <RecommendationBadge>
                   <ExploreCard
                     key={recommendedCourse.courseId}
-                    isPublished={recommendedCourse.status === "published"}
                     subscribed={subscriptions
                       .map((course) => course.courseId)
                       .includes(recommendedCourse.courseId)}
@@ -143,7 +144,6 @@ const ExploreScreen = () => {
                 .map((course, index) => (
                   <ExploreCard
                     key={index}
-                    isPublished={course.status === "published"}
                     subscribed={subscriptions
                       .map((course) => course.courseId)
                       .includes(course.courseId)}
