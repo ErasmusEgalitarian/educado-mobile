@@ -93,7 +93,7 @@ const ExploreScreen = () => {
       return titleMatchesSearch && categoryMatchesFilter;
     });
 
-    setFilteredCourses(filteredCourses);
+    setFilteredCourses(filteredCourses.reverse());
   }, [selectedCategory, searchText, courseQuery.data]);
 
   useEffect(() => {
@@ -136,16 +136,20 @@ const ExploreScreen = () => {
                   />
                 </RecommendationBadge>
               )}
-              {filteredCourses.reverse().map((course, index) => (
-                <ExploreCard
-                  key={index}
-                  isPublished={course.status === "published"}
-                  subscribed={subscriptions
-                    .map((course) => course.courseId)
-                    .includes(course.courseId)}
-                  course={course}
-                />
-              ))}
+              {filteredCourses
+                .filter(
+                  (course) => course.courseId !== recommendedCourse?.courseId,
+                )
+                .map((course, index) => (
+                  <ExploreCard
+                    key={index}
+                    isPublished={course.status === "published"}
+                    subscribed={subscriptions
+                      .map((course) => course.courseId)
+                      .includes(course.courseId)}
+                    course={course}
+                  />
+                ))}
             </View>
           </ScrollView>
         </View>
