@@ -115,14 +115,14 @@ const CourseScreen = () => {
             className="h-[25.54] w-[175.88]"
           />
         </View>
-        <View className="justify-center pt-6">
-          <View className="items-center pt-20">
+        <View className="justify-center">
+          <View className="items-center pt-24">
             <Image source={require("../../assets/images/no-courses.png")} />
-            <Text className="text-h2-sm-regular text-center text-[24px]">
-              {"\n"}{t("welcome-page.header")}
+            <Text className="text-h2-sm-regular text-center text-[24px] mt-2">
+              {t("welcome-page.header")}
             </Text>
-            <Text className="text-body-regular text-center px-6">
-              {"\n"}{t("welcome-page.description")}
+            <Text className="text-body-regular text-center px-6 mt-2">
+              {t("welcome-page.description")}
             </Text>
           </View>
           <View className="items-center pt-6 px-6">
