@@ -46,6 +46,7 @@ const ExploreScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
+  const [recommendedCourse, setRecommendedCourse] = useState<Course>();
 
   const loginStudentQuery = useLoginStudent();
 
@@ -95,16 +96,15 @@ const ExploreScreen = () => {
     setFilteredCourses(filteredCourses);
   }, [selectedCategory, searchText, courseQuery.data]);
 
+  useEffect(() => {
+    const ratingsList = filteredCourses.map((course) => course.rating);
+    const recommendedCourseId = ratingsList.indexOf(Math.max(...ratingsList));
+    setRecommendedCourse(filteredCourses[recommendedCourseId]);
+  }, [filteredCourses]);
+
   if (courseQuery.isLoading || subscriptionsQuery.isLoading) {
     return <LoadingScreen />;
   }
-
-  const ratingsList = filteredCourses.map((course) => course.rating);
-  const recommendedCourseId = ratingsList.indexOf(Math.max(...ratingsList));
-  const recommendedCourse = filteredCourses[recommendedCourseId];
-  console.warn(ratingsList);
-  console.warn(recommendedCourseId);
-  console.warn(recommendedCourse);
 
   return (
     <BaseScreen>
@@ -124,7 +124,7 @@ const ExploreScreen = () => {
             }
           >
             <View className="mt-8 overflow-visible">
-              {recommendedCourseId >= 0 && (
+              {recommendedCourse && (
                 <RecommendationBadge>
                   <ExploreCard
                     key={recommendedCourse.courseId}
