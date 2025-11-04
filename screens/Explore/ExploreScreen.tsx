@@ -74,7 +74,12 @@ const ExploreScreen = () => {
     return <LoadingScreen />;
   }
 
-  const recommendedCourse = filteredCourses[1];
+  const ratingsList = filteredCourses.map((course) => course.rating);
+  const recommendedCourseId = ratingsList.indexOf(Math.max(...ratingsList));
+  const recommendedCourse = filteredCourses[recommendedCourseId];
+  console.warn(ratingsList);
+  console.warn(recommendedCourseId);
+  console.warn(recommendedCourse);
 
   return (
     <BaseScreen>
@@ -94,15 +99,17 @@ const ExploreScreen = () => {
             }
           >
             <View className="mt-8 overflow-visible">
-              <ExploreCard
-                key={recommendedCourse.courseId}
-                isPublished={recommendedCourse.status === "published"}
-                subscribed={subscriptions
-                  .map((course) => course.courseId)
-                  .includes(recommendedCourse.courseId)}
-                course={recommendedCourse}
-                highlighted={true}
-              />
+              {recommendedCourseId >= 0 && (
+                <ExploreCard
+                  key={recommendedCourse.courseId}
+                  isPublished={recommendedCourse.status === "published"}
+                  subscribed={subscriptions
+                    .map((course) => course.courseId)
+                    .includes(recommendedCourse.courseId)}
+                  course={recommendedCourse}
+                  highlighted={true}
+                />
+              )}
               {filteredCourses.reverse().map((course, index) => (
                 <ExploreCard
                   key={index}
