@@ -22,12 +22,8 @@ const RecommendationBadge = ({ children }: PropsWithChildren) => {
     <View className="relative my-3">
       <View className="absolute -top-3 right-3 z-10 overflow-hidden rounded-xl shadow-lg">
         <LinearGradient
-          colors={[
-            colors.surfaceLighterCyan,
-            colors.surfaceDefaultCyan,
-            colors.surfaceDefaultCyan,
-          ]}
-          locations={[0, 0.55, 1]}
+          colors={[colors.surfaceLighterCyan, colors.surfaceDefaultCyan]}
+          locations={[0, 1]}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           className="px-4 py-2"
