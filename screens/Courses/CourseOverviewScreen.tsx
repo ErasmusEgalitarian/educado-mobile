@@ -2,7 +2,6 @@ import type { ReactElement } from "react";
 import { useState, useEffect } from "react";
 import { Alert, View, TouchableOpacity, Image, Text } from "react-native";
 import * as StorageService from "@/services/storage-service";
-import { unsubscribe } from "@/services/storage-service";
 import { SectionCard } from "@/components/Section/SectionCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -14,12 +13,12 @@ import { ContinueSectionButton } from "@/components/Section/ContinueSectionButto
 import Tooltip from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
-import { getBucketImage } from "@/api/api";
-import type { Course } from "@/types/course";
-import type { Section } from "@/types/section";
+import { getBucketImageByFilename } from "@/api/legacy-api";
+import type { Section, Course } from "@/types";
 import { Shadow } from "react-native-shadow-2";
-import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useLoginStudent, useUnsubscribeFromCourse } from "@/hooks/query";
 
 export interface CourseOverviewScreenProps {
   route: {
@@ -46,7 +45,10 @@ const CourseOverviewScreen = ({
   >({});
   const [currentSection, setCurrentSection] = useState<Section | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
-  const [imageError, setImageError] = useState<unknown | null>(null);
+  const [imageError, setImageError] = useState<unknown>(null);
+
+  const loginStudentQuery = useLoginStudent();
+  const unsubscribeFromCourseQuery = useUnsubscribeFromCourse();
 
   const loadSections = async (id: string, signal: AbortSignal) => {
     const sectionData = await StorageService.getSectionList(id, signal);
@@ -114,7 +116,7 @@ const CourseOverviewScreen = ({
     if (!coverImage) {
       const fetchImage = async () => {
         try {
-          const image = await getBucketImage(course.courseId + "_c");
+          const image = await getBucketImageByFilename(course.courseId + "_c");
           setCoverImage(image);
         } catch (error) {
           setImageError(error);
@@ -135,11 +137,13 @@ const CourseOverviewScreen = ({
       {
         text: t("general.yes"),
         onPress: () => {
-          void unsubscribe(course.courseId);
+          unsubscribeFromCourseQuery.mutate({
+            userId: loginStudentQuery.data.userInfo.id,
+            courseId: course.courseId,
+          });
 
-          setTimeout(() => {
-            navigation.navigate("Meus cursos" as never);
-          }, 300);
+          // @ts-expect-error The error will disappear when we migrate to Expo Router
+          navigation.navigate("Meus cursos");
         },
       },
     ]);
@@ -172,17 +176,18 @@ const CourseOverviewScreen = ({
   };
 
   return (
-    <>
-      {/* Back Button */}
+    <SafeAreaView>
       <TouchableOpacity
-        className="absolute left-5 top-10 z-10 pr-3"
-        onPress={() => navigation.navigate("Meus cursos" as never)}
+        className="absolute left-5 top-28 z-10 pr-3"
+        onPress={() => {
+          // @ts-expect-error The error will disappear when we migrate to Expo Router
+          navigation.navigate("Meus cursos");
+        }}
       >
         <MaterialCommunityIcons
           name="chevron-left"
-          style={{ backgroundColor: colors.lightGray, borderRadius: 50 }}
+          className="rounded-[50px] bg-surfaceDefaultGrayscale text-surfaceDarker"
           size={30}
-          color={colors.projectBlack}
         />
       </TouchableOpacity>
       <ScrollView
@@ -194,7 +199,7 @@ const CourseOverviewScreen = ({
             {!imageError && coverImage ? (
               <Image
                 source={{ uri: coverImage }}
-                style={{ width: "100%", height: 296, resizeMode: "cover" }}
+                className="h-[296px] w-full object-cover"
               />
             ) : (
               <Image source={ImageNotFound} />
@@ -202,20 +207,17 @@ const CourseOverviewScreen = ({
           </View>
           <View className="mt-[-15%]">
             <Shadow startColor="#28363E14" distance={6} offset={[0, 3]}>
-              <View
-                className="flex w-[293px] bg-surfaceSubtleGrayscale p-[16px]"
-                style={{ borderRadius: 15, transform: [{ scale: 1.02 }] }}
-              >
+              <View className="flex w-[293px] rounded-2xl bg-surfaceSubtleGrayscale p-[16px]">
                 <View className="flex flex-row justify-between">
                   {/* Course Title */}
-                  <Text className="h3-sm-regular max-w-[80%] text-[24px]">
+                  <Text className="h3-sm-regular max-w-[80%]">
                     {course.title}
                   </Text>
                   {/* TODO: Button to download course should be implemented */}
                   <DownloadCourseButton course={course} disabled={true} />
                 </View>
                 {/* Progress Bar */}
-                <View className="flex h-6 justify-center rounded-sm border-y-[1px] border-lightGray">
+                <View className="flex h-6 justify-center rounded-sm border-y-[1px] border-surfaceDefaultGrayscale">
                   <CustomProgressBar
                     width={63}
                     progress={studentProgress}
@@ -299,7 +301,7 @@ const CourseOverviewScreen = ({
         ) : null}
         <SubscriptionCancelButton onPress={unsubAlert} />
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 };
 

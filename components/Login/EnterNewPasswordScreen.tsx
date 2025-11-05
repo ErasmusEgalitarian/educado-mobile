@@ -108,7 +108,7 @@ const EnterNewPasswordScreen = ({
       }
 
       const apiError = error as ApiError;
-      switch (apiError.error.code) {
+      switch (apiError.code) {
         case "E0401":
           // No user exists with this email!
           setPasswordAlert("Não existe nenhum usuário com este email!");

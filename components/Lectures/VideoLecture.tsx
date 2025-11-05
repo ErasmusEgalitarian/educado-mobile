@@ -1,17 +1,26 @@
-import { View, TouchableOpacity, Alert, Text } from "react-native";
-import { Video, ResizeMode } from "expo-av";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { ResizeMode, Video } from "expo-av";
 import { Icon } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import { completeComponent, handleLastComponent } from "@/services/utils";
+import { handleLastComponent } from "@/services/utils";
 import { getVideoURL } from "@/services/storage-service";
-import { Lecture } from "@/types/lecture";
-import { Course } from "@/types/course";
+import {
+  Course,
+  Lecture,
+  SectionComponent,
+  SectionComponentLecture,
+} from "@/types";
 import axios from "axios";
 import { t } from "@/i18n";
 import { useQuery } from "@tanstack/react-query";
+import {
+  useCompleteComponent,
+  useLoginStudent,
+  useStudent,
+} from "@/hooks/query";
 
 export interface VideoLectureProps {
-  lecture: Lecture;
+  lecture: SectionComponentLecture;
   course: Course;
   isLastSlide: boolean;
   onContinue: () => void;
@@ -72,23 +81,42 @@ export const VideoLecture = ({
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["video-url", lecture.content, currentResolution],
+    queryKey: ["video-url", lecture.content, currentResolution, lecture],
     queryFn: () => fetchVideoUrl(lecture, currentResolution),
   });
+
+  const loginStudentQuery = useLoginStudent();
+  const studentQuery = useStudent(loginStudentQuery.data.userInfo.id);
+  const completeComponentQuery = useCompleteComponent();
+
+  const student = studentQuery.data;
 
   const handleContinuePress = async () => {
     if (!isLastSlide) {
       onContinue();
     }
 
+    if (!student) {
+      return;
+    }
+
     try {
       handleStudyStreak();
 
-      // @ts-expect-error lectureObject type mismatch, not fixed because it's to be deleted
-      await completeComponent(lecture, course.courseId, true);
+      completeComponentQuery.mutate({
+        student,
+        component: lecture,
+        isComplete: true,
+      });
 
-      // @ts-expect-error lectureObject type mismatch, not fixed because it's to be deleted
-      await handleLastComponent(lecture, course, navigation);
+      const requestObject: SectionComponent<SectionComponentLecture> = {
+        type: "lecture",
+        component: lecture,
+        lectureType: "video",
+      };
+
+      // @ts-expect-error Will be refactored when we move to Expo Router
+      await handleLastComponent(requestObject, course, navigation);
     } catch (error) {
       console.error("Error completing the course:", error);
 

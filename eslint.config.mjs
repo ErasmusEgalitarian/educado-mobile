@@ -13,6 +13,7 @@ import typographyTokens from "./theme/typography.tokens.json" with { type: "json
 // `eslint.config.mjs` is an ESM file, so we need to use relative imports
 // @ts-expect-error This is an ESM file, so we need to use with { type: "json" }
 import colorTokens from "./theme/color.tokens.json" with { type: "json" }; // eslint-disable-line no-restricted-imports
+import pluginQuery from "@tanstack/eslint-plugin-query";
 
 const allowedTextStyles = Object.keys(typographyTokens["text-styles"]).map(
   (name) => `text-${name}`,
@@ -37,6 +38,7 @@ export default defineConfig([
   eslintConfigEducado.configs.recommended,
   // @ts-expect-error Something is wrong with how the plugin exports, but it works
   preferArrowFunctions.configs.all,
+  ...pluginQuery.configs["flat/recommended"],
   {
     languageOptions: {
       parserOptions: {

@@ -1,6 +1,1 @@
-export interface UserInfo {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
+export { User as UserInfo } from "@/types/index";

@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
-import type { Icon } from "@/types/icon";
+import type { Icon } from "@/types";
 
 /**
  * CustomRating component displays a star rating based on a number

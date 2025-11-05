@@ -9,7 +9,7 @@ import SectionScreen from "@/screens/Section/SectionScreen";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import WelcomeScreen from "@/screens/Welcome/WelcomeScreen";
 import CompleteSectionScreen from "@/screens/Section/CompleteSectionScreen";
-import NavigationBar from "@/components/NavigationBar/NavigationBar";
+import { NavigationBar } from "@/components/NavigationBar/NavigationBar";
 import ComponentSwipeScreen from "@/screens/Lectures/ComponentSwipeScreen";
 import ErrorScreen from "@/screens/Errors/ErrorScreen";
 import CourseScreen from "@/screens/Courses/CourseScreen";
@@ -106,6 +106,8 @@ const CourseStack = () => (
     />
     <Stack.Screen
       name="CourseOverview"
+      // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
+      // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
       component={CourseOverviewScreen}
       initialParams={{ course_id: "" }}
       options={{ headerShown: false }}
@@ -152,7 +154,7 @@ export const useWelcomeScreenLogic = (
       }
     };
 
-    fetchData();
+    void fetchData();
   }, loadingTime);
 };
 
@@ -201,6 +203,8 @@ export const App = () => {
       />
       <Stack.Screen
         name={"CourseOverview"}
+        // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
+        // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
         component={CourseOverviewScreen}
         initialParams={{ course_id: "" }}
         options={{ headerShown: false }}
