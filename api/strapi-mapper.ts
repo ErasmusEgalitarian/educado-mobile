@@ -3,16 +3,12 @@ import { Course } from "@/types/domain";
 
 export const mapToCourse = (
     courseStrapi: CourseStrapi
-): Course | null => {
+): Course => {
 
     const courseId = courseStrapi.id
 
-    if (courseId === undefined) {
-        return null
-    }
-
     return {
-        courseId: courseId.toString(),
+        courseId: courseId?.toString() ?? '',
         title: courseStrapi.title,
         description: courseStrapi.description ?? '',
         // TODO: Change new type to save category as array
