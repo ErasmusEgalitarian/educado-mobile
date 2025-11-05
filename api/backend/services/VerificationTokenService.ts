@@ -2,6 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { VerificationTokenListResponse } from '../models/VerificationTokenListResponse';
+import type { VerificationTokenRequest } from '../models/VerificationTokenRequest';
+import type { VerificationTokenResponse } from '../models/VerificationTokenResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -13,8 +16,7 @@ export class VerificationTokenService {
      * @param pagination
      * @param sort
      * @param populate
-     * @param status
-     * @returns any OK
+     * @returns VerificationTokenListResponse OK
      * @throws ApiError
      */
     public static verificationTokenGetVerificationTokens(
@@ -32,19 +34,7 @@ export class VerificationTokenService {
         })),
         sort?: ('userEmail' | 'token' | 'expiresAt' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'userEmail' | 'token' | 'expiresAt' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
         populate?: (string | Array<string>),
-        status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: Array<{
-            documentId: string;
-            id: number;
-            userEmail: string;
-            token: string;
-            expiresAt: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-        }>;
-    }> {
+    ): CancelablePromise<VerificationTokenListResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/verification-tokens',
@@ -55,65 +45,43 @@ export class VerificationTokenService {
                 'pagination': pagination,
                 'sort': sort,
                 'populate': populate,
-                'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
+     * @param requestBody
      * @param fields
      * @param populate
-     * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns VerificationTokenResponse OK
      * @throws ApiError
      */
     public static verificationTokenPostVerificationTokens(
+        requestBody: VerificationTokenRequest,
         fields?: Array<'userEmail' | 'token' | 'expiresAt' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | Array<string>),
-        status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                userEmail: string;
-                token: string;
-                expiresAt: string;
-                publishedAt: string;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            userEmail: string;
-            token: string;
-            expiresAt: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-        };
-    }> {
+    ): CancelablePromise<VerificationTokenResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/verification-tokens',
             query: {
                 'fields': fields,
                 'populate': populate,
-                'status': status,
             },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -123,8 +91,7 @@ export class VerificationTokenService {
      * @param populate
      * @param filters
      * @param sort
-     * @param status
-     * @returns any OK
+     * @returns VerificationTokenResponse OK
      * @throws ApiError
      */
     public static verificationTokenGetVerificationTokensById(
@@ -133,19 +100,7 @@ export class VerificationTokenService {
         populate?: (string | Array<string>),
         filters?: Record<string, any>,
         sort?: ('userEmail' | 'token' | 'expiresAt' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'userEmail' | 'token' | 'expiresAt' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
-        status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            userEmail: string;
-            token: string;
-            expiresAt: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-        };
-    }> {
+    ): CancelablePromise<VerificationTokenResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/verification-tokens/{id}',
@@ -157,51 +112,30 @@ export class VerificationTokenService {
                 'populate': populate,
                 'filters': filters,
                 'sort': sort,
-                'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
      * @param id
+     * @param requestBody
      * @param fields
      * @param populate
-     * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns VerificationTokenResponse OK
      * @throws ApiError
      */
     public static verificationTokenPutVerificationTokensById(
         id: string,
+        requestBody: VerificationTokenRequest,
         fields?: Array<'userEmail' | 'token' | 'expiresAt' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | Array<string>),
-        status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                userEmail?: string;
-                token?: string;
-                expiresAt?: string;
-                publishedAt?: string;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            userEmail: string;
-            token: string;
-            expiresAt: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-        };
-    }> {
+    ): CancelablePromise<VerificationTokenResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/verification-tokens/{id}',
@@ -211,16 +145,15 @@ export class VerificationTokenService {
             query: {
                 'fields': fields,
                 'populate': populate,
-                'status': status,
             },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -229,8 +162,7 @@ export class VerificationTokenService {
      * @param fields
      * @param populate
      * @param filters
-     * @param status
-     * @returns any OK
+     * @returns number OK
      * @throws ApiError
      */
     public static verificationTokenDeleteVerificationTokensById(
@@ -238,19 +170,7 @@ export class VerificationTokenService {
         fields?: Array<'userEmail' | 'token' | 'expiresAt' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | Array<string>),
         filters?: Record<string, any>,
-        status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            userEmail: string;
-            token: string;
-            expiresAt: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-        };
-    }> {
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/verification-tokens/{id}',
@@ -261,14 +181,13 @@ export class VerificationTokenService {
                 'fields': fields,
                 'populate': populate,
                 'filters': filters,
-                'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }

@@ -2,6 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { LectureListResponse } from '../models/LectureListResponse';
+import type { LectureRequest } from '../models/LectureRequest';
+import type { LectureResponse } from '../models/LectureResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -14,7 +17,7 @@ export class LectureService {
      * @param sort
      * @param populate
      * @param status
-     * @returns any OK
+     * @returns LectureListResponse OK
      * @throws ApiError
      */
     public static lectureGetLectures(
@@ -33,18 +36,7 @@ export class LectureService {
         sort?: ('title' | 'completed' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'title' | 'completed' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
         populate?: (string | 'content' | Array<'content'>),
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: Array<{
-            documentId: string;
-            id: number;
-            title: string;
-            completed: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            content?: Array<any>;
-        }>;
-    }> {
+    ): CancelablePromise<LectureListResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/lectures',
@@ -58,46 +50,28 @@ export class LectureService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
+     * @param requestBody
      * @param fields
      * @param populate
      * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns LectureResponse OK
      * @throws ApiError
      */
     public static lecturePostLectures(
+        requestBody: LectureRequest,
         fields?: Array<'title' | 'completed' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | 'content' | Array<'content'>),
         status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                title: string;
-                completed: '0' | '1' | 't' | 'true' | 'f' | 'false';
-                publishedAt: string;
-                content?: Array<any>;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            title: string;
-            completed: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            content?: Array<any>;
-        };
-    }> {
+    ): CancelablePromise<LectureResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/lectures',
@@ -109,11 +83,11 @@ export class LectureService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -124,7 +98,7 @@ export class LectureService {
      * @param filters
      * @param sort
      * @param status
-     * @returns any OK
+     * @returns LectureResponse OK
      * @throws ApiError
      */
     public static lectureGetLecturesById(
@@ -134,18 +108,7 @@ export class LectureService {
         filters?: Record<string, any>,
         sort?: ('title' | 'completed' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'title' | 'completed' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            title: string;
-            completed: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            content?: Array<any>;
-        };
-    }> {
+    ): CancelablePromise<LectureResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/lectures/{id}',
@@ -160,48 +123,30 @@ export class LectureService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
      * @param id
+     * @param requestBody
      * @param fields
      * @param populate
      * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns LectureResponse OK
      * @throws ApiError
      */
     public static lecturePutLecturesById(
         id: string,
+        requestBody: LectureRequest,
         fields?: Array<'title' | 'completed' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | 'content' | Array<'content'>),
         status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                title?: string;
-                completed?: '0' | '1' | 't' | 'true' | 'f' | 'false';
-                publishedAt?: string;
-                content?: Array<any>;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            title: string;
-            completed: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            content?: Array<any>;
-        };
-    }> {
+    ): CancelablePromise<LectureResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/lectures/{id}',
@@ -216,11 +161,11 @@ export class LectureService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -230,7 +175,7 @@ export class LectureService {
      * @param populate
      * @param filters
      * @param status
-     * @returns any OK
+     * @returns number OK
      * @throws ApiError
      */
     public static lectureDeleteLecturesById(
@@ -239,18 +184,7 @@ export class LectureService {
         populate?: (string | 'content' | Array<'content'>),
         filters?: Record<string, any>,
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            title: string;
-            completed: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            content?: Array<any>;
-        };
-    }> {
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/lectures/{id}',
@@ -264,11 +198,11 @@ export class LectureService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }

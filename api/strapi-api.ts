@@ -1,7 +1,7 @@
 import { CourseService } from "@/api/backend";
-import { mapToCourse, mapToSectionComponent } from "@/api/dto-mapper";
+import { mapToSectionComponent } from "@/api/dto-mapper";
+import { mapToCourse } from "@/api/strapi-mapper";
 import { sectionComponentDtoSchema } from "@/types/legacy-api-dto";
-import { courseModelSchema } from "@/types/legacy-api-model";
 
 /**
  * Gets all components for a specific section.
@@ -26,11 +26,22 @@ export const getAllComponentsBySectionIdStrapi = async (id: string) => {
  * @throws {@link AxiosError}
  */
 export const getAllCoursesStrapi = async () => {
-    const response = await CourseService.courseGetCourses()
+    const response = await CourseService.courseGetCourses(
+        [
+            'title',
+            'description',
+            'difficulty',
+            'updatedAt',
+            'createdAt',
+            'publishedAt',
+        ],
+        undefined, // filters
+        undefined, // q
+        undefined, // pagination
+        undefined, // sort
+        ['course_categories', 'content_creators'], // populate
+        undefined, // status
+    )
 
-    const parsed = courseModelSchema.array().parse(response.data);
-
-    console.log("response", response);
-
-    return parsed.map(mapToCourse);
+    return response.data?.map(mapToCourse)
 };

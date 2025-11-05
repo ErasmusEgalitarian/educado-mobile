@@ -2,6 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CourseSelectionListResponse } from '../models/CourseSelectionListResponse';
+import type { CourseSelectionRequest } from '../models/CourseSelectionRequest';
+import type { CourseSelectionResponse } from '../models/CourseSelectionResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -14,7 +17,7 @@ export class CourseSelectionService {
      * @param sort
      * @param populate
      * @param status
-     * @returns any OK
+     * @returns CourseSelectionListResponse OK
      * @throws ApiError
      */
     public static courseSelectionGetCourseSelections(
@@ -33,156 +36,7 @@ export class CourseSelectionService {
         sort?: ('title' | 'description' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'title' | 'description' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
         populate?: (string | 'exercises' | 'lectures' | 'course' | Array<'exercises' | 'lectures' | 'course'>),
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: Array<{
-            documentId: string;
-            id: number;
-            title: string;
-            description?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercises?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            }>;
-            lectures?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                completed: boolean;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                content?: Array<any>;
-            }>;
-            course?: {
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            };
-        }>;
-    }> {
+    ): CancelablePromise<CourseSelectionListResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/course-selections',
@@ -196,186 +50,28 @@ export class CourseSelectionService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
+     * @param requestBody
      * @param fields
      * @param populate
      * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns CourseSelectionResponse OK
      * @throws ApiError
      */
     public static courseSelectionPostCourseSelections(
+        requestBody: CourseSelectionRequest,
         fields?: Array<'title' | 'description' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | 'exercises' | 'lectures' | 'course' | Array<'exercises' | 'lectures' | 'course'>),
         status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                title: string;
-                description?: string;
-                publishedAt: string;
-                exercises?: Array<string>;
-                lectures?: Array<string>;
-                course?: string;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            title: string;
-            description?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercises?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            }>;
-            lectures?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                completed: boolean;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                content?: Array<any>;
-            }>;
-            course?: {
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            };
-        };
-    }> {
+    ): CancelablePromise<CourseSelectionResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/course-selections',
@@ -387,11 +83,11 @@ export class CourseSelectionService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -402,7 +98,7 @@ export class CourseSelectionService {
      * @param filters
      * @param sort
      * @param status
-     * @returns any OK
+     * @returns CourseSelectionResponse OK
      * @throws ApiError
      */
     public static courseSelectionGetCourseSelectionsById(
@@ -412,156 +108,7 @@ export class CourseSelectionService {
         filters?: Record<string, any>,
         sort?: ('title' | 'description' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'title' | 'description' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            title: string;
-            description?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercises?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            }>;
-            lectures?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                completed: boolean;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                content?: Array<any>;
-            }>;
-            course?: {
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            };
-        };
-    }> {
+    ): CancelablePromise<CourseSelectionResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/course-selections/{id}',
@@ -576,188 +123,30 @@ export class CourseSelectionService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
      * @param id
+     * @param requestBody
      * @param fields
      * @param populate
      * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns CourseSelectionResponse OK
      * @throws ApiError
      */
     public static courseSelectionPutCourseSelectionsById(
         id: string,
+        requestBody: CourseSelectionRequest,
         fields?: Array<'title' | 'description' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | 'exercises' | 'lectures' | 'course' | Array<'exercises' | 'lectures' | 'course'>),
         status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                title?: string;
-                description?: string;
-                publishedAt?: string;
-                exercises?: Array<string>;
-                lectures?: Array<string>;
-                course?: string;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            title: string;
-            description?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercises?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            }>;
-            lectures?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                completed: boolean;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                content?: Array<any>;
-            }>;
-            course?: {
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            };
-        };
-    }> {
+    ): CancelablePromise<CourseSelectionResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/course-selections/{id}',
@@ -772,11 +161,11 @@ export class CourseSelectionService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -786,7 +175,7 @@ export class CourseSelectionService {
      * @param populate
      * @param filters
      * @param status
-     * @returns any OK
+     * @returns number OK
      * @throws ApiError
      */
     public static courseSelectionDeleteCourseSelectionsById(
@@ -795,156 +184,7 @@ export class CourseSelectionService {
         populate?: (string | 'exercises' | 'lectures' | 'course' | Array<'exercises' | 'lectures' | 'course'>),
         filters?: Record<string, any>,
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            title: string;
-            description?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercises?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            }>;
-            lectures?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                completed: boolean;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                content?: Array<any>;
-            }>;
-            course?: {
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            };
-        };
-    }> {
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/course-selections/{id}',
@@ -958,11 +198,11 @@ export class CourseSelectionService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }

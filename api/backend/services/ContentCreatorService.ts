@@ -2,6 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ContentCreatorListResponse } from '../models/ContentCreatorListResponse';
+import type { ContentCreatorRequest } from '../models/ContentCreatorRequest';
+import type { ContentCreatorResponse } from '../models/ContentCreatorResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -14,7 +17,7 @@ export class ContentCreatorService {
      * @param sort
      * @param populate
      * @param status
-     * @returns any OK
+     * @returns ContentCreatorListResponse OK
      * @throws ApiError
      */
     public static contentCreatorGetContentCreators(
@@ -31,142 +34,9 @@ export class ContentCreatorService {
             limit: number;
         })),
         sort?: ('firstName' | 'lastName' | 'verifiedAt' | 'biography' | 'email' | 'password' | 'education' | 'statusValue' | 'courseExperience' | 'institution' | 'eduStart' | 'eduEnd' | 'currentCompany' | 'currentJobTitle' | 'companyStart' | 'companyEnd' | 'jobDescription' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'firstName' | 'lastName' | 'verifiedAt' | 'biography' | 'email' | 'password' | 'education' | 'statusValue' | 'courseExperience' | 'institution' | 'eduStart' | 'eduEnd' | 'currentCompany' | 'currentJobTitle' | 'companyStart' | 'companyEnd' | 'jobDescription' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
-        populate?: (string | 'courses' | Array<'courses'>),
+        populate?: (string | 'courses' | 'user_logs' | Array<'courses' | 'user_logs'>),
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: Array<{
-            documentId: string;
-            id: number;
-            firstName: string;
-            lastName?: string;
-            verifiedAt?: string;
-            biography?: string;
-            email: string;
-            education: 'TODO1' | 'TODO2' | 'TODO3';
-            statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-            courseExperience: string;
-            institution: string;
-            eduStart: string;
-            eduEnd: string;
-            currentCompany: string;
-            currentJobTitle: string;
-            companyStart: string;
-            companyEnd?: string;
-            jobDescription?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            courses?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            }>;
-        }>;
-    }> {
+    ): CancelablePromise<ContentCreatorListResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/content-creators',
@@ -180,183 +50,28 @@ export class ContentCreatorService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
+     * @param requestBody
      * @param fields
      * @param populate
      * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns ContentCreatorResponse OK
      * @throws ApiError
      */
     public static contentCreatorPostContentCreators(
+        requestBody: ContentCreatorRequest,
         fields?: Array<'firstName' | 'lastName' | 'verifiedAt' | 'biography' | 'email' | 'password' | 'education' | 'statusValue' | 'courseExperience' | 'institution' | 'eduStart' | 'eduEnd' | 'currentCompany' | 'currentJobTitle' | 'companyStart' | 'companyEnd' | 'jobDescription' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
-        populate?: (string | 'courses' | Array<'courses'>),
+        populate?: (string | 'courses' | 'user_logs' | Array<'courses' | 'user_logs'>),
         status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                firstName: string;
-                lastName?: string;
-                verifiedAt?: string;
-                biography?: string;
-                email: string;
-                password: string;
-                education: 'TODO1' | 'TODO2' | 'TODO3';
-                statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                courseExperience: string;
-                institution: string;
-                eduStart: string;
-                eduEnd: string;
-                currentCompany: string;
-                currentJobTitle: string;
-                companyStart: string;
-                companyEnd?: string;
-                jobDescription?: string;
-                publishedAt: string;
-                courses?: Array<string>;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            firstName: string;
-            lastName?: string;
-            verifiedAt?: string;
-            biography?: string;
-            email: string;
-            education: 'TODO1' | 'TODO2' | 'TODO3';
-            statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-            courseExperience: string;
-            institution: string;
-            eduStart: string;
-            eduEnd: string;
-            currentCompany: string;
-            currentJobTitle: string;
-            companyStart: string;
-            companyEnd?: string;
-            jobDescription?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            courses?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            }>;
-        };
-    }> {
+    ): CancelablePromise<ContentCreatorResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/content-creators',
@@ -368,11 +83,11 @@ export class ContentCreatorService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -383,150 +98,17 @@ export class ContentCreatorService {
      * @param filters
      * @param sort
      * @param status
-     * @returns any OK
+     * @returns ContentCreatorResponse OK
      * @throws ApiError
      */
     public static contentCreatorGetContentCreatorsById(
         id: string,
         fields?: Array<'firstName' | 'lastName' | 'verifiedAt' | 'biography' | 'email' | 'password' | 'education' | 'statusValue' | 'courseExperience' | 'institution' | 'eduStart' | 'eduEnd' | 'currentCompany' | 'currentJobTitle' | 'companyStart' | 'companyEnd' | 'jobDescription' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
-        populate?: (string | 'courses' | Array<'courses'>),
+        populate?: (string | 'courses' | 'user_logs' | Array<'courses' | 'user_logs'>),
         filters?: Record<string, any>,
         sort?: ('firstName' | 'lastName' | 'verifiedAt' | 'biography' | 'email' | 'password' | 'education' | 'statusValue' | 'courseExperience' | 'institution' | 'eduStart' | 'eduEnd' | 'currentCompany' | 'currentJobTitle' | 'companyStart' | 'companyEnd' | 'jobDescription' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'firstName' | 'lastName' | 'verifiedAt' | 'biography' | 'email' | 'password' | 'education' | 'statusValue' | 'courseExperience' | 'institution' | 'eduStart' | 'eduEnd' | 'currentCompany' | 'currentJobTitle' | 'companyStart' | 'companyEnd' | 'jobDescription' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            firstName: string;
-            lastName?: string;
-            verifiedAt?: string;
-            biography?: string;
-            email: string;
-            education: 'TODO1' | 'TODO2' | 'TODO3';
-            statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-            courseExperience: string;
-            institution: string;
-            eduStart: string;
-            eduEnd: string;
-            currentCompany: string;
-            currentJobTitle: string;
-            companyStart: string;
-            companyEnd?: string;
-            jobDescription?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            courses?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            }>;
-        };
-    }> {
+    ): CancelablePromise<ContentCreatorResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/content-creators/{id}',
@@ -541,185 +123,30 @@ export class ContentCreatorService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
      * @param id
+     * @param requestBody
      * @param fields
      * @param populate
      * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns ContentCreatorResponse OK
      * @throws ApiError
      */
     public static contentCreatorPutContentCreatorsById(
         id: string,
+        requestBody: ContentCreatorRequest,
         fields?: Array<'firstName' | 'lastName' | 'verifiedAt' | 'biography' | 'email' | 'password' | 'education' | 'statusValue' | 'courseExperience' | 'institution' | 'eduStart' | 'eduEnd' | 'currentCompany' | 'currentJobTitle' | 'companyStart' | 'companyEnd' | 'jobDescription' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
-        populate?: (string | 'courses' | Array<'courses'>),
+        populate?: (string | 'courses' | 'user_logs' | Array<'courses' | 'user_logs'>),
         status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                firstName?: string;
-                lastName?: string;
-                verifiedAt?: string;
-                biography?: string;
-                email?: string;
-                password?: string;
-                education?: 'TODO1' | 'TODO2' | 'TODO3';
-                statusValue?: 'TODO1' | 'TODO2' | 'TODO3';
-                courseExperience?: string;
-                institution?: string;
-                eduStart?: string;
-                eduEnd?: string;
-                currentCompany?: string;
-                currentJobTitle?: string;
-                companyStart?: string;
-                companyEnd?: string;
-                jobDescription?: string;
-                publishedAt?: string;
-                courses?: Array<string>;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            firstName: string;
-            lastName?: string;
-            verifiedAt?: string;
-            biography?: string;
-            email: string;
-            education: 'TODO1' | 'TODO2' | 'TODO3';
-            statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-            courseExperience: string;
-            institution: string;
-            eduStart: string;
-            eduEnd: string;
-            currentCompany: string;
-            currentJobTitle: string;
-            companyStart: string;
-            companyEnd?: string;
-            jobDescription?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            courses?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            }>;
-        };
-    }> {
+    ): CancelablePromise<ContentCreatorResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/content-creators/{id}',
@@ -734,11 +161,11 @@ export class ContentCreatorService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -748,149 +175,16 @@ export class ContentCreatorService {
      * @param populate
      * @param filters
      * @param status
-     * @returns any OK
+     * @returns number OK
      * @throws ApiError
      */
     public static contentCreatorDeleteContentCreatorsById(
         id: string,
         fields?: Array<'firstName' | 'lastName' | 'verifiedAt' | 'biography' | 'email' | 'password' | 'education' | 'statusValue' | 'courseExperience' | 'institution' | 'eduStart' | 'eduEnd' | 'currentCompany' | 'currentJobTitle' | 'companyStart' | 'companyEnd' | 'jobDescription' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
-        populate?: (string | 'courses' | Array<'courses'>),
+        populate?: (string | 'courses' | 'user_logs' | Array<'courses' | 'user_logs'>),
         filters?: Record<string, any>,
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            firstName: string;
-            lastName?: string;
-            verifiedAt?: string;
-            biography?: string;
-            email: string;
-            education: 'TODO1' | 'TODO2' | 'TODO3';
-            statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-            courseExperience: string;
-            institution: string;
-            eduStart: string;
-            eduEnd: string;
-            currentCompany: string;
-            currentJobTitle: string;
-            companyStart: string;
-            companyEnd?: string;
-            jobDescription?: string;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            courses?: Array<{
-                documentId: string;
-                id: number;
-                title: string;
-                description?: string;
-                difficulty: number;
-                numOfRatings: number;
-                numOfSubscriptions: number;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                image?: {
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    alternativeText?: string;
-                    caption?: string;
-                    width?: number;
-                    height?: number;
-                    formats?: any;
-                    hash: string;
-                    ext?: string;
-                    mime: string;
-                    size: number;
-                    url: string;
-                    previewUrl?: string;
-                    provider: string;
-                    provider_metadata?: any;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    related: any;
-                };
-                feedbacks?: Array<any>;
-                course_sections?: Array<{
-                    documentId: string;
-                    id: number;
-                    title: string;
-                    description?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercises?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        question: string;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        exercise_options?: Array<{
-                            documentId: string;
-                            id: number;
-                            text: string;
-                            explanation: string;
-                            isCorrect: boolean;
-                            createdAt?: string;
-                            updatedAt?: string;
-                            publishedAt: string;
-                            exercise?: any;
-                        }>;
-                    }>;
-                    lectures?: Array<{
-                        documentId: string;
-                        id: number;
-                        title: string;
-                        completed: boolean;
-                        createdAt?: string;
-                        updatedAt?: string;
-                        publishedAt: string;
-                        content?: Array<any>;
-                    }>;
-                    course?: any;
-                }>;
-                course_categories?: Array<{
-                    documentId: string;
-                    id: number;
-                    name: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-                students?: Array<any>;
-                content_creators?: Array<{
-                    documentId: string;
-                    id: number;
-                    firstName: string;
-                    lastName?: string;
-                    verifiedAt?: string;
-                    biography?: string;
-                    email: string;
-                    education: 'TODO1' | 'TODO2' | 'TODO3';
-                    statusValue: 'TODO1' | 'TODO2' | 'TODO3';
-                    courseExperience: string;
-                    institution: string;
-                    eduStart: string;
-                    eduEnd: string;
-                    currentCompany: string;
-                    currentJobTitle: string;
-                    companyStart: string;
-                    companyEnd?: string;
-                    jobDescription?: string;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    courses?: Array<any>;
-                }>;
-            }>;
-        };
-    }> {
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/content-creators/{id}',
@@ -904,11 +198,11 @@ export class ContentCreatorService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }

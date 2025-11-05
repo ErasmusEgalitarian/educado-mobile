@@ -2,6 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ExerciseOptionListResponse } from '../models/ExerciseOptionListResponse';
+import type { ExerciseOptionRequest } from '../models/ExerciseOptionRequest';
+import type { ExerciseOptionResponse } from '../models/ExerciseOptionResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -14,7 +17,7 @@ export class ExerciseOptionService {
      * @param sort
      * @param populate
      * @param status
-     * @returns any OK
+     * @returns ExerciseOptionListResponse OK
      * @throws ApiError
      */
     public static exerciseOptionGetExerciseOptions(
@@ -33,38 +36,7 @@ export class ExerciseOptionService {
         sort?: ('text' | 'explanation' | 'isCorrect' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'text' | 'explanation' | 'isCorrect' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
         populate?: (string | 'exercise' | Array<'exercise'>),
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: Array<{
-            documentId: string;
-            id: number;
-            text: string;
-            explanation: string;
-            isCorrect: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercise?: {
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            };
-        }>;
-    }> {
+    ): CancelablePromise<ExerciseOptionListResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/exercise-options',
@@ -78,67 +50,28 @@ export class ExerciseOptionService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
+     * @param requestBody
      * @param fields
      * @param populate
      * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns ExerciseOptionResponse OK
      * @throws ApiError
      */
     public static exerciseOptionPostExerciseOptions(
+        requestBody: ExerciseOptionRequest,
         fields?: Array<'text' | 'explanation' | 'isCorrect' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | 'exercise' | Array<'exercise'>),
         status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                text: string;
-                explanation: string;
-                isCorrect: '0' | '1' | 't' | 'true' | 'f' | 'false';
-                publishedAt: string;
-                exercise?: string;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            text: string;
-            explanation: string;
-            isCorrect: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercise?: {
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            };
-        };
-    }> {
+    ): CancelablePromise<ExerciseOptionResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/exercise-options',
@@ -150,11 +83,11 @@ export class ExerciseOptionService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -165,7 +98,7 @@ export class ExerciseOptionService {
      * @param filters
      * @param sort
      * @param status
-     * @returns any OK
+     * @returns ExerciseOptionResponse OK
      * @throws ApiError
      */
     public static exerciseOptionGetExerciseOptionsById(
@@ -175,38 +108,7 @@ export class ExerciseOptionService {
         filters?: Record<string, any>,
         sort?: ('text' | 'explanation' | 'isCorrect' | 'createdAt' | 'updatedAt' | 'publishedAt' | Array<'text' | 'explanation' | 'isCorrect' | 'createdAt' | 'updatedAt' | 'publishedAt'> | Record<string, 'asc' | 'desc'> | Array<Record<string, 'asc' | 'desc'>>),
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            text: string;
-            explanation: string;
-            isCorrect: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercise?: {
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            };
-        };
-    }> {
+    ): CancelablePromise<ExerciseOptionResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/exercise-options/{id}',
@@ -221,69 +123,30 @@ export class ExerciseOptionService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
     /**
      * @param id
+     * @param requestBody
      * @param fields
      * @param populate
      * @param status
-     * @param requestBody
-     * @returns any OK
+     * @returns ExerciseOptionResponse OK
      * @throws ApiError
      */
     public static exerciseOptionPutExerciseOptionsById(
         id: string,
+        requestBody: ExerciseOptionRequest,
         fields?: Array<'text' | 'explanation' | 'isCorrect' | 'createdAt' | 'updatedAt' | 'publishedAt'>,
         populate?: (string | 'exercise' | Array<'exercise'>),
         status?: 'draft' | 'published',
-        requestBody?: {
-            data: {
-                text?: string;
-                explanation?: string;
-                isCorrect?: '0' | '1' | 't' | 'true' | 'f' | 'false';
-                publishedAt?: string;
-                exercise?: string;
-            };
-        },
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            text: string;
-            explanation: string;
-            isCorrect: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercise?: {
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            };
-        };
-    }> {
+    ): CancelablePromise<ExerciseOptionResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/exercise-options/{id}',
@@ -298,11 +161,11 @@ export class ExerciseOptionService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
@@ -312,7 +175,7 @@ export class ExerciseOptionService {
      * @param populate
      * @param filters
      * @param status
-     * @returns any OK
+     * @returns number OK
      * @throws ApiError
      */
     public static exerciseOptionDeleteExerciseOptionsById(
@@ -321,38 +184,7 @@ export class ExerciseOptionService {
         populate?: (string | 'exercise' | Array<'exercise'>),
         filters?: Record<string, any>,
         status?: 'draft' | 'published',
-    ): CancelablePromise<{
-        data: {
-            documentId: string;
-            id: number;
-            text: string;
-            explanation: string;
-            isCorrect: boolean;
-            createdAt?: string;
-            updatedAt?: string;
-            publishedAt: string;
-            exercise?: {
-                documentId: string;
-                id: number;
-                title: string;
-                question: string;
-                createdAt?: string;
-                updatedAt?: string;
-                publishedAt: string;
-                exercise_options?: Array<{
-                    documentId: string;
-                    id: number;
-                    text: string;
-                    explanation: string;
-                    isCorrect: boolean;
-                    createdAt?: string;
-                    updatedAt?: string;
-                    publishedAt: string;
-                    exercise?: any;
-                }>;
-            };
-        };
-    }> {
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/exercise-options/{id}',
@@ -366,11 +198,11 @@ export class ExerciseOptionService {
                 'status': status,
             },
             errors: {
-                400: `Bad request`,
+                400: `Bad Request`,
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not found`,
-                500: `Internal server error`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
             },
         });
     }
