@@ -28,8 +28,9 @@ const CourseScreen = () => {
   const { data: localStudent } = useLoginStudent();
 
   const userId = localStudent.userInfo.id;
+  // TODO: Make use of student from strapi
   const studentQuery = useStudent(userId);
-  const subscriptionsQuery = useSubscribedCourses(userId);
+  const subscriptionsQuery = useSubscribedCourses('l3s8urev2xp9plf5ljfnp196');
 
   const onRefresh = () => {
     void studentQuery.refetch();

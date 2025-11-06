@@ -32,7 +32,7 @@
     "tsc:check:packages": "npm run tsc:check:plugin && npm run tsc:check:config",
     "tsc:check:plugin": "npm -w @educado/eslint-plugin-educado run tsc:check",
     "tsc:ci": "node ./scripts/ci-tsc-report.mjs > tsc-report.json || true",
-    "generate-strapi-client": "openapi --input ./api/openapi/strapi-spec.json --output ./api/backend --client fetch"
+    "generate-strapi-client": "openapi-ts"
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
@@ -100,6 +100,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/js": "^9.37.0",
+    "@hey-api/openapi-ts": "0.85.2",
     "@jest/globals": "^29.7.0",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@testing-library/react-native": "^11.5.0",

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Alert, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
-import { sendAudioToChatbot } from "@/api/api";
+import { sendAudioToChatbot } from "@/api/legacy-api";
 import { Icon } from "@rneui/themed";
 import { AudioResponse } from "@/types/ai";
 import { Course } from "@/types/course";

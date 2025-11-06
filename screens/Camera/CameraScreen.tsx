@@ -17,7 +17,7 @@ import {
 import { uploadPhoto } from "../../api/user-api";
 import BackButton from "../../components/General/BackButton";
 import { getLoginToken } from "../../services/storage-service";
-import { getBucketImage } from "../../api/api";
+import { getBucketImage } from "../../api/legacy-api";
 
 const CameraScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);

@@ -1,36 +1,35 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addCourseToStudent,
   completeComponent,
   deleteUser,
+  getAllComponentsBySectionId,
   getAllFeedbackOptions,
   getAllSections,
-  getAllStudentSubscriptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
-  getCourseById,
   getSectionById,
   getStudentById,
   loginUser,
   subscribeCourse,
   unsubscribeCourse,
-  updateStudyStreak,
+  updateStudyStreak
 } from "@/api/legacy-api";
-import {
-  documentDirectory,
-  EncodingType,
-  writeAsStringAsync,
-} from "expo-file-system";
+import { getAllCoursesStrapi, getAllStudentSubscriptionsStrapi, getCourseByIdStrapi } from "@/api/strapi-api";
 import { setJWT, setUserInfo } from "@/services/storage-service";
+import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import {
   LoginStudent,
   SectionComponentExercise,
   SectionComponentLecture,
   Student,
 } from "@/types";
-import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getAllComponentsBySectionIdStrapi, getAllCoursesStrapi } from "@/api/strapi-api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  documentDirectory,
+  EncodingType,
+  writeAsStringAsync,
+} from "expo-file-system";
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -61,7 +60,7 @@ export const useCourses = () =>
 export const useCourse = (id: string) =>
   useQuery({
     queryKey: queryKeys.course(id),
-    queryFn: () => getCourseById(id),
+    queryFn: () => getCourseByIdStrapi(id),
   });
 
 /**
@@ -71,7 +70,7 @@ export const useCourse = (id: string) =>
 export const useSectionComponents = (id: string) =>
   useQuery({
     queryKey: queryKeys.sectionComponents(id),
-    queryFn: () => getAllComponentsBySectionIdStrapi(id),
+    queryFn: () => getAllComponentsBySectionId(id),
   });
 
 export const useSubscribeToCourse = () => {
@@ -119,7 +118,7 @@ export const useUnsubscribeFromCourse = () => {
 export const useSubscribedCourses = (id: string) =>
   useQuery({
     queryKey: queryKeys.subscriptions(id),
-    queryFn: () => getAllStudentSubscriptions(id),
+    queryFn: () => getAllStudentSubscriptionsStrapi(id),
   });
 
 /**

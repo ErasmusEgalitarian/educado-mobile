@@ -1,4 +1,4 @@
-import * as api from "@/api/api";
+import * as api from "@/api/legacy-api";
 import * as userApi from "@/api/user-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NetworkStatusService } from "@/services/network-status-service";
@@ -240,7 +240,7 @@ export const setUserInfo = async (userInfo: UserInfo) => {
  * @returns {Promise<string>} A promise that resolves with the JWT.
  */
 // TODO: Rename setJWT to SetJwt
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 export const getJWT = async (): Promise<string | null> => {
   return await AsyncStorage.getItem(STORAGE_KEYS.LOGIN_TOKEN);
 };
@@ -250,7 +250,7 @@ export const getJWT = async (): Promise<string | null> => {
  * @param {string} jwt - The JWT to store.
  */
 // TODO: Rename getJWT to GetJwt
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 export const setJWT = async (jwt: string) => {
   await AsyncStorage.setItem(STORAGE_KEYS.LOGIN_TOKEN, jwt);
 };
@@ -379,7 +379,7 @@ export const fetchLectureImage = async (imageId: string, lectureId: string) => {
  * gets videoURL for a Lecture if online, and video in base64 from file if offline
  */
 // todo! fix name from getVideoURL to getVideoUrl
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 export const getVideoURL = async (videoName: string, resolution: string) => {
   if (!resolution) {
     resolution = "360";
@@ -662,7 +662,7 @@ export const updateStoredCourses = async () => {
     if (
       (course = await getLocalItem<ApiCourse>(
         subListElement.courseId +
-          (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
+        (await AsyncStorage.getItem(STORAGE_KEYS.USER_ID)),
       )) !== null &&
       course.dateUpdated !== subListElement.dateUpdated
     ) {

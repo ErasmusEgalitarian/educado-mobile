@@ -1,23 +1,25 @@
-/* eslint-disable eqeqeq */
 
 
-import { OpenAPI } from "@/api/backend/core/OpenAPI";
+import { client } from "@/api/backend/client.gen";
 import Constants from "expo-constants";
+
+export const getBaseApiUrl = (): string => {
+  const strapiUrl = process.env.EXPO_PUBLIC_STRAPI_BACKEND;
+  return strapiUrl ?? "http://localhost:1337";
+};
 
 /**
  * Configures the API client with base URL and authentication token from environment variables.
  * @throws {Error} When VITE_STRAPI_API_TOKEN is not set in environment variables
  */
-const configureApiClient = () => {
-  // Set the base URL from environment variable
-  const strapiUrl = process.env.EXPO_PUBLIC_STRAPI_BACKEND;
-  OpenAPI.BASE = strapiUrl ?? "http://localhost:1337";
+export const configureApiClient = () => {
+  const baseUrl = getBaseApiUrl();
 
   // Set the API token if available
   const apiToken = Constants.expoConfig?.extra?.STRAPI_TOKEN as string | undefined;
-  if (apiToken != undefined) {
-    OpenAPI.TOKEN = apiToken;
-  } else {
+
+  // eslint-disable-next-line eqeqeq
+  if (apiToken == undefined) {
     console.error(
       "Warning: VITE_STRAPI_API_TOKEN is not set in environment variables. API requests may fail.",
     );
@@ -26,10 +28,37 @@ const configureApiClient = () => {
     );
   }
 
+  // Configure the client with base URL and authorization header
+  client.setConfig({
+    baseUrl,
+    headers: {
+      Authorization: `Bearer ${apiToken}`,
+    },
+    throwOnError: true,
+  });
+
+  // Request interceptor for logging in development
+  client.interceptors.request.use((request) => {
+    if (__DEV__) {
+
+      console.log(`Request 📤 ${request.method} ${request.url}`);
+    }
+    return request;
+  });
+
+  // Response interceptor for logging
+  client.interceptors.response.use((response) => {
+    if (__DEV__) {
+
+      console.log(`Response 📥 ${response.url}`, { status: response.status });
+    }
+    return response;
+  });
+
 
   console.log("API Client configured:", {
-    baseUrl: OpenAPI.BASE,
-    hasToken: OpenAPI.TOKEN !== "",
+    baseUrl,
+    hasToken: apiToken !== "",
   });
 };
 
@@ -38,13 +67,17 @@ const configureApiClient = () => {
  * Used when making fetch calls outside the generated API client.
  * @returns {Record<string, string>} Headers object for fetch requests
  */
-export const fetchHeaders = () => {
+export const fetchHeaders = (): Record<string, string> => {
+  const apiToken = Constants.expoConfig?.extra?.STRAPI_TOKEN as string | undefined;
+
   const headers: Record<string, string> = {
     Accept: "application/json",
   };
-  if (OpenAPI.TOKEN !== undefined && OpenAPI.TOKEN !== "") {
-    headers.Authorization = `Bearer ${String(OpenAPI.TOKEN)}`;
+
+  if (apiToken !== undefined && apiToken !== "") {
+    headers.Authorization = `Bearer ${apiToken}`;
   }
+
   return headers;
 };
 
