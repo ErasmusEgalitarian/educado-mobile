@@ -1,5 +1,7 @@
-import type { Course } from "@/types";
-import type { PopulatedCourse } from "@/types/strapi-populated";
+import type { Component, Course, Section } from "@/types";
+import type { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
+// TODO: Looks like the naming of the CourseSection is incorrect in the Strapi model.
+import type { CourseSelection as CourseSectionStrapi, CourseSelection } from "@/api/backend/models/CourseSelection";
 
 export const mapToCourse = (courseStrapi: PopulatedCourse): Course => {
     const categories = courseStrapi.course_categories ?? [];
@@ -30,5 +32,34 @@ export const mapToCourse = (courseStrapi: PopulatedCourse): Course => {
         topFeedbackOptions: courseStrapi.feedbacks?.sort((a, b) => b.rating - a.rating)[0]?.feedbackText ?? '',
         dateOfDownload: courseStrapi.createdAt,
         sections: courseStrapi.course_sections?.map((section) => section.title) ?? [],
+    };
+};
+
+
+export const mapToSection = (courseSectionStrapi: PopulatedSection): Section => {
+    const exercises = courseSectionStrapi.exercises ?? [];
+    const lectures = courseSectionStrapi.lectures ?? [];
+    const course = courseSectionStrapi.course;
+
+    // Combine exercises and lectures into components
+    const components: Component[] = [
+        ...exercises.map(exercise => ({
+            compId: exercise.id?.toString() ?? "",
+            compType: "exercise" as const
+        })),
+        ...lectures.map(lecture => ({
+            compId: lecture.id?.toString() ?? "",
+            compType: "lecture" as const
+        }))
+    ];
+
+    return {
+        sectionId: courseSectionStrapi.id?.toString() ?? "",
+        // TODO: parentCourseId not exist in Strapi model, but i guess it is the course relation
+        parentCourseId: course?.id?.toString() ?? "",
+        title: courseSectionStrapi.title ?? "",
+        description: courseSectionStrapi.documentId ?? "",
+        total: components.length,
+        components
     };
 };

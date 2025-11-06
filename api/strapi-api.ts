@@ -1,9 +1,10 @@
-import { CourseService } from "@/api/backend";
-import { mapToSectionComponent } from "@/api/dto-mapper";
-import { mapToCourse } from "@/api/strapi-mapper";
+import { CourseSelection, CourseSelectionService, CourseService } from "@/api/backend";
+import { mapToCourse, mapToSection } from "@/api/strapi-mapper";
 import { sectionComponentDtoSchema } from "@/types/legacy-api-dto";
-import { PopulatedCourse } from "@/types/strapi-populated";
+import { sectionModelSchema } from "@/types/legacy-api-model";
+import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 import { AxiosResponse } from "axios";
+import { mapToSectionComponent } from "./dto-mapper";
 
 /**
  * Gets all components for a specific section.
@@ -84,4 +85,38 @@ export const getAllCoursesStrapi = async () => {
     ) as AxiosResponse<PopulatedCourse[]>;
 
     return response.data.map(mapToCourse)
+};
+
+
+/**
+ * Gets all sections for a specific course.
+ *
+ * @param id - The course ID.
+ * @returns A list of sections.
+ * @throws {@link AxiosError}
+ */
+export const getAllSectionsStrapi = async (id: string) => {
+  const response = await CourseSelectionService.courseSelectionGetCourseSelections(
+     [
+            'title',
+            'description',
+        ],
+        {
+            course: {
+                id: {
+                    $eq: id
+                }
+            }
+        }, // filters - now using the course ID
+        undefined, // q
+        undefined, // pagination
+        undefined, // sort
+        [
+            'exercises',
+            'lectures',
+            'course',
+        ], // populate
+  ) as AxiosResponse<PopulatedSection[]>
+
+  return response.data.map(mapToSection);
 };

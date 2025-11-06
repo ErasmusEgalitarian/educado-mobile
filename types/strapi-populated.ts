@@ -5,6 +5,7 @@ import type { ContentCreator as ContentCreatorStrapi } from "@/api/backend/model
 import type { CourseSelection as CourseSectionStrapi } from "@/api/backend/models/CourseSelection";
 import type { Feedback as FeedbackStrapi } from "@/api/backend/models/Feedback";
 import type { Student as StudentStrapi } from "@/api/backend/models/Student";
+import { Exercise, Lecture } from "@/api/backend";
 
 export type PopulatedCourse = Omit<CourseStrapi,
     'course_categories' |
@@ -18,4 +19,15 @@ export type PopulatedCourse = Omit<CourseStrapi,
     feedbacks?: FeedbackStrapi[];
     course_sections?: CourseSectionStrapi[];
     students?: StudentStrapi[];
+}
+
+
+export type PopulatedSection = Omit<CourseSectionStrapi,
+    'exercises'|
+    'lectures' |
+    'course'   
+> & {
+    exercises?: Exercise[];
+    lectures?: Lecture[];
+    course?: PopulatedCourse;
 }
