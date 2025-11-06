@@ -22,6 +22,38 @@ export const getAllComponentsBySectionIdStrapi = async (id: string) => {
 
 
 /**
+ * Gets a course by ID.
+ *
+ * @param courseId - The course ID.
+ * @returns A course object.
+ * @throws {@link AxiosError}
+ */
+export const getCourseByIdStrapi = async (courseId: string) => {
+
+    const response = await CourseService.courseGetCoursesById(
+        courseId,
+        [
+            'title',
+            'description',
+            'difficulty',
+            'createdAt',
+            'updatedAt',
+            'publishedAt',
+        ],
+        [
+            'course_categories',
+            'content_creators',
+            'image',
+            'feedbacks',
+            'course_sections',
+            'students',
+        ],
+    ) as AxiosResponse<PopulatedCourse>;
+
+    return mapToCourse(response.data);
+};
+
+/**
  * Gets all courses.
  *
  * @returns A list of courses.

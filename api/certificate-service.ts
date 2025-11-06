@@ -1,8 +1,8 @@
 import axios, { isAxiosError } from "axios";
-import { getCourse } from "./api";
 import { getUserInfo } from "../services/storage-service";
 import { getStudentInfo } from "./user-api";
 import { certificateServiceClient } from "../axios";
+import { getCourseByIdStrapi } from "@/api/strapi-api";
 
 // Get certificates from student
 export const fetchCertificates = async (userId: string) => {
@@ -36,7 +36,7 @@ export const generateCertificate = async (
 ) => {
   try {
     // Fetch course data
-    const courseData = await getCourse(courseId);
+    const courseData = await getCourseByIdStrapi(courseId);
 
     // Fetch student data and user data concurrently
     const [studentData, userData] = await Promise.all([
@@ -51,11 +51,11 @@ export const generateCertificate = async (
 
     const object = {
       courseName: courseData.title,
-      courseId: courseData._id,
-      studentId: studentData._id,
+      courseId: courseData.courseId,
+      studentId: studentData.id,
       studentFirstName: userData.firstName,
       studentLastName: userData.lastName,
-      courseCreator: courseData.creator,
+      courseCreator: courseData.creatorId,
       estimatedCourseDuration: courseData.estimatedHours || 0,
       dateOfCompletion: new Date().toISOString().split("T")[0], // current date
       courseCategory: courseData.category,

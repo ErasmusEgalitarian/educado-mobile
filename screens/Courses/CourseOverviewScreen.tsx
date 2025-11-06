@@ -13,7 +13,7 @@ import { ContinueSectionButton } from "@/components/Section/ContinueSectionButto
 import Tooltip from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
-import { getBucketImageByFilename } from "@/api/legacy-api";
+import { getBucketImageByFilename } from "@/api/api";
 import type { Section, Course } from "@/types";
 import { Shadow } from "react-native-shadow-2";
 import { t } from "@/i18n";

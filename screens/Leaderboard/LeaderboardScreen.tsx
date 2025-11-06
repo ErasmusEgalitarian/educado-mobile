@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getLeaderboardDataAndUserRank } from "@/api/legacy-api";
+import { getLeaderboardDataAndUserRank } from "@/api/api";
 import { getUserInfo } from "@/services/storage-service";
 import LeaveButton from "@/components/Exercise/LeaveButton";
 import { LeaderboardUser } from "@/types";

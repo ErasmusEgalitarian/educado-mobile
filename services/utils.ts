@@ -3,7 +3,7 @@ import {
   completeComponent as apiCompleteComponent,
   getCourseById,
   createCertificate,
-} from "@/api/legacy-api";
+} from "@/api/api";
 import "intl";
 import "intl/locale-data/jsonp/en-GB";
 import AsyncStorage from "@react-native-async-storage/async-storage";

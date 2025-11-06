@@ -8,7 +8,7 @@ import { FormFieldAlert } from "@/components/General/Forms/FormFieldAlert";
 import { removeEmojis } from "@/components/General/validation";
 import ShowAlert from "@/components/General/ShowAlert";
 import { isAxiosError } from "axios";
-import { toApiError } from "@/api/legacy-api";
+import { toApiError } from "@/api/api";
 import { useLogin } from "@/hooks/query";
 
 /**

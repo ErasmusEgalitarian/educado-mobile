@@ -106,7 +106,7 @@ export default function Feedback({ setFeedbackData }) {
 
           <View className="w-full flex-row items-center justify-center">
             {ratingIcons.map((icon, index) => (
-              <Pressable key={index} onPress={() => handleStarClick(index)}>
+              <Pressable key={index} onPress={() => { handleStarClick(index); }}>
                 <MaterialCommunityIcons
                   key={index}
                   name={icon.icon}
@@ -130,7 +130,7 @@ export default function Feedback({ setFeedbackData }) {
                 const id = option._id;
                 const selected = selectedOptions.includes(id);
                 return (
-                  <Pressable key={index} onPress={() => handleOptionClick(id)}>
+                  <Pressable key={index} onPress={() => { handleOptionClick(id); }}>
                     <View
                       className={`my-[5px] rounded-lg border-[1px] border-cyanBlue px-2 py-2 ${selected ? "bg-bgprimary_custom" : ""}`}
                     >
@@ -155,7 +155,7 @@ export default function Feedback({ setFeedbackData }) {
               className="font-montserrat-bold my-4 h-[100px] w-full rounded-lg border-[1px] border-projectGray p-4 text-top"
               placeholder="Escreva aqui seu feedback"
               placeholderTextColor={"#A1ACB2"}
-              onChangeText={(text) => setFeedbackText(text)}
+              onChangeText={(text) => { setFeedbackText(text); }}
               value={feedbackText}
               multiline
             />
