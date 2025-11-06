@@ -1,5 +1,1 @@
-export interface ApiFeedbackOptions {
-  _id: string;
-  name: string;
-  __v: 0;
-}
+export { FeedbackOptionDto as ApiFeedbackOptions } from "@/types/legacy-api-dto";

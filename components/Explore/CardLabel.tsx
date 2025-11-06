@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
 import { colors, NewColorNames } from "@/theme/colors";
 import { TextClass } from "@/theme/typography";
-import type { Icon } from "@/types/icon";
+import type { Icon } from "@/types";
 
 export interface CardLabelProps {
   title: string;
@@ -17,7 +17,7 @@ export interface CardLabelProps {
  * @param icon - The icon of the label.
  * @param color - The color of the label and icon.
  * @param font - Styling of font, such as size and weight.
- * @returns {JSX.Element} - Returns a JSX element.
+ * @returns A JSX element.
  */
 export const CardLabel = ({
   title,

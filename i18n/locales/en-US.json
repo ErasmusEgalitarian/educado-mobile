@@ -5,7 +5,6 @@
   "courses": "Courses",
   "explore": "Explore",
   "edu": "Edu",
-  "profile": "Profile",
   "api": {
     "courses": "Failed to load courses",
     "audio": "Error sending audio",
@@ -18,7 +17,10 @@
     "confirmation": "Are you sure?",
     "hour": "Hour",
     "hours": "Hours",
-    "error": "Error"
+    "error": "Error",
+    "success": "Success",
+    "notice": "Notice",
+    "notification": "Notification"
   },
   "course": {
     "start": "Start course",
@@ -74,5 +76,14 @@
     "loading": "Edu is thinking",
     "placeholder": "Pesquise aqui",
     "unknown-error": "Error: Unknown error"
+  },
+  "profile": {
+    "edit-profile": "Edit profile",
+    "change-password": "Change password",
+    "download": "Download",
+    "certificates": "Certificates",
+    "leaderboard": "Leaderboard",
+    "change-password-success": "Password changed successfully",
+    "tooltip": "You are on your profile page, where you can access your information, view certificates, and perform other activities."
   }
 }

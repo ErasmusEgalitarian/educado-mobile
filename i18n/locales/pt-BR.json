@@ -5,7 +5,6 @@
   "courses": "Cursos",
   "explore": "Explorar",
   "edu": "Edu",
-  "profile": "Perfil",
   "api": {
     "courses": "Falha ao carregar cursos",
     "audio": "Erro ao enviar áudio",
@@ -18,7 +17,10 @@
     "confirmation": "Tem certeza?",
     "hour": "Hora",
     "hours": "Horas",
-    "error": "Erro"
+    "error": "Erro",
+    "success": "Sucesso",
+    "notice": "Aviso",
+    "notification": "Notificação"
   },
   "course": {
     "start": "Começar curso",
@@ -74,5 +76,14 @@
     "loading": "Edu está pensando",
     "placeholder": "Pesquise aqui",
     "unknown-error": "Erro: Erro desconhecido"
+  },
+  "profile": {
+    "edit-profile": "Editar perfil",
+    "change-password": "Alterar senha",
+    "download": "Download",
+    "certificates": "Certificados",
+    "leaderboard": "Tabela de classificação",
+    "change-password-success": "Senha alterada com sucesso",
+    "tooltip": "Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades."
   }
 }

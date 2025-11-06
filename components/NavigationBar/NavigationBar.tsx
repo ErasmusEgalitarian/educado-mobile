@@ -4,7 +4,7 @@ import CourseScreen from "@/screens/Courses/CourseScreen";
 import DownloadScreen from "@/screens/Download/DownloadScreen";
 import ExploreScreen from "@/screens/Explore/ExploreScreen";
 import EduScreen from "@/screens/EduChatbot/EduScreen";
-import ProfileComponent from "@/screens/Profile/Profile";
+import Profile from "@/screens/Profile/Profile";
 import EditProfileScreen from "@/screens/Profile/EditProfileScreen";
 import CertificateScreen from "@/screens/Certificate/CertificateScreen";
 import { Icon } from "@rneui/themed";
@@ -19,7 +19,7 @@ const ProfileStackScreen = () => {
     <ProfileStack.Navigator initialRouteName="ProfileHome">
       <ProfileStack.Screen
         name="ProfileHome"
-        component={ProfileComponent}
+        component={Profile}
         options={{
           headerShown: false,
         }}
