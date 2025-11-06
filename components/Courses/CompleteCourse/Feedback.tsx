@@ -10,7 +10,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
-import { getAllFeedbackOptions } from "../../../api/api";
+import { getAllFeedbackOptions } from "../../../api/legacy-api";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 /* Check the CompleteCourseSlider file in the screens folder for more info */

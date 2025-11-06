@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import CompleteCourseSlider from "@/components/Courses/CompleteCourse/CompleteCourseSlider";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { giveFeedback } from "@/api/api";
+import { giveFeedback } from "@/api/legacy-api";
 import { Icon } from "@rneui/themed";
 
 /*

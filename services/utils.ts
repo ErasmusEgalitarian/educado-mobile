@@ -1,9 +1,8 @@
 import * as StorageService from "@/services/storage-service";
 import {
   completeComponent as apiCompleteComponent,
-  getCourseById,
   createCertificate,
-} from "@/api/api";
+} from "@/api/legacy-api";
 import "intl";
 import "intl/locale-data/jsonp/en-GB";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,6 +16,7 @@ import {
   Student,
 } from "@/types";
 import { ClassValue, clsx } from "clsx";
+import { getCourseByIdStrapi } from "@/api/strapi-api";
 
 /**
  * Converts a numeric difficulty level to a human-readable label.
@@ -438,7 +438,7 @@ export const handleLastComponent = async (
   await createCertificate(loginStudent, course);
 
   // get the full course from DB, to check what section we are in
-  const getCurrentCourse = await getCourseById(course.courseId);
+  const getCurrentCourse = await getCourseByIdStrapi(course.courseId);
 
   // If the section is the last one, the course is completed
   const courseWithSections = getCurrentCourse as unknown as {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Icon } from "@rneui/themed";
-import { sendFeedbackToBackend } from "../../api/api";
+import { sendFeedbackToBackend } from "../../api/legacy-api";
 import PropTypes from "prop-types";
 
 const FeedbackButtons = ({ aiText, userText }) => {

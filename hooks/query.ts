@@ -13,7 +13,7 @@ import {
   subscribeCourse,
   unsubscribeCourse,
   updateStudyStreak
-} from "@/api/api";
+} from "@/api/legacy-api";
 import { getAllComponentsBySectionIdStrapi, getAllCoursesStrapi, getCourseByIdStrapi } from "@/api/strapi-api";
 import { setJWT, setUserInfo } from "@/services/storage-service";
 import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";

@@ -1,4 +1,4 @@
-import * as api from "@/api/api";
+import * as api from "@/api/legacy-api";
 import * as userApi from "@/api/user-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NetworkStatusService } from "@/services/network-status-service";

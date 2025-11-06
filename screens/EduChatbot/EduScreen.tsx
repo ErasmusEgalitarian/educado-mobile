@@ -1,30 +1,29 @@
-import { useState, useEffect, useRef } from "react";
-import {
-  View,
-  TextInput,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { sendMessageToChatbot } from "@/api/legacy-api";
+import FeedbackButtons from "@/components/Ai/FeedbackButtons";
+import { RecordingButton } from "@/components/Ai/RecordingButton";
 import { BaseScreen } from "@/components/General/BaseScreen";
 import IconHeader from "@/components/General/IconHeader";
-import { RecordingButton } from "@/components/Ai/RecordingButton";
-import FeedbackButtons from "@/components/Ai/FeedbackButtons";
+import { useCourses } from "@/hooks/query";
+import { t } from "@/i18n";
+import { AudioResponse, ChatMessage } from "@/types/ai";
 import { Icon } from "@rneui/themed";
-import Markdown from "react-native-markdown-display";
 import { Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
-import { sendMessageToChatbot, getCourses } from "@/api/api";
-import { AudioResponse, ChatMessage } from "@/types/ai";
-import { Course } from "@/types/course";
-import { t } from "@/i18n";
+import { useEffect, useRef, useState } from "react";
+import {
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Markdown from "react-native-markdown-display";
 
 type PlayingIndex = number | null;
 
 const EduScreen = () => {
   const [userMessage, setUserMessage] = useState("");
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [courses, setCourses] = useState<Course[]>([]);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<PlayingIndex>(null); // Tracks which audio is playing
   const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null); // Stores the current Audio.Sound instance
   const [loading, setLoading] = useState(false);
@@ -175,32 +174,11 @@ const EduScreen = () => {
       );
     }, 500);
 
-    return () => clearInterval(interval);
+    return () => { clearInterval(interval); };
   }, [loading]);
 
-  const fetchCourses = async () => {
-    setCourses([]);
-
-    try {
-      const courses = await getCourses();
-
-      const publishedCourses = courses.filter(
-        (course) => course.status === "published",
-      );
-
-      setCourses(publishedCourses);
-    } catch (error) {
-      console.error("Error fetching courses:", error);
-
-      setCourses([]);
-    }
-  };
-
-  useEffect(() => {
-    void fetchCourses();
-
-    console.log("got courses");
-  }, []);
+  const coursesQuery = useCourses();
+  const courses = coursesQuery.data?.filter((course) => course.status === "published") ?? [];
 
   useEffect(() => {
     return () => {
@@ -215,11 +193,7 @@ const EduScreen = () => {
     <>
       <BaseScreen className="flex h-screen flex-col">
         <View
-          className="border-b"
-          style={{
-            borderBottomWidth: 1,
-            borderBottomColor: "rgba(0, 0, 0, 0.2)",
-          }}
+          className="border-b border-borderDefaultGrayscale"
         >
           <IconHeader
             title={"Edu"}
@@ -240,11 +214,7 @@ const EduScreen = () => {
               ) : (
                 <View
                   key={index}
-                  style={{
-                    alignSelf: "flex-start",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
+                  className="flex-start flex-row items-center"
                 >
                   <View>
                     <View className="mb-1 max-w-[80%] flex-row rounded-t-3xl rounded-br-3xl p-2.5 pl-3">

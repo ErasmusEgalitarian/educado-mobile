@@ -13,7 +13,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogNotification from "@/components/General/DialogNotification";
 import { isAxiosError } from "axios";
 import ShowAlert from "@/components/General/ShowAlert";
-import { ApiError } from "@/api/api";
+import { ApiError } from "@/api/legacy-api";
 
 interface EnterNewPasswordScreenProps {
   hideModal: () => void;
