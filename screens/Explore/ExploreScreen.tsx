@@ -8,6 +8,7 @@ import { BaseScreen } from "@/components/General/BaseScreen";
 import { t } from "@/i18n";
 import {
   useCourses,
+  useFeedbackOptions,
   useLoginStudent,
   useSubscribedCourses,
 } from "@/hooks/query";
@@ -25,8 +26,10 @@ const ExploreScreen = () => {
   const loginStudentQuery = useLoginStudent();
 
   const userId = loginStudentQuery.data.userInfo.id;
+  const feedbackQuery = useFeedbackOptions();
   const courseQuery = useCourses();
-  console.log("gamer", courseQuery.data);
+
+  console.log("yuyuyuyuyuy", feedbackQuery.data);
   const subscriptionsQuery = useSubscribedCourses(userId);
 
   const subscriptions = subscriptionsQuery.data ?? [];

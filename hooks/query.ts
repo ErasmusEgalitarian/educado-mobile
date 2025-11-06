@@ -30,7 +30,7 @@ import {
 } from "@/types";
 import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getAllComponentsBySectionIdStrapi, getAllCoursesStrapi } from "@/api/strapi-api";
+import { getAllComponentsBySectionIdStrapi, getAllCoursesStrapi, getAllFeedbackOptionsStrapi } from "@/api/strapi-api";
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -233,7 +233,7 @@ export const useDeleteUser = (id: string) => {
 export const useFeedbackOptions = () =>
   useQuery({
     queryKey: queryKeys.feedbackOptions,
-    queryFn: () => getAllFeedbackOptions(),
+    queryFn: () => getAllFeedbackOptionsStrapi(),
   });
 
 /**

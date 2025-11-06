@@ -1,8 +1,9 @@
 import { CourseService } from "@/api/backend";
+import { FeedbackService } from "@/api/backend";
 import { mapToSectionComponent } from "@/api/dto-mapper";
-import { mapToCourse } from "@/api/strapi-mapper";
+import { mapToCourse, mapToFeedbackOption } from "@/api/strapi-mapper";
 import { sectionComponentDtoSchema } from "@/types/legacy-api-dto";
-import { PopulatedCourse } from "@/types/strapi-populated";
+import { PopulatedCourse, PopulatedFeedback } from "@/types/strapi-populated";
 import { AxiosResponse } from "axios";
 
 /**
@@ -52,4 +53,28 @@ export const getAllCoursesStrapi = async () => {
     ) as AxiosResponse<PopulatedCourse[]>;
 
     return response.data.map(mapToCourse)
+};
+
+export const getAllFeedbackOptionsStrapi = async () => {
+    const response = await FeedbackService.feedbackGetFeedbacks(
+        [
+            'rating',
+            'feedbackText',
+            'dateCreated',
+            'createdAt',
+            'updatedAt',
+            'publishedAt',
+        ],
+        undefined, // filters
+        undefined, // q
+        undefined, // pagination
+        undefined, // sort
+        [
+            'course',
+            'student',
+            
+        ], // 
+    ) as AxiosResponse<PopulatedFeedback[]>;
+
+    return response.data.map(mapToFeedbackOption);
 };

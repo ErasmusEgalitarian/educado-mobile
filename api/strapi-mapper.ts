@@ -32,3 +32,15 @@ export const mapToCourse = (courseStrapi: PopulatedCourse): Course => {
         sections: courseStrapi.course_sections?.map((section) => section.title) ?? [],
     };
 };
+
+export const mapToFeedbackOption = (strapiData: any) => {
+  return {
+    id: strapiData.id,
+    rating: strapiData.rating,
+    feedbackText: strapiData.feedbackText,
+    dateCreated: strapiData.dateCreated,
+    createdAt: strapiData.createdAt,
+    updatedAt: strapiData.updatedAt,
+    publishedAt: strapiData.publishedAt,
+  };
+};

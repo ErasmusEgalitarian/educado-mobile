@@ -19,3 +19,11 @@ export type PopulatedCourse = Omit<CourseStrapi,
     course_sections?: CourseSectionStrapi[];
     students?: StudentStrapi[];
 }
+
+export type PopulatedFeedback = Omit<FeedbackStrapi,
+    'course' |
+    'student'
+> & {
+    course?: CourseStrapi[];
+    student?: StudentStrapi[];
+}
