@@ -25,6 +25,7 @@
   "course": {
     "start": "Start course",
     "completed-up": "Completed",
+    "best-rating": "Best Rating",
     "completed-low": "completed",
     "points": "points",
     "registered": "Registration completed",

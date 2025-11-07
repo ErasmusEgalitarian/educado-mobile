@@ -11,7 +11,6 @@ import { t } from "@/i18n";
 
 export interface ExploreCardProps {
   course: Course;
-  isPublished: boolean;
   subscribed: boolean;
 }
 
@@ -25,22 +24,17 @@ const styles = StyleSheet.create({
 /**
  * This component is used to display a course card.
  * @param course - The course object to be displayed.
- * @param isPublished - Boolean value that indicates if the course is published. If false, the card will not be displayed.
  * @param subscribed - Boolean value that indicates if the user is subscribed to the course.
  * @returns Returns a JSX element. If the course is not published, returns null.
  */
-export const ExploreCard = ({
-  course,
-  isPublished,
-  subscribed,
-}: ExploreCardProps) => {
+export const ExploreCard = ({ course, subscribed }: ExploreCardProps) => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
 
   const handleToggleBottomSheet = () => {
     setIsBottomSheetOpen(!isBottomSheetOpen);
   };
 
-  return isPublished ? (
+  return (
     <View
       className="mx-1 mb-4 overflow-visible rounded-lg p-5"
       style={styles.shadow}
@@ -115,5 +109,5 @@ export const ExploreCard = ({
         </View>
       </View>
     </View>
-  ) : null;
+  );
 };
