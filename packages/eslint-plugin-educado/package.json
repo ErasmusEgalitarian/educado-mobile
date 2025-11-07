@@ -26,7 +26,7 @@
   "peerDependencies": {
     "eslint": "^9.37.0",
     "@typescript-eslint/parser": "^8.46.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@typescript-eslint/rule-tester": "^8.46.1",
