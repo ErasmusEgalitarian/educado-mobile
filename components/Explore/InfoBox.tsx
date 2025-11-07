@@ -2,8 +2,7 @@ import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
-import type { Icon } from "@/types/icon";
-import type { Course } from "@/types/course";
+import type { Icon, Course } from "@/types";
 import { t } from "@/i18n";
 
 export interface InfoBoxItemProps {

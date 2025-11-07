@@ -1,5 +1,4 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -8,141 +7,75 @@ import {
   Text,
   View,
 } from "react-native";
-import * as StorageService from "@/services/storage-service";
-import { getStudentInfo } from "@/services/storage-service";
 import CourseCard from "@/components/Courses/CourseCard/CourseCard";
 import IconHeader from "@/components/General/IconHeader";
-import { shouldUpdate } from "@/services/utils";
-import ToastNotification from "@/components/General/ToastNotification";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
-import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import errorSwitch from "@/components/General/error-switch";
-import ShowAlert from "@/components/General/ShowAlert";
 import Tooltip from "@/components/Onboarding/Tooltip";
 import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
-import OfflineScreen from "@/screens/Offline/OfflineScreen";
-import { Course } from "@/types/course";
-import { StudentInfo } from "@/types/student";
 import { t } from "@/i18n";
-import {BaseScreen} from "@/components/General/BaseScreen";
+import { BaseScreen } from "@/components/General/BaseScreen";
+import {
+  useLoginStudent,
+  useStudent,
+  useSubscribedCourses,
+} from "@/hooks/query";
+import logo from "@/assets/images/logo.png";
+import noCourses from "@/assets/images/no-courses.png";
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const CourseScreen = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [courseLoaded, setCourseLoaded] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [isOnline, setIsOnline] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [studentLevel, setStudentLevel] = useState(0);
-  const [studentPoints, setStudentPoints] = useState(0);
   const navigation = useNavigation();
 
-  /**
-   * Asynchronous function that loads the courses from storage and updates the state.
-   * @returns {void}
-   */
-  const loadCourses = async (): Promise<void> => {
-    const courseData = await StorageService.getSubCourseList();
-    if (shouldUpdate(courses, courseData)) {
-      const hasValidCourseData =
-        courseData && Array.isArray(courseData) && courseData.length > 0;
+  const { data: localStudent } = useLoginStudent();
 
-      if (hasValidCourseData) {
-        setCourses(courseData);
-        setCourseLoaded(true);
-      } else {
-        setCourses([]);
-        setCourseLoaded(false);
-      }
-    }
-    setLoading(false);
-  };
+  const userId = localStudent.userInfo.id;
+  const studentQuery = useStudent(userId);
+  const subscriptionsQuery = useSubscribedCourses(userId);
 
-  // When refreshing the loadCourses function is called
   const onRefresh = () => {
-    setRefreshing(true);
-    loadCourses();
-    setRefreshing(false);
+    void studentQuery.refetch();
+    void subscriptionsQuery.refetch();
   };
 
-  // Retrieve student points and level from local storage
-  const fetchStudentData = async () => {
-    try {
-      const fetchedStudent = await getStudentInfo();
+  if (studentQuery.isLoading || subscriptionsQuery.isLoading) {
+    return <LoadingScreen />;
+  }
 
-      if (fetchedStudent !== null) {
-        const studentData = fetchedStudent as StudentInfo;
-        setStudentLevel(studentData.level || 0);
-        setStudentPoints(studentData.points || 0);
-      }
-    } catch (error) {
-      ShowAlert(errorSwitch(error));
-    }
-  };
+  const courses = subscriptionsQuery.data ?? [];
+  const studentLevel = studentQuery.data?.level ?? 0;
+  const studentPoints = studentQuery.data?.points ?? 0;
+  const refreshing = studentQuery.isFetching || subscriptionsQuery.isFetching;
 
-  useEffect(() => {
-    // this makes sure loadCourses is called when the screen is focused
-    return navigation.addListener("focus", () => {
-      void loadCourses();
-      void fetchStudentData();
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation, courses]);
+  return courses.length > 0 ? (
+    <SafeAreaView className="h-full">
+      <IconHeader
+        title={t("course.welcome-title")}
+        description={t("course.welcome-description")}
+      />
 
-  useEffect(() => {
-    const logged = async () => {
-      const loggedIn = await AsyncStorage.getItem("loggedIn");
-      if (loggedIn) {
-        setTimeout(async () => {
-          ToastNotification("success", "Logado!");
-          await AsyncStorage.removeItem("loggedIn");
-        }, 1000);
-      }
-    };
-    try {
-      logged();
-    } catch (e) {
-      ShowAlert(errorSwitch(e));
-    }
-  }, []);
+      {/* Render stats box with level and progress bar only */}
+      <View className="px-5">
+        <ProfileStatsBox
+          level={studentLevel || 0}
+          points={studentPoints || 0}
+          studyStreak={0}
+          leaderboardPosition={0}
+          drawProgressBarOnly={true}
+        />
+      </View>
 
-  return loading ? (
-    <LoadingScreen />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {courses.map((course, index) => (
+          <CourseCard key={index} course={course} isOnline={true} />
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   ) : (
-    <>
-      <NetworkStatusObserver setIsOnline={setIsOnline} />
-      {!isOnline ? (
-        <OfflineScreen />
-      ) : courseLoaded ? (
-        <View className="h-full">
-          <IconHeader
-            title={t("course.welcome-title")}
-            description={t("course.welcome-description")}
-          />
-
-          {/* Render stats box with level and progress bar only */}
-          <View className="px-5">
-            <ProfileStatsBox
-              level={studentLevel || 0}
-              points={studentPoints || 0}
-              studyStreak={0}
-              leaderboardPosition={0}
-              drawProgressBarOnly={true}
-            />
-          </View>
-
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-          >
-            {courses.map((course, index) => (
-              <CourseCard key={index} course={course} isOnline={isOnline} />
-            ))}
-          </ScrollView>
-        </View>
-      ) : (
     <BaseScreen>
       <View className="justify-center px-1 pt-6">
         <Tooltip
@@ -189,8 +122,6 @@ const CourseScreen = () => {
         </View>
       </View>
     </BaseScreen>
-      )}
-    </>
   );
 };
 export default CourseScreen;

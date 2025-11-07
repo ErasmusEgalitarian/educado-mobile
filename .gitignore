@@ -55,3 +55,4 @@ summary.md
 var/
 .mise.local.toml
 mise.local.toml
+http-client.private.env.json

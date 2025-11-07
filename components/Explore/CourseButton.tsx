@@ -1,5 +1,5 @@
 import { View, Pressable } from "react-native";
-import type { Course } from "@/types/course";
+import type { Course } from "@/types";
 import { ReactElement } from "react";
 
 export interface CourseButtonProps {
@@ -13,7 +13,7 @@ export interface CourseButtonProps {
  * @param course - Course object containing course details
  * @param onPress - Callback function executed when the button is pressed, receiving the course as an argument
  * @param children - The React element(s) to render inside the button
- * @returns {JSX.Element} - Rendered component
+ * @returns The rendered component
  */
 export const CourseButton = ({
   course,

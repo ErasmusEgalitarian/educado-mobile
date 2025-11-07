@@ -1,39 +1,36 @@
-import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Icon, Button } from "@rneui/base";
-import tailwindConfig from "@/tailwind.config";
-const projectColors = tailwindConfig.theme.colors;
-import PropTypes from "prop-types";
+import { colors } from "@/theme/colors";
 
-const LeaveButton = ({ navigationPlace, courseId }) => {
-  LeaveButton.propTypes = {
-    navigationPlace: PropTypes.string.isRequired,
-    courseId: PropTypes.string,
-  };
+interface LeaveButtonProps {
+  navigationPlace: string;
+}
 
-  const navigation = useNavigation();
+const LeaveButton = ({ navigationPlace }: LeaveButtonProps) => {
+  // Navigation will be upgraded when moving to app-router. To typesafe current navigation is painful why it is omitted.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+  const navigation = useNavigation<any>();
   return (
     <Button
-      buttonStyle={styles.buttons}
+      className="h-12 w-12"
       color="invisible"
       radius="20"
       size="sm"
-      onPress={() =>
-        navigation.navigate(navigationPlace, { courseId: courseId })
-      }
+      onPress={() => {
+        // Navigation will be upgraded when moving to app-router. To typesafe current navigation is painful why it is omitted.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        navigation.navigate(navigationPlace);
+      }}
       icon={
         <Icon
           size={25}
           name="chevron-left"
           type="material-community"
-          color={projectColors.projectBlack}
+          color={colors.textBodyGrayscale}
         />
       }
     ></Button>
   );
 };
-const styles = StyleSheet.create({
-  buttons: { width: 50, height: 50 },
-});
 
 export default LeaveButton;

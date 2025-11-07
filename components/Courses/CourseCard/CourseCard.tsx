@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { useState, useEffect, type ComponentProps } from "react";
+import { useState, useEffect } from "react";
 import { Pressable, View, Text, Image } from "react-native";
 import { checkCourseStoredLocally } from "@/services/storage-service";
 import {
@@ -12,23 +12,21 @@ import {
 import { colors } from "@/theme/colors";
 import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { t } from "@/i18n";
-import { Course } from "@/types/course";
+import { Course } from "@/types";
 import courseTitleIcon from "@/assets/images/course-title-icon.png";
 
 type ProgressTuple = [number, number, number];
-
-type MaterialCommunityIconName = ComponentProps<
-  typeof MaterialCommunityIcons
->["name"];
 
 interface CourseCardProps {
   course: Course;
   isOnline: boolean;
 }
 
-type RootStackParamList = {
-  CourseOverview: { course: Course };
-};
+interface RootStackParamList {
+  CourseOverview: {
+    course: Course;
+  };
+}
 
 const CourseCard = ({ course, isOnline }: CourseCardProps) => {
   const [downloaded, setDownloaded] = useState(false);
@@ -42,9 +40,9 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
     let isMounted = true;
     const run = async () => {
       const isDownloaded = await checkCourseStoredLocally(course.courseId);
-      if (isMounted) setDownloaded(isDownloaded ?? false);
+      if (isMounted) setDownloaded(isDownloaded);
     };
-    run();
+    void run();
     return () => {
       isMounted = false;
     };
@@ -57,7 +55,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
       const progress = await checkProgressCourse(course.courseId);
       if (isMounted) setStudentProgress(progress as ProgressTuple);
     };
-    run();
+    void run();
     return () => {
       isMounted = false;
     };
@@ -74,6 +72,8 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
     <Pressable
       testID="courseCard"
       className={layout}
+      // Pressable doesn't support className
+      // eslint-disable-next-line eslint-plugin-react-native/no-inline-styles
       style={{
         backgroundColor: "white",
         borderRadius: 8,
@@ -90,36 +90,23 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
     >
       <View>
         <View className="relative">
-          <View className="absolute bottom-0 left-0 right-0 top-0 bg-projectWhite opacity-95" />
           <View className="p-[5%]">
             <View className="flex flex-col">
               <View className="flex-row items-center gap-x-2 px-[1%] py-[1%]">
-                <Image
-                  source={courseTitleIcon}
-                  style={{ width: 22, height: 22 }}
-                />
-                <Text
-                  className="text-subtitle-medium self-center"
-                  style={{ color: colors.textTitleGrayscale }}
-                >
+                <Image source={courseTitleIcon} className="h-[22px] w-[22px]" />
+                <Text className="self-center text-textTitleGrayscale text-subtitle-semibold">
                   {course.title ? course.title : t("course.course-title")}
                 </Text>
               </View>
             </View>
-            <View className="m-[2%] h-[1] bg-disable" />
             <View className="flex-col items-start justify-start">
               <View className="flex-row items-center">
                 <MaterialCommunityIcons
                   size={18}
-                  name={
-                    determineIcon(course.category) as MaterialCommunityIconName
-                  }
+                  name={determineIcon(course.category)}
                   color={colors.textCaptionGrayscale}
                 />
-                <Text
-                  className="mx-[2.5%] my-[3%] text-caption-sm-regular"
-                  style={{ color: colors.textCaptionGrayscale }}
-                >
+                <Text className="mx-[2.5%] my-[3%] text-textCaptionGrayscale text-caption-sm-regular">
                   {determineCategory(course.category)}
                 </Text>
               </View>
@@ -129,10 +116,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
                   name="clock"
                   color={colors.textCaptionGrayscale}
                 />
-                <Text
-                  className="mx-[2.5%] my-[3%] text-caption-sm-regular"
-                  style={{ color: colors.textCaptionGrayscale }}
-                >
+                <Text className="mx-[2.5%] my-[3%] text-textCaptionGrayscale text-caption-sm-regular">
                   {course.estimatedHours
                     ? formatHours(course.estimatedHours)
                     : t("course.duration")}

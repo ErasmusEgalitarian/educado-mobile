@@ -1,67 +1,39 @@
-import { useState, useEffect } from "react";
-import { View, ScrollView, RefreshControl } from "react-native";
+import { useEffect, useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { FilterNavigationBar } from "@/components/Explore/FilterNavigationBar";
 import { ExploreCard } from "@/components/Explore/ExploreCard";
-import { getCourseList, getSubCourseList } from "@/services/storage-service";
-import { useNavigation } from "@react-navigation/native";
 import IconHeader from "@/components/General/IconHeader";
-import { shouldUpdate, determineCategory } from "@/services/utils";
-import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
-import OfflineScreen from "@/screens/Offline/OfflineScreen";
-import { Course } from "@/types/course";
+import { determineCategory } from "@/services/utils";
 import { BaseScreen } from "@/components/General/BaseScreen";
 import { t } from "@/i18n";
+import {
+  useCourses,
+  useLoginStudent,
+  useSubscribedCourses,
+} from "@/hooks/query";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
+import { Course } from "@/types";
 
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.
- * @returns {JSX.Element} - Rendered component
  */
-export const ExploreScreen = () => {
-  // Hooks for updating data and states
+const ExploreScreen = () => {
   const [searchText, setSearchText] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [subCourses, setSubCourses] = useState<Set<string>>(new Set());
-  const [isOnline, setIsOnline] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const navigation = useNavigation();
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
 
-  /**
-   * Loads courses and updates React state variables ´courses´ and ´subCourses´.
-   *
-   * @async
-   * @returns {Promise<void>} State is updated, nothing is returned.
-   */
-  const loadCourses = async () => {
-    const [courseData, subData] = await Promise.all([
-      getCourseList(),
-      getSubCourseList(),
-    ]);
+  const loginStudentQuery = useLoginStudent();
 
-    if (shouldUpdate(courses, courseData)) {
-      setCourses(
-        Array.isArray(courseData) && courseData.length ? courseData : [],
-      );
-    }
+  const userId = loginStudentQuery.data.userInfo.id;
+  const courseQuery = useCourses();
+  const subscriptionsQuery = useSubscribedCourses(userId);
 
-    if (Array.isArray(subData) && subData.length) {
-      setSubCourses(new Set(subData.map((sub) => sub.courseId)));
-    } else {
-      setSubCourses(new Set());
-    }
-  };
+  const subscriptions = subscriptionsQuery.data ?? [];
+  const refreshing = courseQuery.isFetching || subscriptionsQuery.isFetching;
 
-  useEffect(() => {
-    return navigation.addListener("focus", () => {
-      console.log("Explore screen focused");
-      void loadCourses();
-    });
-  });
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await loadCourses();
-    setRefreshing(false);
+  const onRefresh = () => {
+    void courseQuery.refetch();
+    void subscriptionsQuery.refetch();
   };
 
   const handleFilter = (text: string) => {
@@ -70,71 +42,72 @@ export const ExploreScreen = () => {
 
   const handleCategoryFilter = (category: string) => {
     if (category === t("categories.all")) {
-      setSelectedCategory(""); // Set selectedCategory to null to show all items
+      setSelectedCategory("");
     } else {
-      setSelectedCategory(category); // Set selectedCategory to the selected category label
+      setSelectedCategory(category);
     }
   };
 
-  /**
-   * Filters courses to match search query or selected category
-   *
-   * @returns {boolean} true if there are any matching results
-   */
-  const filteredCourses = courses.filter((course) => {
-    const titleMatchesSearch = course.title
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
-    const categoryMatchesFilter =
-      !selectedCategory ||
-      determineCategory(course.category) === selectedCategory;
-    return titleMatchesSearch && categoryMatchesFilter;
-  });
+  useEffect(() => {
+    const courses = courseQuery.data ?? [];
+
+    if (courses.length === 0) {
+      return;
+    }
+
+    const filteredCourses = courses.filter((course) => {
+      const titleMatchesSearch = course.title
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+
+      const categoryMatchesFilter =
+        !selectedCategory ||
+        determineCategory(course.category) === selectedCategory;
+
+      return titleMatchesSearch && categoryMatchesFilter;
+    });
+
+    setFilteredCourses(filteredCourses);
+  }, [selectedCategory, searchText, courseQuery.data]);
+
+  if (courseQuery.isLoading || subscriptionsQuery.isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
-    <>
-      <NetworkStatusObserver setIsOnline={setIsOnline} />
-
-      {!isOnline ? (
-        <OfflineScreen />
-      ) : (
-        <BaseScreen>
-          <View className="overflow-visible px-8 pt-28">
-            <IconHeader title={t("course.explore-courses")} />
-            <View className="mt-8">
-              <FilterNavigationBar
-                onChangeText={(text) => {
-                  handleFilter(text);
-                }}
-                onCategoryChange={handleCategoryFilter}
-              />
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={() => void onRefresh()}
-                  />
-                }
-              >
-                <View className="mt-8 overflow-visible">
-                  {filteredCourses.reverse().map((course, index) => (
-                    <ExploreCard
-                      key={index}
-                      isPublished={course.status === "published"}
-                      subscribed={subCourses.has(course.courseId)}
-                      course={course}
-                    />
-                  ))}
-                </View>
-              </ScrollView>
+    <BaseScreen>
+      <View className="overflow-visible px-8 pt-28">
+        <IconHeader title={t("course.explore-courses")} />
+        <View className="mt-8">
+          <FilterNavigationBar
+            onChangeText={(text) => {
+              handleFilter(text);
+            }}
+            onCategoryChange={handleCategoryFilter}
+          />
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            <View className="mt-8 overflow-visible">
+              {filteredCourses.reverse().map((course, index) => (
+                <ExploreCard
+                  key={index}
+                  isPublished={course.status === "published"}
+                  subscribed={subscriptions
+                    .map((course) => course.courseId)
+                    .includes(course.courseId)}
+                  course={course}
+                />
+              ))}
             </View>
-          </View>
-        </BaseScreen>
-      )}
-    </>
+          </ScrollView>
+        </View>
+      </View>
+    </BaseScreen>
   );
 };
 
-//For legacy purposes in App.tsx
 export default ExploreScreen;

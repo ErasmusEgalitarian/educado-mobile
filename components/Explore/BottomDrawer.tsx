@@ -6,11 +6,11 @@ import { CustomRating } from "@/components/Explore/CustomRating";
 import { CourseButton } from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";
 import { ScrollView } from "react-native-gesture-handler";
-import { subscribe, addCourseToStudent } from "@/services/storage-service";
 import { useNavigation } from "@react-navigation/native";
 import { InfoBox } from "@/components/Explore/InfoBox";
-import type { Course } from "@/types/course";
+import { Course } from "@/types";
 import { t } from "@/i18n";
+import { useLoginStudent, useSubscribeToCourse } from "@/hooks/query";
 
 export interface BottomDrawerProps {
   toggleModal: () => void;
@@ -31,10 +31,17 @@ export const BottomDrawer = ({
 }: BottomDrawerProps) => {
   const navigation = useNavigation();
 
-  const subscribeCourse = () => {
+  const localStudentQuery = useLoginStudent();
+  const subscribeToCourseQuery = useSubscribeToCourse();
+
+  const subscribeToCourse = () => {
     toggleModal();
-    void subscribe(course.courseId);
-    void addCourseToStudent(course.courseId);
+
+    subscribeToCourseQuery.mutate({
+      userId: localStudentQuery.data.userInfo.id,
+      courseId: course.courseId,
+    });
+
     // @ts-expect-error Will be refactored when we move to Expo Router
     navigation.navigate("Subscribed", { course: course });
   };
@@ -145,7 +152,7 @@ export const BottomDrawer = ({
               </View>
             </CourseButton>
           ) : (
-            <CourseButton course={course} onPress={subscribeCourse}>
+            <CourseButton course={course} onPress={subscribeToCourse}>
               <Text className="p-1 text-surfaceSubtleGrayscale text-h4-sm-bold">
                 {t("course.signup")}
               </Text>

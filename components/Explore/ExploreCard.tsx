@@ -6,7 +6,7 @@ import { CustomRating } from "@/components/Explore/CustomRating";
 import * as Utility from "@/services/utils";
 import { colors } from "@/theme/colors";
 import { BottomDrawer } from "@/components/Explore/BottomDrawer";
-import type { Course } from "@/types/course";
+import type { Course } from "@/types";
 import { t } from "@/i18n";
 
 export interface ExploreCardProps {
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
  * @param course - The course object to be displayed.
  * @param isPublished - Boolean value that indicates if the course is published. If false, the card will not be displayed.
  * @param subscribed - Boolean value that indicates if the user is subscribed to the course.
- * @returns {JSX.Element | null} - Returns a JSX element. If the course is not published, returns null.
+ * @returns Returns a JSX element. If the course is not published, returns null.
  */
 export const ExploreCard = ({
   course,

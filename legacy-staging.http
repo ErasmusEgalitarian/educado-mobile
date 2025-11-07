@@ -1,0 +1,74 @@
+### Log in user
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Get student
+GET {{baseUrl}}/students/{{userId}}/info
+
+### Get all courses
+GET {{baseUrl}}/courses
+
+### Get all components for a section
+< {%
+  request.variables.set("sectionId", "672b77f8d51069fc04ceb92a")
+%}
+GET {{baseUrl}}/courses/sections/{{sectionId}}/components
+
+### Get all courses a user is subscribed to
+GET {{baseUrl}}/students/{{userId}}/subscriptions
+
+### Complete a component
+PATCH {{baseUrl}}/students/{{userId}}/complete
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "isComplete": true,
+  "comp": {
+    "_id": "672b786dd51069fc04ceb933",
+    "content": "",
+    "contentType": "video",
+    "description": "This is a 7.2MB video for testing purposes",
+    "id": "672b786dd51069fc04ceb933",
+    "parentSection": "672b77f8d51069fc04ceb92a",
+    "title": "Test Video"
+  },
+  "points": 0
+}
+
+### Subscribe user to course
+< {%
+  request.variables.set("courseId", "673236ba7b28500027326e91")
+%}
+POST {{baseUrl}}/courses/{{courseId}}/subscribe
+Content-Type: application/json
+
+{
+  "user_id": "{{userId}}"
+}
+
+### Enroll user in course
+< {%
+  request.variables.set("courseId", "673236ba7b28500027326e91")
+%}
+PATCH {{baseUrl}}/students/{{userId}}/courses/{{courseId}}/enroll
+Authorization: Bearer {{token}}
+
+### Unsubscribe from course
+< {%
+  request.variables.set("courseId", "673236ba7b28500027326e91")
+%}
+POST {{baseUrl}}/courses/{{courseId}}/unsubscribe
+Content-Type: application/json
+
+{
+  "user_id": "{{userId}}"
+}
+
+### Update student's study streak
+PATCH {{baseUrl}}/students/{{studentId}}/updateStudyStreak

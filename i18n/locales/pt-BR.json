@@ -5,7 +5,6 @@
   "courses": "Cursos",
   "explore": "Explorar",
   "edu": "Edu",
-  "profile": "Perfil",
   "api": {
     "courses": "Falha ao carregar cursos",
     "audio": "Erro ao enviar áudio",
@@ -18,7 +17,10 @@
     "confirmation": "Tem certeza?",
     "hour": "Hora",
     "hours": "Horas",
-    "error": "Erro"
+    "error": "Erro",
+    "success": "Sucesso",
+    "notice": "Aviso",
+    "notification": "Notificação"
   },
   "course": {
     "start": "Começar curso",
@@ -78,5 +80,14 @@
   "welcome-page": {
     "header": "Comece agora!",
     "description": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse."
+  },
+  "profile": {
+    "edit-profile": "Editar perfil",
+    "change-password": "Alterar senha",
+    "download": "Download",
+    "certificates": "Certificados",
+    "leaderboard": "Tabela de classificação",
+    "change-password-success": "Senha alterada com sucesso",
+    "tooltip": "Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades."
   }
 }
