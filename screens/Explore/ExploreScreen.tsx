@@ -12,15 +12,15 @@ import {
   useSubscribedCourses,
 } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
-import { Course } from "@/types/index";
+import { Course } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "@/theme/colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const RecommendationBadge = ({ children }: PropsWithChildren) => {
   return (
-    <View className="relative my-3">
-      <View className="absolute -top-3 right-3 z-10 overflow-hidden rounded-xl shadow-lg">
+    <View>
+      <View className="z-10 -mb-5 me-3 self-end overflow-hidden rounded-xl shadow-lg">
         <LinearGradient
           colors={[colors.surfaceLighterCyan, colors.surfaceDefaultCyan]}
           locations={[0, 1]}
@@ -28,10 +28,12 @@ const RecommendationBadge = ({ children }: PropsWithChildren) => {
           end={{ x: 0, y: 1 }}
           className="px-4 py-2"
         >
-          <Text className="font-caption-sm-semibold text-surfaceSubtleCyan">
+          <View className="flex-row items-center">
             <MaterialCommunityIcons name="license" size={12} color="white" />
-            {"  " + t("course.best-rating")}
-          </Text>
+            <Text className="ml-2 text-surfaceSubtleCyan text-caption-sm-semibold">
+              {t("course.best-rating")}
+            </Text>
+          </View>
         </LinearGradient>
       </View>
       {children}
