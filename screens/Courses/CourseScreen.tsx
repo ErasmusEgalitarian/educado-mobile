@@ -21,7 +21,7 @@ import {
 } from "@/hooks/query";
 import logo from "@/assets/images/logo.png";
 import noCourses from "@/assets/images/no-courses.png";
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CourseScreen = () => {
   const navigation = useNavigation();
@@ -80,41 +80,43 @@ const CourseScreen = () => {
       <View className="justify-center px-1 pt-6">
         <Tooltip
           position={{
-            top: -150,
-            left: 95,
-            right: 5,
-            bottom: 24,
+            top: 190,
+            left: 100,
           }}
-          text="Bem-vindo ao Educado! Nesta página central, você encontrará todos os cursos em que está inscrito."
           tailSide="right"
-          tailPosition="20%"
-          uniqueKey="Courses"
-          uniCodeChar="📚"
-        />
-        <View className="mb-20 mt-14 self-center">
+          tailPosition={10}
+          tooltipKey="Courses"
+          uniCodeIcon="📚"
+        >
+          <Text className="text-body-bold">Bem-vindo ao Educado! {"\n"}</Text>
+          Aqui você verá todos os cursos em que está inscrito. Para descobrir
+          novos cursos, acesse
+          <Text className="text-body-bold"> “Explorar Cursos”</Text>.
+        </Tooltip>
+        <View className="mb-20 mt-20 self-center pt-16">
           <Image
             source={require("../../assets/images/logo.png")}
             className="h-[25.54] w-[175.88]"
           />
         </View>
         <View className="justify-center">
-          <View className="items-center pt-24">
+          <View className="items-center pt-16">
             <Image source={require("../../assets/images/no-courses.png")} />
-            <Text className="text-h2-sm-regular text-center text-[24px] pt-4">
+            <Text className="pt-4 text-center text-[24px] text-h2-sm-regular">
               {t("welcome-page.header")}
             </Text>
-            <Text className="text-body-regular text-center px-6 pt-4">
+            <Text className="px-6 pt-4 text-center text-body-regular">
               {t("welcome-page.description")}
             </Text>
           </View>
-          <View className="items-center pt-8 px-6">
+          <View className="items-center px-6 pt-8">
             <Pressable
               testID={"noCoursesExploreButton"}
-              className="flex w-full items-center justify-center bg-surfaceDefaultCyan rounded-2xl p-4"
+              className="flex w-full items-center justify-center rounded-2xl bg-surfaceDefaultCyan p-4"
               onPress={() => navigation.navigate("Explorar")}
             >
               {/* Click to explore courses */}
-              <Text className="text-body-bold text-center text-surfaceSubtleGrayscale">
+              <Text className="text-center text-surfaceSubtleGrayscale text-body-bold">
                 {t("course.explore-courses")}
               </Text>
             </Pressable>
