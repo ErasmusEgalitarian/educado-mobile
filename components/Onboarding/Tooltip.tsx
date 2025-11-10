@@ -135,11 +135,6 @@ Tooltip.propTypes = {
   uniCodeChar: PropTypes.string.isRequired,
 };
 
-Tooltip.defaultProps = {
-  tailPosition: "50%",
-  tailSide: "bottom",
-};
-
 const getTailStyles = (side, position) => {
   const baseSize = 25;
   const heightSize = 15;
