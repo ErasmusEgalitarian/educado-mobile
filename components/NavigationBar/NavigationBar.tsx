@@ -56,7 +56,7 @@ const ProfileStackScreen = () => {
 export const NavigationBar = () => {
   return (
     <Tab.Navigator
-      initialRouteName={"Central"}
+      initialRouteName={"Meus cursos"}
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: colors.surfaceDarker,
         tabBarInactiveTintColor: colors.surfaceDefaultGrayscale,
