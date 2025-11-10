@@ -74,35 +74,32 @@ export const Tooltip = ({
       className={`absolute z-40 overflow-visible ${tailFlexDirection(tailSide)}`}
       style={[position]}
     >
-      <Shadow distance={3} offset={[0, 1]}>
-        <View
-          className="w-80 flex-col bg-surfaceSubtlePurple p-3"
-          style={styles.tooltipContainer}
+      <Animated.View
+        style={[styles.tooltip, tailStyles.tooltip, animatedStyle]}
+      >
+        <Text style={styles.unicodeCharacter}>{uniCodeChar}</Text>
+        <Text style={styles.tooltipText}>{text}</Text>
+        <Button
+          onPress={() => setIsVisible(false)}
+          style={styles.tooltipFooter}
         >
-          <View className="mb-3 flex-row">
-            <Text className="items-start">{uniCodeIcon}</Text>
-            <Text className="px-3 text-body-regular">{children}</Text>
-          </View>
-
-          <View className="flex-row justify-between">
-            <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
-              1/1
-            </Text>
-            <Pressable
-              onPress={() => {
-                setIsVisible(false);
-              }}
-            >
-              <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
-                {t("general.close")}
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-      </Shadow>
-      <View style={tail(tailSide, tailPosition)} />
-    </View>
+          <Text style={styles.tooltipFooterText}>fechar</Text>
+        </Button>
+        <Animated.View
+          style={[styles.tooltipTail, tailStyles.tooltipTail, animatedStyle]}
+        />
+      </Animated.View>
+    </TouchableOpacity>
   );
+};
+
+Tooltip.propTypes = {
+  text: PropTypes.string.isRequired,
+  tailPosition: PropTypes.string,
+  tailSide: PropTypes.string,
+  position: PropTypes.object.isRequired,
+  uniqueKey: PropTypes.string.isRequired,
+  uniCodeChar: PropTypes.string.isRequired,
 };
 
 const tail = (side: TailSide, position: number): ViewStyle => {

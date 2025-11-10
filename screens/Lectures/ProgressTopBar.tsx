@@ -10,19 +10,26 @@ const LectureType = {
   VIDEO: "video",
 };
 
+type ProgressTopBarProps = {
+  courseObject?: any;
+  lectureType?: string;
+  components?: any[];
+  currentIndex?: number;
+};
+
 const ProgressTopBar = ({
   courseObject,
   lectureType,
-  components,
-  currentIndex = "",
-}) => {
+  components = [],
+  currentIndex = 0,
+}: ProgressTopBarProps) => {
   const navigator = useNavigation();
   const chevronColor =
     lectureType === LectureType.VIDEO
       ? tailwindConfig.theme.colors.projectWhite
       : tailwindConfig.theme.colors.projectBlack;
 
-  const createCorrectIcon = (_index, _currentIndex) => {
+  const createCorrectIcon = (_index: number, _currentIndex: number) => {
     //if lecture is completed show check
     if (
       _index < _currentIndex || components[_index].component?.completed
@@ -119,7 +126,7 @@ const ProgressTopBar = ({
           />
         </Pressable>
         <View className="flex-grow flex-row items-center justify-center py-2">
-          {components.map((_lecture, _index) =>
+          {components.map((_lecture: any, _index: number) =>
             /* if lecture is completed show check, otherwise empty  */
             createCorrectIcon(_index, currentIndex),
           )}
