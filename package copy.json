@@ -124,7 +124,6 @@
     "node": ">=18 <19"
   },
   "expo": {
-    "newArchEnabled": true,
     "doctor": {
       "reactNativeDirectoryCheck": {
         "exclude": [
