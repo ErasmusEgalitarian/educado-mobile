@@ -10,6 +10,7 @@ import { cn, completeComponent, handleLastComponent } from "@/services/utils";
 import { useNavigation } from "@react-navigation/native";
 import { Course, Section, SectionComponentExercise } from "@/types";
 import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
 
 /*
 Description:	This screen is displayed when the student is doing an exercise.
@@ -61,7 +62,7 @@ const ExerciseScreen = ({
   ) => {
     setSelectedAnswer(answerIndex);
     if (buttonText === null) {
-      setButtonText("Continuar");
+      setButtonText(t("continue-button-text"));
       setShowFeedback(true);
       if (isAnswerCorrect) {
         setIsCorrectAnswer(true);
@@ -77,12 +78,11 @@ const ExerciseScreen = ({
         setAttempts((prevAttempts) => prevAttempts + 1);
       }
     }
-    if (buttonText === "Continuar") {
+    if (buttonText === t("continue-button-text")) {
       setIsPopUpVisible(false);
 
       const currentLastComponent = componentList[componentList.length - 1];
-      const isLastComponent =
-        currentLastComponent.component._id === exerciseObject._id;
+      const isLastComponent = currentLastComponent.id === exerciseObject.id;
 
       if (isAnswerCorrect && isLastComponent) {
         try {
@@ -126,8 +126,8 @@ const ExerciseScreen = ({
               <View key={index} className="flex-row items-start pb-6">
                 {/* Radio Button */}
                 <RadioButton.Android
-                  disabled={buttonText === "Continuar"}
-                  value={index}
+                  disabled={buttonText === t("continue-button-text")}
+                  value={String(index)}
                   status={selectedAnswer === index ? "checked" : "unchecked"}
                   onPress={() => void handleReviewAnswer(answer.correct, index)}
                   color={colors.primary_custom}
@@ -137,7 +137,7 @@ const ExerciseScreen = ({
                 {/* Answer Text and Feedback */}
                 <View className="flex-1">
                   <TouchableOpacity
-                    disabled={buttonText === "Continuar"}
+                    disabled={buttonText === t("continue-button-text")}
                     onPress={() =>
                       void handleReviewAnswer(answer.correct, index)
                     }
@@ -200,7 +200,7 @@ const ExerciseScreen = ({
         >
           <View className="flex-row items-center">
             <Text className="text-center text-surfaceSubtleGrayscale text-body-regular">
-              {buttonText ?? "Continuar"}
+              {buttonText ?? t("continue-button-text")}
             </Text>
             <Icon
               name="chevron-right"

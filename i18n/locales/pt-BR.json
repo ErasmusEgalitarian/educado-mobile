@@ -42,6 +42,7 @@
     "no-courses-message": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.",
     "explore-courses": "Explorar cursos",
     "continue": "Continuar Curso",
+    "continue-button-text": "Continuar"
     "signup": "Inscrevar-se agora",
     "fail": "Não foi possível concluir o curso. Por favor, tente novamente mais tarde.",
     "tooltip": "Essa é a página do seu curso. É aqui que você vai acessar as aulas e acompanhar seu progresso."

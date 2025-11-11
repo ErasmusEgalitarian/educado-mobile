@@ -42,6 +42,7 @@
     "no-courses-message": "You haven't enrolled in any courses yet. Go to the Explore page and use the search to find courses of your interest.",
     "explore-courses": "Explore courses",
     "continue": "Continue Course",
+    "continue-button-text": "Continue"
     "signup": "Sign up now",
     "fail": "Failed to complete the course. Please try again later.",
     "tooltip": "This is your course page. This is where you will access the lessons and track your progress."
