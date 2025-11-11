@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { View, ActivityIndicator, Text } from "react-native";
 import Swiper from "react-native-swiper";
-import ProgressTopBar from "@/screens/Lectures/ProgressTopBar";
+import { ProgressTopBar } from "@/screens/Lectures/ProgressTopBar";
 import { Lecture } from "@/components/Lectures/Lecture";
 import ExerciseScreen from "@/screens/Excercises/ExerciseScreen";
 import { colors } from "@/theme/colors";
