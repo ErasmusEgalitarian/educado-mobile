@@ -6,7 +6,7 @@ import { Icon } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PopUp from "@/components/Gamification/PopUp";
 import { StatusBar } from "expo-status-bar";
-import { cn, completeComponent, handleLastComponent } from "@/services/utils";
+import { cn, handleLastComponent } from "@/services/utils";
 import { useNavigation } from "@react-navigation/native";
 import { Course, Section, SectionComponentExercise } from "@/types";
 import { colors } from "@/theme/colors";
@@ -16,6 +16,7 @@ import {
   useLoginStudent,
   useStudent,
 } from "@/hooks/query";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
 
 /*
 Description:	This screen is displayed when the student is doing an exercise.
@@ -64,8 +65,20 @@ const ExerciseScreen = ({
   const loginStudent = useLoginStudent();
   const studentQuery = useStudent(loginStudent.data.userInfo.id);
 
-  if (studentQuery.isError) {
-    console.error("student could not be fetched for ExerciseScreen");
+  if (studentQuery.isLoading) {
+    return (
+      <SafeAreaView>
+        <LoadingScreen />
+      </SafeAreaView>
+    );
+  }
+
+  if (studentQuery.isError || !studentQuery.data) {
+    console.error(
+      `Error occured in ExerciseScreen while fetching the studentQuery: ${studentQuery.error ?? "unkown error"}`,
+    );
+    navigation.goBack();
+    return;
   }
 
   const handleReviewAnswer = (
@@ -79,7 +92,6 @@ const ExerciseScreen = ({
       setPoints(attempts === 0 ? 10 : 5);
       setIsPopUpVisible(true);
       try {
-        console.log(exerciseObject);
         completeComponentQuery.mutate({
           student: studentQuery.data,
           component: exerciseObject,
