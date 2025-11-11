@@ -24,7 +24,7 @@ interface Props {
   currentIndex: number;
 }
 
-const ProgressTopBar = ({
+export const ProgressTopBar = ({
   courseObject,
   lectureType,
   components,
@@ -146,5 +146,3 @@ const ProgressTopBar = ({
     </View>
   );
 };
-
-export default ProgressTopBar;
