@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
-import { View, TouchableOpacity, Image, Dimensions, Text } from "react-native";
+import { View, TouchableOpacity, Dimensions, Text } from "react-native";
 import { Icon } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import { cn, completeComponent, handleLastComponent } from "@/services/utils";
+import { cn, handleLastComponent } from "@/services/utils";
 import RenderHtml from "react-native-render-html";
 import { Course, SectionComponentLecture } from "@/types";
 import { t } from "@/i18n";
-import { fetchLectureImage } from "@/services/storage-service";
+import {
+  useCompleteComponent,
+  useLoginStudent,
+  useStudent,
+} from "@/hooks/query";
+import { SafeAreaView } from "react-native-safe-area-context";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
 
 interface TextImageLectureScreenProps {
   lectureObject: SectionComponentLecture;
@@ -24,14 +30,47 @@ const TextImageLectureScreen = ({
   onContinue,
   handleStudyStreak,
 }: TextImageLectureScreenProps) => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [paragraphs, setParagraphs] = useState<string[] | null>(null);
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const navigation = useNavigation();
+  const completeComponentQuery = useCompleteComponent();
+  const loginStudent = useLoginStudent();
+  const studentQuery = useStudent(loginStudent.data.userInfo.id);
+
+  useEffect(() => {
+    if (isHtml(lectureObject.content)) {
+      setHtmlContent(lectureObject.content);
+    } else {
+      splitText(lectureObject.content);
+    }
+  }, [lectureObject.id, lectureObject.content]);
+
+  console.log("lecture TEXT/IMAGE:");
+  console.log(lectureObject);
+
+  if (studentQuery.isLoading) {
+    return (
+      <SafeAreaView>
+        <LoadingScreen />
+      </SafeAreaView>
+    );
+  }
+
+  if (studentQuery.isError || !studentQuery.data) {
+    console.error(
+      `Error occured in ExerciseScreen while fetching the studentQuery: ${studentQuery.error ?? "unkown error"}`,
+    );
+    navigation.goBack();
+    return;
+  }
 
   const handleContinue = async () => {
     try {
-      await completeComponent(lectureObject, courseObject.courseId, true);
+      completeComponentQuery.mutate({
+        student: studentQuery.data,
+        component: lectureObject,
+        isComplete: true,
+      });
       if (isLastSlide) {
         handleStudyStreak();
         await handleLastComponent(lectureObject, courseObject, navigation);
@@ -42,28 +81,6 @@ const TextImageLectureScreen = ({
       console.error("Error completing the component:", error);
     }
   };
-
-  useEffect(() => {
-    const getLectureImage = async () => {
-      try {
-        const imageRes = await fetchLectureImage(
-          lectureObject.image,
-          lectureObject.id,
-        );
-        setImageUrl(imageRes);
-      } catch {
-        setImageUrl(null);
-      }
-    };
-    if (lectureObject.image) {
-      void getLectureImage();
-    }
-    if (isHtml(lectureObject.content)) {
-      setHtmlContent(lectureObject.content);
-    } else {
-      splitText(lectureObject.content);
-    }
-  }, [lectureObject.id, lectureObject.content, lectureObject.image]);
 
   const isHtml = (content: string) => {
     const htmlRegex = /<\/?[a-z][\s\S]*>/i;
@@ -147,11 +164,6 @@ const TextImageLectureScreen = ({
                 {paragraph}
               </Text>
             ))
-          )}
-          {imageUrl && (
-            <View className="h-[25vh] w-full px-4 pt-8">
-              <Image source={{ uri: imageUrl }} className="h-full w-full" />
-            </View>
           )}
           {paragraphs && paragraphs.length > 2 && (
             <Text className="px-4 text-borderDisabledGrayscale">
