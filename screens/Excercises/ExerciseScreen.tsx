@@ -54,8 +54,7 @@ const ExerciseScreen = ({
   const navigation = useNavigation();
 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [buttonText, setButtonText] = useState<string | null>(null);
-  const [showFeedback, setShowFeedback] = useState<boolean>(false);
+  const [hasAnswered, setHasAnswered] = useState<boolean>(false);
   const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(false);
   const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(10);
@@ -69,49 +68,50 @@ const ExerciseScreen = ({
     console.error("student could not be fetched for ExerciseScreen");
   }
 
-  const handleReviewAnswer = async (
+  const handleReviewAnswer = (
     isAnswerCorrect: boolean,
     answerIndex: number,
   ) => {
     setSelectedAnswer(answerIndex);
-    if (buttonText === null) {
-      setButtonText(t("course.continue-button-text"));
-      setShowFeedback(true);
-      if (isAnswerCorrect) {
-        setIsCorrectAnswer(true);
-        setPoints(attempts === 0 ? 10 : 5);
-        setIsPopUpVisible(true);
-        try {
-          console.log(exerciseObject);
-          completeComponentQuery.mutate({
-            student: studentQuery.data,
-            component: exerciseObject,
-            isComplete: true,
-          });
-        } catch (error) {
-          console.error("Error completing the exercise:", error);
-        }
-      } else {
-        setIsCorrectAnswer(false);
-        setAttempts((prevAttempts) => prevAttempts + 1);
+    setHasAnswered(true);
+    if (isAnswerCorrect) {
+      setIsCorrectAnswer(true);
+      setPoints(attempts === 0 ? 10 : 5);
+      setIsPopUpVisible(true);
+      try {
+        console.log(exerciseObject);
+        completeComponentQuery.mutate({
+          student: studentQuery.data,
+          component: exerciseObject,
+          isComplete: true,
+        });
+      } catch (error) {
+        console.error("Error completing the exercise:", error);
       }
+    } else {
+      setIsCorrectAnswer(false);
+      setAttempts((prevAttempts) => prevAttempts + 1);
     }
-    if (buttonText === t("course.continue-button-text")) {
-      setIsPopUpVisible(false);
+  };
 
-      const currentLastComponent = componentList[componentList.length - 1];
-      const isLastComponent = currentLastComponent.id === exerciseObject.id;
+  const handleContinue = async (
+    isAnswerCorrect: boolean,
+    answerIndex: number,
+  ) => {
+    setIsPopUpVisible(false);
 
-      if (isAnswerCorrect && isLastComponent) {
-        try {
-          void handleStudyStreak();
-          await handleLastComponent(exerciseObject, courseObject, navigation);
-        } catch (error) {
-          console.error("Error handling last component:", error);
-        }
-      } else {
-        onContinue(isAnswerCorrect);
+    const currentLastComponent = componentList[componentList.length - 1];
+    const isLastComponent = currentLastComponent.id === exerciseObject.id;
+
+    if (isAnswerCorrect && isLastComponent) {
+      try {
+        void handleStudyStreak();
+        await handleLastComponent(exerciseObject, courseObject, navigation);
+      } catch (error) {
+        console.error("Error handling last component:", error);
       }
+    } else {
+      onContinue(isAnswerCorrect);
     }
   };
 
@@ -144,7 +144,7 @@ const ExerciseScreen = ({
               <View key={index} className="flex-row items-start pb-6">
                 {/* Radio Button */}
                 <RadioButton.Android
-                  disabled={buttonText === t("course.continue-button-text")}
+                  disabled={hasAnswered}
                   value={String(index)}
                   status={selectedAnswer === index ? "checked" : "unchecked"}
                   onPress={() => void handleReviewAnswer(answer.correct, index)}
@@ -155,7 +155,7 @@ const ExerciseScreen = ({
                 {/* Answer Text and Feedback */}
                 <View className="flex-1">
                   <TouchableOpacity
-                    disabled={buttonText === t("course.continue-button-text")}
+                    disabled={hasAnswered}
                     onPress={() =>
                       void handleReviewAnswer(answer.correct, index)
                     }
@@ -167,7 +167,7 @@ const ExerciseScreen = ({
                   </TouchableOpacity>
 
                   {/* Feedback */}
-                  {showFeedback && selectedAnswer === index && (
+                  {hasAnswered && selectedAnswer === index && (
                     <View
                       className={`w-fit flex-row items-center rounded-medium pb-2 ${
                         answer.correct ? "bg-projectGreen" : "bg-projectRed"
@@ -208,7 +208,7 @@ const ExerciseScreen = ({
           }`}
           onPress={() => {
             if (selectedAnswer !== null) {
-              void handleReviewAnswer(
+              void handleContinue(
                 exerciseObject.answers[selectedAnswer]?.correct,
                 selectedAnswer,
               );
@@ -218,7 +218,7 @@ const ExerciseScreen = ({
         >
           <View className="flex-row items-center">
             <Text className="text-center text-surfaceSubtleGrayscale text-body-regular">
-              {buttonText ?? t("course.continue-button-text")}
+              {t("course.continue-button-text")}
             </Text>
             <Icon
               name="chevron-right"
