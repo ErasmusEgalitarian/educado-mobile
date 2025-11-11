@@ -44,6 +44,7 @@ export const queryKeys = {
   courses: ["courses"] as const,
   course: (id: string) => ["course", id] as const,
   subscriptions: (id: string) => ["subscriptions", id] as const,
+  components: (id: string) => ["components", id] as const,
   loginStudent: ["localStudent"] as const,
   student: (id: string) => ["student", id] as const,
   section: (id: string) => ["section", id] as const,
@@ -354,6 +355,8 @@ export const useLogoutStrapi = () => {
  * Complete a component.
  */
 export const useCompleteComponent = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<
     Student,
     unknown,
@@ -388,6 +391,10 @@ export const useCompleteComponent = () => {
         points,
       );
     },
+    onSuccess: (data) =>
+      queryClient.invalidateQueries({
+        queryKey: [...queryKeys.components(data.baseUser)],
+      }),
   });
 };
 
