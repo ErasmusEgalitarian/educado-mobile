@@ -31,7 +31,8 @@
     "tsc:check:config": "npm -w @educado/eslint-config-educado run tsc:check",
     "tsc:check:packages": "npm run tsc:check:plugin && npm run tsc:check:config",
     "tsc:check:plugin": "npm -w @educado/eslint-plugin-educado run tsc:check",
-    "tsc:ci": "node ./scripts/ci-tsc-report.mjs > tsc-report.json || true"
+    "tsc:ci": "node ./scripts/ci-tsc-report.mjs > tsc-report.json || true",
+    "generate-strapi-client": "openapi-ts"
   },
   "dependencies": {
     "@expo-google-fonts/dev": "^0.2.2",
