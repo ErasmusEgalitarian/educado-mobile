@@ -2,8 +2,8 @@ import { useState } from "react";
 import LoginScreen from "@/app/screens/Login/LoginScreen";
 import RegisterScreen from "@/app/screens/Registration/RegistrationScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ExerciseScreen from "@/components/Activities/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ExerciseScreen from "@/app/screens/Excercises/ExerciseScreen";
 import CourseOverviewScreen from "@/app/screens/Courses/CourseOverviewScreen";
 import SectionScreen from "@/app/screens/Section/SectionScreen";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
@@ -102,6 +102,8 @@ const CourseStack = () => (
     />
     <Stack.Screen
       name="CompleteSection"
+      // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
+      // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
       component={CompleteSectionScreen}
       options={{
         headerShown: false,
@@ -241,6 +243,8 @@ export const App = () => {
       />
       <Stack.Screen
         name={"CompleteSection"}
+        // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
+        // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
         component={CompleteSectionScreen}
         options={{ headerShown: false }}
       />

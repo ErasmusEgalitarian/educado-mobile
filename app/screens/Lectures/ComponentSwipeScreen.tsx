@@ -1,17 +1,24 @@
 import { useState, useEffect, useRef } from "react";
 import { View, ActivityIndicator, Text } from "react-native";
-import PagerView from "react-native-pager-view";
-import ProgressTopBar from "@/app/screens/Lectures/ProgressTopBar";
-import { Lecture } from "@/components/Lectures/Lecture";
-import ExerciseScreen from "@/app/screens/Excercises/ExerciseScreen";
+import Swiper from "react-native-swiper";
+import { useNavigation } from "@react-navigation/native";
+import { ProgressTopBar } from "@/screens/Lectures/ProgressTopBar";
+import ExerciseScreen from "@/components/Activities/Exercise";
 import { colors } from "@/theme/colors";
-import { findIndexOfUncompletedComp, differenceInDays } from "@/services/utils";
+import {
+  findIndexOfUncompletedComp,
+  differenceInDays,
+  handleLastComponent,
+} from "@/services/utils";
+import { VideoLecture } from "@/components/Activities/Video";
+import TextImageLectureScreen from "@/components/Activities/TextImage";
 import {
   Section,
   Course,
   SectionComponent,
   SectionComponentLecture,
   SectionComponentExercise,
+  LectureType,
 } from "@/types";
 import {
   useCompleteComponent,
@@ -46,125 +53,92 @@ interface ComponentSwipeScreenProps {
  */
 const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const { section, parsedCourse, parsedComponentIndex } = route.params;
-
-  const [currentLectureType, setCurrentLectureType] = useState("text");
+  const [currentLectureType, setCurrentLectureType] =
+    useState<LectureType>("text");
   const [index, setIndex] = useState(0);
-  const [scrollEnabled, setScrollEnabled] = useState(true);
+  const [initialIndex, setInitialIndex] = useState(0);
+  const initialIndexSetRef = useRef(false);
+  const [resetKey, setResetKey] = useState(0);
   const [sectionComponents, setSectionComponents] = useState<
     SectionComponent<SectionComponentLecture | SectionComponentExercise>[]
   >([]);
-  const pagerRef = useRef<null | PagerView>(null);
-  const [resetKey, setResetKey] = useState(0);
-
+  const swiperRef = useRef<null | Swiper>(null);
   const { data: loginStudent } = useLoginStudent();
-
   const studentId = loginStudent.userInfo.id;
-
   const studentQuery = useStudent(studentId);
   const student = studentQuery.data;
-
   const {
     data: fetchedSectionComponents = [],
     isLoading: areSectionComponentsLoading,
   } = useSectionComponents(section.sectionId);
-
   const completeComponentQuery = useCompleteComponent();
   const updateStudyStreakQuery = useUpdateStudyStreak();
-
   const studentLastStudyDate = student?.lastStudyDate ?? new Date();
   const isLoading = studentQuery.isLoading || areSectionComponentsLoading;
+  const navigation = useNavigation();
 
-  const safeScrollBy = (offset: number, animated: true) => {
-    const target = Math.max(
-      0,
-      Math.min(index + offset, sectionComponents.length - 1),
-    );
-
-    if (animated) {
-      pagerRef.current?.setPage(target);
-    } else {
-      pagerRef.current?.setPageWithoutAnimation(target);
-    }
-  };
-
-  /**
-   * Handles student study streak update process. Checks the difference in days between lastStudyDate and today. If the
-   * difference is greater than 0, it updates `studyStreak` and `lastStudyDate` both in the database, local storage and
-   * this local state.
-   */
   const handleStudyStreak = async () => {
-    if (!student) {
-      return;
-    }
-
     const today = new Date();
     const dayDifference = differenceInDays(studentLastStudyDate, today);
-
-    if (dayDifference === 0) {
+    if (!student || dayDifference === 0) {
       return;
     }
 
+    // Update the database
     updateStudyStreakQuery.mutate({
       studentId: student.id,
     });
-
     await studentQuery.refetch();
   };
 
-  const handleExerciseContinue = (isCorrect: boolean) => {
-    if (!isCorrect) {
-      // Update the section component list to move the incorrect exercise to the end
-      const currentComp = sectionComponents[index];
-      const updatedCombinedLecturesAndExercises = [
-        ...sectionComponents.slice(0, index), // Elements before the current index
-        ...sectionComponents.slice(index + 1), // Elements after the current index
-        currentComp, // Add the current component to the end
-      ];
-
-      setSectionComponents(updatedCombinedLecturesAndExercises);
-
-      // Force re-render by updating the resetKey
-      setResetKey((prevKey) => prevKey + 1);
-    } else {
-      safeScrollBy(1, true);
-      setScrollEnabled(true);
-    }
-
-    // True if this is the last lecture/exercise
-    return index === sectionComponents.length - 1;
-  };
-
-  const handleIndexChange = async (index: number) => {
+  const handleContinue = async (isCorrect: boolean) => {
+    const currentComp = sectionComponents[index];
+    const isLastSlide = index >= sectionComponents.length - 1;
     if (!student) {
       return;
     }
 
-    await handleStudyStreak();
+    // If the activity is not correctly answered
+    if (!isCorrect) {
+      // Move it to the end
+      setSectionComponents((prev) => {
+        const comp = prev[index];
+        return [...prev.slice(0, index), ...prev.slice(index + 1), comp];
+      });
 
-    const currentSlide = sectionComponents[index];
-
-    if (currentSlide.type === "exercise") {
-      setScrollEnabled(false);
-    } else {
-      const currentLectureType =
-        currentSlide.lectureType === "video" ? "video" : "text";
-      setCurrentLectureType(currentLectureType);
-      setScrollEnabled(true);
+      // Re-render if it's last slide
+      if (isLastSlide) {
+        setInitialIndex(index);
+        setResetKey((prev) => prev + 1);
+      }
+      return;
     }
 
-    if (index > 0) {
-      const lastSlide = sectionComponents[index - 1];
-
+    // Update the database
+    try {
       await completeComponentQuery.mutateAsync({
         student,
-        component: lastSlide.component,
+        component: currentComp.component,
         isComplete: true,
       });
+    } catch (error) {
+      console.error("Unable to complete component: ", error);
     }
 
-    setIndex(index);
+    // Update study streak
+    await handleStudyStreak();
+
+    // Complete lesson if it's last slide
+    if (isLastSlide) {
+      await handleLastComponent(currentComp, parsedCourse, navigation);
+      return;
+    }
+
+    // Go to the next slide
+    swiperRef.current?.scrollBy(1, true);
   };
 
+  // Set the components
   useEffect(() => {
     if (fetchedSectionComponents.length === 0) {
       return;
@@ -173,12 +147,20 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     setSectionComponents(fetchedSectionComponents);
   }, [fetchedSectionComponents]);
 
+  // Set the page index
   useEffect(() => {
-    if (isLoading || !student || sectionComponents.length === 0) {
+    // Run only once and only when all data is gathered
+    if (
+      initialIndexSetRef.current ||
+      isLoading ||
+      !student ||
+      sectionComponents.length === 0
+    ) {
       return;
     }
 
-    let initialIndex =
+    // Get the initial index
+    const initialIndex =
       parsedComponentIndex ??
       findIndexOfUncompletedComp(
         student,
@@ -186,27 +168,28 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
         section.sectionId,
       );
 
-    if (initialIndex === -1) {
-      initialIndex = 0;
+    // Sanity check
+    if (initialIndex < 0) {
+      console.warn("Initial index less than zero: ", initialIndex);
+      initialIndexSetRef.current = true;
+      return;
     }
 
+    // Set the initial index, component and type
     const firstSectionComponent = sectionComponents[initialIndex];
-
-    if (firstSectionComponent.type === "exercise") {
-      setScrollEnabled(false);
-    }
-
     setCurrentLectureType(firstSectionComponent.lectureType ?? "text");
+    setInitialIndex(initialIndex);
     setIndex(initialIndex);
 
-    pagerRef.current?.setPageWithoutAnimation(initialIndex);
+    initialIndexSetRef.current = true;
   }, [
     isLoading,
+    student,
+    sectionComponents.length,
+    sectionComponents,
     parsedComponentIndex,
     parsedCourse.courseId,
     section.sectionId,
-    sectionComponents,
-    student,
   ]);
 
   if (isLoading) {
@@ -227,6 +210,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
             lectureType={currentLectureType}
             components={sectionComponents}
             currentIndex={index}
+            currentIndex={index}
           />
         </View>
       )}
@@ -234,42 +218,45 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
       {sectionComponents.length > 0 && (
         <PagerView
           key={resetKey}
-          ref={pagerRef}
-          style={{ flex: 1 }}
-          initialPage={index}
-          onPageSelected={(e) => {
-            void handleIndexChange(e.nativeEvent.position);
-          }}
-          scrollEnabled={scrollEnabled}
+          ref={swiperRef}
+          loop={false}
+          showsPagination={false}
+          scrollEnabled={false}
+          index={initialIndex}
+          onIndexChanged={setIndex}
         >
           {sectionComponents.map((component, index) =>
             component.type === "lecture" ? (
-              <Lecture
-                key={component.component.id || index}
-                lecture={component.component as SectionComponentLecture}
-                course={parsedCourse}
-                isLastSlide={index === sectionComponents.length - 1}
-                onContinue={() => {
-                  safeScrollBy(1, true);
-                }}
-                handleStudyStreak={() => {
-                  void handleStudyStreak();
-                }}
-              />
+              (component.component as SectionComponentLecture).contentType ===
+              "video" ? (
+                <VideoLecture
+                  key={component.component.id || index}
+                  lecture={component.component as SectionComponentLecture}
+                  course={parsedCourse}
+                  onContinue={async () => {
+                    await handleContinue(true);
+                  }}
+                />
+              ) : (
+                <TextImageLectureScreen
+                  key={component.component.id || index}
+                  componentList={sectionComponents}
+                  lectureObject={component.component as SectionComponentLecture}
+                  courseObject={parsedCourse}
+                  onContinue={async () => {
+                    await handleContinue(true);
+                  }}
+                />
+              )
             ) : (
               <ExerciseScreen
                 key={component.component.id || index}
-                componentList={
-                  sectionComponents as unknown as SectionComponentExercise[]
-                }
+                componentList={sectionComponents}
                 exerciseObject={component.component as SectionComponentExercise}
                 sectionObject={section}
                 courseObject={parsedCourse}
-                onContinue={(isCorrect: boolean) =>
-                  handleExerciseContinue(isCorrect)
-                }
-                handleStudyStreak={() => {
-                  void handleStudyStreak();
+                onContinue={async (isCorrect: boolean) => {
+                  await handleContinue(isCorrect);
                 }}
               />
             ),
