@@ -5,19 +5,15 @@ import CoursePoints from "@/components/Exercise/CoursePoints";
 import { colors } from "@/theme/colors";
 import {
   Course,
+  LectureType,
   SectionComponent,
   SectionComponentExercise,
   SectionComponentLecture,
 } from "@/types";
 
-const LectureType = {
-  TEXT: "text",
-  VIDEO: "video",
-};
-
 interface Props {
   courseObject: Course;
-  lectureType: string;
+  lectureType: LectureType;
   components: SectionComponent<
     SectionComponentLecture | SectionComponentExercise
   >[];
@@ -32,13 +28,13 @@ export const ProgressTopBar = ({
 }: Props) => {
   const navigator = useNavigation();
   const chevronColor =
-    lectureType === LectureType.VIDEO
+    lectureType === "video"
       ? colors.surfaceLighterCyan
       : colors.textTitleGrayscale;
 
   const createCorrectIcon = (index: number, currentIndex: number) => {
     //if lecture is completed show check
-    if (index < currentIndex ? true : false) {
+    if (index < currentIndex) {
       return (
         <View
           key={index}
@@ -139,7 +135,7 @@ export const ProgressTopBar = ({
             createCorrectIcon(index, currentIndex),
           )}
         </View>
-        {LectureType.TEXT === lectureType && (
+        {"text" === lectureType && (
           <CoursePoints courseId={courseObject.courseId} />
         )}
       </View>

@@ -12,6 +12,7 @@ import {
   SectionComponent,
   SectionComponentLecture,
   SectionComponentExercise,
+  LectureType,
 } from "@/types";
 import {
   useCompleteComponent,
@@ -43,7 +44,8 @@ interface ComponentSwipeScreenProps {
 const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const { section, parsedCourse, parsedComponentIndex } = route.params;
 
-  const [currentLectureType, setCurrentLectureType] = useState("text");
+  const [currentLectureType, setCurrentLectureType] =
+    useState<LectureType>("text");
   const [index, setIndex] = useState(0);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [sectionComponents, setSectionComponents] = useState<
@@ -133,8 +135,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     if (currentSlide.type === "exercise") {
       setScrollEnabled(false);
     } else {
-      const currentLectureType =
-        currentSlide.lectureType === "video" ? "video" : "text";
+      const currentLectureType = currentSlide.lectureType ?? "text";
       setCurrentLectureType(currentLectureType);
       setScrollEnabled(true);
     }
@@ -252,8 +253,8 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
                 onContinue={(isCorrect: boolean) =>
                   handleExerciseContinue(isCorrect)
                 }
-                handleStudyStreak={() => {
-                  void handleStudyStreak();
+                handleStudyStreak={async () => {
+                  await handleStudyStreak();
                 }}
               />
             ),
