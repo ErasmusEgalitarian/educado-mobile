@@ -62,7 +62,7 @@ const ExerciseScreen = ({
   ) => {
     setSelectedAnswer(answerIndex);
     if (buttonText === null) {
-      setButtonText(t("continue-button-text"));
+      setButtonText(t("course.continue-button-text"));
       setShowFeedback(true);
       if (isAnswerCorrect) {
         setIsCorrectAnswer(true);
@@ -78,7 +78,7 @@ const ExerciseScreen = ({
         setAttempts((prevAttempts) => prevAttempts + 1);
       }
     }
-    if (buttonText === t("continue-button-text")) {
+    if (buttonText === t("course.continue-button-text")) {
       setIsPopUpVisible(false);
 
       const currentLastComponent = componentList[componentList.length - 1];
@@ -126,7 +126,7 @@ const ExerciseScreen = ({
               <View key={index} className="flex-row items-start pb-6">
                 {/* Radio Button */}
                 <RadioButton.Android
-                  disabled={buttonText === t("continue-button-text")}
+                  disabled={buttonText === t("course.continue-button-text")}
                   value={String(index)}
                   status={selectedAnswer === index ? "checked" : "unchecked"}
                   onPress={() => void handleReviewAnswer(answer.correct, index)}
@@ -137,7 +137,7 @@ const ExerciseScreen = ({
                 {/* Answer Text and Feedback */}
                 <View className="flex-1">
                   <TouchableOpacity
-                    disabled={buttonText === t("continue-button-text")}
+                    disabled={buttonText === t("course.continue-button-text")}
                     onPress={() =>
                       void handleReviewAnswer(answer.correct, index)
                     }
@@ -200,7 +200,7 @@ const ExerciseScreen = ({
         >
           <View className="flex-row items-center">
             <Text className="text-center text-surfaceSubtleGrayscale text-body-regular">
-              {buttonText ?? t("continue-button-text")}
+              {buttonText ?? t("course.continue-button-text")}
             </Text>
             <Icon
               name="chevron-right"
