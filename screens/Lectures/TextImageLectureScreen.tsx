@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
-import { View, TouchableOpacity, Image, Dimensions } from "react-native";
-import PropTypes from "prop-types";
+import { View, TouchableOpacity, Image, Dimensions, Text } from "react-native";
 import { Icon } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import Text from "../../components/General/Text";
-import * as StorageService from "../../services/storage-service";
-import { completeComponent, handleLastComponent } from "../../services/utils";
+import { cn, completeComponent, handleLastComponent } from "@/services/utils";
 import RenderHtml from "react-native-render-html";
+import { Course, SectionComponentLecture } from "@/types";
+import { t } from "@/i18n";
+import { fetchLectureImage } from "@/services/storage-service";
+
+interface TextImageLectureScreenProps {
+  lectureObject: SectionComponentLecture;
+  courseObject: Course;
+  isLastSlide: boolean;
+  onContinue: () => void;
+  handleStudyStreak: () => void;
+}
 
 const TextImageLectureScreen = ({
   lectureObject,
@@ -15,10 +23,10 @@ const TextImageLectureScreen = ({
   isLastSlide,
   onContinue,
   handleStudyStreak,
-}) => {
-  const [imageUrl, setImageUrl] = useState(null);
-  const [paragraphs, setParagraphs] = useState(null);
-  const [htmlContent, setHtmlContent] = useState(null);
+}: TextImageLectureScreenProps) => {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [paragraphs, setParagraphs] = useState<string[] | null>(null);
+  const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const navigation = useNavigation();
 
   const handleContinue = async () => {
@@ -26,7 +34,7 @@ const TextImageLectureScreen = ({
       await completeComponent(lectureObject, courseObject.courseId, true);
       if (isLastSlide) {
         handleStudyStreak();
-        handleLastComponent(lectureObject, courseObject, navigation);
+        await handleLastComponent(lectureObject, courseObject, navigation);
       } else {
         onContinue();
       }
@@ -36,44 +44,43 @@ const TextImageLectureScreen = ({
   };
 
   useEffect(() => {
+    const getLectureImage = async () => {
+      try {
+        const imageRes = await fetchLectureImage(
+          lectureObject.image,
+          lectureObject.id,
+        );
+        setImageUrl(imageRes);
+      } catch {
+        setImageUrl(null);
+      }
+    };
     if (lectureObject.image) {
-      getLectureImage();
+      void getLectureImage();
     }
     if (isHtml(lectureObject.content)) {
       setHtmlContent(lectureObject.content);
     } else {
       splitText(lectureObject.content);
     }
-  }, []);
+  }, [lectureObject.id, lectureObject.content, lectureObject.image]);
 
-  const isHtml = (content) => {
+  const isHtml = (content: string) => {
     const htmlRegex = /<\/?[a-z][\s\S]*>/i;
     return htmlRegex.test(content);
   };
 
-  const getLectureImage = async () => {
-    try {
-      const imageRes = await StorageService.fetchLectureImage(
-        lectureObject.image,
-        lectureObject._id,
-      );
-      setImageUrl(imageRes);
-    } catch (err) {
-      setImageUrl(null);
-    }
-  };
-
   // Split text into paragraphs without cutting words
-  const splitText = (text) => {
-    let _paragraphs = [];
+  const splitText = (text: string) => {
+    const tempParagraphs = [];
 
     if (text.length < 250) {
-      _paragraphs.push(text);
-      setParagraphs(_paragraphs);
+      tempParagraphs.push(text);
+      setParagraphs(tempParagraphs);
       return;
     }
 
-    const findBreakPoint = (str, start, direction = 1) => {
+    const findBreakPoint = (str: string, start: number, direction = 1) => {
       let pos = start;
       while (pos > 0 && pos < str.length) {
         if (str[pos] === " ") return pos;
@@ -83,31 +90,32 @@ const TextImageLectureScreen = ({
     };
 
     if (text.length <= 250) {
-      _paragraphs.push(text);
+      tempParagraphs.push(text);
     } else {
       const breakPoint1 = findBreakPoint(text, 250);
-      _paragraphs.push(text.substring(0, breakPoint1));
+      tempParagraphs.push(text.substring(0, breakPoint1));
 
       let remainingText = text.substring(breakPoint1);
 
       while (remainingText.length > 0) {
         const breakPoint = findBreakPoint(remainingText, 100);
         const chunk = remainingText.substring(0, breakPoint);
-        _paragraphs.push(chunk);
+        tempParagraphs.push(chunk);
         remainingText = remainingText.substring(breakPoint);
       }
     }
 
-    setParagraphs(_paragraphs);
+    setParagraphs(tempParagraphs);
   };
 
   return (
-    <View className="flex-1 bg-secondary pt-20">
+    <View className="flex-1 bg-surfaceSubtleCyan pt-20">
       <View className="mt-5 flex-col items-center">
-        <Text className="font-sans text-base text-projectGray">
-          Nome do curso: {courseObject.title}
+        <Text className="text-borderDisabledGrayscale text-caption-sm-semibold">
+          {t("course.name") + ": "}
+          {courseObject.title}
         </Text>
-        <Text className="font-sans-bold text-lg text-projectBlack">
+        <Text className="text-textBodyGrayscale text-body-bold">
           {lectureObject.title}
         </Text>
       </View>
@@ -126,11 +134,15 @@ const TextImageLectureScreen = ({
               }}
             />
           ) : (
-            paragraphs &&
-            paragraphs.map((paragraph, index) => (
+            paragraphs?.map((paragraph, index) => (
               <Text
                 key={index}
-                className={`px-4 pt-4 text-lg ${index === 0 ? "text-primary_custom" : "text-projectGray"}`}
+                className={cn(
+                  "px-4 pt-4 text-lg",
+                  index === 0
+                    ? "text-primary_custom"
+                    : "text-borderDisabledGrayscale",
+                )}
               >
                 {paragraph}
               </Text>
@@ -142,7 +154,7 @@ const TextImageLectureScreen = ({
             </View>
           )}
           {paragraphs && paragraphs.length > 2 && (
-            <Text className="px-4 text-[18px] text-projectGray">
+            <Text className="px-4 text-borderDisabledGrayscale">
               {paragraphs[paragraphs.length - 1]}
             </Text>
           )}
@@ -151,33 +163,25 @@ const TextImageLectureScreen = ({
 
       <View className="w-100 mb-8 px-6">
         <TouchableOpacity
-          className="flex-row items-center justify-center rounded-medium bg-primary_custom px-10 py-4"
-          onPress={handleContinue}
+          className="flex-row items-center justify-center rounded-medium bg-surfaceDefaultCyan px-10 py-4"
+          onPress={void handleContinue}
         >
           <View className="flex-row items-center">
-            <Text className="font-sans-bold text-center text-body text-projectWhite">
-              Continuar
+            <Text className="text-center text-surfaceSubtleGrayscale text-body-bold">
+              {t("course.continue-button-text")}
             </Text>
             <Icon
               name="chevron-right"
               type="material"
               size={24}
               color="white"
-              style={{ marginLeft: 8 }}
+              className="ml-2"
             />
           </View>
         </TouchableOpacity>
       </View>
     </View>
   );
-};
-
-TextImageLectureScreen.propTypes = {
-  lectureObject: PropTypes.object.isRequired,
-  courseObject: PropTypes.object.isRequired,
-  isLastSlide: PropTypes.bool.isRequired,
-  onContinue: PropTypes.func.isRequired,
-  handleStudyStreak: PropTypes.func.isRequired,
 };
 
 export default TextImageLectureScreen;

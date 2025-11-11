@@ -24,6 +24,7 @@
     "notification": "Notification"
   },
   "course": {
+    "name": "Course name",
     "start": "Start course",
     "course-title": "Course Title",
     "completed-up": "Completed",
