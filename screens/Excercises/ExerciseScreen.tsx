@@ -86,7 +86,7 @@ const ExerciseScreen = ({
 
       if (isAnswerCorrect && isLastComponent) {
         try {
-          handleStudyStreak();
+          void handleStudyStreak();
           await handleLastComponent(exerciseObject, courseObject, navigation);
         } catch (error) {
           console.error("Error handling last component:", error);
@@ -129,7 +129,7 @@ const ExerciseScreen = ({
                   disabled={buttonText === "Continuar"}
                   value={index}
                   status={selectedAnswer === index ? "checked" : "unchecked"}
-                  onPress={() => handleReviewAnswer(answer.correct, index)}
+                  onPress={() => void handleReviewAnswer(answer.correct, index)}
                   color={colors.primary_custom}
                   uncheckedColor={colors.primary_custom}
                 />
@@ -138,7 +138,9 @@ const ExerciseScreen = ({
                 <View className="flex-1">
                   <TouchableOpacity
                     disabled={buttonText === "Continuar"}
-                    onPress={() => handleReviewAnswer(answer.correct, index)}
+                    onPress={() =>
+                      void handleReviewAnswer(answer.correct, index)
+                    }
                     className="flex-1"
                   >
                     <Text className="font-body-regular pb-1 pt-2 text-borderDarkerGrayscale">
@@ -188,7 +190,7 @@ const ExerciseScreen = ({
           }`}
           onPress={() => {
             if (selectedAnswer !== null) {
-              handleReviewAnswer(
+              void handleReviewAnswer(
                 exerciseObject.answers[selectedAnswer]?.correct,
                 selectedAnswer,
               );
