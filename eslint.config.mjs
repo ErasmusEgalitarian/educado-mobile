@@ -25,7 +25,7 @@ const disallowedColors = Object.keys(colorTokens["old-colors"]);
 // The config works as it should, but due to some issues with `eslint-plugin-prefer-arrow-functions`, a couple of errors
 // are suppressed
 export default defineConfig([
-  globalIgnores([".expo/*", "**/dist/*", "*.config.js"]),
+  globalIgnores([".expo/*", "**/dist/*", "*.config.js", "api/backend/*"]),
   expoConfig,
   eslint.configs.recommended,
   // I double-checked that this is the correct way to import the config

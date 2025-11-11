@@ -15,5 +15,5 @@
     "**/*.d.ts",
     "eslint.config.mjs"
   ],
-  "exclude": ["packages"]
+  "exclude": ["packages", "api/backend/**"]
 }
