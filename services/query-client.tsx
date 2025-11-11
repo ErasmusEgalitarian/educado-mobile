@@ -9,6 +9,7 @@ import { AppState, AppStateStatus } from "react-native";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { configureApiClient } from "@/api/openapi/api-config";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,8 @@ onlineManager.setEventListener((setOnline) =>
 const onAppStateChange = (status: AppStateStatus) => {
   focusManager.setFocused(status === "active");
 };
+
+configureApiClient();
 
 const persister = createAsyncStoragePersister({
   storage: AsyncStorage,
