@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { ScrollView, View, TouchableOpacity } from "react-native";
-import Text from "../../components/General/Text";
+import { ScrollView, View, TouchableOpacity, Text } from "react-native";
 import { RadioButton } from "react-native-paper";
-import ExerciseInfo from "../../components/Exercise/ExerciseInfo";
+import ExerciseInfo from "@/components/Exercise/ExerciseInfo";
 import { Icon } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
-import PopUp from "../../components/Gamification/PopUp";
+import PopUp from "@/components/Gamification/PopUp";
 import { StatusBar } from "expo-status-bar";
-import PropTypes from "prop-types";
-import { completeComponent, handleLastComponent } from "../../services/utils";
+import { completeComponent, handleLastComponent } from "@/services/utils";
 import { useNavigation } from "@react-navigation/native";
-import tailwindConfig from "@/tailwind.config";
+import { Course, Section, SectionComponentExercise } from "@/types";
+import { colors } from "@/theme/colors";
 
 /*
 Description:	This screen is displayed when the student is doing an exercise.
@@ -29,6 +28,15 @@ Props:			- exerciseObject: The exercise object, which contains the question and 
 				when the exercise is completed and it is the last component in the section, the student is taken to the section complete screen
 */
 
+interface ExerciseScreenProps {
+  componentList: SectionComponentExercise[];
+  exerciseObject: SectionComponentExercise;
+  sectionObject: Section;
+  courseObject: Course;
+  onContinue: (isCorrect: boolean) => boolean;
+  handleStudyStreak: () => Promise<void>;
+}
+
 const ExerciseScreen = ({
   componentList,
   exerciseObject,
@@ -36,19 +44,21 @@ const ExerciseScreen = ({
   courseObject,
   onContinue,
   handleStudyStreak,
-}) => {
-  const projectColors = tailwindConfig.theme.colors;
+}: ExerciseScreenProps) => {
   const navigation = useNavigation();
 
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [buttonText, setButtonText] = useState(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [isPopUpVisible, setIsPopUpVisible] = useState(false);
-  const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
-  const [points, setPoints] = useState(10);
-  const [attempts, setAttempts] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [buttonText, setButtonText] = useState<string | null>(null);
+  const [showFeedback, setShowFeedback] = useState<boolean>(false);
+  const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(false);
+  const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean>(false);
+  const [points, setPoints] = useState<number>(10);
+  const [attempts, setAttempts] = useState<number>(0);
 
-  const handleReviewAnswer = async (isAnswerCorrect, answerIndex) => {
+  const handleReviewAnswer = async (
+    isAnswerCorrect: boolean,
+    answerIndex: number,
+  ) => {
     setSelectedAnswer(answerIndex);
     if (buttonText === null) {
       setButtonText("Continuar");
@@ -120,8 +130,8 @@ const ExerciseScreen = ({
                   value={index}
                   status={selectedAnswer === index ? "checked" : "unchecked"}
                   onPress={() => handleReviewAnswer(answer.correct, index)}
-                  color={projectColors.primary_custom}
-                  uncheckedColor={projectColors.primary_custom}
+                  color={colors.primary_custom}
+                  uncheckedColor={colors.primary_custom}
                 />
 
                 {/* Answer Text and Feedback */}
@@ -148,11 +158,7 @@ const ExerciseScreen = ({
                           size={10}
                           name={answer.correct ? "check" : "close"}
                           type="material"
-                          color={
-                            answer.correct
-                              ? projectColors.success
-                              : projectColors.error
-                          }
+                          color={answer.correct ? colors.success : colors.error}
                         />
                       </View>
                       <Text
@@ -212,15 +218,6 @@ const ExerciseScreen = ({
       <StatusBar style="auto" />
     </SafeAreaView>
   );
-};
-
-ExerciseScreen.propTypes = {
-  exerciseObject: PropTypes.object.isRequired,
-  sectionObject: PropTypes.object.isRequired,
-  courseObject: PropTypes.object.isRequired,
-  onContinue: PropTypes.func.isRequired,
-  componentList: PropTypes.array.isRequired,
-  handleStudyStreak: PropTypes.func.isRequired,
 };
 
 export default ExerciseScreen;
