@@ -232,7 +232,7 @@ export const getUserInfo = async (): Promise<UserInfo> => {
 export const setUserInfo = async (userInfo: UserInfo) => {
   await AsyncStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(userInfo));
   await AsyncStorage.setItem(STORAGE_KEYS.USER_ID, userInfo.id); // needs to be separate
-  await setStudentInfo(userInfo.id);
+  // await setStudentInfo(userInfo.id);
 };
 
 /**

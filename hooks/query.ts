@@ -9,14 +9,14 @@ import {
   getBucketVideoByFilename,
   getSectionById,
   getStudentById,
-  loginUser,
   subscribeCourse,
-  unsubscribeCourse,
   updateStudyStreak
 } from "@/api/legacy-api";
-import { getAllCoursesStrapi, getAllStudentSubscriptionsStrapi, getCourseByIdStrapi } from "@/api/strapi-api";
+import { getAllCoursesStrapi, getAllStudentSubscriptionsStrapi, getCourseByIdStrapi, loginUserStrapi, unsubscribeCourseStrapi } from "@/api/strapi-api";
 import { setJWT, setUserInfo } from "@/services/storage-service";
+import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import {
+  Course,
   LoginStudent,
   SectionComponentExercise,
   SectionComponentLecture,
@@ -29,7 +29,6 @@ import {
   EncodingType,
   writeAsStringAsync,
 } from "expo-file-system";
-import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -101,15 +100,15 @@ export const useSubscribeToCourse = () => {
 export const useUnsubscribeFromCourse = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Student, unknown, { userId: string; courseId: string }>({
+  return useMutation<Course, unknown, { userId: string; courseId: string }>({
     mutationFn: async (variables) => {
       const { userId, courseId } = variables;
 
-      return await unsubscribeCourse(userId, courseId);
+      return await unsubscribeCourseStrapi(userId, courseId);
     },
     onSuccess: (data) =>
       queryClient.invalidateQueries({
-        queryKey: [...queryKeys.subscriptions(data.baseUser)],
+        queryKey: [...queryKeys.subscriptions(data.courseId)],
       }),
   });
 };
@@ -264,11 +263,11 @@ export const useLogin = () => {
     unknown,
     { email: string; password: string }
   >({
-    mutationFn: (variables) => loginUser(variables.email, variables.password),
+    mutationFn: (variables) => loginUserStrapi(variables.email, variables.password),
     onSuccess: async (data) => {
       // TODO: Remove storage-service.ts and AsyncStorage legacy fallback after full migration to TanStack Query
       await setJWT(data.accessToken);
-      await setUserInfo({ ...data.userInfo });
+      await setUserInfo(data.userInfo);
       await AsyncStorage.setItem("loggedIn", "true");
 
       queryClient.setQueryData(queryKeys.loginStudent, data);

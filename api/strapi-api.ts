@@ -1,21 +1,25 @@
 import {
-    courseGetCoursesById,
     courseGetCourses,
-    courseSelectionGetCourseSelections,
+    courseGetCoursesById,
     coursePutCoursesById,
-    studentPutStudentsById,
-    studentGetStudentsById
+    courseSelectionGetCourseSelections,
+    postStudentLogin,
+    studentGetStudentsById,
+    studentPutStudentsById
 } from "@/api/backend/sdk.gen";
 import {
     CourseGetCoursesByIdResponse,
     CourseGetCoursesResponse,
-    CourseSelectionGetCourseSelectionsResponse,
     CoursePutCoursesByIdResponse,
-    StudentPutStudentsByIdResponse,
+    CourseSelectionGetCourseSelectionsResponse,
+    PostStudentLoginResponse,
     StudentGetStudentsByIdResponse,
+    StudentPutStudentsByIdResponse
 } from "@/api/backend/types.gen";
-import { mapToCourse, mapToSection } from "@/api/strapi-mapper";
-import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
+import { mapToCourse, mapToLoginStudent, mapToSection } from "@/api/strapi-mapper";
+import { PopulatedCourse, PopulatedLoginResponse, PopulatedSection } from "@/types/strapi-populated";
+import { client } from "@/api/backend/client.gen";
+import { Auth } from "@/api/backend/core/auth.gen";
 
 /**
  * Gets a course by ID.
@@ -234,7 +238,7 @@ export const unsubscribeCourseStrapi = async (studentId: string, courseId: strin
         },
     }) as CoursePutCoursesByIdResponse;
 
-    return updateResponse.data;
+    return mapToCourse(updateResponse.data as PopulatedCourse);
 };
 
 
@@ -287,3 +291,67 @@ export const addCourseToStudentStrapi = async (studentId: string, courseId: stri
 
     return updateResponse.data;
 };
+
+
+/**
+ * Sends a request to the backend to log in an existing user.
+ *
+ * @param email - should contain an email, to login
+ * @param password - should contain a password, to login
+ */
+export const loginUserStrapi = async (email: string, password: string) => {
+
+
+    const response = await postStudentLogin({
+        body: {
+            email,
+            password,
+        }
+    }) as PostStudentLoginResponse;
+    console.log('response', response);
+
+    if (response.accessToken == null || response.userInfo == null) {
+        throw new Error('Login failed');
+    }
+
+    console.log('AGAMAGM');
+    // Set the access token in the client for future requests
+    client.setConfig({
+        ...client.getConfig(),
+        // headers: { Authorization: `Bearer ${response.accessToken}` }
+    });
+    console.log('data.accessToken', response.accessToken);
+
+    const userCourses = await courseGetCourses({
+        query: {
+            filters: {
+                'students[id][$eq]': response.userInfo.documentId,
+            },
+            populate: [
+                'course_categories',
+                'content_creators',
+                'feedbacks',
+                'course_sections',
+                'students',
+            ],
+        },
+    }) as CourseGetCoursesResponse;
+
+    if (userCourses.data == null) {
+        throw new Error('No courses found');
+    }
+
+    const userInfo: PopulatedLoginResponse = {
+        accessToken: response.accessToken,
+        userInfo: {
+            documentId: response.userInfo.documentId,
+            name: response.userInfo.name,
+            email: response.userInfo.email,
+        },
+        courses: userCourses.data as PopulatedCourse[],
+    }
+
+
+    return mapToLoginStudent(userInfo);
+};
+

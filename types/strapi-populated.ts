@@ -7,7 +7,8 @@ import type {
     Lecture as LectureStrapi,
     Student as StudentStrapi,
     // TODO: Looks like the naming of the CourseSection is incorrect in the Strapi model.
-    CourseSelection as CourseSectionStrapi
+    CourseSelection as CourseSectionStrapi,
+    JwtResponse
 } from "@/api/backend/types.gen";
 
 export type PopulatedCourse = Omit<CourseStrapi,
@@ -39,4 +40,8 @@ export type PopulatedStudent = Omit<StudentStrapi,
     'courses'
 > & {
     courses?: PopulatedCourse[];
+}
+
+export type PopulatedLoginResponse = JwtResponse & {
+    courses: PopulatedCourse[];
 }

@@ -7991,7 +7991,17 @@ export const zLoginRequest = z.object({
   password: z.string(),
 });
 
-export const zJwtResponse = z.string();
+export const zJwtResponse = z.object({
+  accessToken: z.string().optional(),
+  userInfo: z
+    .object({
+      documentId: z.string().optional(),
+      name: z.string().optional(),
+      email: z.string().optional(),
+      verifiedAt: z.string().optional(),
+    })
+    .optional(),
+});
 
 export const zResetPasswordRequestRequest = z.object({
   email: z.string().optional(),

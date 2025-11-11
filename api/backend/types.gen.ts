@@ -5378,7 +5378,15 @@ export interface LoginRequest {
   password: string;
 }
 
-export type JwtResponse = string;
+export interface JwtResponse {
+  accessToken?: string;
+  userInfo?: {
+    documentId?: string;
+    name?: string;
+    email?: string;
+    verifiedAt?: string;
+  };
+}
 
 export interface ResetPasswordRequestRequest {
   email?: string;

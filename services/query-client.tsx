@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: true,
     },
     mutations: {
-      retry: 0,
+      retry: 2,
     },
   },
 });
@@ -37,6 +37,7 @@ const onAppStateChange = (status: AppStateStatus) => {
 };
 
 configureApiClient();
+
 const persister = createAsyncStoragePersister({
   storage: AsyncStorage,
   throttleTime: 1000,
