@@ -1,64 +1,74 @@
 import { View, Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import tailwindConfig from "@/tailwind.config";
-import PropTypes from "prop-types";
-import CoursePoints from "../../components/Exercise/CoursePoints";
+import CoursePoints from "@/components/Exercise/CoursePoints";
+import { colors } from "@/theme/colors";
+import {
+  Course,
+  SectionComponent,
+  SectionComponentExercise,
+  SectionComponentLecture,
+} from "@/types";
 
 const LectureType = {
   TEXT: "text",
   VIDEO: "video",
 };
 
+interface Props {
+  courseObject: Course;
+  lectureType: string;
+  components: SectionComponent<
+    SectionComponentLecture | SectionComponentExercise
+  >[];
+  currentIndex: number;
+}
+
 const ProgressTopBar = ({
   courseObject,
   lectureType,
   components,
-  currentIndex = "",
-}) => {
+  currentIndex,
+}: Props) => {
   const navigator = useNavigation();
   const chevronColor =
     lectureType === LectureType.VIDEO
-      ? tailwindConfig.theme.colors.projectWhite
-      : tailwindConfig.theme.colors.projectBlack;
+      ? colors.surfaceLighterCyan
+      : colors.textTitleGrayscale;
 
-  const createCorrectIcon = (_index, _currentIndex) => {
+  const createCorrectIcon = (index: number, currentIndex: number) => {
     //if lecture is completed show check
-    if (
-      _index < _currentIndex || components[_index].component?.completed
-        ? true
-        : false
-    ) {
+    if (index < currentIndex ? true : false) {
       return (
         <View
-          key={_index}
-          className="mx-1 h-4 w-4 flex-col items-center justify-center rounded-full bg-primary_custom"
+          key={index}
+          className="mx-1 h-4 w-4 flex-col items-center justify-center rounded-full bg-surfaceDefaultCyan"
         >
           <MaterialCommunityIcons
             name="check-bold"
             size={12}
-            color={tailwindConfig.theme.colors.projectWhite}
+            color={colors.surfaceLighterCyan}
           />
         </View>
       );
     }
     //if lecture is current indicate with circle
-    else if (_index === _currentIndex) {
+    else if (index === currentIndex) {
       return (
         <View
-          key={_index}
-          className="mx-1 h-4 w-4 flex-col items-center justify-center rounded-full bg-primary_custom opacity-50"
+          key={index}
+          className="mx-1 h-4 w-4 flex-col items-center justify-center rounded-full bg-surfaceDefaultCyan opacity-50"
         >
           {/* <MaterialCommunityIcons name={_index >= allLectures.length ? "check" : "check"} size={12} color={tailwindConfig.theme.colors.primary_custom} /> */}
         </View>
       );
     }
     //if lecture is not current or completed show empty circle
-    else if (_index > _currentIndex) {
+    else if (index > currentIndex) {
       return (
         <View
-          key={_index}
-          className="mx-1 h-3 w-3 flex-col items-center justify-center rounded-full bg-projectGray first-line:opacity-50"
+          key={index}
+          className="mx-1 h-3 w-3 flex-col items-center justify-center rounded-full bg-surfaceDisabledGrayscale first-line:opacity-50"
         >
           {/* <MaterialCommunityIcons name={_index >= allLectures.length ? "check" : "check"} size={12} color={tailwindConfig.theme.colors.secondary} /> */}
         </View>
@@ -66,42 +76,42 @@ const ProgressTopBar = ({
     }
 
     //if lecture is completed show check
-    if (_index < _currentIndex || components[_index].completed) {
+    if (index < currentIndex) {
       return (
         <View
-          key={_index}
-          className="mx-1 h-5 w-5 flex-col items-center justify-center rounded-full bg-primary_custom"
+          key={index}
+          className="mx-1 h-5 w-5 flex-col items-center justify-center rounded-full bg-surfaceDefaultCyan"
         >
           <MaterialCommunityIcons
             name="check-bold"
             size={12}
-            color={tailwindConfig.theme.colors.projectWhite}
+            color={colors.surfaceLighterCyan}
           />
         </View>
       );
     }
     //if lecture is current indicate with circle
-    else if (_index === _currentIndex) {
+    else if (index === currentIndex) {
       return (
         <View
-          key={_index}
-          className="mx-1 h-5 w-5 flex-col items-center justify-center rounded-full bg-primary_custom opacity-50"
+          key={index}
+          className="mx-1 h-5 w-5 flex-col items-center justify-center rounded-full bg-surfaceDefaultCyan opacity-50"
         >
           {/* <MaterialCommunityIcons name={_index >= allLectures.length ? "check" : "check"} size={12} color={tailwindConfig.theme.colors.primary_custom} /> */}
         </View>
       );
     }
     //if lecture is not current or completed show empty circle
-    else if (_index > _currentIndex) {
+    else if (index > currentIndex) {
       return (
         <View
-          key={_index}
-          className="mx-1 h-5 w-5 flex-col items-center justify-center rounded-full bg-secondary"
+          key={index}
+          className="mx-1 h-5 w-5 flex-col items-center justify-center rounded-full bg-surfaceSubtleCyan"
         >
           <MaterialCommunityIcons
-            name={_index >= components.length ? "check" : "check"}
+            name={index >= components.length ? "check" : "check"}
             size={12}
-            color={tailwindConfig.theme.colors.secondary}
+            color={colors.surfaceSubtleCyan}
           />
         </View>
       );
@@ -111,7 +121,12 @@ const ProgressTopBar = ({
   return (
     <View className="relative w-full flex-row items-center px-4 pt-[15%]">
       <View className="relative flex-grow flex-row items-center justify-center">
-        <Pressable onPress={() => navigator.goBack()} className="">
+        <Pressable
+          onPress={() => {
+            navigator.goBack();
+          }}
+          className=""
+        >
           <MaterialCommunityIcons
             name="chevron-left"
             size={28}
@@ -119,26 +134,17 @@ const ProgressTopBar = ({
           />
         </Pressable>
         <View className="flex-grow flex-row items-center justify-center py-2">
-          {components.map((_lecture, _index) =>
+          {components.map((lecture, index) =>
             /* if lecture is completed show check, otherwise empty  */
-            createCorrectIcon(_index, currentIndex),
+            createCorrectIcon(index, currentIndex),
           )}
         </View>
         {LectureType.TEXT === lectureType && (
-          <>
-            <CoursePoints courseId={courseObject.courseId} />
-          </>
+          <CoursePoints courseId={courseObject.courseId} />
         )}
       </View>
     </View>
   );
-};
-
-ProgressTopBar.propTypes = {
-  courseObject: PropTypes.object,
-  lectureType: PropTypes.string,
-  components: PropTypes.array,
-  currentIndex: PropTypes.number,
 };
 
 export default ProgressTopBar;

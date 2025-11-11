@@ -211,7 +211,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
             courseObject={parsedCourse}
             lectureType={currentLectureType}
             components={sectionComponents}
-            currentIndex={index.toString()}
+            currentIndex={index}
           />
         </View>
       )}
