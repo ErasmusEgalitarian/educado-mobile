@@ -11,6 +11,11 @@ import { useNavigation } from "@react-navigation/native";
 import { Course, Section, SectionComponentExercise } from "@/types";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
+import {
+  useCompleteComponent,
+  useLoginStudent,
+  useStudent,
+} from "@/hooks/query";
 
 /*
 Description:	This screen is displayed when the student is doing an exercise.
@@ -56,6 +61,14 @@ const ExerciseScreen = ({
   const [points, setPoints] = useState<number>(10);
   const [attempts, setAttempts] = useState<number>(0);
 
+  const completeComponentQuery = useCompleteComponent();
+  const loginStudent = useLoginStudent();
+  const studentQuery = useStudent(loginStudent.data.userInfo.id);
+
+  if (studentQuery.isError) {
+    console.error("student could not be fetched for ExerciseScreen");
+  }
+
   const handleReviewAnswer = async (
     isAnswerCorrect: boolean,
     answerIndex: number,
@@ -69,7 +82,12 @@ const ExerciseScreen = ({
         setPoints(attempts === 0 ? 10 : 5);
         setIsPopUpVisible(true);
         try {
-          await completeComponent(exerciseObject, courseObject.courseId, true);
+          console.log(exerciseObject);
+          completeComponentQuery.mutate({
+            student: studentQuery.data,
+            component: exerciseObject,
+            isComplete: true,
+          });
         } catch (error) {
           console.error("Error completing the exercise:", error);
         }
