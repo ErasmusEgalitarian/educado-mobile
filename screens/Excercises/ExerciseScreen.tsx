@@ -147,7 +147,9 @@ const ExerciseScreen = ({
                   disabled={hasAnswered}
                   value={String(index)}
                   status={selectedAnswer === index ? "checked" : "unchecked"}
-                  onPress={() => void handleReviewAnswer(answer.correct, index)}
+                  onPress={() => {
+                    handleReviewAnswer(answer.correct, index);
+                  }}
                   color={colors.primary_custom}
                   uncheckedColor={colors.primary_custom}
                 />
@@ -156,9 +158,9 @@ const ExerciseScreen = ({
                 <View className="flex-1">
                   <TouchableOpacity
                     disabled={hasAnswered}
-                    onPress={() =>
-                      void handleReviewAnswer(answer.correct, index)
-                    }
+                    onPress={() => {
+                      handleReviewAnswer(answer.correct, index);
+                    }}
                     className="flex-1"
                   >
                     <Text className="font-body-regular pb-1 pt-2 text-borderDarkerGrayscale">
