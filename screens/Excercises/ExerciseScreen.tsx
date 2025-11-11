@@ -6,7 +6,7 @@ import { Icon } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PopUp from "@/components/Gamification/PopUp";
 import { StatusBar } from "expo-status-bar";
-import { completeComponent, handleLastComponent } from "@/services/utils";
+import { cn, completeComponent, handleLastComponent } from "@/services/utils";
 import { useNavigation } from "@react-navigation/native";
 import { Course, Section, SectionComponentExercise } from "@/types";
 import { colors } from "@/theme/colors";
@@ -98,7 +98,7 @@ const ExerciseScreen = ({
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-secondary">
+    <SafeAreaView className="flex-1 bg-surfaceSubtleCyan">
       <View className="flex-1 items-center">
         {/* Exercise Information */}
         <View className="text-center">
@@ -114,7 +114,7 @@ const ExerciseScreen = ({
           <View className="mb-4">
             <Text
               testID="exerciseQuestion"
-              className="font-sans-bold text-center text-lg text-projectBlack"
+              className="text-center text-borderDarkerGrayscale text-body-regular"
             >
               {exerciseObject.question}
             </Text>
@@ -135,13 +135,13 @@ const ExerciseScreen = ({
                 />
 
                 {/* Answer Text and Feedback */}
-                <View style={{ flex: 1 }}>
+                <View className="flex-1">
                   <TouchableOpacity
                     disabled={buttonText === "Continuar"}
                     onPress={() => handleReviewAnswer(answer.correct, index)}
                     className="flex-1"
                   >
-                    <Text className="font-montserrat pb-1 pt-2 text-body text-projectBlack">
+                    <Text className="font-body-regular pb-1 pt-2 text-borderDarkerGrayscale">
                       {answer.text}
                     </Text>
                   </TouchableOpacity>
@@ -162,9 +162,10 @@ const ExerciseScreen = ({
                         />
                       </View>
                       <Text
-                        className={`pl-1 pr-2 pt-2 text-caption-medium ${
-                          answer.correct ? "text-success" : "text-error"
-                        }`}
+                        className={cn(
+                          "pl-1 pr-2 pt-2 text-caption-medium",
+                          answer.correct ? "text-success" : "text-error",
+                        )}
                       >
                         {answer.feedback}
                       </Text>
@@ -196,8 +197,8 @@ const ExerciseScreen = ({
           disabled={selectedAnswer === null} // Prevents interaction when no answer is selected
         >
           <View className="flex-row items-center">
-            <Text className="font-sans-bold text-center text-body text-projectWhite">
-              {buttonText || "Continuar"}
+            <Text className="text-center text-surfaceSubtleGrayscale text-body-regular">
+              {buttonText ?? "Continuar"}
             </Text>
             <Icon
               name="chevron-right"
