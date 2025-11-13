@@ -341,12 +341,8 @@ export const useSignUpStrapi = () => {
 };
 
 export const useLogoutStrapi = () => {
-  return useMutation<
-    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-    void,
-    unknown
-  >({
-    mutationFn: () => logoutStudentStrapi(),
+  return useMutation({
+    mutationFn: logoutStudentStrapi
   });
 };
 
