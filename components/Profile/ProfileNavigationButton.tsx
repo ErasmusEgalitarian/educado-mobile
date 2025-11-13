@@ -1,6 +1,6 @@
 import { View, TouchableOpacity } from "react-native";
 import Text from "../General/Text";
-import { Icon } from "@rneui/base";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
 
@@ -31,7 +31,7 @@ export default function ProfileNavigationButton(props) {
             {props.label}
           </Text>
           <View className="items-end">
-            <Icon
+            <MaterialCommunityIcons
               size={25}
               name="chevron-right"
               type="material-community"

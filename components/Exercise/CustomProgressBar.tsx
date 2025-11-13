@@ -1,6 +1,5 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import * as Progress from "react-native-progress";
-import { ScreenWidth, ScreenHeight } from "@rneui/base";
 import { colors } from "@/theme/colors";
 
 interface CustomProgressBarProps {
@@ -16,7 +15,7 @@ interface CustomProgressBarProps {
  * @param progress - The progress value (0-100), the amount done and the total amount.
  * @param width - The width of the progress bar (in percentage).
  * @param height - The height of the progress bar (in percentage).
- * @param {[props.displayLabel=true] - Whether to display the bottom text component.
+ * @param {[props.displayLabel=true]} - Whether to display the bottom text component.
  * @returns - A JSX element representing the custom progress bar.
  */
 export const CustomProgressBar = ({
@@ -25,6 +24,8 @@ export const CustomProgressBar = ({
   height,
   displayLabel = true,
 }: CustomProgressBarProps) => {
+  const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
+
   // Ensure progress is between 0 and 100
   progress[0] = Math.min(100, Math.max(0, progress[0]));
   if (isNaN(progress[0])) {
