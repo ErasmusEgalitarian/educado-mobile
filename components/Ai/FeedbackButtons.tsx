@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { sendFeedbackToBackend } from "../../api/api";
 import PropTypes from "prop-types";
 
@@ -31,7 +31,7 @@ const FeedbackButtons = ({ aiText, userText }) => {
             onPress={() => handleFeedback(true)}
             className="mr-1"
           >
-            <Icon
+            <MaterialCommunityIcons
               name="thumb-up-outline"
               type="material-community"
               color="black"
@@ -39,7 +39,7 @@ const FeedbackButtons = ({ aiText, userText }) => {
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleFeedback(false)}>
-            <Icon
+            <MaterialCommunityIcons
               name="thumb-down-outline"
               type="material-community"
               color="black"
@@ -49,7 +49,7 @@ const FeedbackButtons = ({ aiText, userText }) => {
         </>
       )}
       {selectedFeedback === true && (
-        <Icon
+        <MaterialCommunityIcons
           name="thumb-up"
           type="material-community"
           color="#166276"
@@ -57,7 +57,7 @@ const FeedbackButtons = ({ aiText, userText }) => {
         />
       )}
       {selectedFeedback === false && (
-        <Icon
+        <MaterialCommunityIcons
           name="thumb-down"
           type="material-community"
           color="#166276"

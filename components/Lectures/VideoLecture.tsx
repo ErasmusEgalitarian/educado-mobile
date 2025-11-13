@@ -1,6 +1,6 @@
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { ResizeMode, Video } from "expo-av";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { handleLastComponent } from "@/services/utils";
 import { getVideoURL } from "@/services/storage-service";
@@ -174,7 +174,7 @@ export const VideoLecture = ({
             <Text className="text-center text-surfaceSubtleGrayscale text-body-bold">
               {t("lesson.continue")}
             </Text>
-            <Icon
+            <MaterialCommunityIcons
               className="ml-8"
               name="chevron-right"
               type="material"

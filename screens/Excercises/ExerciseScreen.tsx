@@ -3,7 +3,7 @@ import { ScrollView, View, TouchableOpacity } from "react-native";
 import Text from "../../components/General/Text";
 import { RadioButton } from "react-native-paper";
 import ExerciseInfo from "../../components/Exercise/ExerciseInfo";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PopUp from "../../components/Gamification/PopUp";
 import { StatusBar } from "expo-status-bar";
@@ -23,9 +23,9 @@ Description:	This screen is displayed when the student is doing an exercise.
 				The student gets 0 points when the answer is incorrect or they have completed the exercise before.
 Dependencies:	CompSwipeScreen, the screen which contains all the components in the section
 Props:			- exerciseObject: The exercise object, which contains the question and the answers
-				- sectionObject: The section object, which contains the section title
-				- courseObject: The course object, which contains the course title
-				- onContinue: A function that is called when the student presses the continue button,
+				•  sectionObject: The section object, which contains the section title
+				•  courseObject: The course object, which contains the course title
+				•  onContinue: A function that is called when the student presses the continue button,
 				when the exercise is completed and it is the last component in the section, the student is taken to the section complete screen
 */
 
@@ -144,7 +144,7 @@ const ExerciseScreen = ({
                       }`}
                     >
                       <View className="pl-2 pt-1">
-                        <Icon
+                        <MaterialCommunityIcons
                           size={10}
                           name={answer.correct ? "check" : "close"}
                           type="material"
@@ -193,7 +193,7 @@ const ExerciseScreen = ({
             <Text className="font-sans-bold text-center text-body text-projectWhite">
               {buttonText || "Continuar"}
             </Text>
-            <Icon
+            <MaterialCommunityIcons
               name="chevron-right"
               type="material"
               size={24}
