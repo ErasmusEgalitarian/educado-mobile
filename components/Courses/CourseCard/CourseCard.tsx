@@ -41,12 +41,11 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
   useEffect(() => {
     const testStrapiCourses = async () => {
       try {
-      const courses = await courseGetCourses();
-      console.log("courses", courses);
+        const courses = await courseGetCourses();
+        console.log("courses", courses);
       } catch (error) {
         console.error("Error fetching courses", error);
       }
-
     };
 
     void testStrapiCourses();

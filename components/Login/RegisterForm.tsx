@@ -91,14 +91,14 @@ export const RegisterForm = () => {
    */
   useEffect(() => {
     const validationPassed: boolean =
-      name.trim() !== "" &&        // Name has a value
-      email.trim() !== "" &&       // Email has a value
-      nameAlert === "" &&          // Name has no errors
-      emailAlert === "" &&         // Email has no errors
-      passwordLengthValid &&       // Password is long enough
-      passwordContainsLetter &&    // Password contains a letter
+      name.trim() !== "" && // Name has a value
+      email.trim() !== "" && // Email has a value
+      nameAlert === "" && // Name has no errors
+      emailAlert === "" && // Email has no errors
+      passwordLengthValid && // Password is long enough
+      passwordContainsLetter && // Password contains a letter
       confirmPasswordAlert === ""; // Passwords match
-    
+
     setIsAllInputValid(validationPassed);
   }, [
     nameAlert,
@@ -120,7 +120,6 @@ export const RegisterForm = () => {
       setConfirmPasswordAlert("Os campos de senha precisam ser iguais");
     }
   };
-
 
   const signUpMutation = useSignUpStrapi();
   const loginStudentMutation = useLoginStrapi();
@@ -151,10 +150,18 @@ export const RegisterForm = () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { baseUser }: { baseUser: BaseUserType } = await registerUser(obj);
 
-      const response = await signUpMutation.mutateAsync({ name, email, password });
+      const response = await signUpMutation.mutateAsync({
+        name,
+        email,
+        password,
+      });
 
       // TODO: Removie this console.log when migrating to use strapi fully.
-      console.log(response.accessToken ? "Student signed up in strapi" : "Failed to sign up student in strapi");
+      console.log(
+        response.accessToken
+          ? "Student signed up in strapi"
+          : "Failed to sign up student in strapi",
+      );
 
       const userInfo: UserInfo = {
         id: baseUser._id,

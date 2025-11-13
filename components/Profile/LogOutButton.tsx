@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Alert , Text } from "react-native";
+import { View, TouchableOpacity, Alert, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -27,15 +27,18 @@ export default function LogOutButton(props: { testID: string }) {
     }
   };
 
-  const logoutAlert = () =>
-    { Alert.alert("Sair", "Tem certeza que deseja sair?", [
+  const logoutAlert = () => {
+    Alert.alert("Sair", "Tem certeza que deseja sair?", [
       {
         text: "Não",
-        onPress: () => { console.log("No Pressed"); },
+        onPress: () => {
+          console.log("No Pressed");
+        },
         style: "cancel",
       },
       { text: "Sim", onPress: void logOut() },
-    ]); };
+    ]);
+  };
 
   return (
     <View className="flex items-center py-[6%]">
@@ -47,7 +50,7 @@ export default function LogOutButton(props: { testID: string }) {
             color={colors.error}
             testID={props.testID}
           />
-          <Text className="text-center text-body-regular text-surfaceDefaultRed underline">
+          <Text className="text-center text-surfaceDefaultRed underline text-body-regular">
             Sair
           </Text>
         </View>

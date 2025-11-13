@@ -19,7 +19,11 @@ import {
   unsubscribeCourse,
   updateStudyStreak,
 } from "@/api/legacy-api";
-import { loginStudentStrapi, logoutStudentStrapi, signUpStudentStrapi } from "@/api/strapi-api";
+import {
+  loginStudentStrapi,
+  logoutStudentStrapi,
+  signUpStudentStrapi,
+} from "@/api/strapi-api";
 import { setJWT, setUserInfo } from "@/services/storage-service";
 import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import {
@@ -295,28 +299,24 @@ export const useLogin = () => {
 
 /**
  * Log in a user by email and password in strapi.
- * 
+ *
  */
 export const useLoginStrapi = () => {
-  return useMutation<
-    JwtResponse,
-    unknown,
-    { email: string; password: string }
-  >({
-    mutationFn: (variables) => loginStudentStrapi(variables.email, variables.password),
-    onSuccess: (data) => {
-      client.setConfig(
-        {
+  return useMutation<JwtResponse, unknown, { email: string; password: string }>(
+    {
+      mutationFn: (variables) =>
+        loginStudentStrapi(variables.email, variables.password),
+      onSuccess: (data) => {
+        client.setConfig({
           ...client.getConfig(),
           headers: {
             Authorization: `Bearer ${data.accessToken ?? ""}`,
           },
-        }
-      )
+        });
+      },
     },
-  });
+  );
 };
-
 
 /**
  * Sign up a user by email and password in strapi.
@@ -327,20 +327,18 @@ export const useSignUpStrapi = () => {
     unknown,
     { name: string; email: string; password: string }
   >({
-    mutationFn: (variables) => signUpStudentStrapi(variables.name, variables.email, variables.password),
+    mutationFn: (variables) =>
+      signUpStudentStrapi(variables.name, variables.email, variables.password),
     onSuccess: (data) => {
-      client.setConfig(
-        {
-          ...client.getConfig(),
-          headers: {
-            Authorization: `Bearer ${data.accessToken ?? ""}`,
-          },
-        }
-      )
+      client.setConfig({
+        ...client.getConfig(),
+        headers: {
+          Authorization: `Bearer ${data.accessToken ?? ""}`,
+        },
+      });
     },
   });
 };
-
 
 export const useLogoutStrapi = () => {
   return useMutation<
@@ -350,7 +348,7 @@ export const useLogoutStrapi = () => {
   >({
     mutationFn: () => logoutStudentStrapi(),
   });
-}
+};
 
 /**
  * Complete a component.
