@@ -1,8 +1,8 @@
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function Star() {
   return (
-    <Icon
+    <MaterialCommunityIcons
       style={{
         shadowOpacity: 0.8,
         shadowRadius: 2,

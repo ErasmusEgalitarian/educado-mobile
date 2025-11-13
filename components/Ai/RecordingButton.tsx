@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Alert, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { sendAudioToChatbot } from "@/api/api";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AudioResponse } from "@/types/ai";
 import { Course } from "@/types/course";
 
@@ -98,7 +98,7 @@ export const RecordingButton = ({
       onPressIn={startRecording}
       onPressOut={stopRecording}
     >
-      <Icon
+      <MaterialCommunityIcons
         name="microphone"
         type="material-community"
         color="white"

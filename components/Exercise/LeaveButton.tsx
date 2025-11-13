@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import { Icon, Button } from "@rneui/base";
+import { IconButton } from "react-native-paper";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/theme/colors";
 
 interface LeaveButtonProps {
@@ -11,25 +12,17 @@ const LeaveButton = ({ navigationPlace }: LeaveButtonProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   const navigation = useNavigation<any>();
   return (
-    <Button
-      className="h-12 w-12"
-      color="invisible"
-      radius="20"
-      size="sm"
+    <IconButton
+      size={25}
+      icon={"chevron-left"}
+      color={colors.textBodyGrayscale}
+      style={{ height: 48, width: 48 }}
       onPress={() => {
         // Navigation will be upgraded when moving to app-router. To typesafe current navigation is painful why it is omitted.
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         navigation.navigate(navigationPlace);
       }}
-      icon={
-        <Icon
-          size={25}
-          name="chevron-left"
-          type="material-community"
-          color={colors.textBodyGrayscale}
-        />
-      }
-    ></Button>
+    />
   );
 };
 

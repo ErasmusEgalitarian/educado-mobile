@@ -9,7 +9,7 @@ import {
 import CompleteCourseSlider from "@/components/Courses/CompleteCourse/CompleteCourseSlider";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { giveFeedback } from "@/api/api";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 /*
 Description: 	This screen is displayed when the student completes a course.
@@ -122,7 +122,7 @@ const CompleteCourseScreen = () => {
               >
                 {isFeedbackScreen ? "Enviar e concluir" : "Continuar"}
               </Text>
-              <Icon
+              <MaterialCommunityIcons
                 name="chevron-right"
                 type="material"
                 size={24}

@@ -10,7 +10,7 @@ import { BaseScreen } from "@/components/General/BaseScreen";
 import IconHeader from "@/components/General/IconHeader";
 import { RecordingButton } from "@/components/Ai/RecordingButton";
 import FeedbackButtons from "@/components/Ai/FeedbackButtons";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Markdown from "react-native-markdown-display";
 import { Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
@@ -249,7 +249,7 @@ const EduScreen = () => {
                   <View>
                     <View className="mb-1 max-w-[80%] flex-row rounded-t-3xl rounded-br-3xl p-2.5 pl-3">
                       <View className="px-2">
-                        <Icon
+                        <MaterialCommunityIcons
                           name="robot-outline"
                           type="material-community"
                           color="black"
@@ -273,7 +273,7 @@ const EduScreen = () => {
                             }
                             className=""
                           >
-                            <Icon
+                            <MaterialCommunityIcons
                               name={
                                 currentlyPlaying === index
                                   ? "stop-circle-outline"
@@ -299,7 +299,7 @@ const EduScreen = () => {
                   marginBottom: 5,
                 }}
               >
-                <Icon
+                <MaterialCommunityIcons
                   name="robot-outline"
                   type="material-community"
                   color="primary_custom"
@@ -323,7 +323,7 @@ const EduScreen = () => {
                 onPress={() => void handleSendMessage()}
                 disabled={loading}
               >
-                <Icon
+                <MaterialCommunityIcons
                   name="arrow-up"
                   type="material-community"
                   color="white"

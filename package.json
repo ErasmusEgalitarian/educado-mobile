@@ -31,11 +31,9 @@
     "tsc:check:config": "npm -w @educado/eslint-config-educado run tsc:check",
     "tsc:check:packages": "npm run tsc:check:plugin && npm run tsc:check:config",
     "tsc:check:plugin": "npm -w @educado/eslint-plugin-educado run tsc:check",
-    "tsc:ci": "node ./scripts/ci-tsc-report.mjs > tsc-report.json || true",
-    "generate-strapi-client": "openapi-ts"
+    "tsc:ci": "node ./scripts/ci-tsc-report.mjs > tsc-report.json || true"
   },
   "dependencies": {
-    "@eva-design/eva": "^2.1.1",
     "@expo-google-fonts/dev": "^0.2.2",
     "@expo-google-fonts/montserrat": "^0.4.2",
     "@expo/vector-icons": "~14.0.4",
@@ -78,7 +76,6 @@
     "nativewind": "~4.1.23",
     "prop-types": "^15.8.1",
     "react": "18.3.1",
-    "react-dom": "18.3.1",
     "react-native": "0.76.9",
     "react-native-alert-notification": "^0.3.5",
     "react-native-circular-progress": "^1.3.9",
@@ -127,17 +124,12 @@
     "node": ">=18 <19"
   },
   "expo": {
-    "newArchEnabled": true,
     "doctor": {
       "reactNativeDirectoryCheck": {
         "exclude": [
-          "@rneui/base",
-          "@rneui/themed",
-          "@ui-kitten/components",
           "react-native-event-listeners",
           "react-native-keyboard-aware-scroll-view",
-          "react-native-progress",
-          "react-native-swiper"
+          "react-native-progress"
         ]
       }
     }
