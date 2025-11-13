@@ -6,7 +6,7 @@ import {
   getAllComponentsBySectionId,
   getAllCourses,
   getAllFeedbackOptions,
-  getAllSections,
+  getAllSectionsByCourseId,
   getAllStudentSubscriptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
@@ -46,6 +46,7 @@ export const queryKeys = {
   lectureVideos: (filename: string) => ["lectureVideos", filename] as const,
   sectionComponents: (id: string) => ["sectionComponents", id] as const,
   feedbackOptions: ["feedbackOptions"] as const,
+  bucketImage: (filename: string) => ["bucketImage", filename] as const,
 };
 
 /**
@@ -66,6 +67,7 @@ export const useCourse = (id: string) =>
   useQuery({
     queryKey: queryKeys.course(id),
     queryFn: () => getCourseById(id),
+    enabled: !!id,
   });
 
 /**
@@ -190,7 +192,8 @@ export const useSection = (id: string) =>
 export const useSections = (id: string) =>
   useQuery({
     queryKey: queryKeys.sections(id),
-    queryFn: () => getAllSections(id),
+    queryFn: () => getAllSectionsByCourseId(id),
+    enabled: !!id,
   });
 
 /**
@@ -325,5 +328,18 @@ export const useCompleteComponent = () => {
         points,
       );
     },
+  });
+};
+
+/**
+ * Get a bucket image by filename.
+ *
+ * @param filename - The filename of the image.
+ */
+export const useBucketImage = (filename?: string | null) => {
+  return useQuery({
+    queryKey: queryKeys.bucketImage(filename ?? ""),
+    queryFn: () => getBucketImageByFilename(filename ?? ""),
+    enabled: !!filename,
   });
 };

@@ -1,4 +1,4 @@
-import { z } from "zod/index";
+import * as z from "zod";
 
 export const objectIdSchema = z.string();
 
@@ -71,7 +71,7 @@ export const courseBaseModelSchema = mongooseBaseObjectSchema.extend({
   description: z.string(),
   dateCreated: z.iso.datetime().optional(),
   dateUpdated: z.iso.datetime().optional(),
-  coverImg: z.string().optional(),
+  coverImg: z.string(),
   category: categorySchema.optional(),
   difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]),
   status: courseStatusSchema,
@@ -108,8 +108,8 @@ export const sectionModelSchema = mongooseBaseObjectSchema.extend({
   components: z.array(sectionComponentModelSchema).optional(),
   sectionNumber: z.number().optional(),
   totalPoints: z.number(),
-  dateCreated: z.date(),
-  dateUpdated: z.date(),
+  dateCreated: z.iso.datetime(),
+  dateUpdated: z.iso.datetime(),
   parentCourse: objectIdSchema,
   __v: z.number(),
 });

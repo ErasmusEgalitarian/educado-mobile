@@ -62,6 +62,7 @@ export interface Course {
   readonly courseId: string;
   readonly title: string;
   readonly description: string;
+  readonly image: string | null;
   readonly category: string;
   readonly estimatedHours: number;
   readonly dateUpdated?: string;
@@ -184,3 +185,5 @@ export interface Leaderboard {
 export interface OnlineObserver {
   update(isOnline: boolean): void;
 }
+
+export type ProgressTuple = [number, number, number];

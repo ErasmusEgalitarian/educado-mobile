@@ -30,6 +30,13 @@ const convertToRelativePath = (absolutePath) => {
   return path.relative(appRoot, abs).split(path.sep).join("/");
 };
 
+// Filter function to exclude generated files
+const isNotGeneratedFile = (filePath) => {
+  // Exclude generated files from the report
+  const excludedPaths = ["api/backend/", "scripts/"];
+  return !excludedPaths.some((excluded) => filePath.startsWith(excluded));
+};
+
 let allEslintProblems = [];
 
 try {
@@ -39,6 +46,11 @@ try {
 
   for (const file of eslintReportJson) {
     const relativeFilePath = convertToRelativePath(file.filePath);
+
+    // Skip generated files
+    if (!isNotGeneratedFile(relativeFilePath)) {
+      continue;
+    }
 
     for (const problem of file.messages || []) {
       allEslintProblems.push({
@@ -59,6 +71,11 @@ try {
   const tscReportJson = JSON.parse(fs.readFileSync(tscReportJsonPath, "utf8"));
 
   for (const problem of tscReportJson) {
+    // Skip generated files
+    if (!isNotGeneratedFile(problem.file)) {
+      continue;
+    }
+
     allTscProblems.push({
       file: problem.file,
       line: problem.line,

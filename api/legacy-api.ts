@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, isAxiosError } from "axios";
 import { Buffer } from "buffer";
 import {
   mapToSectionComponent,
@@ -198,12 +198,26 @@ export const getAllCourses = async () => {
  * @returns A list of sections.
  * @throws {@link AxiosError}
  */
-export const getAllSections = async (id: string) => {
-  const response = await getRequest<SectionDto[]>(`/courses/${id}/sections`);
+export const getAllSectionsByCourseId = async (id: string) => {
+  try {
+    const response = await getRequest<SectionDto[]>(`/courses/${id}/sections`);
 
-  const parsed = sectionModelSchema.array().parse(response.data);
+    const parsed = sectionModelSchema.array().parse(response.data);
 
-  return parsed.map(mapToSection);
+    return parsed.map(mapToSection);
+  } catch (error) {
+    // Due to bad API design, we need to return an empty array if the course doesn't contain any sections.
+    if (
+      isAxiosError(error) &&
+      error.response?.status === 404 &&
+      // "Course has no sections" error
+      toApiError(error).code === "E0009"
+    ) {
+      return [];
+    }
+
+    throw error;
+  }
 };
 
 /**

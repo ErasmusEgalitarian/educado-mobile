@@ -1,24 +1,31 @@
-import type { ReactElement } from "react";
-import { useState, useEffect } from "react";
-import { Alert, View, TouchableOpacity, Image, Text } from "react-native";
-import * as StorageService from "@/services/storage-service";
+import { useEffect, useState } from "react";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { SectionCard } from "@/components/Section/SectionCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptionButton";
-import { checkProgressCourse, checkProgressSection } from "@/services/utils";
+import {
+  getCourseProgress,
+  getNumberOfCompletedComponents,
+} from "@/services/utils";
 import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
 import Tooltip from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
-import { getBucketImageByFilename } from "@/api/legacy-api";
-import type { Section, Course } from "@/types";
+import { Course, ProgressTuple, Section } from "@/types";
 import { Shadow } from "react-native-shadow-2";
 import { t } from "@/i18n";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLoginStudent, useUnsubscribeFromCourse } from "@/hooks/query";
+import {
+  useBucketImage,
+  useCourse,
+  useLoginStudent,
+  useSections,
+  useUnsubscribeFromCourse,
+} from "@/hooks/query";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
 
 export interface CourseOverviewScreenProps {
   route: {
@@ -31,102 +38,77 @@ export interface CourseOverviewScreenProps {
 /**
  * Course overview screen.
  *
- * @param route
+ * @param route - The route object containing the course data.
  */
-const CourseOverviewScreen = ({
-  route,
-}: CourseOverviewScreenProps): ReactElement => {
+const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
   const { course } = route.params;
+
   const navigation = useNavigation();
-  const [sections, setSections] = useState<null | Section[]>(null);
-  const [studentProgress, setStudentProgress] = useState([0, 0, 0]);
+
+  const [studentProgress, setStudentProgress] = useState<ProgressTuple>([
+    0, 0, 0,
+  ]);
   const [sectionProgress, setSectionProgress] = useState<
     Record<string, number>
   >({});
   const [currentSection, setCurrentSection] = useState<Section | null>(null);
-  const [coverImage, setCoverImage] = useState<string | null>(null);
-  const [imageError, setImageError] = useState<unknown>(null);
 
   const loginStudentQuery = useLoginStudent();
   const unsubscribeFromCourseQuery = useUnsubscribeFromCourse();
+  const courseQuery = useCourse(course.courseId);
+  const sectionQuery = useSections(course.courseId);
+  const bucketImageQuery = useBucketImage(courseQuery.data?.image);
 
-  const loadSections = async (id: string, signal: AbortSignal) => {
-    const sectionData = await StorageService.getSectionList(id, signal);
-    setSections(sectionData);
-  };
-
-  const checkProgressInSection = async (sectionId: string) => {
-    const completed = await checkProgressSection(sectionId);
-    setSectionProgress((prevProgress) => ({
-      ...prevProgress,
-      [sectionId]: completed,
-    }));
-  };
+  const student = loginStudentQuery.data;
 
   useEffect(() => {
-    const abortController = new AbortController();
-
-    const loadData = async () => {
-      await loadSections(course.courseId, abortController.signal);
-    };
-
-    void loadData();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [course.courseId]);
-
-  useEffect(() => {
-    if (sections) {
-      sections.forEach((section) => {
-        void checkProgressInSection(section.sectionId);
-      });
+    if (!sectionQuery.data) {
+      return;
     }
-  }, [sections]);
+
+    const newProgress: Record<string, number> = {};
+
+    sectionQuery.data.forEach((section) => {
+      newProgress[section.sectionId] = getNumberOfCompletedComponents(
+        student,
+        section,
+      );
+    });
+
+    setSectionProgress(newProgress);
+  }, [sectionQuery.data, student]);
 
   useEffect(() => {
-    if (sections) {
-      const incompleteSection = sections.find((section) => {
-        const completedComponents = sectionProgress[section.sectionId] || 0;
-        return completedComponents < section.components.length;
-      });
-      setCurrentSection(incompleteSection ?? null);
+    if (!sectionQuery.data) {
+      return;
     }
-  }, [sectionProgress, sections]);
+
+    const incompleteSection = sectionQuery.data.find((section) => {
+      const completedComponents = sectionProgress[section.sectionId] || 0;
+
+      return completedComponents < section.components.length;
+    });
+
+    setCurrentSection(incompleteSection ?? null);
+  }, [sectionProgress, sectionQuery.data]);
 
   useEffect(() => {
-    const checkProgress = async () => {
-      const progress = await checkProgressCourse(course.courseId);
+    if (!sectionQuery.data) {
+      return;
+    }
+
+    const updateProgress = () => {
+      const progress = getCourseProgress(student, sectionQuery.data);
+
       setStudentProgress(progress);
     };
 
+    updateProgress();
+
     return navigation.addListener("focus", () => {
-      void checkProgress();
-
-      if (sections) {
-        sections.forEach((section) => {
-          void checkProgressInSection(section.sectionId);
-        });
-      }
+      updateProgress();
     });
-  }, [navigation, sections, course.courseId]);
-
-  useEffect(() => {
-    if (!coverImage) {
-      const fetchImage = async () => {
-        try {
-          const image = await getBucketImageByFilename(course.courseId + "_c");
-          setCoverImage(image);
-        } catch (error) {
-          setImageError(error);
-          console.error(error);
-        }
-      };
-
-      void fetchImage();
-    }
-  }, [course, coverImage]);
+  }, [navigation, course, student, sectionQuery.data]);
 
   const unsubAlert = () => {
     Alert.alert(t("course.cancel-subscription"), t("general.confirmation"), [
@@ -149,31 +131,11 @@ const CourseOverviewScreen = ({
     ]);
   };
 
-  const navigateToCurrentSection = () => {
-    if (currentSection) {
-      navigation.navigate(
-        ...([
-          "Components",
-          {
-            section: currentSection,
-            parsedCourse: course,
-          },
-        ] as never),
-      );
-    }
-  };
+  if (sectionQuery.isLoading) {
+    return <LoadingScreen />;
+  }
 
-  const navigateToSpecifiedSection = (section: Section) => {
-    navigation.navigate(
-      ...([
-        "Section",
-        {
-          course: course,
-          section: section,
-        },
-      ] as never),
-    );
-  };
+  const sections = sectionQuery.data ?? [];
 
   return (
     <SafeAreaView>
@@ -196,9 +158,9 @@ const CourseOverviewScreen = ({
       >
         <View className="flex w-full items-center">
           <View className="flex w-full items-center justify-between">
-            {!imageError && coverImage ? (
+            {bucketImageQuery.isSuccess ? (
               <Image
-                source={{ uri: coverImage }}
+                source={{ uri: bucketImageQuery.data }}
                 className="h-[296px] w-full object-cover"
               />
             ) : (
@@ -209,23 +171,20 @@ const CourseOverviewScreen = ({
             <Shadow startColor="#28363E14" distance={6} offset={[0, 3]}>
               <View className="flex w-[293px] rounded-2xl bg-surfaceSubtleGrayscale p-[16px]">
                 <View className="flex flex-row justify-between">
-                  {/* Course Title */}
                   <Text className="h3-sm-regular max-w-[80%]">
                     {course.title}
                   </Text>
                   {/* TODO: Button to download course should be implemented */}
                   <DownloadCourseButton course={course} disabled={true} />
                 </View>
-                {/* Progress Bar */}
                 <View className="flex h-6 justify-center rounded-sm border-y-[1px] border-surfaceDefaultGrayscale">
                   <CustomProgressBar
                     width={63}
                     progress={studentProgress}
                     height={1}
                     displayLabel={false}
-                  ></CustomProgressBar>
+                  />
                 </View>
-
                 <View className="flex w-full flex-row items-center justify-between">
                   <View className="flex flex-row">
                     <MaterialCommunityIcons
@@ -234,7 +193,7 @@ const CourseOverviewScreen = ({
                       color="orange"
                     />
                     {/* TODO: Points should be implemented */}
-                    <Text>?? pontos</Text>
+                    <Text className="ml-1">{`0 ${t("course.points")}`}</Text>
                   </View>
                   <MaterialCommunityIcons
                     name="circle-small"
@@ -247,7 +206,9 @@ const CourseOverviewScreen = ({
                       size={20}
                       color="orange"
                     />
-                    <Text>{studentProgress[0]}% concluído</Text>
+                    <Text className="ml-1">
+                      {`${String(studentProgress[0])} ${t("course.completed-low")}`}
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -255,50 +216,57 @@ const CourseOverviewScreen = ({
           </View>
         </View>
         <View className="my-6 flex items-center px-[25px]">
-          {/* Navigate to Current Section Button */}
-          <ContinueSectionButton onPress={navigateToCurrentSection} />
+          <ContinueSectionButton
+            onPress={() => {
+              if (currentSection) {
+                // @ts-expect-error The error will disappear when we migrate to Expo Router
+                navigation.navigate("Components", {
+                  section: currentSection,
+                  parsedCourse: course,
+                });
+              }
+            }}
+          />
         </View>
-        {/* Conditionally render the sections if they exist */}
-        {sections ? (
-          sections.length === 0 ? null : (
-            <View className="flex-[1] flex-col">
-              <Tooltip
-                position={{
-                  top: -30,
-                  left: 70,
-                  right: 30,
-                  bottom: 24,
-                }}
-                text={
-                  "Essa é a página do seu curso. É aqui que você vai acessar as aulas e acompanhar seu progresso."
-                }
-                tailSide="right"
-                tailPosition="20%"
-                uniqueKey="Sections"
-                uniCodeChar="🎓"
-              />
-              {/* Section Cards */}
-              <View>
-                {sections.map((section, i) => {
-                  const completedComponents =
-                    sectionProgress[section.sectionId] || 0;
-                  return (
-                    <SectionCard
-                      numOfEntries={section.components.length}
-                      title={section.title}
-                      icon="chevron-right"
-                      key={i}
-                      progress={completedComponents}
-                      onPress={() => {
-                        navigateToSpecifiedSection(section);
-                      }}
-                    ></SectionCard>
-                  );
-                })}
-              </View>
+        {sections.length > 0 && (
+          <View className="flex-[1] flex-col">
+            <Tooltip
+              position={{
+                top: -30,
+                left: 70,
+                right: 30,
+                bottom: 24,
+              }}
+              text={t("course.tooltip")}
+              tailSide="right"
+              tailPosition="20%"
+              uniqueKey="Sections"
+              uniCodeChar="🎓"
+            />
+            <View>
+              {sections.map((section, i) => {
+                const completedComponents =
+                  sectionProgress[section.sectionId] || 0;
+                return (
+                  <SectionCard
+                    numOfEntries={section.components.length}
+                    title={section.title}
+                    icon="chevron-right"
+                    key={i}
+                    progress={completedComponents}
+                    onPress={() => {
+                      // @ts-expect-error The error will disappear when we migrate to Expo Router
+                      navigation.navigate("Section", {
+                        course,
+                        section,
+                      });
+                    }}
+                  />
+                );
+              })}
             </View>
-          )
-        ) : null}
+          </View>
+        )}
         <SubscriptionCancelButton onPress={unsubAlert} />
       </ScrollView>
     </SafeAreaView>

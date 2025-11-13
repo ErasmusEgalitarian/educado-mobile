@@ -24,7 +24,9 @@
   },
   "course": {
     "start": "Start course",
+    "course-title": "Course Title",
     "completed-up": "Completed",
+    "best-rating": "Best Rating",
     "completed-low": "completed",
     "points": "points",
     "registered": "Registration completed",
@@ -32,7 +34,6 @@
     "cancel-subscription": "Cancel subscription",
     "in-progress": "In progress",
     "not-started": "Not started",
-    "course-title": "Course Title",
     "duration": "Duration",
     "welcome-title": "Welcome!",
     "welcome-description": "Here you can find all the courses you are enrolled in!",
@@ -41,7 +42,8 @@
     "explore-courses": "Explore courses",
     "continue": "Continue Course",
     "signup": "Sign up now",
-    "fail": "Failed to complete the course. Please try again later."
+    "fail": "Failed to complete the course. Please try again later.",
+    "tooltip": "This is your course page. This is where you will access the lessons and track your progress."
   },
   "search-course": "Search for a course",
   "learn-more": "learn more",

@@ -11,10 +11,14 @@ import { t } from "@/i18n";
 import {
   Course,
   Icon,
+  LoginStudent,
+  ProgressTuple,
+  Section,
   SectionComponent,
   SectionComponentExercise,
   SectionComponentLecture,
   Student,
+  StudentCourse,
 } from "@/types";
 import { ClassValue, clsx } from "clsx";
 
@@ -282,8 +286,23 @@ export const isSectionCompleted = (student: Student, sectionId: string) => {
   );
 };
 
-export const isComponentCompleted = (student: Student, compId: string) => {
-  return student.courses.some((course) =>
+export const isComponentCompleted = (
+  student: Student | LoginStudent,
+  compId: string,
+) => {
+  let courses: StudentCourse[] = [];
+
+  // Student
+  if ("courses" in student) {
+    courses = student.courses;
+  }
+
+  // LoginStudent
+  if ("userInfo" in student) {
+    courses = student.userInfo.courses;
+  }
+
+  return courses.some((course) =>
     course.sections.some((section) =>
       section.components.some(
         (component) => component.compId === compId && component.isComplete,
@@ -303,61 +322,68 @@ export const isFirstAttemptExercise = (student: Student, compId: string) => {
 };
 
 /**
- * ...
+ * Get the student's progress of a course.
  *
- * @param courseId
- * @returns The students progress of a course in percentage, and also returns the completed and total components
+ * @param student - The student to check.
+ * @param sections - The sections of the course to check.
+ * @returns The students progress of a course as a tuple: [percentage completed, number of completed components, number
+ * of total components].
  */
-export const checkProgressCourse = async (
-  courseId: string,
-): Promise<[number, number, number]> => {
-  try {
-    const student = await StorageService.getStudentInfo();
-    const sections = await StorageService.getSectionList(courseId);
+export const getCourseProgress = (
+  student: Student | LoginStudent,
+  sections: Section[],
+): ProgressTuple => {
+  let totalNumberOfComponents = 0;
+  let numberOfCompletedComponents = 0;
 
-    let totalComponents = 0;
-    let progress = 0;
-    for (const section of sections) {
-      totalComponents += section.components.length;
-      for (const comp of section.components) {
-        if (comp.compId && isComponentCompleted(student, comp.compId)) {
-          progress++;
-        }
-      }
-    }
+  for (const section of sections) {
+    totalNumberOfComponents += section.components.length;
 
-    let progressProcent = (progress / totalComponents) * 100;
-    progressProcent = Math.floor(progressProcent); // Round down to the nearest integer
-    return [progressProcent, progress, totalComponents];
-  } catch {
+    numberOfCompletedComponents += getNumberOfCompletedComponents(
+      student,
+      section,
+    );
+  }
+
+  if (totalNumberOfComponents === 0) {
     return [0, 0, 0];
   }
+
+  const progressPercentage = Math.floor(
+    (numberOfCompletedComponents / totalNumberOfComponents) * 100,
+  );
+
+  return [
+    progressPercentage,
+    numberOfCompletedComponents,
+    totalNumberOfComponents,
+  ];
 };
 
 /**
- * ...
+ * Get the student's number of completed components in a section.
  *
- * @param sectionId
- * @returns The students progress of a section.
+ * @param student
+ * @param section
+ * @returns The number of completed components in the section.
  */
-export const checkProgressSection = async (
-  sectionId: string,
-): Promise<number> => {
-  const student = await StorageService.getStudentInfo();
-  const section = await StorageService.getSection(sectionId);
-
-  if (!section || section.components.length === 0) {
+export const getNumberOfCompletedComponents = (
+  student: Student | LoginStudent,
+  section: Section,
+) => {
+  if (section.components.length === 0) {
     return 0;
   }
 
-  let progress = 0;
+  let completedComponents = 0;
 
-  for (const comp of section.components) {
-    if (comp.compId && isComponentCompleted(student, comp.compId)) {
-      progress++;
+  for (const component of section.components) {
+    if (component.compId && isComponentCompleted(student, component.compId)) {
+      completedComponents++;
     }
   }
-  return progress;
+
+  return completedComponents;
 };
 
 export const findCompletedCourse = (student: Student, courseId: string) => {

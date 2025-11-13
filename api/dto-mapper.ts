@@ -98,6 +98,7 @@ export const mapToCourse = (
     courseId: courseDto._id,
     title: courseDto.title,
     description: courseDto.description,
+    image: courseDto.coverImg.length === 0 ? null : courseDto.coverImg,
     category: courseDto.category ?? "",
     estimatedHours: courseDto.estimatedHours ?? 0,
     difficulty: courseDto.difficulty,

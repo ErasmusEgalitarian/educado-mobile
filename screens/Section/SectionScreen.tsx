@@ -1,9 +1,8 @@
-import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { checkProgressSection } from "@/services/utils";
+import { getNumberOfCompletedComponents } from "@/services/utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { SectionCard } from "@/components/Section/SectionCard";
 import {
@@ -15,7 +14,8 @@ import {
   SectionComponentExercise,
 } from "@/types";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSectionComponents } from "@/hooks/query";
+import { useLoginStudent, useSectionComponents } from "@/hooks/query";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
 
 export interface SectionScreenProps {
   route: {
@@ -29,26 +29,24 @@ export interface SectionScreenProps {
 /**
  * Section screen.
  *
- * @param route
+ * @param route - The route object containing the section and course data.
  */
-const SectionScreen = ({ route }: SectionScreenProps): ReactElement => {
+const SectionScreen = ({ route }: SectionScreenProps) => {
   const { course, section } = route.params;
-
-  const [completedCompAmount, setCompletedCompAmount] = useState(0);
 
   const navigation = useNavigation();
 
+  const [completedCompAmount, setCompletedCompAmount] = useState(0);
+
   const sectionComponentQuery = useSectionComponents(section.sectionId);
 
-  const sectionComponents = sectionComponentQuery.data ?? [];
+  const loginStudentQuery = useLoginStudent();
+
+  const student = loginStudentQuery.data;
 
   useEffect(() => {
-    const setProgress = async () => {
-      setCompletedCompAmount(await checkProgressSection(section.sectionId));
-    };
-
-    void setProgress();
-  }, [section.sectionId]);
+    setCompletedCompAmount(getNumberOfCompletedComponents(student, section));
+  }, [student, section]);
 
   const getProgressStatus = (index: number) => {
     if (index < completedCompAmount) {
@@ -56,15 +54,6 @@ const SectionScreen = ({ route }: SectionScreenProps): ReactElement => {
     } else {
       return [0, 2];
     }
-  };
-
-  const navigateToComponent = (compIndex: number) => {
-    // @ts-expect-error This type error gets fixed when moving to Expo Router
-    navigation.navigate("Components", {
-      section: section,
-      parsedCourse: course,
-      parsedComponentIndex: compIndex,
-    });
   };
 
   const getIcon = (
@@ -86,6 +75,12 @@ const SectionScreen = ({ route }: SectionScreenProps): ReactElement => {
 
     return "play-circle";
   };
+
+  if (sectionComponentQuery.isLoading) {
+    return <LoadingScreen />;
+  }
+
+  const sectionComponents = sectionComponentQuery.data ?? [];
 
   return (
     <SafeAreaView>
@@ -110,7 +105,7 @@ const SectionScreen = ({ route }: SectionScreenProps): ReactElement => {
             </View>
           </View>
         </View>
-        {sectionComponents.length === 0 ? null : (
+        {sectionComponents.length > 0 && (
           <View>
             {sectionComponents.map((component, index) => {
               const isDisabled = index > completedCompAmount;
@@ -127,7 +122,12 @@ const SectionScreen = ({ route }: SectionScreenProps): ReactElement => {
                   disabledIcon="lock-outline"
                   key={index}
                   onPress={() => {
-                    navigateToComponent(index);
+                    // @ts-expect-error This type error gets fixed when moving to Expo Router
+                    navigation.navigate("Components", {
+                      section: section,
+                      parsedCourse: course,
+                      parsedComponentIndex: index,
+                    });
                   }}
                   disabled={isDisabled}
                 />

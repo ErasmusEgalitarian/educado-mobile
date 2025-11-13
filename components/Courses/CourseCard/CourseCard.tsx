@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Pressable, View, Text, Image } from "react-native";
 import { checkCourseStoredLocally } from "@/services/storage-service";
 import {
-  checkProgressCourse,
+  getCourseProgress,
   determineCategory,
   determineIcon,
   formatHours,
@@ -12,10 +12,9 @@ import {
 import { colors } from "@/theme/colors";
 import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { t } from "@/i18n";
-import { Course } from "@/types";
+import { Course, ProgressTuple } from "@/types";
 import courseTitleIcon from "@/assets/images/course-title-icon.png";
-
-type ProgressTuple = [number, number, number];
+import { useLoginStudent, useSections } from "@/hooks/query";
 
 interface CourseCardProps {
   course: Course;
@@ -35,31 +34,31 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
     0, 0, 0,
   ]);
 
-  // Check if the course is downloaded (only when courseId changes)
+  const loginStudentQuery = useLoginStudent();
+  const sectionQuery = useSections(course.courseId);
+
   useEffect(() => {
-    let isMounted = true;
-    const run = async () => {
+    const checkIsCourseDownloaded = async () => {
       const isDownloaded = await checkCourseStoredLocally(course.courseId);
-      if (isMounted) setDownloaded(isDownloaded);
+
+      setDownloaded(isDownloaded);
     };
-    void run();
-    return () => {
-      isMounted = false;
-    };
+
+    void checkIsCourseDownloaded();
   }, [course.courseId]);
 
-  // Load student progress (only when courseId changes)
   useEffect(() => {
-    let isMounted = true;
-    const run = async () => {
-      const progress = await checkProgressCourse(course.courseId);
-      if (isMounted) setStudentProgress(progress as ProgressTuple);
-    };
-    void run();
-    return () => {
-      isMounted = false;
-    };
-  }, [course.courseId]);
+    if (!sectionQuery.data) {
+      return;
+    }
+
+    const progress = getCourseProgress(
+      loginStudentQuery.data,
+      sectionQuery.data,
+    );
+
+    setStudentProgress(progress);
+  }, [loginStudentQuery.data, sectionQuery.data]);
 
   const enabledUI =
     "bg-projectWhite rounded-lg elevation-[3] m-[3%] mx-[5%] overflow-hidden";
@@ -95,7 +94,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
               <View className="flex-row items-center gap-x-2 px-[1%] py-[1%]">
                 <Image source={courseTitleIcon} className="h-[22px] w-[22px]" />
                 <Text className="self-center text-textTitleGrayscale text-subtitle-semibold">
-                  {course.title ? course.title : t("course.course-title")}
+                  {course.title}
                 </Text>
               </View>
             </View>
@@ -134,7 +133,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
                 onPress={() => {
                   if (layout === enabledUI) {
                     navigation.navigate("CourseOverview", {
-                      course: course,
+                      course,
                     });
                   }
                 }}

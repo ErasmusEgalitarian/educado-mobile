@@ -26,6 +26,7 @@
     "start": "Começar curso",
     "course-title": "Título do curso",
     "completed-up": "Concluído",
+    "best-rating": "Melhor Avaliação",
     "completed-low": "concluído",
     "points": "pontos",
     "registered": "Inscrição realizada",
@@ -41,7 +42,8 @@
     "explore-courses": "Explorar cursos",
     "continue": "Continuar Curso",
     "signup": "Inscrevar-se agora",
-    "fail": "Não foi possível concluir o curso. Por favor, tente novamente mais tarde."
+    "fail": "Não foi possível concluir o curso. Por favor, tente novamente mais tarde.",
+    "tooltip": "Essa é a página do seu curso. É aqui que você vai acessar as aulas e acompanhar seu progresso."
   },
   "search-course": "Buscar curso",
   "learn-more": "saiba mais",

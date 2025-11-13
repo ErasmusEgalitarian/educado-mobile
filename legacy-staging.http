@@ -13,6 +13,18 @@ GET {{baseUrl}}/students/{{userId}}/info
 ### Get all courses
 GET {{baseUrl}}/courses
 
+### Get a course
+< {%
+  request.variables.set("courseId", "672b77f5d51069fc04ceb924")
+%}
+GET {{baseUrl}}/courses/{{courseId}}
+
+### Get all sections for a course
+< {%
+  request.variables.set("courseId", "673ce531b480159dac4b7fc8")
+%}
+GET {{baseUrl}}/courses/{{courseId}}/sections
+
 ### Get all components for a section
 < {%
   request.variables.set("sectionId", "672b77f8d51069fc04ceb92a")

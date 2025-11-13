@@ -109,7 +109,7 @@ const CourseStack = () => (
       // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
       // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
       component={CourseOverviewScreen}
-      initialParams={{ course_id: "" }}
+      initialParams={{ course: {} }}
       options={{ headerShown: false }}
     />
     <Stack.Screen
@@ -206,7 +206,7 @@ export const App = () => {
         // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
         // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
         component={CourseOverviewScreen}
-        initialParams={{ course_id: "" }}
+        initialParams={{ course: {} }}
         options={{ headerShown: false }}
       />
       <Stack.Screen
