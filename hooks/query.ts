@@ -19,7 +19,7 @@ import {
   unsubscribeCourse,
   updateStudyStreak,
 } from "@/api/legacy-api";
-import { loginUserStrapi } from "@/api/strapi-api";
+import { loginStudentStrapi, logoutStudentStrapi, signUpStudentStrapi } from "@/api/strapi-api";
 import { setJWT, setUserInfo } from "@/services/storage-service";
 import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import {
@@ -299,18 +299,17 @@ export const useLogin = () => {
  */
 export const useLoginStrapi = () => {
   return useMutation<
-    JwtResponse | undefined,
+    JwtResponse,
     unknown,
     { email: string; password: string }
   >({
-    mutationFn: (variables) => loginUserStrapi(variables.email, variables.password),
+    mutationFn: (variables) => loginStudentStrapi(variables.email, variables.password),
     onSuccess: (data) => {
-      console.log(data);
       client.setConfig(
         {
           ...client.getConfig(),
           headers: {
-            Authorization: `Bearer ${data?.accessToken ?? ""}`,
+            Authorization: `Bearer ${data.accessToken ?? ""}`,
           },
         }
       )
@@ -318,6 +317,40 @@ export const useLoginStrapi = () => {
   });
 };
 
+
+/**
+ * Sign up a user by email and password in strapi.
+ */
+export const useSignUpStrapi = () => {
+  return useMutation<
+    JwtResponse,
+    unknown,
+    { name: string; email: string; password: string }
+  >({
+    mutationFn: (variables) => signUpStudentStrapi(variables.name, variables.email, variables.password),
+    onSuccess: (data) => {
+      client.setConfig(
+        {
+          ...client.getConfig(),
+          headers: {
+            Authorization: `Bearer ${data.accessToken ?? ""}`,
+          },
+        }
+      )
+    },
+  });
+};
+
+
+export const useLogoutStrapi = () => {
+  return useMutation<
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    void,
+    unknown
+  >({
+    mutationFn: () => logoutStudentStrapi(),
+  });
+}
 
 /**
  * Complete a component.

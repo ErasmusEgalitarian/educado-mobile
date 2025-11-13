@@ -13,24 +13,9 @@ export const getBaseApiUrl = (): string => {
 export const configureApiClient = () => {
   const baseUrl = getBaseApiUrl();
 
-  // Set the API token if available
-  const apiToken = Constants.expoConfig?.extra?.STRAPI_TOKEN as
-    | string
-    | undefined;
-
-  if (apiToken === undefined) {
-    console.error(
-      "Warning: STRAPI_TOKEN is not set in environment variables. API requests may fail.",
-    );
-    throw new Error("STRAPI_TOKEN is not set in environment variables");
-  }
-
   // Configure the client with base URL and authorization header
   client.setConfig({
     baseUrl,
-    headers: {
-      Authorization: `Bearer ${apiToken}`,
-    },
     throwOnError: true,
   });
 
@@ -52,7 +37,6 @@ export const configureApiClient = () => {
 
   console.log("API Client configured:", {
     baseUrl,
-    hasToken: apiToken !== "",
   });
 };
 
