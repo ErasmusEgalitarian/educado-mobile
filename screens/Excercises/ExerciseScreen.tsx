@@ -8,7 +8,13 @@ import PopUp from "@/components/Gamification/PopUp";
 import { StatusBar } from "expo-status-bar";
 import { cn, handleLastComponent } from "@/services/utils";
 import { useNavigation } from "@react-navigation/native";
-import { Course, Section, SectionComponentExercise } from "@/types";
+import {
+  Course,
+  Section,
+  SectionComponent,
+  SectionComponentExercise,
+  SectionComponentLecture,
+} from "@/types";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
 import {
@@ -36,7 +42,9 @@ Props:			- exerciseObject: The exercise object, which contains the question and 
 */
 
 interface ExerciseScreenProps {
-  componentList: SectionComponentExercise[];
+  componentList: SectionComponent<
+    SectionComponentLecture | SectionComponentExercise
+  >[];
   exerciseObject: SectionComponentExercise;
   sectionObject: Section;
   courseObject: Course;
@@ -113,12 +121,17 @@ const ExerciseScreen = ({
     setIsPopUpVisible(false);
 
     const currentLastComponent = componentList[componentList.length - 1];
-    const isLastComponent = currentLastComponent.id === exerciseObject.id;
+    const isLastComponent =
+      currentLastComponent.component.id === exerciseObject.id;
 
     if (isAnswerCorrect && isLastComponent) {
       try {
         void handleStudyStreak();
-        await handleLastComponent(exerciseObject, courseObject, navigation);
+        await handleLastComponent(
+          currentLastComponent,
+          courseObject,
+          navigation,
+        );
       } catch (error) {
         console.error("Error handling last component:", error);
       }

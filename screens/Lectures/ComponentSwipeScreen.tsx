@@ -244,9 +244,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
             ) : (
               <ExerciseScreen
                 key={component.component.id || index}
-                componentList={
-                  sectionComponents as unknown as SectionComponentExercise[]
-                }
+                componentList={sectionComponents}
                 exerciseObject={component.component as SectionComponentExercise}
                 sectionObject={section}
                 courseObject={parsedCourse}
