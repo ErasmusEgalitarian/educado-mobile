@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, TouchableOpacity, Image, Dimensions } from "react-native";
 import PropTypes from "prop-types";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import Text from "../../components/General/Text";
@@ -158,7 +158,7 @@ const TextImageLectureScreen = ({
             <Text className="font-sans-bold text-center text-body text-projectWhite">
               Continuar
             </Text>
-            <Icon
+            <MaterialCommunityIcons
               name="chevron-right"
               type="material"
               size={24}

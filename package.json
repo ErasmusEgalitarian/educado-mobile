@@ -31,28 +31,22 @@
     "tsc:check:config": "npm -w @educado/eslint-config-educado run tsc:check",
     "tsc:check:packages": "npm run tsc:check:plugin && npm run tsc:check:config",
     "tsc:check:plugin": "npm -w @educado/eslint-plugin-educado run tsc:check",
-    "tsc:ci": "node ./scripts/ci-tsc-report.mjs > tsc-report.json || true",
-    "generate-strapi-client": "openapi-ts"
+    "tsc:ci": "node ./scripts/ci-tsc-report.mjs > tsc-report.json || true"
   },
   "dependencies": {
-    "@eva-design/eva": "^2.1.1",
     "@expo-google-fonts/dev": "^0.2.2",
     "@expo-google-fonts/montserrat": "^0.4.2",
-  "@expo/vector-icons": "~14.0.4",
-  "@hey-api/openapi-ts": "0.85.2",
-  "@react-native-async-storage/async-storage": "1.23.1",
-  "@react-native-community/netinfo": "11.4.1",
-  "@react-native-community/slider": "4.5.5",
-  "@react-navigation/bottom-tabs": "^7.2.0",
-  "@react-navigation/native": "^7.0.14",
-  "@react-navigation/native-stack": "^7.2.0",
-    "@rneui/base": "^4.0.0-rc.6",
-    "@rneui/themed": "^4.0.0-rc.6",
+    "@expo/vector-icons": "~14.0.4",
+    "@hey-api/openapi-ts": "0.85.2",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/netinfo": "11.4.1",
+    "@react-native-community/slider": "4.5.5",
+    "@react-navigation/bottom-tabs": "^7.2.0",
+    "@react-navigation/native": "^7.0.14",
+    "@react-navigation/native-stack": "^7.2.0",
     "@tanstack/query-async-storage-persister": "^5.90.7",
     "@tanstack/react-query": "^5.90.5",
     "@tanstack/react-query-persist-client": "^5.90.7",
-    "@ui-kitten/components": "^5.3.1",
-    "@ui-kitten/eva-icons": "^5.3.1",
     "axios": "^1.12.2",
     "clsx": "^2.1.1",
     "expo": "^52.0.47",
@@ -120,26 +114,21 @@
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "react-test-renderer": "18.2.0",
-  "tailwindcss": "^3.4.17",
-  "ts-node": "^10.9.2",
-  "typescript": "^5.5.3",
-  "typescript-eslint": "^8.46.1"
+    "tailwindcss": "^3.4.17",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.46.1"
   },
   "engines": {
     "node": ">=18 <19"
   },
   "expo": {
-    "newArchEnabled": true,
     "doctor": {
       "reactNativeDirectoryCheck": {
         "exclude": [
-          "@rneui/base",
-          "@rneui/themed",
-          "@ui-kitten/components",
           "react-native-event-listeners",
           "react-native-keyboard-aware-scroll-view",
-          "react-native-progress",
-          "react-native-swiper"
+          "react-native-progress"
         ]
       }
     }

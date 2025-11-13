@@ -7,7 +7,7 @@ import EduScreen from "@/screens/EduChatbot/EduScreen";
 import Profile from "@/screens/Profile/Profile";
 import EditProfileScreen from "@/screens/Profile/EditProfileScreen";
 import CertificateScreen from "@/screens/Certificate/CertificateScreen";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Platform, Text } from "react-native";
 import { colors } from "@/theme/colors";
 
@@ -109,7 +109,7 @@ export const NavigationBar = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Icon
+            <MaterialCommunityIcons
               size={25}
               name="home-outline"
               type="material-community"
@@ -124,7 +124,7 @@ export const NavigationBar = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Icon
+            <MaterialCommunityIcons
               size={25}
               name="compass-outline"
               type="material-community"
@@ -139,7 +139,7 @@ export const NavigationBar = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Icon
+            <MaterialCommunityIcons
               size={25}
               name="robot-outline"
               type="material-community"
@@ -154,7 +154,7 @@ export const NavigationBar = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Icon
+            <MaterialCommunityIcons
               size={34}
               name="account-outline"
               type="material-community"
