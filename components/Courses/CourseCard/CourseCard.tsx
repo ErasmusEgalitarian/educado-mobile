@@ -8,6 +8,7 @@ import {
   determineCategory,
   determineIcon,
   formatHours,
+  cn,
 } from "@/services/utils";
 import { colors } from "@/theme/colors";
 import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
@@ -60,17 +61,15 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
     setStudentProgress(progress);
   }, [loginStudentQuery.data, sectionQuery.data]);
 
-  const enabledUI =
-    "bg-projectWhite rounded-lg elevation-[3] m-[3%] mx-[5%] overflow-hidden";
-  const disabledUI =
-    "opacity-50 bg-projectWhite rounded-lg elevation-[3] m-[3%] mx-[5%] overflow-hidden";
-
-  const layout = downloaded || isOnline ? enabledUI : disabledUI;
+  const enabledUI = downloaded || isOnline;
 
   return (
     <Pressable
       testID="courseCard"
-      className={layout}
+      className={cn(
+        "elevation-[3] m-2 mx-7 overflow-hidden rounded-lg bg-surfaceSubtleGrayscale",
+        enabledUI || "opacity-50",
+      )}
       // Pressable doesn't support className
       // eslint-disable-next-line eslint-plugin-react-native/no-inline-styles
       style={{
@@ -80,7 +79,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
         shadowColor: "#28363E",
       }}
       onPress={() => {
-        if (layout === enabledUI) {
+        if (enabledUI) {
           navigation.navigate("CourseOverview", {
             course: course,
           });
@@ -131,7 +130,7 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
               <Pressable
                 className="z-[1]"
                 onPress={() => {
-                  if (layout === enabledUI) {
+                  if (enabledUI) {
                     navigation.navigate("CourseOverview", {
                       course,
                     });
