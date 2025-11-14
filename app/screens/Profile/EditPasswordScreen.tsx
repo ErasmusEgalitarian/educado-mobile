@@ -3,20 +3,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Components
 import { View, SafeAreaView } from "react-native";
-import PasswordField from "../../components/General/Forms/PasswordField";
-import FormButton from "../../components/General/Forms/FormButton";
-import ToastNotification from "../../components/General/ToastNotification";
-import BackButton from "../../components/General/BackButton";
+import PasswordField from "@/components/General/Forms/PasswordField";
+import FormButton from "@/components/General/Forms/FormButton";
+import ToastNotification from "@/components/General/ToastNotification";
+import BackButton from "@/components/General/BackButton";
 import { useNavigation } from "@react-navigation/native";
-import Text from "../../components/General/Text";
+import Text from "@/components/General/Text";
 // Services
-import { updateUserPassword } from "../../api/user-api";
-import { getUserInfo, getJWT } from "../../services/storage-service";
-import FormFieldAlert from "../../components/General/Forms/FormFieldAlert";
+import { updateUserPassword } from "@/api/user-api";
+import { getUserInfo, getJWT } from "@/services/storage-service";
+import FormFieldAlert from "@/components/General/Forms/FormFieldAlert";
 import {
   validatePasswordContainsLetter,
   validatePasswordLength,
-} from "../../components/General/validation";
+} from "@/components/General/validation";
 
 /**
  * Edit password screen

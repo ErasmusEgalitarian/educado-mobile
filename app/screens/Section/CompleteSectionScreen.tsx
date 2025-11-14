@@ -3,19 +3,19 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
-import Text from "../../components/General/Text";
-import StandardButton from "../../components/General/StandardButton";
-import AnimatedNumbers from "../../components/Gamification/AnimatedNumber";
-import { generateSectionCompletePhrases } from "../../constants/phrases";
-import { getStudentInfo } from "../../services/storage-service";
-import { findCompletedSection, isCourseCompleted } from "../../services/utils";
+import Text from "@/components/General/Text";
+import StandardButton from "@/components/General/StandardButton";
+import AnimatedNumbers from "@/components/Gamification/AnimatedNumber";
+import { generateSectionCompletePhrases } from "@/constants/phrases";
+import { getStudentInfo } from "@/services/storage-service";
+import { findCompletedSection, isCourseCompleted } from "@/services/utils";
 import PropTypes from "prop-types";
 
-/* 
-Description: 	This screen is displayed when the student completes a section. 
-				It displays the points earned in the section, an animation, and a button to continue. 
+/*
+Description: 	This screen is displayed when the student completes a section.
+				It displays the points earned in the section, an animation, and a button to continue.
 				The button will take the student to the section overview.
-				The points earned are retrieved from the student model (in the field courses.sections) in the database, 
+				The points earned are retrieved from the student model (in the field courses.sections) in the database,
 				which are stored in async storage when logging in.
 Dependencies: 	Routes which in this case are the whole course object and the sectionId
 */
@@ -134,7 +134,7 @@ export default function CompleteSectionScreen() {
     <SafeAreaView className="flex h-screen w-screen flex-col items-center justify-center bg-secondary">
       <LottieView
         className="absolute top-0 z-10 w-full"
-        source={require("../../assets/animations/completeSection.json")}
+        source={require("@/assets/animations/completeSection.json")}
         autoPlay
       />
 

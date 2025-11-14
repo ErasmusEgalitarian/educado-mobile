@@ -1,18 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { RefreshControl, ScrollView, View, SafeAreaView } from "react-native";
-import Text from "../../components/General/Text";
-import * as StorageService from "../../services/storage-service";
-import BackButton from "../../components/General/BackButton";
-import CourseCard from "../../components/Courses/CourseCard/CourseCard";
-import IconHeader from "../../components/General/IconHeader";
-import { shouldUpdate } from "../../services/utils";
-import ToastNotification from "../../components/General/ToastNotification";
-import LoadingScreen from "../../components/Loading/LoadingScreen";
-import NetworkStatusObserver from "../../hooks/NetworkStatusObserver";
+import Text from "@/components/General/Text";
+import * as StorageService from "@/services/storage-service";
+import BackButton from "@/components/General/BackButton";
+import CourseCard from "@/components/Courses/CourseCard/CourseCard";
+import IconHeader from "@/components/General/IconHeader";
+import { shouldUpdate } from "@/services/utils";
+import ToastNotification from "@/components/General/ToastNotification";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
+import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import errorSwitch from "../../components/General/error-switch";
-import ShowAlert from "../../components/General/ShowAlert";
+import errorSwitch from "@/components/General/error-switch";
+import ShowAlert from "@/components/General/ShowAlert";
 
 /**
  * Profile screen

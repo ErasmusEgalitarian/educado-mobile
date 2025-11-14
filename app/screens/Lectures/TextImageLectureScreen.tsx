@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import Text from "../../components/General/Text";
-import * as StorageService from "../../services/storage-service";
-import { completeComponent, handleLastComponent } from "../../services/utils";
+import Text from "@/components/General/Text";
+import * as StorageService from "@/services/storage-service";
+import { completeComponent, handleLastComponent } from "@/services/utils";
 import RenderHtml from "react-native-render-html";
 
 const TextImageLectureScreen = ({

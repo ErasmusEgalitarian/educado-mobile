@@ -10,14 +10,11 @@ import {
   X,
   Image as ImageIcon,
 } from "lucide-react-native";
-import {
-  getStudentInfo,
-  updateStudentInfo,
-} from "../../services/storage-service";
-import { uploadPhoto } from "../../api/user-api";
-import BackButton from "../../components/General/BackButton";
-import { getLoginToken } from "../../services/storage-service";
-import { getBucketImage } from "../../api/api";
+import { getStudentInfo, updateStudentInfo } from "@/services/storage-service";
+import { uploadPhoto } from "@/api/user-api";
+import BackButton from "@/components/General/BackButton";
+import { getLoginToken } from "@/services/storage-service";
+import { getBucketImage } from "@/api/api";
 
 const CameraScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Animated, Text, Easing, View, Pressable, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import NetworkStatusObserver from "../../hooks/NetworkStatusObserver";
+import NetworkStatusObserver from "@/hooks/NetworkStatusObserver";
 import { useNavigation } from "@react-navigation/native";
 
 /**
@@ -29,7 +29,7 @@ export default function OfflineScreen() {
       <View className="justify-center px-1 pt-6">
         <View className="mb-20 mt-6 self-center">
           <Image
-            source={require("../../assets/images/logo.png")}
+            source={require("@/assets/images/logo.png")}
             className="h-[25.54] w-[175.88]"
           />
         </View>

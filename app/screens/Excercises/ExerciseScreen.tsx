@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { ScrollView, View, TouchableOpacity } from "react-native";
-import Text from "../../components/General/Text";
+import Text from "@/components/General/Text";
 import { RadioButton } from "react-native-paper";
-import ExerciseInfo from "../../components/Exercise/ExerciseInfo";
+import ExerciseInfo from "@/components/Exercise/ExerciseInfo";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import PopUp from "../../components/Gamification/PopUp";
+import PopUp from "@/components/Gamification/PopUp";
 import { StatusBar } from "expo-status-bar";
 import PropTypes from "prop-types";
-import { completeComponent, handleLastComponent } from "../../services/utils";
+import { completeComponent, handleLastComponent } from "@/services/utils";
 import { useNavigation } from "@react-navigation/native";
 import tailwindConfig from "@/tailwind.config";
 

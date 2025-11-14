@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { View, SafeAreaView, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import BackButton from "../../components/General/BackButton";
-import Text from "../../components/General/Text";
-import FilterNavigationBar from "../../components/Explore/FilterNavigationBar";
-import CertificateCard from "../../components/Certificate/CertificateCard";
-import CertificateEmptyState from "../../components/Certificate/CertificateEmptyState";
-import { determineCategory } from "../../services/utils";
-import { fetchCertificates } from "../../services/certificate-service";
-import { getStudentInfo } from "../../services/storage-service";
+import BackButton from "@/components/General/BackButton";
+import Text from "@/components/General/Text";
+import FilterNavigationBar from "@/components/Explore/FilterNavigationBar";
+import CertificateCard from "@/components/Certificate/CertificateCard";
+import CertificateEmptyState from "@/components/Certificate/CertificateEmptyState";
+import { determineCategory } from "@/services/utils";
+import { fetchCertificates } from "@/services/certificate-service";
+import { getStudentInfo } from "@/services/storage-service";
 
 /**
  * Profile screen
