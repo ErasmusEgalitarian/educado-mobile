@@ -1,7 +1,7 @@
 import renderer from "react-test-renderer";
 import LoginScreen from "../../../screens/Login/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ScrollView } from "react-native";
 
 let navigated = false;
 
@@ -64,7 +64,9 @@ describe("Login screen", () => {
 
 
   it('Check screen is scrollable with keyboard active', async () => {
-    const scrollView = loginScreen.root.findByType(KeyboardAwareScrollView);
+    // No direct dependency on react-native-keyboard-aware-scroll-view:
+    // look for a ScrollView in the rendered tree instead.
+    const scrollView = loginScreen.root.findByType(ScrollView);
     expect(scrollView.props.scrollEnabled).toBeTruthy();
   });
 });
@@ -78,5 +80,5 @@ test('Check login when valid token stored', async () => {
     renderer.create(<Login />);
     expect(useNavigation().navigate).toHaveBeenCalledTimes(1);
   });
-  
+
 })*/
