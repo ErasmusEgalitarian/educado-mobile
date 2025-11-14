@@ -118,19 +118,5 @@
   },
   "engines": {
     "node": ">=18 <19"
-  },
-  "expo": {
-    "doctor": {
-      "reactNativeDirectoryCheck": {
-        "exclude": [
-          "@rneui/base",
-          "@rneui/themed",
-          "@ui-kitten/components",
-          "react-native-event-listeners",
-          "react-native-keyboard-aware-scroll-view",
-          "react-native-progress"
-        ]
-      }
-    }
   }
 }

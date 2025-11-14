@@ -1,11 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { View, ActivityIndicator, Text } from "react-native";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import PagerView from "react-native-pager-view";
 
 =======
 import Swiper from "react-native-swiper";
 >>>>>>> 029fc68a (Fix: Changed all relative paths to absolute paths)
+=======
+import PagerView from "react-native-pager-view";
+
+>>>>>>> 3e51826d (Fix: remove last deprecated/unmaintained dependencies)
 import ProgressTopBar from "@/app/screens/Lectures/ProgressTopBar";
 import { Lecture } from "@/components/Lectures/Lecture";
 import ExerciseScreen from "@/app/screens/Excercises/ExerciseScreen";
