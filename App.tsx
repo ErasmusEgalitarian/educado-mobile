@@ -22,6 +22,18 @@ import CameraScreen from "@/screens/Camera/CameraScreen";
 import LeaderboardScreen from "@/screens/Leaderboard/LeaderboardScreen";
 import SubscribedToCourseScreen from "@/screens/Courses/SubscribedToCourseScreen";
 
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_400Regular_Italic,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Montserrat_600SemiBold_Italic,
+  Montserrat_700Bold,
+  Montserrat_700Bold_Italic,
+  Montserrat_800ExtraBold,
+} from "@expo-google-fonts/montserrat";
+
 const Stack = createNativeStackNavigator();
 
 const LeaderboardStack = () => (
@@ -161,6 +173,17 @@ export const useWelcomeScreenLogic = (
 export const App = () => {
   const [initialRoute, setInitialRoute] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
+  const [fontsLoaded] = useFonts({
+    Montserrat_400Regular,
+    Montserrat_400Regular_Italic,
+    Montserrat_500Medium,
+    Montserrat_600SemiBold,
+    Montserrat_600SemiBold_Italic,
+    Montserrat_700Bold,
+    Montserrat_700Bold_Italic,
+    Montserrat_800ExtraBold,
+  });
 
   // Callback function to handle the results
   const handleResult = (route: string, loading: boolean) => {
