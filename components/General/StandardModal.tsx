@@ -1,8 +1,15 @@
-import { View, Modal, TouchableWithoutFeedback, Keyboard } from "react-native";
-import Text from "./Text";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {
+  View,
+  Modal,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
+import Text from "@/components/General/Text";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import BackButton from "./BackButton";
+import BackButton from "@/components/General/BackButton";
 import PropTypes from "prop-types";
 
 /**

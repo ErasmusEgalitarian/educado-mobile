@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { View, ActivityIndicator, Text } from "react-native";
-import Swiper from "react-native-swiper";
+import PagerView from "react-native-pager-view";
+
 import ProgressTopBar from "@/app/screens/Lectures/ProgressTopBar";
 import { Lecture } from "@/components/Lectures/Lecture";
 import ExerciseScreen from "@/app/screens/Excercises/ExerciseScreen";
@@ -32,13 +33,17 @@ interface ComponentSwipeScreenProps {
 }
 
 /**
- * This screen is displayed when the student is doing a component. It displays the component, which can be a lecture or
- * an exercise. When the student presses the continue-button, or swipes, the next component is displayed. The swiper is
- * disabled when the student is doing an exercise. The swiper starts at the first uncompleted component in the section.
- * The swiper is enabled when the student is doing a lecture. The screen has a progress bar at the top, which shows the
- * progress in the section. It also shows the points the student has earned in the course.
+ * Screen that displays a single section component (lecture or exercise) and
+ * lets the student navigate between components using react-native-pager-view.
+ * Swiping is enabled for lectures and disabled for exercises. The view starts
+ * at the first uncompleted component.
+ * A top progress bar shows section progress and course points. "Continue"
+ * actions use programmatic navigation and incorrect exercise answers are moved
+ * to the end of the queue.
  *
- * @param route - The route object, which contains the section object and the course object.
+ * @param route.params.section - Section object.
+ * @param route.params.parsedCourse - Course object.
+ * @param route.params.parsedComponentIndex - Optional initial component index.
  */
 const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const { section, parsedCourse, parsedComponentIndex } = route.params;
@@ -49,7 +54,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const [sectionComponents, setSectionComponents] = useState<
     SectionComponent<SectionComponentLecture | SectionComponentExercise>[]
   >([]);
-  const swiperRef = useRef<null | Swiper>(null);
+  const pagerRef = useRef<null | PagerView>(null);
   const [resetKey, setResetKey] = useState(0);
 
   const { data: loginStudent } = useLoginStudent();
@@ -71,7 +76,16 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const isLoading = studentQuery.isLoading || areSectionComponentsLoading;
 
   const safeScrollBy = (offset: number, animated: true) => {
-    swiperRef.current?.scrollBy(offset, animated);
+    const target = Math.max(
+      0,
+      Math.min(index + offset, sectionComponents.length - 1),
+    );
+
+    if (animated) {
+      pagerRef.current?.setPage(target);
+    } else {
+      pagerRef.current?.setPageWithoutAnimation(target);
+    }
   };
 
   /**
@@ -185,6 +199,8 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
 
     setCurrentLectureType(firstSectionComponent.lectureType ?? "text");
     setIndex(initialIndex);
+
+    pagerRef.current?.setPageWithoutAnimation(initialIndex);
   }, [
     isLoading,
     parsedComponentIndex,
@@ -217,13 +233,14 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
       )}
 
       {sectionComponents.length > 0 && (
-        <Swiper
+        <PagerView
           key={resetKey}
-          ref={swiperRef}
-          index={index}
-          onIndexChanged={void handleIndexChange}
-          loop={false}
-          showsPagination={false}
+          ref={pagerRef}
+          style={{ flex: 1 }}
+          initialPage={index}
+          onPageSelected={(e) => {
+            void handleIndexChange(e.nativeEvent.position);
+          }}
           scrollEnabled={scrollEnabled}
         >
           {sectionComponents.map((component, index) =>
@@ -258,7 +275,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
               />
             ),
           )}
-        </Swiper>
+        </PagerView>
       )}
     </View>
   );

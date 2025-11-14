@@ -1,5 +1,6 @@
 import { View, Text, Dimensions } from "react-native";
-import * as Progress from "react-native-progress";
+//import * as Progress from "react-native-progress";
+import { ProgressBar } from "react-native-paper";
 import { colors } from "@/theme/colors";
 
 interface CustomProgressBarProps {
@@ -34,15 +35,16 @@ export const CustomProgressBar = ({
 
   return (
     <View className="flex-row items-center justify-around">
-      <Progress.Bar
+      <ProgressBar
         progress={progress[0] / 100}
-        width={ScreenWidth * (width / 100)}
-        height={ScreenHeight * (height / 100)}
         color={colors.surfaceDarker}
-        unfilledColor={colors.surfaceLighter}
-        borderWidth={0}
-        borderRadius={8}
-      ></Progress.Bar>
+        style={{
+          width: ScreenWidth * (width / 100),
+          height: ScreenHeight * (height / 100),
+          backgroundColor: colors.surfaceLighter,
+          borderRadius: 8,
+        }}
+      ></ProgressBar>
       {displayLabel && (
         <Text
           className="caption-sm-regular px-5 text-center text-projectBlack"
