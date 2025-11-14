@@ -74,7 +74,7 @@ const Tooltip = ({
           </Pressable>
         </View>
       </View>
-      <View style={tail(tailSide, tailPosition) as ViewStyle} />
+      <View style={tail(tailSide, tailPosition)} />
     </View>
   );
 };

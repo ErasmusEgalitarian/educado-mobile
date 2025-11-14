@@ -110,8 +110,8 @@ const CourseScreen = () => {
             <Pressable
               testID={"noCoursesExploreButton"}
               className="flex w-full items-center justify-center rounded-2xl bg-surfaceDefaultCyan p-4"
-              // @ts-expect-error Will be refactored when we move to Expo Router
               onPress={() => {
+                // @ts-expect-error Will be refactored when we move to Expo Router
                 navigation.navigate("Explorar");
               }}
             >
