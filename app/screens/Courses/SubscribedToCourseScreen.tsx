@@ -1,9 +1,9 @@
 import { View, SafeAreaView } from "react-native";
 import LottieView from "lottie-react-native";
-import Text from "../../components/General/Text";
+import Text from "@/components/General/Text";
 import PropTypes from "prop-types";
-import StartNowButton from "../../components/Courses/CourseSubsription/StartNowButton";
-import StartLaterButton from "../../components/Courses/CourseSubsription/StartLaterButton";
+import StartNowButton from "@/components/Courses/CourseSubsription/StartNowButton";
+import StartLaterButton from "@/components/Courses/CourseSubsription/StartLaterButton";
 
 export default function SubscribedToCourseScreen({ route }) {
   SubscribedToCourseScreen.propTypes = {
@@ -16,7 +16,7 @@ export default function SubscribedToCourseScreen({ route }) {
     <SafeAreaView className="flex h-screen w-screen flex-col items-center justify-center bg-secondary">
       <LottieView
         className="absolute top-8 z-10 w-full"
-        source={require("../../assets/animations/subscribedToCourse.json")}
+        source={require("@/assets/animations/subscribedToCourse.json")}
         autoPlay
       />
 

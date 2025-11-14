@@ -3,7 +3,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
-import CoursePoints from "../../components/Exercise/CoursePoints";
+import CoursePoints from "@/components/Exercise/CoursePoints";
 
 const LectureType = {
   TEXT: "text",
