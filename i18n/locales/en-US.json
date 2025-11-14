@@ -14,6 +14,7 @@
   "general": {
     "yes": "Yes",
     "no": "No",
+    "close": "Close",
     "confirmation": "Are you sure?",
     "hour": "Hour",
     "hours": "Hours",

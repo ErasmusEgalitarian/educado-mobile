@@ -94,15 +94,12 @@ const CourseScreen = () => {
           <Text className="text-body-bold"> “Explorar Cursos”</Text>.
         </Tooltip>
         <View className="mb-20 mt-20 self-center pt-16">
-          <Image
-            source={require("../../assets/images/logo.png")}
-            className="h-[25.54] w-[175.88]"
-          />
+          <Image source={logo} className="h-[25.54] w-[175.88]" />
         </View>
         <View className="justify-center">
           <View className="items-center pt-16">
-            <Image source={require("../../assets/images/no-courses.png")} />
-            <Text className="pt-4 text-center text-[24px] text-h2-sm-regular">
+            <Image source={noCourses} />
+            <Text className="pt-4 text-center text-h2-sm-regular">
               {t("welcome-page.header")}
             </Text>
             <Text className="px-6 pt-4 text-center text-body-regular">
@@ -113,7 +110,10 @@ const CourseScreen = () => {
             <Pressable
               testID={"noCoursesExploreButton"}
               className="flex w-full items-center justify-center rounded-2xl bg-surfaceDefaultCyan p-4"
-              onPress={() => navigation.navigate("Explorar")}
+              // @ts-expect-error Will be refactored when we move to Expo Router
+              onPress={() => {
+                navigation.navigate("Explorar");
+              }}
             >
               {/* Click to explore courses */}
               <Text className="text-center text-surfaceSubtleGrayscale text-body-bold">

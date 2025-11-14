@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { useEffect, useState, PropsWithChildren } from "react";
+import { View, ViewStyle, Text, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
+
+type TailSide = "top" | "bottom" | "left" | "right";
 
 interface TooltipProps {
   tooltipKey: string;
   uniCodeIcon: string;
-  children: React.ReactNode;
   position: object;
-  tailSide: string;
+  tailSide: TailSide;
   tailPosition: number;
 }
 
@@ -19,7 +21,7 @@ const Tooltip = ({
   position,
   tailSide,
   tailPosition,
-}: TooltipProps) => {
+}: PropsWithChildren<TooltipProps>) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const storageKey = `tooltip_shown_${tooltipKey}`;
@@ -58,25 +60,27 @@ const Tooltip = ({
           <Text className="px-3 text-body-regular">{children}</Text>
         </View>
         <View className="flex-row justify-between">
-          <Text className="text-greyscaleTexticonSubtitle text-caption-lg-semibold">
-            {" "}
-            1/1{" "}
+          <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
+            1/1
           </Text>
-          <Pressable onPress={() => setIsVisible(false)}>
-            <Text className="text-greyscaleTexticonSubtitle text-caption-lg-semibold">
-              {" "}
-              Fechar{" "}
+          <Pressable
+            onPress={() => {
+              setIsVisible(false);
+            }}
+          >
+            <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
+              {t("general.close")}
             </Text>
           </Pressable>
         </View>
       </View>
-      <View style={tail(tailSide, tailPosition)} />
+      <View style={tail(tailSide, tailPosition) as ViewStyle} />
     </View>
   );
 };
 
-const tail = (side: string, position: number) => {
-  const baseTail = {
+const tail = (side: TailSide, position: number): ViewStyle => {
+  const baseTail: ViewStyle = {
     width: 0,
     height: 0,
     backgroundColor: "transparent",
@@ -89,7 +93,7 @@ const tail = (side: string, position: number) => {
     borderBottomColor: colors.surfaceSubtlePurple,
   };
 
-  const alignment = {
+  const alignment: Record<TailSide, ViewStyle> = {
     top: {
       ...baseTail,
       marginLeft: position,
@@ -117,7 +121,7 @@ const tail = (side: string, position: number) => {
   return alignment[side];
 };
 
-const tailFlexDirection = (side: string) => {
+const tailFlexDirection = (side: TailSide): string => {
   const flexDirection = {
     top: "flex-col-reverse",
     bottom: "flex-col",
