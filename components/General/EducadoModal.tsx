@@ -5,9 +5,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Text,
+  Platform,
+  ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ReactNode } from "react";
 
@@ -37,19 +39,28 @@ export const EducadoModal = ({
       <TouchableWithoutFeedback onPress={closeModal}>
         <View className="flex-1 justify-end bg-modalOpacityBlue">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View className="h-[90%] rounded-t-3xl bg-surfaceSubtleCyan pt-10">
-              <AlertNotificationRoot>
-                <KeyboardAwareScrollView>
-                  <View className="mb-4 flex flex-row items-center justify-between px-[10%]">
-                    <Text className="text-h2-sm-regular">{title}</Text>
-                    <Pressable onPress={closeModal}>
-                      <Entypo name="chevron-down" size={24} />
-                    </Pressable>
-                  </View>
-                  {children}
-                </KeyboardAwareScrollView>
-              </AlertNotificationRoot>
-            </View>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : undefined}
+              keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+              style={{ flex: 1 }}
+            >
+              <View className="h-[90%] rounded-t-3xl bg-surfaceSubtleCyan pt-10">
+                <AlertNotificationRoot>
+                  <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    keyboardShouldPersistTaps="handled"
+                  >
+                    <View className="mb-4 flex flex-row items-center justify-between px-[10%]">
+                      <Text className="text-h2-sm-regular">{title}</Text>
+                      <Pressable onPress={closeModal}>
+                        <Entypo name="chevron-down" size={24} />
+                      </Pressable>
+                    </View>
+                    {children}
+                  </ScrollView>
+                </AlertNotificationRoot>
+              </View>
+            </KeyboardAvoidingView>
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>

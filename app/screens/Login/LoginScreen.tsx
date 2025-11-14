@@ -1,11 +1,18 @@
 import { useState } from "react";
-import { View, Keyboard, Text, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  Keyboard,
+  Text,
+  TouchableWithoutFeedback,
+  Platform,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import LoginForm from "@/components/Login/LoginForm";
 import LogoBackButton from "@/components/Login/LogoBackButton";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import * as StorageService from "@/services/storage-service";
 
@@ -48,47 +55,51 @@ const Login = () => {
       {loading ? (
         <LoadingScreen />
       ) : (
-        <KeyboardAwareScrollView
-          className="flex-1"
-          resetScrollToCoords={{ x: 0, y: 0 }}
-          scrollEnabled={true}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+          style={{ flex: 1 }}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View>
-              <View className="mt-10">
-                <LogoBackButton navigationPlace={"WelcomeStack"} />
-              </View>
-              <View className="mx-6">
-                {/* Login form */}
-                <View className="my-8">
-                  <LoginForm />
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+            className="flex-1"
+          >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View>
+                <View className="mt-10">
+                  <LogoBackButton navigationPlace={"WelcomeStack"} />
                 </View>
-                {/* Register button */}
-                <View className="flex-col items-center">
-                  <Text className="mr-1 text-textSubtitleGrayscale text-h4-sm-regular">
-                    {/* Dont have an account yet? */}
-                    Ainda não tem conta?
-                  </Text>
-                  <Text
-                    className={
-                      "left-1 text-textTitleGrayscale underline text-h4-sm-regular"
-                    }
-                    onPress={() => {
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-expect-error
-                      navigation.navigate("Register", {
-                        previousScreen: "Login",
-                      });
-                    }}
-                  >
-                    {/* Sign up now */}
-                    Cadastre-se agora
-                  </Text>
+                <View className="mx-6">
+                  {/* Login form */}
+                  <View className="my-8">
+                    <LoginForm />
+                  </View>
+                  {/* Register button */}
+                  <View className="flex-col items-center">
+                    <Text className="mr-1 text-textSubtitleGrayscale text-h4-sm-regular">
+                      Ainda não tem conta?
+                    </Text>
+                    <Text
+                      className={
+                        "left-1 text-textTitleGrayscale underline text-h4-sm-regular"
+                      }
+                      onPress={() => {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-expect-error
+                        navigation.navigate("Register", {
+                          previousScreen: "Login",
+                        });
+                      }}
+                    >
+                      Cadastre-se agora
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAwareScrollView>
+            </TouchableWithoutFeedback>
+          </ScrollView>
+        </KeyboardAvoidingView>
       )}
     </SafeAreaView>
   );
