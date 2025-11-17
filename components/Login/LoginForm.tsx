@@ -9,7 +9,7 @@ import { removeEmojis } from "@/components/General/validation";
 import ShowAlert from "@/components/General/ShowAlert";
 import { isAxiosError } from "axios";
 import { toApiError } from "@/api/legacy-api";
-import { useLogin } from "@/hooks/query";
+import { useLogin, useLoginStrapi } from "@/hooks/query";
 
 /**
  * Login form component for the login screen containing email and password input fields and a login button.
@@ -23,6 +23,7 @@ const LoginForm = () => {
   const [emailAlert, setEmailAlert] = useState("");
 
   const loginQuery = useLogin();
+  const strapiloginQuery = useLoginStrapi();
 
   const login = async () => {
     setEmailAlert("");
@@ -30,6 +31,7 @@ const LoginForm = () => {
 
     try {
       await loginQuery.mutateAsync({ email, password });
+      await strapiloginQuery.mutateAsync({ email, password });
     } catch (error) {
       if (!isAxiosError(error)) {
         throw error;

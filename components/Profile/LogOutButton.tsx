@@ -1,44 +1,44 @@
-import { View, TouchableOpacity, Alert } from "react-native";
+import { View, TouchableOpacity, Alert, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Text from "../General/Text";
-import tailwindConfig from "@/tailwind.config";
-import PropTypes from "prop-types";
+import { useLogoutStrapi } from "@/hooks/query";
+import { colors } from "@/theme/colors";
 
 const LOGIN_TOKEN = "@loginToken";
 const USER_INFO = "@userInfo";
-const tailwindColors = tailwindConfig.theme.colors;
 const STUDENT_INFO = "@studentInfo";
 
-export default function LogOutButton(props) {
-  LogOutButton.propTypes = {
-    testID: PropTypes.string,
-  };
-
+export default function LogOutButton(props: { testID: string }) {
   const navigation = useNavigation();
+  const logoutStrapi = useLogoutStrapi();
 
-  async function logOut() {
+  const logOut = async () => {
     try {
       await AsyncStorage.removeItem(LOGIN_TOKEN);
       await AsyncStorage.removeItem(USER_INFO);
       await AsyncStorage.removeItem(STUDENT_INFO);
 
-      navigation.navigate("LoginStack");
+      await logoutStrapi.mutateAsync();
+
+      navigation.navigate("LoginStack" as never);
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
-  const logoutAlert = () =>
+  const logoutAlert = () => {
     Alert.alert("Sair", "Tem certeza que deseja sair?", [
       {
         text: "Não",
-        onPress: () => console.log("No Pressed"),
+        onPress: () => {
+          console.log("No Pressed");
+        },
         style: "cancel",
       },
-      { text: "Sim", onPress: logOut },
+      { text: "Sim", onPress: () => void logOut() },
     ]);
+  };
 
   return (
     <View className="flex items-center py-[6%]">
@@ -47,10 +47,10 @@ export default function LogOutButton(props) {
           <MaterialCommunityIcons
             name="logout"
             size={30}
-            color={tailwindColors.error}
+            color={colors.error}
             testID={props.testID}
           />
-          <Text className="font-sans-bold text-center text-lg text-error underline">
+          <Text className="text-center text-surfaceDefaultRed underline text-body-regular">
             Sair
           </Text>
         </View>

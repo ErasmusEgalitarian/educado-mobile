@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { client } from "@/api/backend/client.gen";
+import { JwtResponse } from "@/api/backend/types.gen";
 import {
   addCourseToStudent,
   completeComponent,
@@ -19,19 +20,25 @@ import {
   updateStudyStreak,
 } from "@/api/legacy-api";
 import {
-  documentDirectory,
-  EncodingType,
-  writeAsStringAsync,
-} from "expo-file-system";
+  loginStudentStrapi,
+  logoutStudentStrapi,
+  signUpStudentStrapi,
+} from "@/api/strapi-api";
 import { setJWT, setUserInfo } from "@/services/storage-service";
+import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import {
   LoginStudent,
   SectionComponentExercise,
   SectionComponentLecture,
   Student,
 } from "@/types";
-import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  documentDirectory,
+  EncodingType,
+  writeAsStringAsync,
+} from "expo-file-system";
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -287,6 +294,59 @@ export const useLogin = () => {
 
       return data;
     },
+  });
+};
+
+/**
+ * Log in a user by email and password in strapi.
+ *
+ */
+export const useLoginStrapi = () => {
+  return useMutation<JwtResponse, unknown, { email: string; password: string }>(
+    {
+      mutationFn: (variables) =>
+        loginStudentStrapi(variables.email, variables.password),
+      onSuccess: (data) => {
+        client.setConfig({
+          ...client.getConfig(),
+          headers: {
+            Authorization: `Bearer ${data.accessToken ?? ""}`,
+          },
+        });
+      },
+    },
+  );
+};
+
+/**
+ * Sign up a user by email and password in strapi.
+ */
+export const useSignUpStrapi = () => {
+  return useMutation<
+    JwtResponse,
+    unknown,
+    { name: string; email: string; password: string }
+  >({
+    mutationFn: (variables) =>
+      signUpStudentStrapi(variables.name, variables.email, variables.password),
+    onSuccess: (data) => {
+      client.setConfig({
+        ...client.getConfig(),
+        headers: {
+          Authorization: `Bearer ${data.accessToken ?? ""}`,
+        },
+      });
+    },
+  });
+};
+
+/**
+ * Log out a user by clearing the authorization header.
+ * Even thought the logout function is not async we do it this way to stay consistent
+ */
+export const useLogoutStrapi = () => {
+  return useMutation({
+    mutationFn: logoutStudentStrapi,
   });
 };
 

@@ -21,6 +21,7 @@ import { colors } from "@/theme/colors";
 import { setUserInfo, setJWT } from "@/services/storage-service";
 import { UserInfo } from "@/types/user";
 import { isAxiosError } from "axios";
+import { useLoginStrapi, useSignUpStrapi } from "@/hooks/query";
 
 interface BaseUserType {
   _id: string;
@@ -68,10 +69,6 @@ export const RegisterForm = () => {
     checkIfPasswordsMatch(password, confirmPassword);
   }, [confirmPassword, password]);
 
-  useEffect(() => {
-    checkIfPasswordsMatch(password, confirmPassword);
-  }, [confirmPassword, password]);
-
   // validating name
   useEffect(() => {
     if (name !== "") {
@@ -94,13 +91,13 @@ export const RegisterForm = () => {
    */
   useEffect(() => {
     const validationPassed: boolean =
-      !nameAlert &&
-      !emailAlert &&
-      !name &&
-      !email &&
-      passwordLengthValid &&
-      passwordContainsLetter &&
-      !confirmPasswordAlert;
+      name.trim() !== "" && // Name has a value
+      email.trim() !== "" && // Email has a value
+      nameAlert === "" && // Name has no errors
+      emailAlert === "" && // Email has no errors
+      passwordLengthValid && // Password is long enough
+      passwordContainsLetter && // Password contains a letter
+      confirmPasswordAlert === ""; // Passwords match
 
     setIsAllInputValid(validationPassed);
   }, [
@@ -123,6 +120,9 @@ export const RegisterForm = () => {
       setConfirmPasswordAlert("Os campos de senha precisam ser iguais");
     }
   };
+
+  const signUpMutation = useSignUpStrapi();
+  const loginStudentMutation = useLoginStrapi();
 
   /**
    * Function for registering a new user in the database
@@ -149,6 +149,20 @@ export const RegisterForm = () => {
       // I am also unsure of its returned type, hence the weird type it now has.
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { baseUser }: { baseUser: BaseUserType } = await registerUser(obj);
+
+      const response = await signUpMutation.mutateAsync({
+        name,
+        email,
+        password,
+      });
+
+      // TODO: Removie this console.log when migrating to use strapi fully.
+      console.log(
+        response.accessToken
+          ? "Student signed up in strapi"
+          : "Failed to sign up student in strapi",
+      );
+
       const userInfo: UserInfo = {
         id: baseUser._id,
         firstName: baseUser.user.firstName,
@@ -173,6 +187,7 @@ export const RegisterForm = () => {
     password: string;
   }) => {
     try {
+      await loginStudentMutation.mutateAsync(obj);
       await loginUser(obj)
         .then(async (response: { accessToken: string }) => {
           await setJWT(response.accessToken);
