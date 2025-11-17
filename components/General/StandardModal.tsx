@@ -41,7 +41,7 @@ const StandardModal = (props) => {
       className="border-black border-8"
     >
       <AlertNotificationRoot>
-        <KeyboardAwareScrollView className="bg-secondary">
+        <ScrollView className="bg-secondary">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
               <View className="relative mx-4 my-6">
@@ -57,7 +57,7 @@ const StandardModal = (props) => {
               {props.children}
             </View>
           </TouchableWithoutFeedback>
-        </KeyboardAwareScrollView>
+        </ScrollView>
       </AlertNotificationRoot>
     </Modal>
   );
