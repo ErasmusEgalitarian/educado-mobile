@@ -1,8 +1,15 @@
 import { client } from "@/api/backend/client.gen";
-import { postStudentLogin, postStudentSignup } from "@/api/backend/sdk.gen";
-import { JwtResponse } from "@/api/backend/types.gen";
-import { mapToLoginStudent } from "@/api/strapi-mappers";
-import { LoginStudent } from "@/types";
+import {
+  courseGetCourses,
+  postStudentLogin,
+  postStudentSignup,
+} from "@/api/backend/sdk.gen";
+import {
+  CourseGetCoursesResponse,
+  JwtResponse,
+} from "@/api/backend/types.gen";
+import { mapToCourse, mapToLoginStudent } from "@/api/strapi-mappers";
+import { Course, LoginStudent } from "@/types";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -42,7 +49,9 @@ export const signUpStudentStrapi = async (
 };
 
 export const logoutStudentStrapi = () => {
-  // Removes the authorization header from the client
+  // Clear the authorization header from the client config
+  // Note: The interceptor reads from TanStack Query cache, so the cache
+  // should also be cleared via useLogoutStrapi hook
   client.setConfig({
     ...client.getConfig(),
     headers: {
@@ -51,4 +60,42 @@ export const logoutStudentStrapi = () => {
   });
 
   return Promise.resolve();
+};
+
+/**
+ * Gets all courses from Strapi.
+ *
+ * @returns A list of courses.
+ * @throws Error if the request fails
+ */
+export const getAllCoursesStrapi = async (): Promise<Course[]> => {
+  const response = await courseGetCourses({
+    query: {
+      fields: [
+        "title",
+        "description",
+        "difficulty",
+        "numOfRatings",
+        "numOfSubscriptions",
+        "createdAt",
+        "updatedAt",
+        "publishedAt",
+      ],
+      populate: [
+        "course_categories",
+        "content_creators",
+        "image",
+        "feedbacks",
+        "course_sections",
+        "students",
+      ],
+      status: "published", // Only get published courses
+    },
+  }) as CourseGetCoursesResponse;
+
+  if (!response.data || response.data.length === 0) {
+    return [];
+  }
+
+  return response.data.map((course) => mapToCourse(course));
 };

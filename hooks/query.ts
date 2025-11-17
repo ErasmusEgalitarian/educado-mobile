@@ -20,6 +20,7 @@ import {
   updateStudyStreak,
 } from "@/api/legacy-api";
 import {
+  getAllCoursesStrapi,
   loginStudentStrapi,
   logoutStudentStrapi,
   signUpStudentStrapi,
@@ -62,7 +63,7 @@ export const queryKeys = {
 export const useCourses = () =>
   useQuery({
     queryKey: queryKeys.courses,
-    queryFn: () => getAllCourses(),
+    queryFn: () => getAllCoursesStrapi(),
   });
 
 /**
@@ -316,22 +317,7 @@ export const useLoginStrapi = () => {
       );
     },
     onSuccess: async (data) => {
-      // Set the authorization header for future requests
-      client.setConfig({
-        ...client.getConfig(),
-        headers: {
-          Authorization: `Bearer ${data.accessToken}`,
-        },
-      });
-
-      // TODO: Remove storage-service.ts and AsyncStorage legacy fallback after full migration to TanStack Query
-      await setJWT(data.accessToken);
-      // Store user info directly without calling setUserInfo to avoid calling old API's setStudentInfo
-      await AsyncStorage.setItem("@userInfo", JSON.stringify(data.userInfo));
-      await AsyncStorage.setItem("@userId", data.userInfo.id);
-      await AsyncStorage.setItem("loggedIn", "true");
-
-      // Store in query cache
+      // Store in TanStack Query cache (interceptor will automatically add token to requests)
       queryClient.setQueryData(queryKeys.loginStudent, data);
 
       // Invalidate student queries to refetch with new data
@@ -348,31 +334,40 @@ export const useLoginStrapi = () => {
  * Sign up a user by email and password in strapi.
  */
 export const useSignUpStrapi = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<
-    JwtResponse,
+    LoginStudent,
     unknown,
     { name: string; email: string; password: string }
   >({
     mutationFn: (variables) =>
       signUpStudentStrapi(variables.name, variables.email, variables.password),
-    onSuccess: (data) => {
-      client.setConfig({
-        ...client.getConfig(),
-        headers: {
-          Authorization: `Bearer ${data.accessToken ?? ""}`,
-        },
+    onSuccess: async (data) => {
+      // Store in TanStack Query cache (interceptor will automatically add token to requests)
+      queryClient.setQueryData(queryKeys.loginStudent, data);
+
+      // Invalidate student queries to refetch with new data
+      await queryClient.invalidateQueries({
+        queryKey: [...queryKeys.student(data.userInfo.id)],
       });
     },
   });
 };
 
 /**
- * Log out a user by clearing the authorization header.
- * Even thought the logout function is not async we do it this way to stay consistent
+ * Log out a user by clearing the authorization header and cache.
+ * Even though the logout function is not async we do it this way to stay consistent
  */
 export const useLogoutStrapi = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: logoutStudentStrapi,
+    onSuccess: () => {
+      // Clear login data from cache so interceptor stops adding token
+      queryClient.removeQueries({ queryKey: queryKeys.loginStudent });
+    },
   });
 };
 

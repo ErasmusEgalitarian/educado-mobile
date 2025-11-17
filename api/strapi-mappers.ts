@@ -1,5 +1,69 @@
+import { Course as StrapiCourse } from "@/api/backend/types.gen";
 import { JwtResponse } from "@/api/backend/types.gen";
-import { LoginStudent, StudentCourse } from "@/types";
+import { Course, LoginStudent, StudentCourse } from "@/types";
+import { PopulatedCourse } from "@/types/strapi-populated";
+
+/**
+ * Maps a Strapi Course to the app Course type.
+ *
+ * @param courseStrapi - The Strapi course data
+ * @returns A Course object
+ */
+export const mapToCourse = (courseStrapi: StrapiCourse | PopulatedCourse): Course => {
+  const categories = "course_categories" in courseStrapi && Array.isArray(courseStrapi.course_categories)
+    ? courseStrapi.course_categories
+    : [];
+  const contentCreators = "content_creators" in courseStrapi && Array.isArray(courseStrapi.content_creators)
+    ? courseStrapi.content_creators
+    : [];
+  const feedbacks = "feedbacks" in courseStrapi && Array.isArray(courseStrapi.feedbacks)
+    ? courseStrapi.feedbacks
+    : [];
+  const sections = "course_sections" in courseStrapi && Array.isArray(courseStrapi.course_sections)
+    ? courseStrapi.course_sections
+    : [];
+
+  // Calculate rating from feedbacks
+  const rating = feedbacks.length > 0
+    ? feedbacks.reduce((acc, feedback) => acc + (feedback.rating ?? 0), 0) / feedbacks.length
+    : 0;
+
+  // Get image URL if available
+  const imageUrl = courseStrapi.image?.url ?? null;
+
+  // Get category name
+  const categoryName =
+    categories.length > 0 &&
+    typeof categories[0] === "object" &&
+    categories[0] !== null &&
+    "name" in categories[0]
+      ? (categories[0] as { name?: string }).name ?? ""
+      : "";
+
+  return {
+    courseId: courseStrapi.documentId ?? "",
+    title: courseStrapi.title,
+    description: courseStrapi.description ?? "",
+    image: imageUrl,
+    category: categoryName,
+    estimatedHours: 0, // TODO: Add to Strapi model (durationHours field exists but may need mapping)
+    dateUpdated: courseStrapi.updatedAt,
+    creatorId: contentCreators.length > 0 ? contentCreators[0].documentId ?? "" : "",
+    difficulty: courseStrapi.difficulty,
+    published: !!courseStrapi.publishedAt,
+    status: courseStrapi.publishedAt ? "published" : "draft",
+    rating,
+    feedbackOptions: feedbacks.map((feedback) => ({
+      id: feedback.documentId ?? "",
+      count: feedback.rating ?? 0,
+    })),
+    topFeedbackOptions: feedbacks.length > 0
+      ? feedbacks.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))[0]?.feedbackText ?? ""
+      : "",
+    dateOfDownload: courseStrapi.createdAt,
+    sections: sections.map((section) => section.documentId ?? ""),
+  };
+};
 
 /**
  * Maps a Strapi JwtResponse to a LoginStudent.

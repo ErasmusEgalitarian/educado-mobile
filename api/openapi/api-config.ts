@@ -1,5 +1,37 @@
 import { client } from "@/api/backend/client.gen";
 import Constants from "expo-constants";
+import { queryKeys } from "@/hooks/query";
+import type { LoginStudent } from "@/types";
+
+// Store reference to queryClient - will be set by QueryProvider
+let queryClientRef: { getQueryData: <T>(key: unknown[]) => T | undefined } | null =
+  null;
+
+/**
+ * Sets the query client reference so the interceptor can access cached login data.
+ * @param queryClient - The TanStack Query client instance
+ */
+export const setQueryClientRef = (queryClient: {
+  getQueryData: <T>(key: unknown[]) => T | undefined;
+}) => {
+  queryClientRef = queryClient;
+};
+
+/**
+ * Gets the auth token from the TanStack Query cache.
+ * @returns The access token if available, null otherwise
+ */
+const getAuthToken = (): string | null => {
+  if (!queryClientRef) {
+    return null;
+  }
+
+  const loginStudent = queryClientRef.getQueryData<LoginStudent>([
+    ...queryKeys.loginStudent,
+  ]);
+
+  return loginStudent?.accessToken ?? null;
+};
 
 export const getBaseApiUrl = (): string => {
   const strapiUrl = process.env.EXPO_PUBLIC_STRAPI_BACKEND;
@@ -19,8 +51,16 @@ export const configureApiClient = () => {
     throwOnError: true,
   });
 
-  // Request interceptor for logging in development
+  // Request interceptor to add auth token and logging
   client.interceptors.request.use((request) => {
+    // Get token from query cache
+    const token = getAuthToken();
+
+    // Add Authorization header if token is available
+    if (token) {
+      request.headers.set("Authorization", `Bearer ${token}`);
+    }
+
     if (__DEV__) {
       console.log(`Request 📤 ${request.method} ${request.url}`);
     }
@@ -32,6 +72,17 @@ export const configureApiClient = () => {
     if (__DEV__) {
       console.log(`Response 📥 ${response.url}`, { status: response.status });
     }
+
+    // Handle 401/403 errors - token might be invalid
+    if (response.status === 401 || response.status === 403) {
+      if (__DEV__) {
+        console.log(
+          `Response 📥 ${response.url} [${response.status}] - Auth failed`,
+        );
+      }
+      // Note: Error will propagate and components can handle logout if needed
+    }
+
     return response;
   });
 
