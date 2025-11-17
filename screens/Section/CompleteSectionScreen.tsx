@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -21,29 +21,38 @@ Dependencies: 	Routes which in this case are the whole course object and the sec
 */
 
 interface Props {
-  parsedCourse: Course;
-  sectionId: string;
+  route: {
+    params: {
+      parsedCourse: Course;
+      sectionId: string;
+    };
+  };
 }
 
-export default function CompleteSectionScreen({
-  sectionId,
-  parsedCourse,
-}: Props) {
+export default function CompleteSectionScreen({ route }: Props) {
+  const parsedCourse = route.params.parsedCourse;
+  const sectionId = route.params.sectionId;
   const [points, setPoints] = useState(0);
   const [extraPoints, setExtraPoints] = useState(0);
   const navigation = useNavigation();
   const [randomPhrase, setRandomPhrase] = useState("");
 
   const getRandomPhrase = () => {
-    let randomIndex = 0;
     const phrases = generateSectionCompletePhrases();
 
-    randomIndex = Math.floor(Math.random() * phrases.length);
+    const randomIndex = Math.floor(Math.random() * phrases.length);
 
     return phrases[randomIndex];
   };
+  useEffect(() => {
+    setRandomPhrase(getRandomPhrase());
+  }, []);
 
-  const animation = (state: number, setState:  React.Dispatch<React.SetStateAction<number>>, finalValue: number) => {
+  const animation = (
+    state: number,
+    setState: Dispatch<SetStateAction<number>>,
+    finalValue: number,
+  ) => {
     return new Promise((resolve) => {
       if (state < finalValue) {
         const interval = setInterval(() => {
@@ -61,15 +70,20 @@ export default function CompleteSectionScreen({
         resolve(finalValue);
       }
     });
-  }
+  };
 
-  const pointBox = (text: string, pointsText: number, color: string, duration: number) => {
+  const pointBox = (
+    text: string,
+    pointsText: number,
+    color: string,
+    duration: number,
+  ) => {
     return (
       <View
         className={`h-24 w-40 ${color === "green" ? "bg-success" : "bg-yellow"} items-center justify-between rounded-lg px-2 pb-2 shadow shadow-projectGray`}
       >
         <View className="h-2/5 w-full justify-center">
-          <Text className="text-body-bold text-center text-textNegativeGrayscale">
+          <Text className="text-center text-textNegativeGrayscale text-body-bold">
             {text}
           </Text>
         </View>
@@ -82,9 +96,7 @@ export default function CompleteSectionScreen({
         </View>
       </View>
     );
-  }
-
-
+  };
 
   const handleAllSectionsCompleted = async () => {
     const studentInfo = await getStudentInfo();
@@ -103,73 +115,76 @@ export default function CompleteSectionScreen({
         ],
       });
     }
-  }
-  const getPointsFromSection = async() => {
-    try{
-    const studentInfo = await getStudentInfo();
+  };
 
-    const completedSection = findCompletedSection(
-      studentInfo,
-      parsedCourse.courseId,
-      sectionId,
-    );
-    if (completedSection === undefined) {
-      return 0;
-    }
-    return {
-      totalPoints: completedSection.totalPoints,
-      extraPoints: completedSection.extraPoints,
-    };
-    }catch(error){
-      console.log(error);
-      return 0;
-    }
-  }
   useEffect(() => {
+    const getPointsFromSection = async () => {
+      try {
+        const studentInfo = await getStudentInfo();
 
-    const  animations = async () => {
+        const completedSection = findCompletedSection(
+          studentInfo,
+          parsedCourse.courseId,
+          sectionId,
+        );
+        if (completedSection === undefined) {
+          return 0;
+        }
+        return {
+          totalPoints: completedSection.totalPoints,
+          extraPoints: completedSection.extraPoints,
+        };
+      } catch (error) {
+        console.log(error);
+        return 0;
+      }
+    };
+    const animations = async () => {
       const obj = await getPointsFromSection();
       await animation(points, setPoints, obj === 0 ? obj : obj.totalPoints);
 
-
-
       const id = setTimeout(() => {
-        animation(extraPoints, setExtraPoints, obj === 0 ? obj : obj.extraPoints).catch(() => {
-          console.error("Could not play animations")
+        animation(
+          extraPoints,
+          setExtraPoints,
+          obj === 0 ? obj : obj.extraPoints,
+        ).catch(() => {
+          console.error("Could not play animations");
         });
       }, 750);
-      return ()=> {clearInterval(id)};
-    }
+      return () => {
+        clearInterval(id);
+      };
+    };
 
-    setRandomPhrase(getRandomPhrase());
-    let clearTimer:(() => void) | undefined
+    let clearTimer: (() => void) | undefined;
 
     // Call the async function without 'await'
-    animations().then(clear => {
-      clearTimer = clear;
-    }).catch(()=>{console.error("Could not play animations")});
+    animations()
+      .then((clear) => {
+        clearTimer = clear;
+      })
+      .catch(() => {
+        console.error("Could not play animations");
+      });
 
     // Return the cleanup function for useEffect
     return () => {
       if (clearTimer) {
-        clearTimer()
+        clearTimer();
       }
     };
-  },[points, extraPoints, sectionId, getPointsFromSection]);
+  }, [points, extraPoints, sectionId, parsedCourse.courseId]);
 
   return (
     <SafeAreaView className="flex h-screen w-screen flex-col items-center justify-center bg-surfaceLighterCyan">
       <View className="absolute top-0 z-10 w-full">
-        <LottieView
-          source={Animation}
-          autoPlay
-        />
+        <LottieView source={Animation} autoPlay />
       </View>
-
 
       <View className="absolute bottom-0 z-20 h-3/4 w-full items-center justify-end px-6">
         <View className="mb-8 h-40 w-fit justify-center">
-          <Text className="text-body-bold bg-surfaceLighterCyan text-center text-textLabelCyan">
+          <Text className="bg-surfaceLighterCyan text-center text-textLabelCyan text-body-bold">
             {randomPhrase}
           </Text>
         </View>

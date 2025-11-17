@@ -30,7 +30,7 @@ import LoadingScreen from "@/components/Loading/LoadingScreen";
 export interface CourseOverviewScreenProps {
   route: {
     params: {
-      course?: Course;
+      course: Course;
     };
   };
 }
@@ -55,8 +55,8 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
 
   const loginStudentQuery = useLoginStudent();
   const unsubscribeFromCourseQuery = useUnsubscribeFromCourse();
-  const courseQuery = useCourse(course?.courseId ?? "");
-  const sectionQuery = useSections(course?.courseId ?? "");
+  const courseQuery = useCourse(course.courseId);
+  const sectionQuery = useSections(course.courseId);
   const bucketImageQuery = useBucketImage(courseQuery.data?.image);
 
   const student = loginStudentQuery.data;
@@ -121,7 +121,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
         onPress: () => {
           unsubscribeFromCourseQuery.mutate({
             userId: loginStudentQuery.data.userInfo.id,
-            courseId: course?.courseId ?? "",
+            courseId: course.courseId,
           });
 
           // @ts-expect-error The error will disappear when we migrate to Expo Router
@@ -172,10 +172,10 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
               <View className="flex w-[293px] rounded-2xl bg-surfaceSubtleGrayscale p-[16px]">
                 <View className="flex flex-row justify-between">
                   <Text className="h3-sm-regular max-w-[80%]">
-                    {course?.title ?? "Error"}
+                    {course.title}
                   </Text>
                   {/* TODO: Button to download course should be implemented */}
-                  <DownloadCourseButton course={course ?? {courseId: ""}} disabled={true} />
+                  <DownloadCourseButton course={course} disabled={true} />
                 </View>
                 <View className="flex h-6 justify-center rounded-sm border-y-[1px] border-surfaceDefaultGrayscale">
                   <CustomProgressBar

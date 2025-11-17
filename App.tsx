@@ -90,6 +90,8 @@ const CourseStack = () => (
     />
     <Stack.Screen
       name="CompleteSection"
+      // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
+      // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
       component={CompleteSectionScreen}
       options={{
         headerShown: false,
@@ -218,6 +220,8 @@ export const App = () => {
       />
       <Stack.Screen
         name={"CompleteSection"}
+        // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
+        // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
         component={CompleteSectionScreen}
         options={{ headerShown: false }}
       />
