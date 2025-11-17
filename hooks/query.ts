@@ -302,20 +302,46 @@ export const useLogin = () => {
  *
  */
 export const useLoginStrapi = () => {
-  return useMutation<JwtResponse, unknown, { email: string; password: string }>(
-    {
-      mutationFn: (variables) =>
-        loginStudentStrapi(variables.email, variables.password),
-      onSuccess: (data) => {
-        client.setConfig({
-          ...client.getConfig(),
-          headers: {
-            Authorization: `Bearer ${data.accessToken ?? ""}`,
-          },
-        });
-      },
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    LoginStudent,
+    unknown,
+    { email: string; password: string }
+  >({
+    mutationFn: async (variables) => {
+      return await loginStudentStrapi(
+        variables.email,
+        variables.password,
+      );
     },
-  );
+    onSuccess: async (data) => {
+      // Set the authorization header for future requests
+      client.setConfig({
+        ...client.getConfig(),
+        headers: {
+          Authorization: `Bearer ${data.accessToken}`,
+        },
+      });
+
+      // TODO: Remove storage-service.ts and AsyncStorage legacy fallback after full migration to TanStack Query
+      await setJWT(data.accessToken);
+      // Store user info directly without calling setUserInfo to avoid calling old API's setStudentInfo
+      await AsyncStorage.setItem("@userInfo", JSON.stringify(data.userInfo));
+      await AsyncStorage.setItem("@userId", data.userInfo.id);
+      await AsyncStorage.setItem("loggedIn", "true");
+
+      // Store in query cache
+      queryClient.setQueryData(queryKeys.loginStudent, data);
+
+      // Invalidate student queries to refetch with new data
+      await queryClient.invalidateQueries({
+        queryKey: [...queryKeys.student(data.userInfo.id)],
+      });
+
+      return data;
+    },
+  });
 };
 
 /**
