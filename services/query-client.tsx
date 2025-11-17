@@ -9,7 +9,7 @@ import { AppState, AppStateStatus } from "react-native";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { configureApiClient } from "@/api/openapi/api-config";
+import { configureApiClient, setQueryClientRef } from "@/api/openapi/api-config";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +42,9 @@ const persister = createAsyncStoragePersister({
   storage: AsyncStorage,
   throttleTime: 1000,
 });
+
+// Set the query client reference so the API client can access cached login data
+setQueryClientRef(queryClient);
 
 export const QueryProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
