@@ -21,7 +21,7 @@ import {
   StudentCourse,
 } from "@/types";
 import { ClassValue, clsx } from "clsx";
-import { NavigationProp, NavigationState } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
 
 /**
  * Converts a numeric difficulty level to a human-readable label.
@@ -453,7 +453,7 @@ export const findIndexOfUncompletedComp = (
 export const handleLastComponent = async (
   comp: SectionComponent<SectionComponentLecture | SectionComponentExercise>,
   course: Course,
-  navigation:  Omit<NavigationProp<ReactNavigation.RootParamList>, "getState">
+  navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState">,
 ) => {
   // Generate certificate
   const loginStudent = await StorageService.getUserInfo();

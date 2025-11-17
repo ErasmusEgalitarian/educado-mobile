@@ -5,7 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { cn, handleLastComponent } from "@/services/utils";
 import RenderHtml from "react-native-render-html";
-import { Course, SectionComponentLecture } from "@/types";
+import { Course, SectionComponent, SectionComponentLecture } from "@/types";
 import { t } from "@/i18n";
 import {
   useCompleteComponent,
@@ -45,9 +45,6 @@ const TextImageLectureScreen = ({
     }
   }, [lectureObject.id, lectureObject.content]);
 
-  console.log("lecture TEXT/IMAGE:");
-  console.log(lectureObject);
-
   if (studentQuery.isLoading) {
     return (
       <SafeAreaView>
@@ -73,7 +70,12 @@ const TextImageLectureScreen = ({
       });
       if (isLastSlide) {
         handleStudyStreak();
-        await handleLastComponent(lectureObject, courseObject, navigation);
+        const secComp: SectionComponent<SectionComponentLecture> = {
+          component: lectureObject,
+          type: "lecture",
+          lectureType: "text",
+        };
+        await handleLastComponent(secComp, courseObject, navigation);
       } else {
         onContinue();
       }
