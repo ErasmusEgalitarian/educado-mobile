@@ -1,18 +1,38 @@
 import { useEffect, useState, PropsWithChildren } from "react";
-import { View, ViewStyle, Text, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, ViewStyle, Text, Pressable, StyleSheet } from "react-native";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
+
+/**
+ •  Tooltip component displays a highly customizable tooltip window which is shown to a user only once
+ •  @param children - The textual contents of the tooltip
+ •  @param uniCodeIcon - The unicode icon shown at by the text
+ •  @param position - The absolute position of the tooltip, aligned by top and left
+ •  @param tailSide - The side on which the tail of the tooltip is shown (top, bottom, left or right)
+ •  @param tailPosition - The position of the tail on the given side, number of pixels relative to the tooltip component on an axis
+ •  @returns The rendered component
+ */
 
 type TailSide = "top" | "bottom" | "left" | "right";
 
 interface TooltipProps {
   tooltipKey: string;
   uniCodeIcon: string;
-  position: object;
+  position: {
+    top: number;
+    left: number;
+  };
   tailSide: TailSide;
   tailPosition: number;
 }
+
+const styles = StyleSheet.create({
+  shadow: {
+    backgroundColor: colors.surfaceSubtlePurple,
+    elevation: 4,
+  },
+});
 
 const Tooltip = ({
   children,
@@ -54,7 +74,10 @@ const Tooltip = ({
       className={`absolute z-40 overflow-visible ${tailFlexDirection(tailSide)}`}
       style={[position]}
     >
-      <View className="w-80 flex-col rounded-lg bg-surfaceSubtlePurple p-3">
+      <View
+        className="w-80 flex-col rounded-lg bg-surfaceSubtlePurple p-3"
+        style={styles.shadow}
+      >
         <View className="mb-3 flex-row">
           <Text className="items-start">{uniCodeIcon}</Text>
           <Text className="px-3 text-body-regular">{children}</Text>

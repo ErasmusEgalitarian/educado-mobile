@@ -88,10 +88,16 @@ const CourseScreen = () => {
           tooltipKey="Courses"
           uniCodeIcon="📚"
         >
-          <Text className="text-body-bold">Bem-vindo ao Educado! {"\n"}</Text>
-          Aqui você verá todos os cursos em que está inscrito. Para descobrir
-          novos cursos, acesse
-          <Text className="text-body-bold"> “Explorar Cursos”</Text>.
+          <Text className="text-body-bold">
+            {t("welcome-page.tutorial-heading")}
+          </Text>
+          <Text className="text-body-regular">
+            {t("welcome-page.tutorial-body")}
+          </Text>
+          <Text className="text-body-bold">
+            {t("welcome-page.tutorial-body-bold")}
+          </Text>
+          <Text className="text-body-regular">.</Text>
         </Tooltip>
         <View className="mb-20 mt-20 self-center pt-16">
           <Image source={logo} className="h-[25.54] w-[175.88]" />

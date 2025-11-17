@@ -82,7 +82,10 @@
   },
   "welcome-page": {
     "header": "Comece agora!",
-    "description": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse."
+    "description": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.",
+    "tutorial-heading": "Bem-vindo ao Educado!\n",
+    "tutorial-body": "Aqui você verá todos os cursos em que está inscrito. Para descobrir novos cursos, acesse ",
+    "tutorial-body-bold": "“Explorar Cursos”"
   },
   "profile": {
     "edit-profile": "Editar perfil",
