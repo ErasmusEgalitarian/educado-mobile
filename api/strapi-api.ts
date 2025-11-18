@@ -3,13 +3,17 @@ import {
   courseGetCourses,
   postStudentLogin,
   postStudentSignup,
+  studentGetStudentsById,
 } from "@/api/backend/sdk.gen";
 import {
   CourseGetCoursesResponse,
   JwtResponse,
+  StudentGetStudentsByIdResponse,
+  Course as StrapiCourse,
 } from "@/api/backend/types.gen";
 import { mapToCourse, mapToLoginStudent } from "@/api/strapi-mappers";
 import { Course, LoginStudent } from "@/types";
+import { PopulatedCourse } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -98,4 +102,30 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
   }
 
   return response.data.map((course) => mapToCourse(course));
+};
+
+
+/**
+ * Gets the student info for a specific student.
+ */
+export const getAllStudentSubscriptionsStrapi = async (id: string) : Promise<Course[]> => {
+   const response = await studentGetStudentsById({
+    path: { id },
+    query: {
+      populate: [
+        "courses",
+      ],
+      status: "published", // Only get published courses
+    },
+  }) as StudentGetStudentsByIdResponse;
+
+  const courses = response.data?.courses || [];
+
+  if (courses.length === 0) { 
+    return [];
+  }
+
+  return courses
+    .filter((course): course is StrapiCourse | PopulatedCourse => course != null)
+    .map((course) => mapToCourse(course));
 };
