@@ -18,6 +18,7 @@ import {
 } from "@/api/legacy-api";
 import {
   getAllCoursesStrapi,
+  getAllStudentSubscriptionsStrapi,
   loginStudentStrapi,
   logoutStudentStrapi,
   signUpStudentStrapi,
@@ -135,7 +136,7 @@ export const useUnsubscribeFromCourse = () => {
 export const useSubscribedCourses = (id: string) =>
   useQuery({
     queryKey: queryKeys.subscriptions(id),
-    queryFn: () => getAllStudentSubscriptions(id),
+    queryFn: () => getAllStudentSubscriptionsStrapi(id),
   });
 
 /**
