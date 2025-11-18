@@ -1,8 +1,7 @@
 import { client } from "@/api/backend/client.gen";
-import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AUTH_TOKEN_KEY = "auth_token";
+const AUTH_TOKEN_KEY = "@authToken";
 
 /**
  * Gets the auth token from AsyncStorage.
@@ -33,7 +32,7 @@ export const getBaseApiUrl = (): string => {
  * Configures the API client with base URL and authentication token from environment variables.
  * @throws {Error} When STRAPI_TOKEN is not set in environment variables
  */
-export const configureApiClient = async () => {
+export const configureApiClient = () => {
   const baseUrl = getBaseApiUrl();
 
   // Configure the client with base URL and authorization header
@@ -72,7 +71,7 @@ export const configureApiClient = async () => {
           `Response 📥 ${response.url} [${status}] - Auth failed`,
         );
       }
-      // Note: Error will propagate and components can handle logout if needed
+      // TODO: Request new token from backend
     }
 
     return response;
@@ -81,25 +80,4 @@ export const configureApiClient = async () => {
   console.log("API Client configured:", {
     baseUrl,
   });
-};
-
-/**
- * Generates headers for API requests, including Authorization if token is set.
- * Used when making fetch calls outside the generated API client.
- * @returns {Record<string, string>} Headers object for fetch requests
- */
-export const fetchHeaders = (): Record<string, string> => {
-  const apiToken = Constants.expoConfig?.extra?.STRAPI_TOKEN as
-    | string
-    | undefined;
-
-  const headers: Record<string, string> = {
-    Accept: "application/json",
-  };
-
-  if (apiToken !== undefined && apiToken !== "") {
-    headers.Authorization = `Bearer ${apiToken}`;
-  }
-
-  return headers;
 };
