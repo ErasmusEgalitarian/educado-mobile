@@ -18,12 +18,13 @@ import { RecordingButton } from "@/components/Ai/RecordingButton";
 import FeedbackButtons from "@/components/Ai/FeedbackButtons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Markdown from "react-native-markdown-display";
-import { Audio } from "expo-av";
+import { useAudioPlayer, AudioPlayer, AudioStatus } from "expo-audio";
 import * as FileSystem from "expo-file-system";
 import { sendMessageToChatbot, getCourses } from "@/api/api";
 import { AudioResponse, ChatMessage } from "@/types/ai";
 import { Course } from "@/types/course";
 import { t } from "@/i18n";
+import { colors } from "@/theme/colors";
 
 type PlayingIndex = number | null;
 
@@ -32,11 +33,11 @@ const EduScreen = () => {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<PlayingIndex>(null); // Tracks which audio is playing
-  const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null); // Stores the current Audio.Sound instance
   const [loading, setLoading] = useState(false);
   const [loadingDots, setLoadingDots] = useState("");
 
   const scrollViewRef = useRef<ScrollView | null>(null);
+  const player: AudioPlayer = useAudioPlayer();
 
   const handleAudioResponse = (audioResponse: AudioResponse) => {
     const trimmedUserResponse = audioResponse.message
@@ -78,7 +79,7 @@ const EduScreen = () => {
         ...previousChatMessages,
         {
           sender: "Chatbot",
-          text: chatbotResponse.message ?? chatbotResponse.aiResponse ?? "Ok.",
+          text: chatbotResponse.message || chatbotResponse.aiResponse || "Ok.",
           audio: chatbotResponse.audio,
         },
       ]);
@@ -103,16 +104,11 @@ const EduScreen = () => {
   const playAudio = async (base64Audio: string, index: number) => {
     try {
       if (currentlyPlaying === index) {
-        if (currentSound) {
+        if (player.playing) {
           console.log("Stopping current sound...");
-
-          await currentSound.unloadAsync();
-
-          setCurrentSound(null);
+          player.release();
         }
-
         setCurrentlyPlaying(null);
-
         return;
       }
 
@@ -120,48 +116,36 @@ const EduScreen = () => {
         ? base64Audio.split(",")[1]
         : base64Audio;
 
-      const filePath = `${FileSystem.cacheDirectory}chatbotResponse.mp3`;
+      const cacheDir = FileSystem.cacheDirectory;
+      if (!cacheDir) {
+        console.error("Error retrieving audio file");
+        return;
+      }
+
+      const filePath = `${cacheDir}chatbotResponse.mp3`;
 
       await FileSystem.writeAsStringAsync(filePath, audioData, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      if (currentSound) {
-        console.log("Stopping previous sound...");
-
-        await currentSound.unloadAsync();
+      if (player.playing) {
+        player.release();
       }
 
-      await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+      player.replace({ uri: filePath });
 
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: filePath },
-        { shouldPlay: true },
-      );
-
-      sound.setOnPlaybackStatusUpdate(async (status) => {
+      player.addListener("playbackStatusUpdate", (status: AudioStatus) => {
         if (!status.isLoaded) {
-          return;
-        }
-
-        if (status.didJustFinish) {
-          await sound.unloadAsync();
-
-          setCurrentSound(null);
+          player.release();
           setCurrentlyPlaying(null);
         }
       });
 
-      setCurrentSound(sound);
+      player.play();
       setCurrentlyPlaying(index);
     } catch (error) {
       console.error("Error playing or stopping audio:", error);
-
-      if (currentSound) {
-        await currentSound.unloadAsync();
-      }
-
-      setCurrentSound(null);
+      player.release();
       setCurrentlyPlaying(null);
     }
   };
@@ -181,7 +165,9 @@ const EduScreen = () => {
       );
     }, 500);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [loading]);
 
   const fetchCourses = async () => {
@@ -210,9 +196,7 @@ const EduScreen = () => {
 
   useEffect(() => {
     return () => {
-      if (currentSound) {
-        void currentSound.unloadAsync();
-      }
+      player.pause();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -220,13 +204,7 @@ const EduScreen = () => {
   return (
     <>
       <BaseScreen className="flex h-screen flex-col">
-        <View
-          className="border-b"
-          style={{
-            borderBottomWidth: 1,
-            borderBottomColor: "rgba(0, 0, 0, 0.2)",
-          }}
-        >
+        <View className="borderBottomWidth: 1, borderBottomColor: rgba(0, 0, 0, 0.2) border-b">
           <IconHeader
             title={"Edu"}
             description={`${t("edu-screen.header")}.`}
@@ -236,9 +214,9 @@ const EduScreen = () => {
           <ScrollView ref={scrollViewRef} className="flex-1 pr-2.5">
             {chatMessages.map((message, index) =>
               message.sender === "User" ? (
-                <View key={index} style={{ alignSelf: "flex-end" }}>
-                  <View className="mb-1 mt-2 max-w-[80%] flex-row rounded-t-3xl rounded-bl-3xl bg-bgprimary_custom p-2.5 pl-3">
-                    <Text className="text-projectLightGray">
+                <View key={index} className="alignSelf: flex-end">
+                  <View className="mb-1 mt-2 max-w-[80%] flex-row rounded-t-3xl rounded-bl-3xl bg-surfaceDefaultCyan p-2.5 pl-3">
+                    <Text className="text-textTitleGrayscale">
                       {message.text}
                     </Text>
                   </View>
@@ -246,11 +224,7 @@ const EduScreen = () => {
               ) : (
                 <View
                   key={index}
-                  style={{
-                    alignSelf: "flex-start",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
+                  className="alignSelf: flex-start flexDirection: row alignItems: center"
                 >
                   <View>
                     <View className="mb-1 max-w-[80%] flex-row rounded-t-3xl rounded-br-3xl p-2.5 pl-3">
@@ -274,9 +248,11 @@ const EduScreen = () => {
                       {message.audio && (
                         <View className="self-center pl-2">
                           <TouchableOpacity
-                            onPress={() =>
-                              void playAudio(message.audio!, index)
-                            }
+                            onPress={() => {
+                              if (message.audio) {
+                                void playAudio(message.audio, index);
+                              }
+                            }}
                             className=""
                           >
                             <MaterialCommunityIcons
@@ -298,13 +274,7 @@ const EduScreen = () => {
               ),
             )}
             {loading && (
-              <View
-                style={{
-                  alignSelf: "flex-start",
-                  padding: 10,
-                  marginBottom: 5,
-                }}
-              >
+              <View className="alignSelf: flex-start padding: 10 marginBottom: 5">
                 <MaterialCommunityIcons
                   name="robot-outline"
                   type="material-community"
@@ -315,7 +285,11 @@ const EduScreen = () => {
               </View>
             )}
           </ScrollView>
-          <View className="m-4 flex-row rounded-3xl border border-projectBlack p-1 pl-4">
+          <View
+            className="m-4 flex-row rounded-3xl border p-1 pl-4"
+            style={{ borderColor: colors.textTitleGrayscale }}
+            colors={[colors.bgPrimary]}
+          >
             <TextInput
               value={userMessage}
               onChangeText={setUserMessage}
