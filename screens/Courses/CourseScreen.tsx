@@ -84,7 +84,7 @@ const CourseScreen = () => {
             left: 100,
           }}
           tailSide="right"
-          tailPosition={10}
+          tailPosition={12}
           tooltipKey="Courses"
           uniCodeIcon="📚"
         >

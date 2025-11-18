@@ -1,6 +1,7 @@
 import { useEffect, useState, PropsWithChildren } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, ViewStyle, Text, Pressable, StyleSheet } from "react-native";
+import { Shadow } from "react-native-shadow-2";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
 
@@ -16,6 +17,12 @@ import { t } from "@/i18n";
 
 type TailSide = "top" | "bottom" | "left" | "right";
 
+const styles = StyleSheet.create({
+  tooltipContainer: {
+    borderRadius: 10,
+  },
+});
+
 interface TooltipProps {
   tooltipKey: string;
   uniCodeIcon: string;
@@ -26,13 +33,6 @@ interface TooltipProps {
   tailSide: TailSide;
   tailPosition: number;
 }
-
-const styles = StyleSheet.create({
-  shadow: {
-    backgroundColor: colors.surfaceSubtlePurple,
-    elevation: 4,
-  },
-});
 
 const Tooltip = ({
   children,
@@ -48,18 +48,19 @@ const Tooltip = ({
 
   useEffect(() => {
     const initializeTooltip = async () => {
-      try {
-        const shownTooltip = await AsyncStorage.getItem(storageKey);
-
-        if (!shownTooltip) {
           await AsyncStorage.setItem(storageKey, "true");
-          setTimeout(() => {
-            setIsVisible(true);
-          }, 0);
-        }
-      } catch (error) {
-        console.error("Error initializing tooltip:", error);
-      }
+       try {
+         const shownTooltip = await AsyncStorage.getItem(storageKey);
+
+         if (!shownTooltip) {
+           await AsyncStorage.setItem(storageKey, "true");
+           setTimeout(() => {
+      setIsVisible(true);
+           }, 0);
+         }
+       } catch (error) {
+         console.error("Error initializing tooltip:", error);
+       }
     };
 
     void initializeTooltip();
@@ -74,29 +75,36 @@ const Tooltip = ({
       className={`absolute z-40 overflow-visible ${tailFlexDirection(tailSide)}`}
       style={[position]}
     >
-      <View
-        className="w-80 flex-col rounded-lg bg-surfaceSubtlePurple p-3"
-        style={styles.shadow}
+      <Shadow
+        distance={3}
+        offset={[0, 1]}
       >
-        <View className="mb-3 flex-row">
-          <Text className="items-start">{uniCodeIcon}</Text>
-          <Text className="px-3 text-body-regular">{children}</Text>
-        </View>
-        <View className="flex-row justify-between">
-          <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
-            1/1
-          </Text>
-          <Pressable
-            onPress={() => {
-              setIsVisible(false);
-            }}
-          >
+        <View
+          className="w-80 flex-col bg-surfaceSubtlePurple p-3"
+          style={styles.tooltipContainer}
+        >
+          <View className="mb-3 flex-row">
+            <Text className="items-start">{uniCodeIcon}</Text>
+            <Text className="px-3 text-body-regular">{children}</Text>
+          </View>
+
+          <View className="flex-row justify-between">
             <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
-              {t("general.close")}
+              1/1
             </Text>
-          </Pressable>
+            <Pressable
+              onPress={() => {
+                setIsVisible(false);
+              }}
+            >
+              <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
+                {t("general.close")}
+              </Text>
+            </Pressable>
+          </View>
+
         </View>
-      </View>
+      </Shadow>
       <View style={tail(tailSide, tailPosition)} />
     </View>
   );
@@ -108,9 +116,9 @@ const tail = (side: TailSide, position: number): ViewStyle => {
     height: 0,
     backgroundColor: "transparent",
     borderStyle: "solid",
-    borderLeftWidth: 8,
-    borderRightWidth: 8,
-    borderBottomWidth: 8,
+    borderLeftWidth: 9,
+    borderRightWidth: 9,
+    borderBottomWidth: 9,
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
     borderBottomColor: colors.surfaceSubtlePurple,
