@@ -1,15 +1,18 @@
 import { client } from "@/api/backend/client.gen";
 import {
   courseGetCourses,
+  courseGetCoursesById,
   postStudentLogin,
   postStudentSignup,
 } from "@/api/backend/sdk.gen";
 import {
+  CourseGetCoursesByIdResponse,
   CourseGetCoursesResponse,
   JwtResponse,
 } from "@/api/backend/types.gen";
 import { mapToCourse, mapToLoginStudent } from "@/api/strapi-mappers";
 import { Course, LoginStudent } from "@/types";
+import { PopulatedCourse } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -69,7 +72,7 @@ export const logoutStudentStrapi = () => {
  * @throws Error if the request fails
  */
 export const getAllCoursesStrapi = async (): Promise<Course[]> => {
-  const response = await courseGetCourses({
+  const response = (await courseGetCourses({
     query: {
       fields: [
         "title",
@@ -91,11 +94,40 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
       ],
       status: "published", // Only get published courses
     },
-  }) as CourseGetCoursesResponse;
+  })) as CourseGetCoursesResponse;
 
   if (!response.data || response.data.length === 0) {
     return [];
   }
 
   return response.data.map((course) => mapToCourse(course));
+};
+
+export const getCourseByIdStrapi = async (courseId: string) => {
+  const response = (await courseGetCoursesById({
+    path: { id: courseId },
+    query: {
+      fields: [
+        "title",
+        "description",
+        "difficulty",
+        "numOfRatings",
+        "numOfSubscriptions",
+        "createdAt",
+        "updatedAt",
+        "publishedAt",
+      ],
+      // Use "*" to populate all relations with their full data including nested fields
+      populate: [
+        "course_categories",
+        "content_creators",
+        "image",
+        "feedbacks",
+        "course_sections",
+        "students",
+      ],
+    },
+  })) as CourseGetCoursesByIdResponse;
+
+  return mapToCourse(response.data as PopulatedCourse);
 };
