@@ -94,6 +94,11 @@
     "certificates": "Certificados",
     "leaderboard": "Tabela de classificação",
     "change-password-success": "Senha alterada com sucesso",
-    "tooltip": "Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades."
+    "tooltip": "Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.",
+    "level_message": "Faltam apenas {{points}} pts. para você mudar de nível, continue estudando para chegar lá",
+    "level": "Nível",
+    "position": "posição",
+    "points": "pontos",
+    "day_streak": "dia seguido"
   }
 }

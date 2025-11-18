@@ -11,7 +11,6 @@ import CourseCard from "@/components/Courses/CourseCard/CourseCard";
 import IconHeader from "@/components/General/IconHeader";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import Tooltip from "@/components/Onboarding/Tooltip";
-import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
 import { t } from "@/i18n";
 import { BaseScreen } from "@/components/General/BaseScreen";
 import {
@@ -22,6 +21,7 @@ import {
 import logo from "@/assets/images/logo.png";
 import noCourses from "@/assets/images/no-courses.png";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LevelProgress } from "@/components/Profile/LevelProgress";
 
 const CourseScreen = () => {
   const navigation = useNavigation();
@@ -46,24 +46,28 @@ const CourseScreen = () => {
   const studentPoints = studentQuery.data?.points ?? 0;
   const refreshing = studentQuery.isFetching || subscriptionsQuery.isFetching;
 
+  const levelProgressPercentage = studentPoints % 100;
+  const pointsToNextLevel = 100 - levelProgressPercentage;
+
   return courses.length > 0 ? (
     <SafeAreaView className="h-full">
       <IconHeader
         title={t("course.welcome-title")}
         description={t("course.welcome-description")}
       />
-
-      {/* Render stats box with level and progress bar only */}
-      <View className="px-5">
-        <ProfileStatsBox
-          level={studentLevel || 0}
-          points={studentPoints || 0}
-          studyStreak={0}
-          leaderboardPosition={0}
-          drawProgressBarOnly={true}
-        />
+      <View className="p-7">
+        <View className="rounded-xl border border-borderDefaultGrayscale p-4">
+          <LevelProgress
+            levelProgressPercentage={levelProgressPercentage}
+            level={studentLevel}
+          />
+          <View className="flex flex-row flex-wrap items-center">
+            <Text className="text-textLabelCyan text-caption-sm-regular">
+              {t("profile.level_message", { points: pointsToNextLevel })} {"🥳"}
+            </Text>
+          </View>
+        </View>
       </View>
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={

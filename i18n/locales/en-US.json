@@ -94,6 +94,11 @@
     "certificates": "Certificates",
     "leaderboard": "Leaderboard",
     "change-password-success": "Password changed successfully",
-    "tooltip": "You are on your profile page, where you can access your information, view certificates, and perform other activities."
+    "tooltip": "You are on your profile page, where you can access your information, view certificates, and perform other activities.",
+    "level_message": "Only {{points}} pts. left for you to level up, keep studying to get there",
+    "level": "Level",
+    "position": "position",
+    "points": "points",
+    "day_streak": "day streak"
   }
 }
