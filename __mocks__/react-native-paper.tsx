@@ -20,6 +20,3 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     <View testID={testID} accessibilityValue={{ now: progress }} {...props} />
   );
 };
-
-// Default export in case code imports default
-export default { ProgressBar };
