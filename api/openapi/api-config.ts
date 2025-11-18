@@ -1,36 +1,27 @@
 import { client } from "@/api/backend/client.gen";
 import Constants from "expo-constants";
-import { queryKeys } from "@/hooks/query";
-import type { LoginStudent } from "@/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Store reference to queryClient - will be set by QueryProvider
-let queryClientRef: { getQueryData: <T>(key: unknown[]) => T | undefined } | null =
-  null;
+const AUTH_TOKEN_KEY = "auth_token";
 
 /**
- * Sets the query client reference so the interceptor can access cached login data.
- * @param queryClient - The TanStack Query client instance
+ * Gets the auth token from AsyncStorage.
+ * @returns The access token if available, null otherwise
  */
-export const setQueryClientRef = (queryClient: {
-  getQueryData: <T>(key: unknown[]) => T | undefined;
-}) => {
-  queryClientRef = queryClient;
+const getAuthToken = async (): Promise<string | null> => {
+  return await AsyncStorage.getItem(AUTH_TOKEN_KEY);
 };
 
 /**
- * Gets the auth token from the TanStack Query cache.
- * @returns The access token if available, null otherwise
+ * Sets the auth token in AsyncStorage.
+ * @param token - The token to store, or null to remove it
  */
-const getAuthToken = (): string | null => {
-  if (!queryClientRef) {
-    return null;
+export const setAuthToken = async (token: string | null): Promise<void> => {
+  if (token) {
+    await AsyncStorage.setItem(AUTH_TOKEN_KEY, token);
+  } else {
+    await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
   }
-
-  const loginStudent = queryClientRef.getQueryData<LoginStudent>([
-    ...queryKeys.loginStudent,
-  ]);
-
-  return loginStudent?.accessToken ?? null;
 };
 
 export const getBaseApiUrl = (): string => {
@@ -42,7 +33,7 @@ export const getBaseApiUrl = (): string => {
  * Configures the API client with base URL and authentication token from environment variables.
  * @throws {Error} When STRAPI_TOKEN is not set in environment variables
  */
-export const configureApiClient = () => {
+export const configureApiClient = async () => {
   const baseUrl = getBaseApiUrl();
 
   // Configure the client with base URL and authorization header
@@ -52,9 +43,9 @@ export const configureApiClient = () => {
   });
 
   // Request interceptor to add auth token and logging
-  client.interceptors.request.use((request) => {
-    // Get token from query cache
-    const token = getAuthToken();
+  client.interceptors.request.use(async (request) => {
+    // Get token from AsyncStorage
+    const token = await getAuthToken();
 
     // Add Authorization header if token is available
     if (token) {
@@ -76,8 +67,9 @@ export const configureApiClient = () => {
     // Handle 401/403 errors - token might be invalid
     if (response.status === 401 || response.status === 403) {
       if (__DEV__) {
+        const status = String(response.status);
         console.log(
-          `Response 📥 ${response.url} [${response.status}] - Auth failed`,
+          `Response 📥 ${response.url} [${status}] - Auth failed`,
         );
       }
       // Note: Error will propagate and components can handle logout if needed

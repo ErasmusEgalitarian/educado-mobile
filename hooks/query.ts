@@ -1,11 +1,8 @@
-import { client } from "@/api/backend/client.gen";
-import { JwtResponse } from "@/api/backend/types.gen";
 import {
   addCourseToStudent,
   completeComponent,
   deleteUser,
   getAllComponentsBySectionId,
-  getAllCourses,
   getAllFeedbackOptions,
   getAllSectionsByCourseId,
   getAllStudentSubscriptions,
@@ -25,6 +22,7 @@ import {
   logoutStudentStrapi,
   signUpStudentStrapi,
 } from "@/api/strapi-api";
+import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
 import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
 import {
@@ -317,7 +315,10 @@ export const useLoginStrapi = () => {
       );
     },
     onSuccess: async (data) => {
-      // Store in TanStack Query cache (interceptor will automatically add token to requests)
+      // Store token in AsyncStorage for HTTP interceptor
+      await setAuthToken(data.accessToken);
+
+      // Store full login data in TanStack Query cache for UI
       queryClient.setQueryData(queryKeys.loginStudent, data);
 
       // Invalidate student queries to refetch with new data
@@ -344,7 +345,10 @@ export const useSignUpStrapi = () => {
     mutationFn: (variables) =>
       signUpStudentStrapi(variables.name, variables.email, variables.password),
     onSuccess: async (data) => {
-      // Store in TanStack Query cache (interceptor will automatically add token to requests)
+      // Store token in AsyncStorage for HTTP interceptor
+      await setAuthToken(data.accessToken);
+
+      // Store full login data in TanStack Query cache for UI
       queryClient.setQueryData(queryKeys.loginStudent, data);
 
       // Invalidate student queries to refetch with new data
@@ -357,15 +361,17 @@ export const useSignUpStrapi = () => {
 
 /**
  * Log out a user by clearing the authorization header and cache.
- * Even though the logout function is not async we do it this way to stay consistent
  */
 export const useLogoutStrapi = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: logoutStudentStrapi,
-    onSuccess: () => {
-      // Clear login data from cache so interceptor stops adding token
+    onSuccess: async () => {
+      // Clear token from AsyncStorage so interceptor stops adding it
+      await setAuthToken(null);
+
+      // Clear login data from query cache
       queryClient.removeQueries({ queryKey: queryKeys.loginStudent });
     },
   });
