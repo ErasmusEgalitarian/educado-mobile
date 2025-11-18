@@ -48,18 +48,18 @@ const Tooltip = ({
 
   useEffect(() => {
     const initializeTooltip = async () => {
-       try {
-         const shownTooltip = await AsyncStorage.getItem(storageKey);
+      try {
+        const shownTooltip = await AsyncStorage.getItem(storageKey);
 
-         if (!shownTooltip) {
-           await AsyncStorage.setItem(storageKey, "true");
-           setTimeout(() => {
-      setIsVisible(true);
-           }, 0);
-         }
-       } catch (error) {
-         console.error("Error initializing tooltip:", error);
-       }
+        if (!shownTooltip) {
+          await AsyncStorage.setItem(storageKey, "true");
+          setTimeout(() => {
+            setIsVisible(true);
+          }, 0);
+        }
+      } catch (error) {
+        console.error("Error initializing tooltip:", error);
+      }
     };
 
     void initializeTooltip();
@@ -74,10 +74,7 @@ const Tooltip = ({
       className={`absolute z-40 overflow-visible ${tailFlexDirection(tailSide)}`}
       style={[position]}
     >
-      <Shadow
-        distance={3}
-        offset={[0, 1]}
-      >
+      <Shadow distance={3} offset={[0, 1]}>
         <View
           className="w-80 flex-col bg-surfaceSubtlePurple p-3"
           style={styles.tooltipContainer}
@@ -101,7 +98,6 @@ const Tooltip = ({
               </Text>
             </Pressable>
           </View>
-
         </View>
       </Shadow>
       <View style={tail(tailSide, tailPosition)} />
