@@ -34,18 +34,6 @@ import {
   Montserrat_800ExtraBold,
 } from "@expo-google-fonts/montserrat";
 
-import {
-  useFonts,
-  Montserrat_400Regular,
-  Montserrat_400Regular_Italic,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold,
-  Montserrat_600SemiBold_Italic,
-  Montserrat_700Bold,
-  Montserrat_700Bold_Italic,
-  Montserrat_800ExtraBold,
-} from "@expo-google-fonts/montserrat";
-
 const Stack = createNativeStackNavigator();
 
 const LeaderboardStack = () => (
