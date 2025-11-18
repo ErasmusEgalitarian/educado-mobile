@@ -309,10 +309,7 @@ export const useLoginStrapi = () => {
     { email: string; password: string }
   >({
     mutationFn: async (variables) => {
-      return await loginStudentStrapi(
-        variables.email,
-        variables.password,
-      );
+      return await loginStudentStrapi(variables.email, variables.password);
     },
     onSuccess: async (data) => {
       // Store token in AsyncStorage for HTTP interceptor

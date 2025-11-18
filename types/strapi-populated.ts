@@ -91,7 +91,15 @@ export interface PopulatedLecture {
 /**
  * Course with all relations populated
  */
-export interface PopulatedCourse extends Omit<Course, "course_categories" | "content_creators" | "feedbacks" | "course_sections" | "students"> {
+export interface PopulatedCourse
+  extends Omit<
+    Course,
+    | "course_categories"
+    | "content_creators"
+    | "feedbacks"
+    | "course_sections"
+    | "students"
+  > {
   course_categories?: PopulatedCourseCategory[];
   content_creators?: PopulatedContentCreator[];
   feedbacks?: PopulatedFeedback[];
@@ -102,7 +110,8 @@ export interface PopulatedCourse extends Omit<Course, "course_categories" | "con
 /**
  * Course Selection (Section) with all relations populated
  */
-export interface PopulatedSection extends Omit<CourseSelection, "exercises" | "lectures" | "course"> {
+export interface PopulatedSection
+  extends Omit<CourseSelection, "exercises" | "lectures" | "course"> {
   exercises?: PopulatedExercise[];
   lectures?: PopulatedLecture[];
   course?: PopulatedCourse;
@@ -111,7 +120,11 @@ export interface PopulatedSection extends Omit<CourseSelection, "exercises" | "l
 /**
  * Student with all relations populated
  */
-export interface PopulatedStudent extends Omit<Student, "feedbacks" | "courses" | "certificates" | "user_logs"> {
+export interface PopulatedStudent
+  extends Omit<
+    Student,
+    "feedbacks" | "courses" | "certificates" | "user_logs"
+  > {
   feedbacks?: PopulatedFeedback[];
   courses?: PopulatedCourse[];
   certificates?: {
@@ -150,4 +163,3 @@ export interface PopulatedLoginResponse {
   };
   courses?: PopulatedCourse[];
 }
-

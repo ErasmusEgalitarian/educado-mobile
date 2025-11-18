@@ -30,7 +30,7 @@ const LoginForm = () => {
     setPasswordAlert("");
 
     try {
-     // await loginQuery.mutateAsync({ email, password });
+      // await loginQuery.mutateAsync({ email, password });
       await strapiloginQuery.mutateAsync({ email, password });
     } catch (error) {
       if (!isAxiosError(error)) {

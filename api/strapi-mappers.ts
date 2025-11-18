@@ -9,24 +9,35 @@ import { PopulatedCourse } from "@/types/strapi-populated";
  * @param courseStrapi - The Strapi course data
  * @returns A Course object
  */
-export const mapToCourse = (courseStrapi: StrapiCourse | PopulatedCourse): Course => {
-  const categories = "course_categories" in courseStrapi && Array.isArray(courseStrapi.course_categories)
-    ? courseStrapi.course_categories
-    : [];
-  const contentCreators = "content_creators" in courseStrapi && Array.isArray(courseStrapi.content_creators)
-    ? courseStrapi.content_creators
-    : [];
-  const feedbacks = "feedbacks" in courseStrapi && Array.isArray(courseStrapi.feedbacks)
-    ? courseStrapi.feedbacks
-    : [];
-  const sections = "course_sections" in courseStrapi && Array.isArray(courseStrapi.course_sections)
-    ? courseStrapi.course_sections
-    : [];
+export const mapToCourse = (
+  courseStrapi: StrapiCourse | PopulatedCourse,
+): Course => {
+  const categories =
+    "course_categories" in courseStrapi &&
+    Array.isArray(courseStrapi.course_categories)
+      ? courseStrapi.course_categories
+      : [];
+  const contentCreators =
+    "content_creators" in courseStrapi &&
+    Array.isArray(courseStrapi.content_creators)
+      ? courseStrapi.content_creators
+      : [];
+  const feedbacks =
+    "feedbacks" in courseStrapi && Array.isArray(courseStrapi.feedbacks)
+      ? courseStrapi.feedbacks
+      : [];
+  const sections =
+    "course_sections" in courseStrapi &&
+    Array.isArray(courseStrapi.course_sections)
+      ? courseStrapi.course_sections
+      : [];
 
   // Calculate rating from feedbacks
-  const rating = feedbacks.length > 0
-    ? feedbacks.reduce((acc, feedback) => acc + (feedback.rating ?? 0), 0) / feedbacks.length
-    : 0;
+  const rating =
+    feedbacks.length > 0
+      ? feedbacks.reduce((acc, feedback) => acc + (feedback.rating ?? 0), 0) /
+        feedbacks.length
+      : 0;
 
   // Get image URL if available
   const imageUrl = courseStrapi.image?.url ?? null;
@@ -37,7 +48,7 @@ export const mapToCourse = (courseStrapi: StrapiCourse | PopulatedCourse): Cours
     typeof categories[0] === "object" &&
     categories[0] !== null &&
     "name" in categories[0]
-      ? (categories[0] as { name?: string }).name ?? ""
+      ? ((categories[0] as { name?: string }).name ?? "")
       : "";
 
   return {
@@ -48,7 +59,8 @@ export const mapToCourse = (courseStrapi: StrapiCourse | PopulatedCourse): Cours
     category: categoryName,
     estimatedHours: 0, // TODO: Add to Strapi model (durationHours field exists but may need mapping)
     dateUpdated: courseStrapi.updatedAt,
-    creatorId: contentCreators.length > 0 ? contentCreators[0].documentId ?? "" : "",
+    creatorId:
+      contentCreators.length > 0 ? (contentCreators[0].documentId ?? "") : "",
     difficulty: courseStrapi.difficulty,
     published: !!courseStrapi.publishedAt,
     status: courseStrapi.publishedAt ? "published" : "draft",
@@ -57,9 +69,11 @@ export const mapToCourse = (courseStrapi: StrapiCourse | PopulatedCourse): Cours
       id: feedback.documentId ?? "",
       count: feedback.rating ?? 0,
     })),
-    topFeedbackOptions: feedbacks.length > 0
-      ? feedbacks.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))[0]?.feedbackText ?? ""
-      : "",
+    topFeedbackOptions:
+      feedbacks.length > 0
+        ? (feedbacks.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))[0]
+            ?.feedbackText ?? "")
+        : "",
     dateOfDownload: courseStrapi.createdAt,
     sections: sections.map((section) => section.documentId ?? ""),
   };
@@ -96,4 +110,3 @@ export const mapToLoginStudent = (jwtResponse: JwtResponse): LoginStudent => {
     },
   };
 };
-
