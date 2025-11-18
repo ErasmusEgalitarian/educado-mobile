@@ -48,7 +48,6 @@ const Tooltip = ({
 
   useEffect(() => {
     const initializeTooltip = async () => {
-          await AsyncStorage.setItem(storageKey, "true");
        try {
          const shownTooltip = await AsyncStorage.getItem(storageKey);
 
