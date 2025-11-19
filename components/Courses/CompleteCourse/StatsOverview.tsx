@@ -5,30 +5,24 @@ import {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { View, Dimensions, Image } from "react-native";
-import Text from "../../General/Text";
+import { View, Dimensions, Image, Text } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Easing } from "react-native-reanimated";
-import { getStudentInfo } from "../../../services/storage-service";
-import { findCompletedCourse } from "../../../services/utils";
-import PropTypes from "prop-types";
-import tailwindConfig from "@/tailwind.config";
+import { getStudentInfo } from "@/services/storage-service";
+import { findCompletedCourse } from "@/services/utils";
 
 /* Check the CompleteCourseSlider file in the screens folder for more info */
 
+/* todo!: If the react version of the project is updated to 19 or higher, remove use of forwardRef, as it is deprecated.
+*   instead pass ref as a prop
+*/
 const StatsOverview = forwardRef(({ courseObject }, ref) => {
-  StatsOverview.propTypes = {
-    courseObject: PropTypes.object.isRequired,
-  };
 
   const [percentage, setPercentage] = useState(0);
   const circleSize = Dimensions.get("window").height * 0.25;
-  const projectColors = tailwindConfig.theme.colors;
   const circularProgressRef = useRef(null);
 
-  StatsOverview.displayName = "StatsOverview";
-
-  async function getPercentage() {
+  const getPercentage = async ()=> {
     try {
       const completedCourse = findCompletedCourse(
         await getStudentInfo(),
@@ -68,7 +62,7 @@ const StatsOverview = forwardRef(({ courseObject }, ref) => {
   }));
 
   useEffect(() => {
-    getPercentage().then((percentage) => {
+    void getPercentage().then((percentage) => {
       setPercentage(percentage);
     });
   }, []);
