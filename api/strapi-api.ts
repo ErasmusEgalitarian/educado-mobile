@@ -109,23 +109,28 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
  * Gets the student info for a specific student.
  */
 export const getAllStudentSubscriptionsStrapi = async (id: string) : Promise<Course[]> => {
-   const response = await studentGetStudentsById({
-    path: { id },
-    query: {
-      populate: [
-        "courses",
-      ],
-      status: "published", // Only get published courses
-    },
-  }) as StudentGetStudentsByIdResponse;
+  try {
+    const response = await studentGetStudentsById({
+      path: { id },
+      query: {
+        populate: [
+          "courses",
+        ],
+      },
+    }) as StudentGetStudentsByIdResponse;
 
-  const courses = response.data?.courses || [];
+    const courses = response.data?.courses || [];
 
-  if (courses.length === 0) { 
-    return [];
+    if (courses.length === 0) { 
+      console.log("No courses found for student");
+      return [];
+    }
+
+    return courses
+      .filter((course): course is StrapiCourse | PopulatedCourse => course != null)
+      .map((course) => mapToCourse(course));
+  } catch (error) {
+    console.error("Error fetching student subscriptions:", error);
+    throw error;
   }
-
-  return courses
-    .filter((course): course is StrapiCourse | PopulatedCourse => course != null)
-    .map((course) => mapToCourse(course));
 };
