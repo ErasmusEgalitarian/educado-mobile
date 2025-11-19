@@ -3,13 +3,16 @@ import {
   courseGetCourses,
   postStudentLogin,
   postStudentSignup,
+  courseSelectionGetCourseSelections,
 } from "@/api/backend/sdk.gen";
 import {
   CourseGetCoursesResponse,
   JwtResponse,
+  CourseSelectionGetCourseSelectionsResponse,
 } from "@/api/backend/types.gen";
-import { mapToCourse, mapToLoginStudent } from "@/api/strapi-mappers";
-import { Course, LoginStudent } from "@/types";
+import { mapToCourse, mapToLoginStudent, mapToSection } from "@/api/strapi-mappers";
+import { Course, LoginStudent, Section } from "@/types";
+import { PopulatedSection } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -99,3 +102,23 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
 
   return response.data.map((course) => mapToCourse(course));
 };
+
+export const getAllSectionsByCourseIdStrapi = async (id: string): Promise<Section[]> => {
+  const response = await courseSelectionGetCourseSelections({
+    query: {
+      filters: {
+        "course[id][$eq]": id,
+      },
+      populate: "*",
+      status: "published",
+    },
+  }) as CourseSelectionGetCourseSelectionsResponse;
+
+  if (response.data == null) {
+      throw new Error('No sections found');
+  }
+
+  return response.data.map((section) => mapToSection(section as PopulatedSection));
+};
+
+
