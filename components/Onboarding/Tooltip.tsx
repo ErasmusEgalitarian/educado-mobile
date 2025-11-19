@@ -92,17 +92,17 @@ const Tooltip = ({
       >
         <Text style={styles.unicodeCharacter}>{uniCodeChar}</Text>
         <Text style={styles.tooltipText}>{text}</Text>
-        <Button
+        <Pressable
           onPress={() => setIsVisible(false)}
           style={styles.tooltipFooter}
         >
           <Text style={styles.tooltipFooterText}>fechar</Text>
-        </Button>
+        </Pressable>
         <Animated.View
           style={[styles.tooltipTail, tailStyles.tooltipTail, animatedStyle]}
         />
       </Animated.View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
