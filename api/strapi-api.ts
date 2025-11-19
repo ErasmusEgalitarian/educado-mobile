@@ -146,6 +146,13 @@ export const getAllSectionsByCourseIdStrapi = async (id: string): Promise<Sectio
     throw new Error('No sections found');
   }
 
+  console.log(
+    'All Data:',
+    JSON.stringify(response, null, 2)
+  );
+  
+  console.log("The first exercise: ", response.data[0].exercises);
+
   return response.data.map((section) => mapToSection(section as PopulatedSection));
 };
 
