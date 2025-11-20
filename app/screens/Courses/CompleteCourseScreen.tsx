@@ -1,11 +1,6 @@
 import { useRef, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  Alert,
-  Text,
-} from "react-native";
+import { View, TouchableOpacity, Alert, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import CompleteCourseSlider from "@/components/Courses/CompleteCourse/CompleteCourseSlider";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { giveFeedback } from "@/api/api";

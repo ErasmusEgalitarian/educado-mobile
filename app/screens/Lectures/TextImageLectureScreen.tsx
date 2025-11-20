@@ -5,10 +5,15 @@
 // Reason: bypass CI check for the specific file since it is not relevant to the upgrade.
 
 import { useEffect, useState } from "react";
-import { View, TouchableOpacity, Image, Dimensions } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import PropTypes from "prop-types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import Text from "@/components/General/Text";
 import * as StorageService from "@/services/storage-service";

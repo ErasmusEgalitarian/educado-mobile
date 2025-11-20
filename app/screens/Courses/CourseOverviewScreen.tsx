@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { SectionCard } from "@/components/Section/SectionCard";
-import { ScrollView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
@@ -125,7 +131,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
           });
 
           // @ts-expect-error The error will disappear when we migrate to Expo Router
-          navigation.navigate("Meus cursos");
+          navigation.navigate("HomeStack", { screen: "Meus cursos" });
         },
       },
     ]);
@@ -143,7 +149,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
         className="absolute left-5 top-28 z-10 pr-3"
         onPress={() => {
           // @ts-expect-error The error will disappear when we migrate to Expo Router
-          navigation.navigate("Meus cursos");
+          navigation.navigate("HomeStack", { screen: "Meus cursos" });
         }}
       >
         <MaterialCommunityIcons

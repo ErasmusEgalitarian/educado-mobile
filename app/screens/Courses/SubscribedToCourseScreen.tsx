@@ -4,7 +4,8 @@
 // the type errors if you edit this file.
 // Reason: bypass CI check for the specific file since it is not relevant to the upgrade.
 
-import { View, SafeAreaView } from "react-native";
+import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import Text from "@/components/General/Text";
 import PropTypes from "prop-types";

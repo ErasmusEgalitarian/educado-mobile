@@ -9,13 +9,14 @@
 import { useEffect, useState, useCallback } from "react";
 import {
   View,
-  SafeAreaView,
   Alert,
   Image,
   TouchableOpacity,
   TextInputProps,
+  Text,
+  TextInput,
 } from "react-native";
-import { Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ProfileNameCircle } from "@/components/Profile/ProfileNameCircle";
 import FormButton from "@/components/General/Forms/FormButton";
 import {
@@ -40,7 +41,6 @@ import ShowAlert from "@/components/General/ShowAlert";
 import errorSwitch from "@/components/General/error-switch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { TextInput } from "react-native";
 
 interface ProfileInputProps extends TextInputProps {
   label: string;
