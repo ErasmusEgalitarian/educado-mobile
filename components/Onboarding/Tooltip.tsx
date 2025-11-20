@@ -1,17 +1,4 @@
-// @ts-nocheck
-// NOTE: Temporarily disabling TypeScript checks for this file to bypass CI errors
-// that are unrelated to the current Expo upgrade. Remove this comment and fix
-// the type errors if you edit this file.
-// Reason: bypass CI check for the specific file since it is not relevant to the upgrade.
-
-import { useRef, useEffect, useState, useMemo } from "react";
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Animated,
-  Easing,
-} from "react-native";
+import { useEffect, useState, PropsWithChildren } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, ViewStyle, Text, Pressable, StyleSheet } from "react-native";
 import { Shadow } from "react-native-shadow-2";
@@ -87,32 +74,35 @@ export const Tooltip = ({
       className={`absolute z-40 overflow-visible ${tailFlexDirection(tailSide)}`}
       style={[position]}
     >
-      <Animated.View
-        style={[styles.tooltip, tailStyles.tooltip, animatedStyle]}
-      >
-        <Text style={styles.unicodeCharacter}>{uniCodeChar}</Text>
-        <Text style={styles.tooltipText}>{text}</Text>
-        <Pressable
-          onPress={() => setIsVisible(false)}
-          style={styles.tooltipFooter}
+      <Shadow distance={3} offset={[0, 1]}>
+        <View
+          className="w-80 flex-col bg-surfaceSubtlePurple p-3"
+          style={styles.tooltipContainer}
         >
-          <Text style={styles.tooltipFooterText}>fechar</Text>
-        </Pressable>
-        <Animated.View
-          style={[styles.tooltipTail, tailStyles.tooltipTail, animatedStyle]}
-        />
-      </Animated.View>
+          <View className="mb-3 flex-row">
+            <Text className="items-start">{uniCodeIcon}</Text>
+            <Text className="px-3 text-body-regular">{children}</Text>
+          </View>
+
+          <View className="flex-row justify-between">
+            <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
+              1/1
+            </Text>
+            <Pressable
+              onPress={() => {
+                setIsVisible(false);
+              }}
+            >
+              <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
+                {t("general.close")}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Shadow>
+      <View style={tail(tailSide, tailPosition)} />
     </View>
   );
-};
-
-Tooltip.propTypes = {
-  text: PropTypes.string.isRequired,
-  tailPosition: PropTypes.string,
-  tailSide: PropTypes.string,
-  position: PropTypes.object.isRequired,
-  uniqueKey: PropTypes.string.isRequired,
-  uniCodeChar: PropTypes.string.isRequired,
 };
 
 const tail = (side: TailSide, position: number): ViewStyle => {
