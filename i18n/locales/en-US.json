@@ -87,6 +87,10 @@
     "tutorial-body": "Here you will see all the courses you are enrolled in. To discover new courses, access ",
     "tutorial-body-bold": "“Explore Courses”"
   },
+  "explore-drawer": {
+    "tooltip": "Here you will find all the information about the course, such as its duration. To begin, simply click on register now ",
+    "tooltip-bold": "“Register Now”"
+  },
   "profile": {
     "edit-profile": "Edit profile",
     "change-password": "Change password",

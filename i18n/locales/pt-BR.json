@@ -87,6 +87,10 @@
     "tutorial-body": "Aqui você verá todos os cursos em que está inscrito. Para descobrir novos cursos, acesse ",
     "tutorial-body-bold": "“Explorar Cursos”"
   },
+  "explore-drawer": {
+    "tooltip": "Aqui você encontra todas as informações do curso, como a duração. Para começar, é só clicar \nem ",
+    "tooltip-bold": "“Inscreva-se agora”"
+  },
   "profile": {
     "edit-profile": "Editar perfil",
     "change-password": "Alterar senha",
