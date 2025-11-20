@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Components
-import { View, SafeAreaView } from "react-native";
+import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import PasswordField from "@/components/General/Forms/PasswordField";
 import FormButton from "@/components/General/Forms/FormButton";
 import ToastNotification from "@/components/General/ToastNotification";

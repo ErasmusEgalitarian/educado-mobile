@@ -5,7 +5,8 @@
 // Reason: bypass CI check for the specific file since it is not relevant to the upgrade.
 
 import { useEffect, useState } from "react";
-import { View, SafeAreaView, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BackButton from "@/components/General/BackButton";
 import Text from "@/components/General/Text";

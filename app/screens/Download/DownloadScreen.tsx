@@ -6,7 +6,8 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View, SafeAreaView } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Text from "@/components/General/Text";
 import * as StorageService from "@/services/storage-service";
 import BackButton from "@/components/General/BackButton";

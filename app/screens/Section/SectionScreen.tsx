@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { getNumberOfCompletedComponents } from "@/services/utils";
-import { ScrollView } from "react-native-gesture-handler";
 import { SectionCard } from "@/components/Section/SectionCard";
 import {
   Section,

@@ -1,4 +1,5 @@
-import { View, Image, SafeAreaView, Text } from "react-native";
+import { View, Image, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { BackgroundLinearGradient } from "@/constants/BackgroundLinearGradient";
 import WelcomeSlider from "@/components/Welcome/WelcomeSlider";
 import { useNavigation } from "@react-navigation/native";
