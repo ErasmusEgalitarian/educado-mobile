@@ -104,5 +104,10 @@
     "position": "posição",
     "points": "pontos",
     "day_streak": "dia seguido"
+  },
+  "explore-page": {
+    "tutorial-body-first": "Nessa página, você encontra todos os cursos disponíveis. Clique em ",
+    "tutorial-body-bold": "“Saiba mais” ",
+    "tutorial-body-second": "para ver os detalhes e se inscrever."
   }
 }
