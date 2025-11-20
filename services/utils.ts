@@ -518,3 +518,10 @@ export const resetOnboarding = async (uniqueKeys: string[]) => {
 };
 
 export const cn = (...inputs: ClassValue[]): string => clsx(...inputs);
+
+export const getRecommendedCourse = (courses: Course[]): Course => {
+  const ratingsList = courses.map((course) => course.rating);
+  const recommendedCourseId = ratingsList.indexOf(Math.max(...ratingsList));
+
+  return courses[recommendedCourseId];
+};

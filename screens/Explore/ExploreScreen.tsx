@@ -3,7 +3,7 @@ import { RefreshControl, ScrollView, View, Text } from "react-native";
 import { FilterNavigationBar } from "@/components/Explore/FilterNavigationBar";
 import { ExploreCard } from "@/components/Explore/ExploreCard";
 import IconHeader from "@/components/General/IconHeader";
-import { determineCategory } from "@/services/utils";
+import { determineCategory, getRecommendedCourse } from "@/services/utils";
 import { BaseScreen } from "@/components/General/BaseScreen";
 import { t } from "@/i18n";
 import {
@@ -101,9 +101,7 @@ const ExploreScreen = () => {
   }, [selectedCategory, searchText, courseQuery.data]);
 
   useEffect(() => {
-    const ratingsList = filteredCourses.map((course) => course.rating);
-    const recommendedCourseId = ratingsList.indexOf(Math.max(...ratingsList));
-    setRecommendedCourse(filteredCourses[recommendedCourseId]);
+    setRecommendedCourse(getRecommendedCourse(filteredCourses));
   }, [filteredCourses]);
 
   if (courseQuery.isLoading || subscriptionsQuery.isLoading) {
