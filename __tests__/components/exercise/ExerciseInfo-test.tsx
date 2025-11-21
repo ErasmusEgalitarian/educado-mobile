@@ -1,4 +1,4 @@
-import renderer from "react-test-renderer";
+import renderer, { act } from "react-test-renderer";
 import ExerciseInfo from "../../../components/Exercise/ExerciseInfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -20,7 +20,22 @@ let ExerciseInfoScreen;
 beforeEach(() => {
   navigated = false;
   AsyncStorage.clear();
-  ExerciseInfoScreen = renderer.create(<ExerciseInfo />);
+  // Provide required props so the component renders deterministically
+  act(() => {
+    ExerciseInfoScreen = renderer.create(
+      <ExerciseInfo courseTitle="My Course" sectionTitle="Section 1" />,
+    );
+  });
+});
+
+afterEach(() => {
+  try {
+    if (ExerciseInfoScreen && ExerciseInfoScreen.unmount) {
+      ExerciseInfoScreen.unmount();
+    }
+  } catch (e) {
+    // ignore
+  }
 });
 
 describe("ExerciseInfo", () => {
