@@ -100,5 +100,9 @@
     "position": "position",
     "points": "points",
     "day_streak": "day streak"
+  },
+  "section-page": {
+    "tutorial-body": "You can now view the section's schedule. To begin, access the first lesson. ",
+    "tutorial-body-bold": "Let's go?"
   }
 }
