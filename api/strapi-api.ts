@@ -73,7 +73,7 @@ export const logoutStudentStrapi = () => {
  * @throws Error if the request fails
  */
 export const getAllCoursesStrapi = async (): Promise<Course[]> => {
-  const response = await courseGetCourses({
+  const response = (await courseGetCourses({
     query: {
       fields: [
         "title",
@@ -95,7 +95,7 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
       ],
       status: "published", // Only get published courses
     },
-  }) as CourseGetCoursesResponse;
+  })) as CourseGetCoursesResponse;
 
   if (!response.data || response.data.length === 0) {
     return [];
@@ -104,30 +104,31 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
   return response.data.map((course) => mapToCourse(course));
 };
 
-
 /**
  * Gets the student info for a specific student.
  */
-export const getAllStudentSubscriptionsStrapi = async (id: string) : Promise<Course[]> => {
+export const getAllStudentSubscriptionsStrapi = async (
+  id: string,
+): Promise<Course[]> => {
   try {
-    const response = await studentGetStudentsById({
+    const response = (await studentGetStudentsById({
       path: { id },
       query: {
-        populate: [
-          "courses",
-        ],
+        populate: ["courses"],
       },
-    }) as StudentGetStudentsByIdResponse;
+    })) as StudentGetStudentsByIdResponse;
 
     const courses = response.data?.courses || [];
 
-    if (courses.length === 0) { 
+    if (courses.length === 0) {
       console.log("No courses found for student");
       return [];
     }
 
     return courses
-      .filter((course): course is StrapiCourse | PopulatedCourse => course != null)
+      .filter(
+        (course): course is StrapiCourse | PopulatedCourse => course != null,
+      )
       .map((course) => mapToCourse(course));
   } catch (error) {
     console.error("Error fetching student subscriptions:", error);
