@@ -109,7 +109,9 @@ export const getAllSectionsByCourseIdStrapi = async (id: string): Promise<Sectio
       filters: {
         "course[id][$eq]": id,
       },
-      populate: "*",
+      populate: [ "exercises", 
+                  "course", 
+                  "lectures" ],
       status: "published",
     },
   }) as CourseSelectionGetCourseSelectionsResponse;
@@ -117,13 +119,6 @@ export const getAllSectionsByCourseIdStrapi = async (id: string): Promise<Sectio
   if (response.data == null) {
       throw new Error('No sections found');
   }
-
-  console.log(
-    'All Data:',
-    JSON.stringify(response, null, 2)
-  );
-  
-  console.log("The first exercise: ", response.data[0].exercises);
 
   return response.data.map((section) => mapToSection(section as PopulatedSection));
 };
