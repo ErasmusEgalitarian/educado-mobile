@@ -12,7 +12,6 @@ import {
   CourseGetCoursesResponse,
   JwtResponse,
   StudentGetStudentsByIdResponse,
-  Course as StrapiCourse,
   CourseSelectionGetCourseSelectionsResponse,
 } from "@/api/backend/types.gen";
 import {
@@ -21,8 +20,7 @@ import {
   mapToSection,
 } from "@/api/strapi-mappers";
 import { Course, LoginStudent, Section } from "@/types";
-import { PopulatedCourse } from "@/types/strapi-populated";
-import { PopulatedSection } from "@/types/strapi-populated";
+import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -177,15 +175,11 @@ export const getAllStudentSubscriptionsStrapi = async (
     },
   })) as StudentGetStudentsByIdResponse;
 
-  const courses = response.data?.courses || [];
+  const courses = response.data?.courses ?? [];
 
   if (courses.length === 0) {
     return [];
   }
 
-  return courses
-    .filter(
-      (course): course is StrapiCourse | PopulatedCourse => course != null,
-    )
-    .map((course) => mapToCourse(course));
+  return courses.map((course) => mapToCourse(course as PopulatedCourse));
 };
