@@ -49,7 +49,6 @@ export const mapToCourse = (
   const categoryName =
     categories.length > 0 &&
     typeof categories[0] === "object" &&
-    categories[0] !== null &&
     "name" in categories[0]
       ? ((categories[0] as { name?: string }).name ?? "")
       : "";
@@ -98,7 +97,7 @@ export const mapToLoginStudent = (jwtResponse: JwtResponse): LoginStudent => {
   const { userInfo } = jwtResponse;
   const nameParts = (userInfo.name ?? "").split(" ");
   const firstName = nameParts[0] ?? "";
-  const lastName = nameParts.slice(1).join(" ") ?? "";
+  const lastName = nameParts.slice(1).join(" ");
 
   return {
     accessToken: jwtResponse.accessToken,
