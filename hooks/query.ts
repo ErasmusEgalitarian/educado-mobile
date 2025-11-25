@@ -4,8 +4,6 @@ import {
   deleteUser,
   getAllComponentsBySectionId,
   getAllFeedbackOptions,
-  getAllSectionsByCourseId,
-  getAllStudentSubscriptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
   getSectionById,
