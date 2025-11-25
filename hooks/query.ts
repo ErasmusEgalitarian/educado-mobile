@@ -18,9 +18,11 @@ import {
 import {
   getAllCoursesStrapi,
   getCourseByIdStrapi,
+  getAllStudentSubscriptionsStrapi,
   loginStudentStrapi,
   logoutStudentStrapi,
   signUpStudentStrapi,
+  getAllSectionsByCourseIdStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
@@ -135,7 +137,7 @@ export const useUnsubscribeFromCourse = () => {
 export const useSubscribedCourses = (id: string) =>
   useQuery({
     queryKey: queryKeys.subscriptions(id),
-    queryFn: () => getAllStudentSubscriptions(id),
+    queryFn: () => getAllStudentSubscriptionsStrapi(id),
   });
 
 /**
@@ -197,8 +199,8 @@ export const useSection = (id: string) =>
  */
 export const useSections = (id: string) =>
   useQuery({
-    queryKey: queryKeys.sections(id),
-    queryFn: () => getAllSectionsByCourseId(id),
+    queryKey: queryKeys.course(id),
+    queryFn: () => getAllSectionsByCourseIdStrapi(id),
     enabled: !!id,
   });
 
