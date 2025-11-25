@@ -1,6 +1,6 @@
 import { Course as StrapiCourse } from "@/api/backend/types.gen";
 import { JwtResponse } from "@/api/backend/types.gen";
-import { Course, LoginStudent, StudentCourse } from "@/types";
+import { Course, LoginStudent } from "@/types";
 import { PopulatedCourse } from "@/types/strapi-populated";
 
 /**

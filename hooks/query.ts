@@ -8,7 +8,6 @@ import {
   getAllStudentSubscriptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
-  getCourseById,
   getSectionById,
   getStudentById,
   loginUser,
@@ -18,6 +17,7 @@ import {
 } from "@/api/legacy-api";
 import {
   getAllCoursesStrapi,
+  getCourseByIdStrapi,
   loginStudentStrapi,
   logoutStudentStrapi,
   signUpStudentStrapi,
@@ -72,7 +72,7 @@ export const useCourses = () =>
 export const useCourse = (id: string) =>
   useQuery({
     queryKey: queryKeys.course(id),
-    queryFn: () => getCourseById(id),
+    queryFn: () => getCourseByIdStrapi(id),
     enabled: !!id,
   });
 
