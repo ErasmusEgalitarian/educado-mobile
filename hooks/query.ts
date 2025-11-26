@@ -5,7 +5,6 @@ import {
   getAllFeedbackOptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
-  getSectionById,
   loginUser,
   subscribeCourse,
   unsubscribeCourse,
@@ -179,16 +178,6 @@ export const useLoginStudent = () => {
     gcTime: Infinity,
   });
 };
-
-/**
- *
- * @param id - The section ID.
- */
-export const useSection = (id: string) =>
-  useQuery({
-    queryKey: queryKeys.section(id),
-    queryFn: () => getSectionById(id),
-  });
 
 /**
  * Get all sections for a course.
