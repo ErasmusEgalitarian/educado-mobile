@@ -21,7 +21,7 @@ import {
   logoutStudentStrapi,
   signUpStudentStrapi,
   getAllSectionsByCourseIdStrapi,
-  getAllComponentsBySectionIdStrapi
+  getAllComponentsBySectionIdStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";

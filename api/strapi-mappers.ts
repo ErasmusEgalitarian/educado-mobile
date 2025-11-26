@@ -1,9 +1,15 @@
 import {
   Course as StrapiCourse,
   CourseSelection as StrapiSection,
-  JwtResponse,
 } from "@/api/backend/types.gen";
-import { Course, LoginStudent, Section, Component } from "@/types";
+import { JwtResponse } from "@/api/backend/types.gen";
+import {
+  Course,
+  LoginStudent,
+  StudentCourse,
+  Section,
+  Component,
+} from "@/types";
 import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 
 /**

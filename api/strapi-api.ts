@@ -7,7 +7,7 @@ import {
   studentGetStudentsById,
   courseSelectionGetCourseSelections,
   lectureGetLecturesById,
-  lectureGetLectures
+  lectureGetLectures,
 } from "@/api/backend/sdk.gen";
 import {
   CourseGetCoursesByIdResponse,
@@ -15,11 +15,14 @@ import {
   JwtResponse,
   StudentGetStudentsByIdResponse,
   CourseSelectionGetCourseSelectionsResponse,
-  LectureGetLecturesResponse
-  
+  LectureGetLecturesResponse,
 } from "@/api/backend/types.gen";
-import { mapToCourse, mapToLoginStudent, mapToSection } from "@/api/strapi-mappers";
-import { Course, LoginStudent, Section, Lecture} from "@/types";
+import {
+  mapToCourse,
+  mapToLoginStudent,
+  mapToSection,
+} from "@/api/strapi-mappers";
+import { Course, LoginStudent, Section, Lecture } from "@/types";
 import { PopulatedSection, PopulatedLecture } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
@@ -147,11 +150,7 @@ export const getAllSectionsByCourseIdStrapi = async (
       filters: {
         "course[id][$eq]": id,
       },
-      populate: [ 
-        "exercises", 
-        "course", 
-        "lectures" 
-      ],
+      populate: ["exercises", "course", "lectures"],
       status: "published",
     },
   })) as CourseSelectionGetCourseSelectionsResponse;
@@ -188,24 +187,24 @@ export const getAllStudentSubscriptionsStrapi = async (
   return courses.map((course) => mapToCourse(course as PopulatedCourse));
 };
 
-export const getAllComponentsBySectionIdStrapi = async (id: string): Promise<Section[]> => {
-  const response = await courseSelectionGetCourseSelections({
+export const getAllComponentsBySectionIdStrapi = async (
+  id: string,
+): Promise<Section[]> => {
+  const response = (await courseSelectionGetCourseSelections({
     query: {
       filters: {
         "id[$eq]": id,
       },
-      populate: [ 
-        "exercises", 
-        "course", 
-        "lectures" 
-      ],
+      populate: ["exercises", "course", "lectures"],
       status: "published",
     },
-  }) as CourseSelectionGetCourseSelectionsResponse;
+  })) as CourseSelectionGetCourseSelectionsResponse;
 
   if (response.data == null) {
-      throw new Error('No section found');
+    throw new Error("No section found");
   }
 
-  return response.data.map((section) => mapToSection(section as PopulatedSection));
+  return response.data.map((section) =>
+    mapToSection(section as PopulatedSection),
+  );
 };
