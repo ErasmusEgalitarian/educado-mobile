@@ -4,12 +4,9 @@ import {
   deleteUser,
   getAllComponentsBySectionId,
   getAllFeedbackOptions,
-  getAllSectionsByCourseId,
   getBucketImageByFilename,
   getBucketVideoByFilename,
-  getCourseById,
   getSectionById,
-  getStudentById,
   loginUser,
   subscribeCourse,
   unsubscribeCourse,
@@ -17,10 +14,13 @@ import {
 } from "@/api/legacy-api";
 import {
   getAllCoursesStrapi,
+  getCourseByIdStrapi,
   getAllStudentSubscriptionsStrapi,
   loginStudentStrapi,
   logoutStudentStrapi,
   signUpStudentStrapi,
+  getAllSectionsByCourseIdStrapi,
+  getStudentByIdStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
@@ -72,7 +72,7 @@ export const useCourses = () =>
 export const useCourse = (id: string) =>
   useQuery({
     queryKey: queryKeys.course(id),
-    queryFn: () => getCourseById(id),
+    queryFn: () => getCourseByIdStrapi(id),
     enabled: !!id,
   });
 
@@ -147,7 +147,7 @@ export const useStudent = (id: string) =>
   useQuery({
     queryKey: queryKeys.student(id),
     queryFn: async () => {
-      const student = await getStudentById(id);
+      const student = await getStudentByIdStrapi(id);
 
       if (student.profilePhoto) {
         try {
@@ -197,8 +197,8 @@ export const useSection = (id: string) =>
  */
 export const useSections = (id: string) =>
   useQuery({
-    queryKey: queryKeys.sections(id),
-    queryFn: () => getAllSectionsByCourseId(id),
+    queryKey: queryKeys.course(id),
+    queryFn: () => getAllSectionsByCourseIdStrapi(id),
     enabled: !!id,
   });
 

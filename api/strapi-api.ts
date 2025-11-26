@@ -1,18 +1,27 @@
 import { client } from "@/api/backend/client.gen";
 import {
   courseGetCourses,
+  courseGetCoursesById,
   postStudentLogin,
   postStudentSignup,
   studentGetStudentsById,
+  courseSelectionGetCourseSelections,
 } from "@/api/backend/sdk.gen";
 import {
+  CourseGetCoursesByIdResponse,
   CourseGetCoursesResponse,
   JwtResponse,
   StudentGetStudentsByIdResponse,
+  CourseSelectionGetCourseSelectionsResponse,
 } from "@/api/backend/types.gen";
-import { mapToCourse, mapToLoginStudent } from "@/api/strapi-mappers";
-import { Course, LoginStudent } from "@/types";
-import { PopulatedCourse } from "@/types/strapi-populated";
+import {
+  mapToCourse,
+  mapToLoginStudent,
+  mapToSection,
+  mapToStudent,
+} from "@/api/strapi-mappers";
+import { Course, LoginStudent, Section, Student } from "@/types";
+import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -133,4 +142,82 @@ export const getAllStudentSubscriptionsStrapi = async (
     console.error("Error fetching student subscriptions:", error);
     throw error;
   }
+};
+
+export const getCourseByIdStrapi = async (courseId: string) => {
+  const response = (await courseGetCoursesById({
+    path: { id: courseId },
+    query: {
+      fields: [
+        "title",
+        "description",
+        "difficulty",
+        "numOfRatings",
+        "numOfSubscriptions",
+        "createdAt",
+        "updatedAt",
+        "publishedAt",
+      ],
+      // Use "*" to populate all relations with their full data including nested fields
+      populate: [
+        "course_categories",
+        "content_creators",
+        "image",
+        "feedbacks",
+        "course_sections",
+        "students",
+      ],
+    },
+  })) as CourseGetCoursesByIdResponse;
+
+  return mapToCourse(response.data as PopulatedCourse);
+};
+
+export const getAllSectionsByCourseIdStrapi = async (
+  id: string,
+): Promise<Section[]> => {
+  const response = (await courseSelectionGetCourseSelections({
+    query: {
+      filters: {
+        "course[id][$eq]": id,
+      },
+      populate: ["exercises", "course", "lectures"],
+      status: "published",
+    },
+  })) as CourseSelectionGetCourseSelectionsResponse;
+
+  if (response.data == null) {
+    throw new Error("No sections found");
+  }
+
+  return response.data.map((section) =>
+    mapToSection(section as PopulatedSection),
+  );
+};
+
+/**
+ * Gets the student info for a specific student.
+ */
+export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
+  const response = (await studentGetStudentsById({
+    path: { id },
+    query: {
+      populate: [
+        "courses",
+        /*
+          This is probably not needed right now
+        "feedbacks",
+        "certificates",
+        "user_logs",
+        */
+      ],
+      status: "published", // Only get published students
+    },
+  })) as StudentGetStudentsByIdResponse;
+
+  if (!response.data) {
+    throw new Error("Student not found");
+  }
+
+  return mapToStudent(response.data);
 };

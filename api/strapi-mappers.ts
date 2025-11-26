@@ -1,6 +1,15 @@
-import { JwtResponse, Course as StrapiCourse } from "@/api/backend/types.gen";
-import { Course, LoginStudent } from "@/types";
-import { PopulatedCourse } from "@/types/strapi-populated";
+import {
+  JwtResponse,
+  Course as StrapiCourse,
+  CourseSelection as StrapiSection,
+  Student as StrapiStudent,
+} from "@/api/backend/types.gen";
+import { Course, LoginStudent, Section, Component, Student } from "@/types";
+import {
+  PopulatedCourse,
+  PopulatedSection,
+  PopulatedStudent,
+} from "@/types/strapi-populated";
 
 /**
  * Maps a Strapi Course to the app Course type.
@@ -11,9 +20,11 @@ import { PopulatedCourse } from "@/types/strapi-populated";
 export const mapToCourse = (
   courseStrapi: StrapiCourse | PopulatedCourse,
 ): Course => {
-  const categories = Array.isArray(courseStrapi.course_categories)
-    ? courseStrapi.course_categories
-    : [];
+  const categories =
+    "course_categories" in courseStrapi &&
+    Array.isArray(courseStrapi.course_categories)
+      ? courseStrapi.course_categories
+      : [];
   const contentCreators =
     "content_creators" in courseStrapi &&
     Array.isArray(courseStrapi.content_creators)
@@ -41,7 +52,9 @@ export const mapToCourse = (
 
   // Get category name
   const categoryName =
-    categories.length > 0 && "name" in categories[0]
+    categories.length > 0 &&
+    typeof categories[0] === "object" &&
+    "name" in categories[0]
       ? ((categories[0] as { name?: string }).name ?? "")
       : "";
 
@@ -102,5 +115,76 @@ export const mapToLoginStudent = (jwtResponse: JwtResponse): LoginStudent => {
       points: 0, // TODO: Add points to Strapi model or fetch from student data
       role: "user" as const, // TODO: Add role to Strapi model
     },
+  };
+};
+
+/**
+ * Maps a Strapi Course to the app Course type.
+ *
+ * @param courseStrapi - The Strapi course data
+ * @returns A Course object
+ */
+export const mapToSection = (
+  courseSectionStrapi: StrapiSection | PopulatedSection,
+): Section => {
+  const exercises = courseSectionStrapi.exercises ?? [];
+  const lectures = courseSectionStrapi.lectures ?? [];
+  const course = courseSectionStrapi.course;
+
+  // Combine exercises and lectures into components
+  const components: Component[] = [
+    ...exercises.map((exercise) => ({
+      compId: exercise.documentId?.toString() ?? "",
+      compType: "exercise" as const,
+    })),
+    ...lectures.map((lecture) => ({
+      compId: lecture.documentId?.toString() ?? "",
+      compType: "lecture" as const,
+    })),
+  ];
+
+  return {
+    sectionId: courseSectionStrapi.documentId?.toString() ?? "",
+    // TODO: parentCourseId not exist in Strapi model, but i guess it is the course relation
+    parentCourseId: course?.documentId?.toString() ?? "",
+    title: courseSectionStrapi.title,
+    description: courseSectionStrapi.description ?? "",
+    total: 177, // TODO: Strapi model does not have points currently"
+    components: components,
+  };
+};
+
+/**
+ * Maps a Strapi Student to the app Student type.
+ *
+ * @param studentStrapi - The Strapi student data
+ * @returns A Student object
+ */
+export const mapToStudent = (
+  studentStrapi: StrapiStudent | PopulatedStudent,
+): Student => {
+  const courses =
+    "courses" in studentStrapi && Array.isArray(studentStrapi.courses)
+      ? studentStrapi.courses
+      : [];
+
+  return {
+    id: studentStrapi.documentId ?? "",
+    points: 123, // TODO: Add points field to Strapi Student model
+    currentExtraPoints: 123, // TODO: Add currentExtraPoints field to Strapi Student model
+    level: 123, // TODO: Add level field to Strapi Student model
+    studyStreak: 123, // TODO: Might need to calculate from user_log
+    lastStudyDate: new Date(), // TODO: Add lastStudyDate field to Strapi Student model
+    subscriptions: courses.map((course) => course.documentId ?? ""), // Using course IDs as subscriptions
+    profilePhoto: "", // TODO: Add profilePhoto field to Strapi Student model
+    photo: null,
+    courses: courses.map((course) => ({
+      courseId: course.documentId ?? "",
+      totalPoints: 123321, // TODO: Calculate from course data
+      isComplete: false, // TODO: Determine completion status
+      sections: [], // TODO: Fetch and map course sections
+      completionDate: new Date(),
+    })),
+    baseUser: studentStrapi.documentId ?? "", // Using documentId as baseUser identifier
   };
 };
