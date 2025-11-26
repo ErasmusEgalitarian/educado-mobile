@@ -2,7 +2,6 @@ import {
   addCourseToStudent,
   completeComponent,
   deleteUser,
-  getAllComponentsBySectionId,
   getAllFeedbackOptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
@@ -20,6 +19,7 @@ import {
   logoutStudentStrapi,
   signUpStudentStrapi,
   getAllSectionsByCourseIdStrapi,
+  getAllComponentsBySectionIdStrapi,
   getStudentByIdStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
@@ -83,8 +83,8 @@ export const useCourse = (id: string) =>
  */
 export const useSectionComponents = (id: string) =>
   useQuery({
-    queryKey: queryKeys.sectionComponents(id),
-    queryFn: () => getAllComponentsBySectionId(id),
+    queryKey: queryKeys.section(id),
+    queryFn: () => getAllComponentsBySectionIdStrapi(id),
   });
 
 /**

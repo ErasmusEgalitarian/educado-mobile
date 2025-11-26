@@ -107,6 +107,8 @@ export interface PopulatedCourse
  */
 export interface PopulatedSection
   extends Omit<CourseSelection, "exercises" | "lectures" | "course"> {
+  title: string;
+  description: string;
   exercises?: PopulatedExercise[];
   lectures?: PopulatedLecture[];
   course?: PopulatedCourse;
