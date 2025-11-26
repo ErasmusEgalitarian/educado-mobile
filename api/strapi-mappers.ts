@@ -7,7 +7,6 @@ import {
 import {
   Course,
   LoginStudent,
-  StudentCourse,
   Section,
   Component,
 } from "@/types";

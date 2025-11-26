@@ -6,8 +6,6 @@ import {
   postStudentSignup,
   studentGetStudentsById,
   courseSelectionGetCourseSelections,
-  lectureGetLecturesById,
-  lectureGetLectures,
 } from "@/api/backend/sdk.gen";
 import {
   CourseGetCoursesByIdResponse,
@@ -15,7 +13,6 @@ import {
   JwtResponse,
   StudentGetStudentsByIdResponse,
   CourseSelectionGetCourseSelectionsResponse,
-  LectureGetLecturesResponse,
 } from "@/api/backend/types.gen";
 import {
   mapToCourse,

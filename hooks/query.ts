@@ -2,7 +2,6 @@ import {
   addCourseToStudent,
   completeComponent,
   deleteUser,
-  getAllComponentsBySectionId,
   getAllFeedbackOptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
