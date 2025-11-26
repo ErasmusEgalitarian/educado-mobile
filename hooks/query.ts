@@ -4,11 +4,8 @@ import {
   deleteUser,
   getAllComponentsBySectionId,
   getAllFeedbackOptions,
-  getAllSectionsByCourseId,
-  getAllStudentSubscriptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
-  getCourseById,
   getSectionById,
   getStudentById,
   loginUser,
@@ -18,11 +15,12 @@ import {
 } from "@/api/legacy-api";
 import {
   getAllCoursesStrapi,
+  getCourseByIdStrapi,
   getAllStudentSubscriptionsStrapi,
   loginStudentStrapi,
   logoutStudentStrapi,
   signUpStudentStrapi,
-  getAllSectionsByCourseIdStrapi
+  getAllSectionsByCourseIdStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
@@ -74,7 +72,7 @@ export const useCourses = () =>
 export const useCourse = (id: string) =>
   useQuery({
     queryKey: queryKeys.course(id),
-    queryFn: () => getCourseById(id),
+    queryFn: () => getCourseByIdStrapi(id),
     enabled: !!id,
   });
 
@@ -311,10 +309,7 @@ export const useLoginStrapi = () => {
     { email: string; password: string }
   >({
     mutationFn: async (variables) => {
-      return await loginStudentStrapi(
-        variables.email,
-        variables.password,
-      );
+      return await loginStudentStrapi(variables.email, variables.password);
     },
     onSuccess: async (data) => {
       // Store token in AsyncStorage for HTTP interceptor

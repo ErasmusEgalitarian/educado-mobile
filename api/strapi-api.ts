@@ -1,19 +1,24 @@
 import { client } from "@/api/backend/client.gen";
 import {
   courseGetCourses,
+  courseGetCoursesById,
   postStudentLogin,
   postStudentSignup,
   studentGetStudentsById,
   courseSelectionGetCourseSelections,
 } from "@/api/backend/sdk.gen";
 import {
+  CourseGetCoursesByIdResponse,
   CourseGetCoursesResponse,
   JwtResponse,
   StudentGetStudentsByIdResponse,
-  Course as StrapiCourse,
   CourseSelectionGetCourseSelectionsResponse,
 } from "@/api/backend/types.gen";
-import { mapToCourse, mapToLoginStudent, mapToSection } from "@/api/strapi-mappers";
+import {
+  mapToCourse,
+  mapToLoginStudent,
+  mapToSection,
+} from "@/api/strapi-mappers";
 import { Course, LoginStudent, Section } from "@/types";
 import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 
@@ -75,7 +80,7 @@ export const logoutStudentStrapi = () => {
  * @throws Error if the request fails
  */
 export const getAllCoursesStrapi = async (): Promise<Course[]> => {
-  const response = await courseGetCourses({
+  const response = (await courseGetCourses({
     query: {
       fields: [
         "title",
@@ -97,7 +102,7 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
       ],
       status: "published", // Only get published courses
     },
-  }) as CourseGetCoursesResponse;
+  })) as CourseGetCoursesResponse;
 
   if (!response.data || response.data.length === 0) {
     return [];
@@ -106,49 +111,75 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
   return response.data.map((course) => mapToCourse(course));
 };
 
+export const getCourseByIdStrapi = async (courseId: string) => {
+  const response = (await courseGetCoursesById({
+    path: { id: courseId },
+    query: {
+      fields: [
+        "title",
+        "description",
+        "difficulty",
+        "numOfRatings",
+        "numOfSubscriptions",
+        "createdAt",
+        "updatedAt",
+        "publishedAt",
+      ],
+      // Use "*" to populate all relations with their full data including nested fields
+      populate: [
+        "course_categories",
+        "content_creators",
+        "image",
+        "feedbacks",
+        "course_sections",
+        "students",
+      ],
+    },
+  })) as CourseGetCoursesByIdResponse;
+
+  return mapToCourse(response.data as PopulatedCourse);
+};
+export const getAllSectionsByCourseIdStrapi = async (
+  id: string,
+): Promise<Section[]> => {
+  const response = (await courseSelectionGetCourseSelections({
+    query: {
+      filters: {
+        "course[id][$eq]": id,
+      },
+      populate: ["exercises", "course", "lectures"],
+      status: "published",
+    },
+  })) as CourseSelectionGetCourseSelectionsResponse;
+
+  if (response.data == null) {
+    throw new Error("No sections found");
+  }
+
+  return response.data.map((section) =>
+    mapToSection(section as PopulatedSection),
+  );
+};
 
 /**
  * Gets the student info for a specific student.
  */
-export const getAllStudentSubscriptionsStrapi = async (id: string): Promise<Course[]> => {
-  const response = await studentGetStudentsById({
+export const getAllStudentSubscriptionsStrapi = async (
+  id: string,
+): Promise<Course[]> => {
+  const response = (await studentGetStudentsById({
     path: { id },
     query: {
-      populate: [
-        "courses",
-      ],
+      populate: ["courses"],
       status: "published", // Only get published courses
     },
-  }) as StudentGetStudentsByIdResponse;
+  })) as StudentGetStudentsByIdResponse;
 
-  const courses = response.data?.courses || [];
+  const courses = response.data?.courses ?? [];
 
   if (courses.length === 0) {
     return [];
   }
 
-  return courses
-    .filter((course): course is StrapiCourse | PopulatedCourse => course != null)
-    .map((course) => mapToCourse(course));
+  return courses.map((course) => mapToCourse(course as PopulatedCourse));
 };
-export const getAllSectionsByCourseIdStrapi = async (id: string): Promise<Section[]> => {
-  const response = await courseSelectionGetCourseSelections({
-    query: {
-      filters: {
-        "course[id][$eq]": id,
-      },
-      populate: [ "exercises", 
-                  "course", 
-                  "lectures" ],
-      status: "published",
-    },
-  }) as CourseSelectionGetCourseSelectionsResponse;
-
-  if (response.data == null) {
-    throw new Error('No sections found');
-  }
-
-  return response.data.map((section) => mapToSection(section as PopulatedSection));
-};
-
-

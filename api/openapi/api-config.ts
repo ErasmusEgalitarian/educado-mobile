@@ -67,9 +67,7 @@ export const configureApiClient = () => {
     if (response.status === 401 || response.status === 403) {
       if (__DEV__) {
         const status = String(response.status);
-        console.log(
-          `Response 📥 ${response.url} [${status}] - Auth failed`,
-        );
+        console.log(`Response 📥 ${response.url} [${status}] - Auth failed`);
       }
       // TODO: Request new token from backend
     }
