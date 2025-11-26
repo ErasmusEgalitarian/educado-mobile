@@ -1,9 +1,4 @@
-import type {
-  Course,
-  CourseSelection,
-  Student,
-  JwtResponse,
-} from "@/api/backend/types.gen";
+import type { Course, CourseSelection, Student } from "@/api/backend/types.gen";
 
 /**
  * Course Category with populated data

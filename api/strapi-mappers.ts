@@ -1,7 +1,10 @@
-import { Course as StrapiCourse } from "@/api/backend/types.gen";
-import { JwtResponse } from "@/api/backend/types.gen";
-import { Course, LoginStudent, StudentCourse } from "@/types";
-import { PopulatedCourse } from "@/types/strapi-populated";
+import {
+  Course as StrapiCourse,
+  CourseSelection as StrapiSection,
+  JwtResponse,
+} from "@/api/backend/types.gen";
+import { Course, LoginStudent, Section, Component } from "@/types";
+import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 
 /**
  * Maps a Strapi Course to the app Course type.
@@ -46,7 +49,6 @@ export const mapToCourse = (
   const categoryName =
     categories.length > 0 &&
     typeof categories[0] === "object" &&
-    categories[0] !== null &&
     "name" in categories[0]
       ? ((categories[0] as { name?: string }).name ?? "")
       : "";
@@ -95,7 +97,7 @@ export const mapToLoginStudent = (jwtResponse: JwtResponse): LoginStudent => {
   const { userInfo } = jwtResponse;
   const nameParts = (userInfo.name ?? "").split(" ");
   const firstName = nameParts[0] ?? "";
-  const lastName = nameParts.slice(1).join(" ") ?? "";
+  const lastName = nameParts.slice(1).join(" ");
 
   return {
     accessToken: jwtResponse.accessToken,
@@ -108,5 +110,41 @@ export const mapToLoginStudent = (jwtResponse: JwtResponse): LoginStudent => {
       points: 0, // TODO: Add points to Strapi model or fetch from student data
       role: "user" as const, // TODO: Add role to Strapi model
     },
+  };
+};
+
+/**
+ * Maps a Strapi Course to the app Course type.
+ *
+ * @param courseStrapi - The Strapi course data
+ * @returns A Course object
+ */
+export const mapToSection = (
+  courseSectionStrapi: StrapiSection | PopulatedSection,
+): Section => {
+  const exercises = courseSectionStrapi.exercises ?? [];
+  const lectures = courseSectionStrapi.lectures ?? [];
+  const course = courseSectionStrapi.course;
+
+  // Combine exercises and lectures into components
+  const components: Component[] = [
+    ...exercises.map((exercise) => ({
+      compId: exercise.documentId?.toString() ?? "",
+      compType: "exercise" as const,
+    })),
+    ...lectures.map((lecture) => ({
+      compId: lecture.documentId?.toString() ?? "",
+      compType: "lecture" as const,
+    })),
+  ];
+
+  return {
+    sectionId: courseSectionStrapi.documentId?.toString() ?? "",
+    // TODO: parentCourseId not exist in Strapi model, but i guess it is the course relation
+    parentCourseId: course?.documentId?.toString() ?? "",
+    title: courseSectionStrapi.title,
+    description: courseSectionStrapi.description ?? "",
+    total: 177, // TODO: Strapi model does not have points currently"
+    components: components,
   };
 };
