@@ -4,14 +4,12 @@ import {
   courseGetCoursesById,
   postStudentLogin,
   postStudentSignup,
-  studentGetStudentsById,
   courseSelectionGetCourseSelections,
 } from "@/api/backend/sdk.gen";
 import {
   CourseGetCoursesByIdResponse,
   CourseGetCoursesResponse,
   JwtResponse,
-  StudentGetStudentsByIdResponse,
   CourseSelectionGetCourseSelectionsResponse,
 } from "@/api/backend/types.gen";
 import {
@@ -162,34 +160,12 @@ export const getAllSectionsByCourseIdStrapi = async (
   );
 };
 
-/**
- * Gets the student info for a specific student.
- */
-export const getAllStudentSubscriptionsStrapiOld = async (
-  id: string,
-): Promise<Course[]> => {
-  const response = (await studentGetStudentsById({
-    path: { id },
-    query: {
-      populate: ["courses"],
-      status: "published", // Only get published courses
-    },
-  })) as StudentGetStudentsByIdResponse;
-
-  const courses = response.data?.courses ?? [];
-
-  if (courses.length === 0) {
-    return [];
-  }
-
-  return courses.map((course) => mapToCourse(course as PopulatedCourse));
-};
-
 export const getAllStudentSubscriptionsStrapi = async (
   id: string,
 ): Promise<Course[]> => {
   const response = (await courseGetCourses({
     query: {
+      /* @ts-expect-error: Strapi filter typing does not support nested filters */
       "filters[students][documentId][$eq]": id,
       fields: [
         "title",
