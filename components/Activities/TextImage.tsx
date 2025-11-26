@@ -22,7 +22,6 @@ interface TextImageLectureScreenProps {
   >[];
   lectureObject: SectionComponentLecture;
   courseObject: Course;
-  isLastSlide: boolean;
   onContinue: () => Promise<void>;
 }
 
@@ -30,7 +29,6 @@ const TextImageLectureScreen = ({
   componentList,
   lectureObject,
   courseObject,
-  isLastSlide,
   onContinue,
 }: TextImageLectureScreenProps) => {
   const [paragraphs, setParagraphs] = useState<string[] | null>(null);

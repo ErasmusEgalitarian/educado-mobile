@@ -10,7 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 export interface VideoLectureProps {
   lecture: SectionComponentLecture;
   course: Course;
-  isLastSlide: boolean;
   onContinue: () => Promise<void>;
 }
 
@@ -47,7 +46,6 @@ const fetchVideoUrl = async (lecture: Lecture, currentResolution: string) => {
 export const VideoLecture = ({
   lecture,
   course,
-  isLastSlide,
   onContinue,
 }: VideoLectureProps) => {
   const currentResolution = "1080";

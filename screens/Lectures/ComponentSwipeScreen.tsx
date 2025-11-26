@@ -49,11 +49,13 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const [index, setIndex] = useState(0);
   const [initialIndex, setInitialIndex] = useState(0);
   const initialIndexSetRef = useRef(false);
+  const [resetKey, setResetKey] = useState(0);
   const [sectionComponents, setSectionComponents] = useState<
     SectionComponent<SectionComponentLecture | SectionComponentExercise>[]
   >([]);
   const swiperRef = useRef<null | Swiper>(null);
-  const [resetKey, setResetKey] = useState(0);
+  // Previously used to force a remount of the Swiper, but that caused the Swiper to
+  // jump back to `initialIndex`. We avoid remounts now, so this state is removed.
   const { data: loginStudent } = useLoginStudent();
   const studentId = loginStudent.userInfo.id;
   const studentQuery = useStudent(studentId);
@@ -85,21 +87,36 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
 
   const handleContinue = async (isCorrect: boolean) => {
     const currentComp = sectionComponents[index];
+    const isLastSlide = index >= sectionComponents.length - 1;
     if (!student) {
       return;
     }
-    // TODO: not sure if this logic works 100%
+
+    // debugging, not yet finished :P
+    // !isCorrect seems to still be a wee bitty buggy
+    console.warn(
+      "Type: ",
+      currentComp.type,
+      " Index: ",
+      index,
+      " Answer: ",
+      isCorrect,
+      " Last: ",
+      isLastSlide,
+    );
+
     // If the activity is not correctly answered
     if (!isCorrect) {
-      // Update the section component list to move the incorrect activity to the end
-      const updatedCombinedLecturesAndExercises = [
-        ...sectionComponents.slice(0, index), // Elements before the current index
-        ...sectionComponents.slice(index + 1), // Elements after the current index
-        currentComp, // Add the current component to the end
-      ];
-      setSectionComponents(updatedCombinedLecturesAndExercises);
-      // Force re-render by updating the resetKey
-      setResetKey((prevKey) => prevKey + 1);
+      // Move it to the end
+      setSectionComponents((prev) => {
+        const comp = prev[index];
+        return [...prev.slice(0, index), ...prev.slice(index + 1), comp];
+      });
+
+      // Re-render if it's last slide
+      if (isLastSlide) {
+        setResetKey((prev) => prev + 1);
+      }
       return;
     }
 
@@ -116,7 +133,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
 
     // Update streak, index, and move to next component
     await handleStudyStreak();
-    setIndex(index + 1);
     swiperRef.current?.scrollBy(1, true);
   };
 
@@ -153,7 +169,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     // Sanity check
     if (initialIndex < 0) {
       console.warn("Initial index less than zero: ", initialIndex);
-      setIndex(0);
       initialIndexSetRef.current = true;
       return;
     }
@@ -205,6 +220,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
           showsPagination={false}
           scrollEnabled={false}
           index={initialIndex}
+          onIndexChanged={setIndex}
         >
           {sectionComponents.map((component, index) =>
             component.type === "lecture" ? (
@@ -214,7 +230,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
                   key={component.component.id || index}
                   lecture={component.component as SectionComponentLecture}
                   course={parsedCourse}
-                  isLastSlide={index === sectionComponents.length - 1}
                   onContinue={async () => {
                     await handleContinue(true);
                   }}
@@ -225,7 +240,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
                   componentList={sectionComponents}
                   lectureObject={component.component as SectionComponentLecture}
                   courseObject={parsedCourse}
-                  isLastSlide={index === sectionComponents.length - 1}
                   onContinue={async () => {
                     await handleContinue(true);
                   }}
