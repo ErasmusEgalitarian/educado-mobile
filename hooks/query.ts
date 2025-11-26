@@ -102,31 +102,10 @@ export const useSubscribeToCourse = () => {
 
       return await addCourseToStudent(userId, courseId);
     },
-    onSuccess: (data) => {
-      // Update the cached full student
-      queryClient.setQueryData(queryKeys.student(data.baseUser), data);
-
-      // Also keep the local/login student cache in sync so UI using
-      // `useLoginStudent` reflects changes immediately.
-      const local = queryClient.getQueryData<LoginStudent>(
-        queryKeys.loginStudent,
-      );
-
-      if (local) {
-        queryClient.setQueryData<LoginStudent>(queryKeys.loginStudent, {
-          ...local,
-          userInfo: {
-            ...local.userInfo,
-            courses: data.courses,
-            points: data.points,
-          },
-        });
-      }
-
-      void queryClient.invalidateQueries({
+    onSuccess: (data) =>
+      queryClient.invalidateQueries({
         queryKey: [...queryKeys.subscriptions(data.baseUser)],
-      });
-    },
+      }),
   });
 };
 
@@ -142,31 +121,10 @@ export const useUnsubscribeFromCourse = () => {
 
       return await unsubscribeCourse(userId, courseId);
     },
-    onSuccess: (data) => {
-      // Update the cached full student
-      queryClient.setQueryData(queryKeys.student(data.baseUser), data);
-
-      // Also keep the local/login student cache in sync so UI using
-      // `useLoginStudent` reflects changes immediately.
-      const local = queryClient.getQueryData<LoginStudent>(
-        queryKeys.loginStudent,
-      );
-
-      if (local) {
-        queryClient.setQueryData<LoginStudent>(queryKeys.loginStudent, {
-          ...local,
-          userInfo: {
-            ...local.userInfo,
-            courses: data.courses,
-            points: data.points,
-          },
-        });
-      }
-
-      void queryClient.invalidateQueries({
+    onSuccess: (data) =>
+      queryClient.invalidateQueries({
         queryKey: [...queryKeys.subscriptions(data.baseUser)],
-      });
-    },
+      }),
   });
 };
 
