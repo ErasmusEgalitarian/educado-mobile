@@ -1,20 +1,16 @@
 import { client } from "@/api/backend/client.gen";
 import {
   courseGetCourses,
+  courseGetCoursesById,
   postStudentLogin,
   postStudentSignup,
+  studentGetStudentsById,
   courseSelectionGetCourseSelections,
 } from "@/api/backend/sdk.gen";
 import {
+  CourseGetCoursesByIdResponse,
   CourseGetCoursesResponse,
   JwtResponse,
-<<<<<<< Updated upstream
-  CourseSelectionGetCourseSelectionsResponse,
-} from "@/api/backend/types.gen";
-import { mapToCourse, mapToLoginStudent, mapToSection } from "@/api/strapi-mappers";
-import { Course, LoginStudent, Section } from "@/types";
-import { PopulatedSection } from "@/types/strapi-populated";
-=======
   StudentGetStudentsByIdResponse,
   CourseSelectionGetCourseSelectionsResponse,
 } from "@/api/backend/types.gen";
@@ -26,7 +22,6 @@ import {
 } from "@/api/strapi-mappers";
 import { Course, LoginStudent, Section, Student } from "@/types";
 import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
->>>>>>> Stashed changes
 
 export const loginStudentStrapi = async (
   email: string,
@@ -117,6 +112,35 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
   return response.data.map((course) => mapToCourse(course));
 };
 
+export const getCourseByIdStrapi = async (courseId: string) => {
+  const response = (await courseGetCoursesById({
+    path: { id: courseId },
+    query: {
+      fields: [
+        "title",
+        "description",
+        "difficulty",
+        "numOfRatings",
+        "numOfSubscriptions",
+        "createdAt",
+        "updatedAt",
+        "publishedAt",
+      ],
+      // Use "*" to populate all relations with their full data including nested fields
+      populate: [
+        "course_categories",
+        "content_creators",
+        "image",
+        "feedbacks",
+        "course_sections",
+        "students",
+      ],
+    },
+  })) as CourseGetCoursesByIdResponse;
+
+  return mapToCourse(response.data as PopulatedCourse);
+};
+
 export const getAllSectionsByCourseIdStrapi = async (
   id: string,
 ): Promise<Section[]> => {
@@ -139,9 +163,6 @@ export const getAllSectionsByCourseIdStrapi = async (
   );
 };
 
-<<<<<<< Updated upstream
-
-=======
 /**
  * Gets the courses a student is subscribed to.
  */
@@ -154,11 +175,9 @@ export const getAllStudentSubscriptionsStrapi = async (
       populate: ["courses"],
       status: "published", // Only get published courses
     },
-  })) as StudentGetStudentsByIdResponse & {
-    data?: { courses?: PopulatedCourse[] };
-  };
+  })) as StudentGetStudentsByIdResponse;
 
-  const courses = (response.data?.courses as PopulatedCourse[]);
+  const courses = response.data?.courses ?? [];
 
   if (courses.length === 0) {
     return [];
@@ -195,4 +214,3 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
 
   return mapToStudent(response.data);
 };
->>>>>>> Stashed changes

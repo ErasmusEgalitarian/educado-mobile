@@ -6,7 +6,6 @@ import {
   getAllFeedbackOptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
-  getCourseById,
   getSectionById,
   loginUser,
   subscribeCourse,
@@ -15,6 +14,8 @@ import {
 } from "@/api/legacy-api";
 import {
   getAllCoursesStrapi,
+  getCourseByIdStrapi,
+  getAllStudentSubscriptionsStrapi,
   loginStudentStrapi,
   logoutStudentStrapi,
   signUpStudentStrapi,
@@ -71,7 +72,7 @@ export const useCourses = () =>
 export const useCourse = (id: string) =>
   useQuery({
     queryKey: queryKeys.course(id),
-    queryFn: () => getCourseById(id),
+    queryFn: () => getCourseByIdStrapi(id),
     enabled: !!id,
   });
 
@@ -134,7 +135,7 @@ export const useUnsubscribeFromCourse = () => {
 export const useSubscribedCourses = (id: string) =>
   useQuery({
     queryKey: queryKeys.subscriptions(id),
-    queryFn: () => getAllStudentSubscriptions(id),
+    queryFn: () => getAllStudentSubscriptionsStrapi(id),
   });
 
 /**
