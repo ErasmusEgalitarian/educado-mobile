@@ -1,5 +1,3 @@
-// @ts-nocheck
-// Temporarily disable TypeScript checks in Jest setup. Remove once types/mocks are stabilized.
 import mockAsyncStorage from "@react-native-async-storage/async-storage/jest/async-storage-mock";
 import { Animated } from "react-native";
 

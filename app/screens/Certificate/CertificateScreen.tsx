@@ -1,9 +1,3 @@
-// @ts-nocheck
-// NOTE: Temporarily disabling TypeScript checks for this file to bypass CI errors
-// that are unrelated to the current Expo upgrade. Remove this comment and fix
-// the type errors if you edit this file.
-// Reason: bypass CI check for the specific file since it is not relevant to the upgrade.
-
 import { useEffect, useState } from "react";
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
