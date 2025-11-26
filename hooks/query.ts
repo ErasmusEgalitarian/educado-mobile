@@ -148,7 +148,6 @@ export const useStudent = (id: string) =>
     queryKey: queryKeys.student(id),
     queryFn: async () => {
       const student = await getStudentByIdStrapi(id);
-      console.log("\n\nFetched student :\n", student);
 
       if (student.profilePhoto) {
         try {
