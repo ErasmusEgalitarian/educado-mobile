@@ -7,7 +7,6 @@ import {
   getBucketImageByFilename,
   getBucketVideoByFilename,
   getSectionById,
-  getStudentById,
   loginUser,
   subscribeCourse,
   unsubscribeCourse,
@@ -22,6 +21,7 @@ import {
   signUpStudentStrapi,
   getAllSectionsByCourseIdStrapi,
   getAllComponentsBySectionIdStrapi,
+  getStudentByIdStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
@@ -148,7 +148,7 @@ export const useStudent = (id: string) =>
   useQuery({
     queryKey: queryKeys.student(id),
     queryFn: async () => {
-      const student = await getStudentById(id);
+      const student = await getStudentByIdStrapi(id);
 
       if (student.profilePhoto) {
         try {
