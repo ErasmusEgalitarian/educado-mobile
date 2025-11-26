@@ -145,6 +145,7 @@ export const getAllSectionsByCourseIdStrapi = async (
   const response = (await courseSelectionGetCourseSelections({
     query: {
       filters: {
+        //TODO: wrong filter format - look at getAllStudentSubscriptionsStrapi
         "course[id][$eq]": id,
       },
       populate: ["exercises", "course", "lectures"],
@@ -164,7 +165,7 @@ export const getAllSectionsByCourseIdStrapi = async (
 /**
  * Gets the student info for a specific student.
  */
-export const getAllStudentSubscriptionsStrapi = async (
+export const getAllStudentSubscriptionsStrapiOld = async (
   id: string,
 ): Promise<Course[]> => {
   const response = (await studentGetStudentsById({
@@ -182,4 +183,38 @@ export const getAllStudentSubscriptionsStrapi = async (
   }
 
   return courses.map((course) => mapToCourse(course as PopulatedCourse));
+};
+
+export const getAllStudentSubscriptionsStrapi = async (
+  id: string,
+): Promise<Course[]> => {
+  const response = (await courseGetCourses({
+    query: {
+      "filters[students][documentId][$eq]": id,
+      fields: [
+        "title",
+        "description",
+        "difficulty",
+        "numOfRatings",
+        "numOfSubscriptions",
+        "createdAt",
+        "updatedAt",
+        "publishedAt",
+      ],
+      populate: [
+        "course_categories",
+        "content_creators",
+        "image",
+        "feedbacks",
+        "course_sections",
+        "students",
+      ],
+    },
+  })) as CourseGetCoursesResponse;
+
+  if (!response.data || response.data.length === 0) {
+    return [];
+  }
+
+  return response.data.map((course) => mapToCourse(course));
 };
