@@ -6,7 +6,7 @@ import { Icon } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PopUp from "@/components/Gamification/PopUp";
 import { StatusBar } from "expo-status-bar";
-import { cn, handleLastComponent } from "@/services/utils";
+import { cn } from "@/services/utils";
 import { useNavigation } from "@react-navigation/native";
 import {
   Course,
@@ -17,11 +17,7 @@ import {
 } from "@/types";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
-import {
-  useCompleteComponent,
-  useLoginStudent,
-  useStudent,
-} from "@/hooks/query";
+import { useLoginStudent, useStudent } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 
 /*
@@ -48,8 +44,7 @@ interface ExerciseScreenProps {
   exerciseObject: SectionComponentExercise;
   sectionObject: Section;
   courseObject: Course;
-  onContinue: (isCorrect: boolean) => boolean;
-  handleStudyStreak: () => Promise<void>;
+  onContinue: (isCorrect: boolean) => Promise<void>;
 }
 
 const ExerciseScreen = ({
@@ -58,7 +53,6 @@ const ExerciseScreen = ({
   sectionObject,
   courseObject,
   onContinue,
-  handleStudyStreak,
 }: ExerciseScreenProps) => {
   const navigation = useNavigation();
 
@@ -68,8 +62,6 @@ const ExerciseScreen = ({
   const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(10);
   const [attempts, setAttempts] = useState<number>(0);
-
-  const completeComponentQuery = useCompleteComponent();
   const loginStudent = useLoginStudent();
   const studentQuery = useStudent(loginStudent.data.userInfo.id);
 
@@ -99,44 +91,9 @@ const ExerciseScreen = ({
       setIsCorrectAnswer(true);
       setPoints(attempts === 0 ? 10 : 5);
       setIsPopUpVisible(true);
-      try {
-        completeComponentQuery.mutate({
-          student: studentQuery.data,
-          component: exerciseObject,
-          isComplete: true,
-        });
-      } catch (error) {
-        console.error("Error completing the exercise:", error);
-      }
     } else {
       setIsCorrectAnswer(false);
       setAttempts((prevAttempts) => prevAttempts + 1);
-    }
-  };
-
-  const handleContinue = async (
-    isAnswerCorrect: boolean,
-    answerIndex: number,
-  ) => {
-    setIsPopUpVisible(false);
-
-    const currentLastComponent = componentList[componentList.length - 1];
-    const isLastComponent =
-      currentLastComponent.component.id === exerciseObject.id;
-
-    if (isAnswerCorrect && isLastComponent) {
-      try {
-        void handleStudyStreak();
-        await handleLastComponent(
-          currentLastComponent,
-          courseObject,
-          navigation,
-        );
-      } catch (error) {
-        console.error("Error handling last component:", error);
-      }
-    } else {
-      onContinue(isAnswerCorrect);
     }
   };
 
@@ -235,10 +192,7 @@ const ExerciseScreen = ({
           }`}
           onPress={() => {
             if (selectedAnswer !== null) {
-              void handleContinue(
-                exerciseObject.answers[selectedAnswer]?.correct,
-                selectedAnswer,
-              );
+              void onContinue(exerciseObject.answers[selectedAnswer]?.correct);
             }
           }}
           disabled={selectedAnswer === null} // Prevents interaction when no answer is selected

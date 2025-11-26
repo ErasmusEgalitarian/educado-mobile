@@ -2,7 +2,7 @@ import { useState } from "react";
 import LoginScreen from "@/screens/Login/LoginScreen";
 import RegisterScreen from "@/screens/Registration/RegistrationScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ExerciseScreen from "@/screens/Excercises/ExerciseScreen";
+import ExerciseScreen from "@/components/Activities/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CourseOverviewScreen from "@/screens/Courses/CourseOverviewScreen";
 import SectionScreen from "@/screens/Section/SectionScreen";

@@ -3,37 +3,39 @@ import { View, TouchableOpacity, Dimensions, Text } from "react-native";
 import { Icon } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import { cn, handleLastComponent } from "@/services/utils";
+import { cn } from "@/services/utils";
 import RenderHtml from "react-native-render-html";
-import { Course, SectionComponent, SectionComponentLecture } from "@/types";
-import { t } from "@/i18n";
 import {
-  useCompleteComponent,
-  useLoginStudent,
-  useStudent,
-} from "@/hooks/query";
+  Course,
+  SectionComponent,
+  SectionComponentExercise,
+  SectionComponentLecture,
+} from "@/types";
+import { t } from "@/i18n";
+import { useLoginStudent, useStudent } from "@/hooks/query";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 
 interface TextImageLectureScreenProps {
+  componentList: SectionComponent<
+    SectionComponentLecture | SectionComponentExercise
+  >[];
   lectureObject: SectionComponentLecture;
   courseObject: Course;
   isLastSlide: boolean;
-  onContinue: () => void;
-  handleStudyStreak: () => void;
+  onContinue: () => Promise<void>;
 }
 
 const TextImageLectureScreen = ({
+  componentList,
   lectureObject,
   courseObject,
   isLastSlide,
   onContinue,
-  handleStudyStreak,
 }: TextImageLectureScreenProps) => {
   const [paragraphs, setParagraphs] = useState<string[] | null>(null);
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const navigation = useNavigation();
-  const completeComponentQuery = useCompleteComponent();
   const loginStudent = useLoginStudent();
   const studentQuery = useStudent(loginStudent.data.userInfo.id);
 
@@ -60,29 +62,6 @@ const TextImageLectureScreen = ({
     navigation.goBack();
     return;
   }
-
-  const handleContinue = async () => {
-    try {
-      completeComponentQuery.mutate({
-        student: studentQuery.data,
-        component: lectureObject,
-        isComplete: true,
-      });
-      if (isLastSlide) {
-        handleStudyStreak();
-        const secComp: SectionComponent<SectionComponentLecture> = {
-          component: lectureObject,
-          type: "lecture",
-          lectureType: "text",
-        };
-        await handleLastComponent(secComp, courseObject, navigation);
-      } else {
-        onContinue();
-      }
-    } catch (error) {
-      console.error("Error completing the component:", error);
-    }
-  };
 
   const isHtml = (content: string) => {
     const htmlRegex = /<\/?[a-z][\s\S]*>/i;
@@ -178,7 +157,7 @@ const TextImageLectureScreen = ({
       <View className="w-100 mb-8 px-6">
         <TouchableOpacity
           className="flex-row items-center justify-center rounded-medium bg-surfaceDefaultCyan px-10 py-4"
-          onPress={void handleContinue}
+          onPress={() => void onContinue()}
         >
           <View className="flex-row items-center">
             <Text className="text-center text-surfaceSubtleGrayscale text-body-bold">
