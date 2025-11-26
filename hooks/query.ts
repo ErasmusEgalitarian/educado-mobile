@@ -21,6 +21,7 @@ import {
   logoutStudentStrapi,
   signUpStudentStrapi,
   getAllSectionsByCourseIdStrapi,
+  getAllComponentsBySectionIdStrapi
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
@@ -83,8 +84,8 @@ export const useCourse = (id: string) =>
  */
 export const useSectionComponents = (id: string) =>
   useQuery({
-    queryKey: queryKeys.sectionComponents(id),
-    queryFn: () => getAllComponentsBySectionId(id),
+    queryKey: queryKeys.section(id),
+    queryFn: () => getAllComponentsBySectionIdStrapi(id),
   });
 
 /**
