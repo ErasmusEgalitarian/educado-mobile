@@ -1,10 +1,15 @@
 import {
+  JwtResponse,
   Course as StrapiCourse,
   CourseSelection as StrapiSection,
-  JwtResponse,
+  Student as StrapiStudent,
 } from "@/api/backend/types.gen";
-import { Course, LoginStudent, Section, Component } from "@/types";
-import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
+import { Course, LoginStudent, Section, Component, Student } from "@/types";
+import {
+  PopulatedCourse,
+  PopulatedSection,
+  PopulatedStudent,
+} from "@/types/strapi-populated";
 
 /**
  * Maps a Strapi Course to the app Course type.
@@ -146,5 +151,40 @@ export const mapToSection = (
     description: courseSectionStrapi.description ?? "",
     total: 177, // TODO: Strapi model does not have points currently"
     components: components,
+  };
+};
+
+/**
+ * Maps a Strapi Student to the app Student type.
+ *
+ * @param studentStrapi - The Strapi student data
+ * @returns A Student object
+ */
+export const mapToStudent = (
+  studentStrapi: StrapiStudent | PopulatedStudent,
+): Student => {
+  const courses =
+    "courses" in studentStrapi && Array.isArray(studentStrapi.courses)
+      ? studentStrapi.courses
+      : [];
+
+  return {
+    id: studentStrapi.documentId ?? "",
+    points: 123, // TODO: Add points field to Strapi Student model
+    currentExtraPoints: 123, // TODO: Add currentExtraPoints field to Strapi Student model
+    level: 123, // TODO: Add level field to Strapi Student model
+    studyStreak: 123, // TODO: Might need to calculate from user_log
+    lastStudyDate: new Date(), // TODO: Add lastStudyDate field to Strapi Student model
+    subscriptions: courses.map((course) => course.documentId ?? ""), // Using course IDs as subscriptions
+    profilePhoto: "", // TODO: Add profilePhoto field to Strapi Student model
+    photo: null,
+    courses: courses.map((course) => ({
+      courseId: course.documentId ?? "",
+      totalPoints: 123321, // TODO: Calculate from course data
+      isComplete: false, // TODO: Determine completion status
+      sections: [], // TODO: Fetch and map course sections
+      completionDate: new Date(),
+    })),
+    baseUser: studentStrapi.documentId ?? "", // Using documentId as baseUser identifier
   };
 };
