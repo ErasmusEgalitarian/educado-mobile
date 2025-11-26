@@ -178,15 +178,13 @@ export const mapToStudent = (
     subscriptions: courses.map((course) => course.documentId ?? ""), // Using course IDs as subscriptions
     profilePhoto: "", // TODO: Add profilePhoto field to Strapi Student model
     photo: null,
-    courses: courses
-      .filter((course): course is StrapiCourse => course != null)
-      .map((course) => ({
-        courseId: course.documentId ?? "",
-        totalPoints: 123321, // TODO: Calculate from course data
-        isComplete: false, // TODO: Determine completion status
-        sections: [], // TODO: Fetch and map course sections
-        completionDate: new Date(),
-      })),
+    courses: courses.map((course) => ({
+      courseId: course.documentId ?? "",
+      totalPoints: 123321, // TODO: Calculate from course data
+      isComplete: false, // TODO: Determine completion status
+      sections: [], // TODO: Fetch and map course sections
+      completionDate: new Date(),
+    })),
     baseUser: studentStrapi.documentId ?? "", // Using documentId as baseUser identifier
   };
 };

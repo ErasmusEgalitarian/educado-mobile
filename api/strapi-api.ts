@@ -177,15 +177,13 @@ export const getAllStudentSubscriptionsStrapi = async (
     },
   })) as StudentGetStudentsByIdResponse;
 
-  const courses = response.data?.courses ?? [];
+  const courses = (response.data?.courses ?? []) as PopulatedCourse[];
 
   if (courses.length === 0) {
     return [];
   }
 
-  return courses
-    .filter((course): course is PopulatedCourse => course != null)
-    .map((course) => mapToCourse(course));
+  return courses.map((course) => mapToCourse(course));
 };
 
 /**
