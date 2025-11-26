@@ -18,8 +18,9 @@ import {
   mapToCourse,
   mapToLoginStudent,
   mapToSection,
+  mapToStudent,
 } from "@/api/strapi-mappers";
-import { Course, LoginStudent, Section } from "@/types";
+import { Course, LoginStudent, Section, Student } from "@/types";
 import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
@@ -139,6 +140,7 @@ export const getCourseByIdStrapi = async (courseId: string) => {
 
   return mapToCourse(response.data as PopulatedCourse);
 };
+
 export const getAllSectionsByCourseIdStrapi = async (
   id: string,
 ): Promise<Section[]> => {
@@ -162,7 +164,7 @@ export const getAllSectionsByCourseIdStrapi = async (
 };
 
 /**
- * Gets the student info for a specific student.
+ * Gets the courses a student is subscribed to.
  */
 export const getAllStudentSubscriptionsStrapi = async (
   id: string,
@@ -175,11 +177,38 @@ export const getAllStudentSubscriptionsStrapi = async (
     },
   })) as StudentGetStudentsByIdResponse;
 
-  const courses = response.data?.courses ?? [];
+  const courses = (response.data?.courses ?? []) as PopulatedCourse[];
 
   if (courses.length === 0) {
     return [];
   }
 
-  return courses.map((course) => mapToCourse(course as PopulatedCourse));
+  return courses.map((course) => mapToCourse(course));
+};
+
+/**
+ * Gets the student info for a specific student.
+ */
+export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
+  const response = (await studentGetStudentsById({
+    path: { id },
+    query: {
+      populate: [
+        "courses",
+        /*
+          This is probably not needed right now
+        "feedbacks",
+        "certificates",
+        "user_logs",
+        */
+      ],
+      status: "published", // Only get published students
+    },
+  })) as StudentGetStudentsByIdResponse;
+
+  if (!response.data) {
+    throw new Error("Student not found");
+  }
+
+  return mapToStudent(response.data);
 };
