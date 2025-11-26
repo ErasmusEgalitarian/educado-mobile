@@ -61,10 +61,6 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
 
   const student = loginStudentQuery.data;
 
-  const courseData = useCourse(course.courseId);
-
-  console.log("Course Data:", courseData.data);
-
   useEffect(() => {
     if (!sectionQuery.data) {
       return;
