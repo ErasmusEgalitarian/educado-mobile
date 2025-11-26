@@ -2,7 +2,7 @@ import {
   JwtResponse,
   Course as StrapiCourse,
   CourseSelection as StrapiSection,
-  Student as StrapiStudent
+  Student as StrapiStudent,
 } from "@/api/backend/types.gen";
 import {
   Course,
@@ -11,7 +11,11 @@ import {
   Section,
   Component,
 } from "@/types";
-import { PopulatedCourse, PopulatedSection, PopulatedStudent} from "@/types/strapi-populated";
+import {
+  PopulatedCourse,
+  PopulatedSection,
+  PopulatedStudent,
+} from "@/types/strapi-populated";
 
 /**
  * Maps a Strapi Course to the app Course type.
