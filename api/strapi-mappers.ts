@@ -170,10 +170,10 @@ export const mapToStudent = (
 
   return {
     id: studentStrapi.documentId ?? "",
-    points: 0, // TODO: Add points field to Strapi Student model
-    currentExtraPoints: 0, // TODO: Add currentExtraPoints field to Strapi Student model
-    level: 0, // TODO: Add level field to Strapi Student model
-    studyStreak: 0, // TODO: Add studyStreak field to Strapi Student model
+    points: 123, // TODO: Add points field to Strapi Student model
+    currentExtraPoints: 123, // TODO: Add currentExtraPoints field to Strapi Student model
+    level: 123, // TODO: Add level field to Strapi Student model
+    studyStreak: 123, // TODO: Might need to calculate from user_log
     lastStudyDate: new Date(), // TODO: Add lastStudyDate field to Strapi Student model
     subscriptions: courses.map((course) => course.documentId ?? ""), // Using course IDs as subscriptions
     profilePhoto: "", // TODO: Add profilePhoto field to Strapi Student model
@@ -182,7 +182,7 @@ export const mapToStudent = (
       .filter((course): course is StrapiCourse => course != null)
       .map((course) => ({
         courseId: course.documentId ?? "",
-        totalPoints: 0, // TODO: Calculate from course data
+        totalPoints: 123321, // TODO: Calculate from course data
         isComplete: false, // TODO: Determine completion status
         sections: [], // TODO: Fetch and map course sections
         completionDate: new Date(),
