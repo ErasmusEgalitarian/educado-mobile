@@ -112,6 +112,38 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
   return response.data.map((course) => mapToCourse(course));
 };
 
+/**
+ * Gets the student info for a specific student.
+ */
+export const getAllStudentSubscriptionsStrapi = async (
+  id: string,
+): Promise<Course[]> => {
+  try {
+    const response = (await studentGetStudentsById({
+      path: { id },
+      query: {
+        populate: ["courses"],
+      },
+    })) as StudentGetStudentsByIdResponse;
+
+    const courses = response.data?.courses ?? [];
+
+    if (courses.length === 0) {
+      console.log("No courses found for student");
+      return [];
+    }
+
+    // Some student subscription entries may be relation objects with only id/documentId;
+    // assert as PopulatedCourse to satisfy the mapper's expected input type.
+    return courses.map((course) =>
+      mapToCourse(course as unknown as PopulatedCourse),
+    );
+  } catch (error) {
+    console.error("Error fetching student subscriptions:", error);
+    throw error;
+  }
+};
+
 export const getCourseByIdStrapi = async (courseId: string) => {
   const response = (await courseGetCoursesById({
     path: { id: courseId },
@@ -161,29 +193,6 @@ export const getAllSectionsByCourseIdStrapi = async (
   return response.data.map((section) =>
     mapToSection(section as PopulatedSection),
   );
-};
-
-/**
- * Gets the courses a student is subscribed to.
- */
-export const getAllStudentSubscriptionsStrapi = async (
-  id: string,
-): Promise<Course[]> => {
-  const response = (await studentGetStudentsById({
-    path: { id },
-    query: {
-      populate: ["courses"],
-      status: "published", // Only get published courses
-    },
-  })) as StudentGetStudentsByIdResponse;
-
-  const courses = (response.data?.courses ?? []) as PopulatedCourse[];
-
-  if (courses.length === 0) {
-    return [];
-  }
-
-  return courses.map((course) => mapToCourse(course));
 };
 
 /**
