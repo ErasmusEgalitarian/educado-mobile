@@ -67,34 +67,24 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const studentLastStudyDate = student?.lastStudyDate ?? new Date();
   const isLoading = studentQuery.isLoading || areSectionComponentsLoading;
 
-  /**
-   * Handles student study streak update process. Checks the difference in days between lastStudyDate and today. If the
-   * difference is greater than 0, it updates `studyStreak` and `lastStudyDate` both in the database, local storage and
-   * this local state.
-   */
   const handleStudyStreak = async () => {
-    // TODO: probably does not work
-    if (!student) {
-      return;
-    }
-
     const today = new Date();
     const dayDifference = differenceInDays(studentLastStudyDate, today);
-
-    if (dayDifference === 0) {
+    if (!student || dayDifference === 0) {
       return;
     }
 
+    // Update the database
     updateStudyStreakQuery.mutate({
       studentId: student.id,
     });
-
     await studentQuery.refetch();
   };
 
   // TODO: missing logic for when lesson (all components) is completed
 
   const handleContinue = async (isCorrect: boolean) => {
+    const currentComp = sectionComponents[index];
     if (!student) {
       return;
     }
@@ -102,7 +92,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     // If the activity is not correctly answered
     if (!isCorrect) {
       // Update the section component list to move the incorrect activity to the end
-      const currentComp = sectionComponents[index];
       const updatedCombinedLecturesAndExercises = [
         ...sectionComponents.slice(0, index), // Elements before the current index
         ...sectionComponents.slice(index + 1), // Elements after the current index
@@ -118,7 +107,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     try {
       await completeComponentQuery.mutateAsync({
         student,
-        component: sectionComponents[index].component,
+        component: currentComp.component,
         isComplete: true,
       });
     } catch (error) {
