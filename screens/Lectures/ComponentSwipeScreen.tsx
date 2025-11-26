@@ -1,10 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { View, ActivityIndicator, Text } from "react-native";
 import Swiper from "react-native-swiper";
+import { useNavigation } from "@react-navigation/native";
 import { ProgressTopBar } from "@/screens/Lectures/ProgressTopBar";
 import ExerciseScreen from "@/components/Activities/Exercise";
 import { colors } from "@/theme/colors";
-import { findIndexOfUncompletedComp, differenceInDays } from "@/services/utils";
+import {
+  findIndexOfUncompletedComp,
+  differenceInDays,
+  handleLastComponent,
+} from "@/services/utils";
 import { VideoLecture } from "@/components/Activities/Video";
 import TextImageLectureScreen from "@/components/Activities/TextImage";
 import {
@@ -54,8 +59,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     SectionComponent<SectionComponentLecture | SectionComponentExercise>[]
   >([]);
   const swiperRef = useRef<null | Swiper>(null);
-  // Previously used to force a remount of the Swiper, but that caused the Swiper to
-  // jump back to `initialIndex`. We avoid remounts now, so this state is removed.
   const { data: loginStudent } = useLoginStudent();
   const studentId = loginStudent.userInfo.id;
   const studentQuery = useStudent(studentId);
@@ -68,6 +71,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const updateStudyStreakQuery = useUpdateStudyStreak();
   const studentLastStudyDate = student?.lastStudyDate ?? new Date();
   const isLoading = studentQuery.isLoading || areSectionComponentsLoading;
+  const navigation = useNavigation();
 
   const handleStudyStreak = async () => {
     const today = new Date();
@@ -82,8 +86,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     });
     await studentQuery.refetch();
   };
-
-  // TODO: missing logic for when lesson (all components) is completed
 
   const handleContinue = async (isCorrect: boolean) => {
     const currentComp = sectionComponents[index];
@@ -131,8 +133,16 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
       console.error("Unable to complete component: ", error);
     }
 
-    // Update streak, index, and move to next component
+    // Update study streak
     await handleStudyStreak();
+
+    // Complete lesson if it's last slide
+    if (isLastSlide) {
+      await handleLastComponent(currentComp, parsedCourse, navigation);
+      return;
+    }
+
+    // Go to the next slide
     swiperRef.current?.scrollBy(1, true);
   };
 
