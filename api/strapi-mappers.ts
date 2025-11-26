@@ -4,12 +4,7 @@ import {
   CourseSelection as StrapiSection,
   Student as StrapiStudent,
 } from "@/api/backend/types.gen";
-import {
-  Course,
-  LoginStudent,
-  Section,
-  Component,
-} from "@/types";
+import { Course, LoginStudent, Section, Component } from "@/types";
 import {
   PopulatedCourse,
   PopulatedSection,
