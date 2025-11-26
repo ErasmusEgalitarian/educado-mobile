@@ -221,3 +221,25 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
 
   return mapToStudent(response.data);
 };
+
+export const getAllComponentsBySectionIdStrapi = async (
+  id: string,
+): Promise<Section[]> => {
+  const response = (await courseSelectionGetCourseSelections({
+    query: {
+      filters: {
+        "id[$eq]": id,
+      },
+      populate: ["exercises", "course", "lectures"],
+      status: "published",
+    },
+  })) as CourseSelectionGetCourseSelectionsResponse;
+
+  if (response.data == null) {
+    throw new Error("No section found");
+  }
+
+  return response.data.map((section) =>
+    mapToSection(section as PopulatedSection),
+  );
+};
