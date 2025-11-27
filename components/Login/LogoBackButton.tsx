@@ -1,7 +1,7 @@
-import { View } from "react-native";
-import LeaveButton from "../Exercise/LeaveButton";
+import { Pressable, View } from "react-native";
 import EducadoLogo from "../Images/EducadoLogo";
 import PropTypes from "prop-types";
+import { useNavigation } from "@react-navigation/native";
 
 /**
  * Component that includes, logo, title and backbutton, used in login and register screens
@@ -11,21 +11,23 @@ import PropTypes from "prop-types";
 
  */
 export default function LogoBackButton(props) {
+  const navigation = useNavigation();
   return (
-    <View className="mt-4 w-full flex-row items-center justify-center">
+    <Pressable
+      className="mt-4 w-full flex-row items-center justify-center"
+      onPress={() => {
+        props.navigationPlace
+          ? navigation.navigate(props.navigationPlace)
+          : navigation.navigate("Home");
+      }}
+    >
       {/* TODO: Implement with general back button instead */}
-      <View className="absolute left-0 z-50">
-        <LeaveButton
-          navigationPlace={
-            props.navigationPlace ? props.navigationPlace : "Home"
-          }
-        />
-      </View>
+      <View className="absolute left-0 z-50"></View>
       {/* Educado logo */}
       <View className="w-full items-center justify-center">
         <EducadoLogo />
       </View>
-    </View>
+    </Pressable>
   );
 }
 
