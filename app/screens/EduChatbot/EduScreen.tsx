@@ -204,7 +204,7 @@ const EduScreen = () => {
   return (
     <>
       <BaseScreen className="flex h-screen flex-col">
-        <View className="borderBottomWidth: 1, borderBottomColor: rgba(0, 0, 0, 0.2) border-b">
+        <View className="border-b border-borderDarkerGrayscale">
           <IconHeader
             title={"Edu"}
             description={`${t("edu-screen.header")}.`}
@@ -214,7 +214,7 @@ const EduScreen = () => {
           <ScrollView ref={scrollViewRef} className="flex-1 pr-2.5">
             {chatMessages.map((message, index) =>
               message.sender === "User" ? (
-                <View key={index} className="alignSelf: flex-end">
+                <View key={index} className="self-end">
                   <View className="mb-1 mt-2 max-w-[80%] flex-row rounded-t-3xl rounded-bl-3xl bg-surfaceDefaultCyan p-2.5 pl-3">
                     <Text className="text-textTitleGrayscale">
                       {message.text}
@@ -222,10 +222,7 @@ const EduScreen = () => {
                   </View>
                 </View>
               ) : (
-                <View
-                  key={index}
-                  className="alignSelf: flex-start flexDirection: row alignItems: center"
-                >
+                <View key={index} className="flex-row items-center self-start">
                   <View>
                     <View className="mb-1 max-w-[80%] flex-row rounded-t-3xl rounded-br-3xl p-2.5 pl-3">
                       <View className="px-2">
@@ -274,7 +271,7 @@ const EduScreen = () => {
               ),
             )}
             {loading && (
-              <View className="alignSelf: flex-start padding: 10 marginBottom: 5">
+              <View className="mb-5 self-start p-10">
                 <MaterialCommunityIcons
                   name="robot-outline"
                   type="material-community"
@@ -285,11 +282,7 @@ const EduScreen = () => {
               </View>
             )}
           </ScrollView>
-          <View
-            className="m-4 flex-row rounded-3xl border p-1 pl-4"
-            style={{ borderColor: colors.textTitleGrayscale }}
-            colors={[colors.bgPrimary]}
-          >
+          <View className="m-4 flex-row rounded-3xl border border-textTitleGrayscale bg-surfaceSubtleGrayscale p-1 pl-4">
             <TextInput
               value={userMessage}
               onChangeText={setUserMessage}

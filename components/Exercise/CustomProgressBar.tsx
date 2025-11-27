@@ -35,15 +35,16 @@ export const CustomProgressBar = ({
   return (
     <View className="flex-row items-center justify-around">
       <ProgressBar
+        className="rounded-lg bg-surfaceLighter"
         progress={progress[0] / 100}
-        color={colors.surfaceDarker}
+        /* The ProgressBar component will pick a wrong color itself unless directly specified like this  */
+        color={colors.surfaceLighter}
+        /* Since the height and width are calculated dynamically, it can't be rendered by passing it to className */
         style={{
           width: ScreenWidth * (width / 100),
           height: ScreenHeight * (height / 100),
-          backgroundColor: colors.surfaceLighter,
-          borderRadius: 8,
         }}
-      ></ProgressBar>
+      />
       {displayLabel && (
         <Text
           className="caption-sm-regular px-5 text-center text-projectBlack"
