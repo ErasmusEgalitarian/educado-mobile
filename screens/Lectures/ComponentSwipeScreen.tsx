@@ -64,6 +64,8 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     isLoading: areSectionComponentsLoading,
   } = useSectionComponents(section.sectionId);
 
+  console.log("Fetched section components:", fetchedSectionComponents);
+
   const completeComponentQuery = useCompleteComponent();
   const updateStudyStreakQuery = useUpdateStudyStreak();
 

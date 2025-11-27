@@ -227,9 +227,8 @@ export const getAllComponentsBySectionIdStrapi = async (
 ): Promise<Section[]> => {
   const response = (await courseSelectionGetCourseSelections({
     query: {
-      filters: {
-        "id[$eq]": id,
-      },
+      /* @ts-expect-error: Strapi filter typing does not support nested filters */
+      "filters[documentId][$eq]": id,
       populate: ["exercises", "course", "lectures"],
       status: "published",
     },
@@ -238,6 +237,8 @@ export const getAllComponentsBySectionIdStrapi = async (
   if (response.data == null) {
     throw new Error("No section found");
   }
+
+  console.log("Section components response:", response.data);
 
   return response.data.map((section) =>
     mapToSection(section as PopulatedSection),
