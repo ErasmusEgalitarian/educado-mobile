@@ -3,12 +3,12 @@ import { View, TouchableOpacity, Text, Image, Dimensions } from "react-native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
-import Feather from "@expo/vector-icons/Feather";
 import { getStudentInfo, updateStudentInfo } from "@/services/storage-service";
 import { uploadPhoto } from "@/api/user-api";
 import BackButton from "@/components/General/BackButton";
 import { getLoginToken } from "@/services/storage-service";
 import { getBucketImage } from "@/api/api";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const CameraScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -116,13 +116,17 @@ const CameraScreen = () => {
             onPress={handleDeny}
             className="rounded-full bg-error p-3"
           >
-            <Feather name="x" size={24} color="white" />
+            <MaterialCommunityIcons
+              name="window-close"
+              size={24}
+              color="white"
+            />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleAccept}
             className="rounded-full bg-success p-3"
           >
-            <Feather name="check" size={24} color="white" />
+            <MaterialCommunityIcons name="check" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </View>
@@ -141,19 +145,19 @@ const CameraScreen = () => {
               onPress={pickImage}
               className="rounded-full bg-projectGray p-3"
             >
-              <Feather name="image" size={24} color="white" />
+              <MaterialCommunityIcons name="image" size={24} color="white" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={takePicture}
               className="rounded-full bg-lightGray p-4"
             >
-              <Feather name="camera" size={32} color="black" />
+              <MaterialCommunityIcons name="camera" size={32} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={toggleCameraType}
               className="rounded-full bg-projectGray p-3"
             >
-              <Feather name="refresh-ccw" size={24} color="white" />
+              <MaterialCommunityIcons name="refresh" size={24} color="white" />
             </TouchableOpacity>
           </View>
         </View>
