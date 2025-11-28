@@ -232,17 +232,17 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
           <View className="flex-[1] flex-col">
             <Tooltip
               position={{
-                top: -30,
-                left: 70,
-                right: 30,
-                bottom: 24,
+                top: 30,
+                left: 60,
               }}
-              text={t("course.tooltip")}
               tailSide="right"
-              tailPosition="20%"
-              uniqueKey="Sections"
-              uniCodeChar="🎓"
-            />
+              tailPosition={12}
+              tooltipKey="Startee123"
+              uniCodeIcon="🎓"
+            >
+              <Text className="text-body-regular">{t("course.tooltip")}</Text>
+            </Tooltip>
+
             <View>
               {sections.map((section, i) => {
                 const completedComponents =
