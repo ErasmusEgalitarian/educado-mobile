@@ -75,7 +75,7 @@ const ExerciseScreen = ({
 
   if (studentQuery.isError || !studentQuery.data) {
     console.error(
-      `Error occured in ExerciseScreen while fetching the studentQuery: ${studentQuery.error ?? "unkown error"}`,
+      `Error occured in ExerciseScreen while fetching the studentQuery: ${studentQuery.error ?? "unknown error"}`,
     );
     navigation.goBack();
     return;
