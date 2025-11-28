@@ -1,6 +1,14 @@
 {
   "welcome": {
-    "title": "Bem vindo"
+    "title": "Bem vindo",
+    "enter": "Entrar",
+    "register": "Cadastrar",
+    "slide-1-title": "SEJA BEM-VINDO!",
+    "slide-1-description": "Aqui, tornamos o aprendizado acessível e divertido para todos. Explore nossos conteúdos e comece sua jornada de desenvolvimento.",
+    "slide-2-title": "FAÇA DOWNLOAD E ACESSE OFFLINE",
+    "slide-2-description": "Este é o seu espaço para aprender de forma interativa e envolvente. Faça o download dos conteúdos e acesse offline quando quiser!",
+    "slide-3-title": "CADASTRE-SE E EXPLORE",
+    "slide-3-description": "Faça parte de nossa comunidade e descubra um mundo de aprendizado ao seu alcance, não importa sua formação acadêmica."
   },
   "courses": "Cursos",
   "explore": "Explorar",

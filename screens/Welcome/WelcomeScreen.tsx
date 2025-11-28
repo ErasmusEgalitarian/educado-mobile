@@ -1,9 +1,10 @@
-import { View, Image, SafeAreaView, Text } from "react-native";
+import { View, Image, Text } from "react-native";
 import { BackgroundLinearGradient } from "@/constants/BackgroundLinearGradient";
-import WelcomeSlider from "@/components/Welcome/WelcomeSlider";
+import { WelcomeSlider } from "@/components/Welcome/WelcomeSlider";
 import { useNavigation } from "@react-navigation/native";
 import { FormButton } from "@/components/General/Forms/FormButton";
 import logo from "@/assets/images/logo.png";
+import { t } from "@/i18n";
 
 /**
  * This is the welcome screen shown when the user opens the app for the first time. It is a slider that explains the app
@@ -16,55 +17,46 @@ const WelcomeScreen = () => {
 
   return (
     <BackgroundLinearGradient>
-      <SafeAreaView>
-        <View className="flex flex-col items-center justify-center">
-          <View className="mb-[20%] flex pt-[30%]">
-            <Image source={logo} className="h-[25.54] w-[175.88]" />
-          </View>
+      <View>
+        <View className="flex-col items-center pt-40">
+          <Image source={logo} className="h-[25.54] w-[175.88]" />
 
-          <View className="mb-[15%] flex w-screen flex-row items-center justify-center">
+          <View className="flex-row items-center pt-28">
             <WelcomeSlider />
           </View>
 
-          <View className="justify-around">
-            <View className="w-screen px-6">
-              <FormButton
-                onPress={() => {
-                  navigation.navigate(
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-expect-error
-                    "LoginStack",
-                    { screen: "Login" },
-                    { previousScreen: "Welcome" },
-                  );
-                }}
-              >
-                Entrar
-              </FormButton>
-            </View>
+          <View className="w-screen px-6 pt-12">
+            <FormButton
+              onPress={() => {
+                navigation.navigate(
+                  // @ts-expect-error incorrect type 'never'
+                  "LoginStack",
+                  { screen: "Login" },
+                  { previousScreen: "Welcome" },
+                );
+              }}
+            >
+              {t("welcome.enter")}
+            </FormButton>
 
-            <View className="flex-row justify-center">
-              <Text
-                className={
-                  "text-textSubtitleGrayscale underline text-h4-sm-bold"
-                }
-                onPress={() => {
-                  navigation.navigate(
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-expect-error
-                    "LoginStack",
-                    { screen: "Register" },
-                    { previousScreen: "Welcome" },
-                  );
-                }}
-              >
-                {/* Register */}
-                Cadastrar
-              </Text>
-            </View>
+            <Text
+              className={
+                "self-center pt-6 text-textSubtitleGrayscale underline text-h4-sm-bold"
+              }
+              onPress={() => {
+                navigation.navigate(
+                  // @ts-expect-error incorrect type 'never'
+                  "LoginStack",
+                  { screen: "Register" },
+                  { previousScreen: "Welcome" },
+                );
+              }}
+            >
+              {t("welcome.register")}
+            </Text>
           </View>
         </View>
-      </SafeAreaView>
+      </View>
     </BackgroundLinearGradient>
   );
 };
