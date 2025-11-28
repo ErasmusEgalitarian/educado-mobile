@@ -6,9 +6,15 @@
       }
     },
     "production": {
+      "node": "18.20.8",
       "android": {
         "buildType": "app-bundle"
       }
+    },
+    "dev": {
+      "extends": "production",
+      "developmentClient": true,
+      "distribution": "internal"
     }
   },
   "submit": {

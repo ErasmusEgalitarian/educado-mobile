@@ -6,6 +6,7 @@ export default {
     slug: "educado-mobile",
     scheme: "educado-mobile",
     version: "2.1.5",
+    owner: "educado-mobile-25",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     splash: {
@@ -78,7 +79,7 @@ export default {
       JWT_SECRET: "test",
       STRAPI_TOKEN: strapiToken,
       eas: {
-        projectId: "33029e48-261a-46db-a3d6-211aa40139f0",
+        projectId: "eb5fcd66-c59f-46fb-8d8c-b5955fb36861",
       },
     },
     experiments: {
