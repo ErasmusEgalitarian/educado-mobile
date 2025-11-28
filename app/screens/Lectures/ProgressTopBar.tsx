@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import tailwindConfig from "@/tailwind.config";
 import PropTypes from "prop-types";
 import CoursePoints from "@/components/Exercise/CoursePoints";
+import { Course, Section } from "@/types";
 
 const LectureType = {
   TEXT: "text",
@@ -11,9 +12,9 @@ const LectureType = {
 };
 
 type ProgressTopBarProps = {
-  courseObject?: any;
+  courseObject?: Course;
   lectureType?: string;
-  components?: any[];
+  components?: Section[];
   currentIndex?: number;
 };
 

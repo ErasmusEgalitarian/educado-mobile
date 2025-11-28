@@ -1,5 +1,5 @@
-import renderer, { act } from "react-test-renderer";
-import ExerciseInfo from "../../../components/Exercise/ExerciseInfo";
+import { render, screen } from "@testing-library/react-native";
+import ExerciseInfo from "@/components/Exercise/ExerciseInfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let navigated = false;
@@ -20,12 +20,8 @@ let ExerciseInfoScreen;
 beforeEach(() => {
   navigated = false;
   AsyncStorage.clear();
-  // Provide required props so the component renders deterministically
-  act(() => {
-    ExerciseInfoScreen = renderer.create(
-      <ExerciseInfo courseTitle="My Course" sectionTitle="Section 1" />,
-    );
-  });
+
+  render(<ExerciseInfo courseTitle="My Course" sectionTitle="Section 1" />);
 });
 
 afterEach(() => {
@@ -40,6 +36,6 @@ afterEach(() => {
 
 describe("ExerciseInfo", () => {
   it("renders ExerciseInfo correctly", () => {
-    expect(ExerciseInfoScreen.toJSON()).toMatchSnapshot();
+    expect(screen.toJSON()).toMatchSnapshot();
   });
 });

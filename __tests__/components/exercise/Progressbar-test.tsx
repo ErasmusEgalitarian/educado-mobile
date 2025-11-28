@@ -1,4 +1,3 @@
-import * as React from "react";
 import { render } from "@testing-library/react-native";
 import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { describe, it, expect } from "@jest/globals";

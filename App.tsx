@@ -193,7 +193,7 @@ export const App = () => {
 
   useWelcomeScreenLogic(3000, handleResult);
 
-  if (isLoading) {
+  if (isLoading || !fontsLoaded) {
     return <LoadingScreen />;
   }
 

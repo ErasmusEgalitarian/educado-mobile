@@ -55,7 +55,7 @@ export default {
         "expo-localization",
         {
           supportedLocales: {
-            android: ["en-rUS", "pt-rBR"],
+            android: ["en_US", "pt_BR"],
           },
         },
       ],
