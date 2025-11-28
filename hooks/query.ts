@@ -354,6 +354,8 @@ export const useLogoutStrapi = () => {
  * Complete a component.
  */
 export const useCompleteComponent = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<
     Student,
     unknown,
@@ -387,6 +389,24 @@ export const useCompleteComponent = () => {
         isComplete,
         points,
       );
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKeys.student(data.baseUser), data);
+
+      const local = queryClient.getQueryData<LoginStudent>(
+        queryKeys.loginStudent,
+      );
+
+      if (local) {
+        queryClient.setQueryData<LoginStudent>(queryKeys.loginStudent, {
+          ...local,
+          userInfo: {
+            ...local.userInfo,
+            courses: data.courses,
+            points: data.points,
+          },
+        });
+      }
     },
   });
 };
