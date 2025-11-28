@@ -16,6 +16,7 @@ import { Course } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "@/theme/colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 
 const RecommendationBadge = ({ children }: PropsWithChildren) => {
   return (
@@ -113,6 +114,26 @@ const ExploreScreen = () => {
   return (
     <BaseScreen>
       <View className="overflow-visible px-8 pt-28">
+        <Tooltip
+          position={{
+            top: 470,
+            left: 95,
+          }}
+          tailSide="top"
+          tailPosition={252}
+          tooltipKey="Courses"
+          uniCodeIcon="🔍"
+        >
+          <Text className="text-body-regular">
+            {t("explore-page.tutorial-body-first")}
+          </Text>
+          <Text className="text-body-bold">
+            {t("explore-page.tutorial-body-bold")}
+          </Text>
+          <Text className="text-body-regular">
+            {t("explore-page.tutorial-body-second")}
+          </Text>
+        </Tooltip>
         <IconHeader title={t("course.explore-courses")} />
         <View className="mt-8">
           <FilterNavigationBar
