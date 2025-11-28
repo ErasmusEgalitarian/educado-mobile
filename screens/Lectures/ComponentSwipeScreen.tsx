@@ -94,19 +94,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
       return;
     }
 
-    // debugging, not yet finished :P
-    // !isCorrect seems to still be a wee bitty buggy
-    console.warn(
-      "Type: ",
-      currentComp.type,
-      " Index: ",
-      index,
-      " Answer: ",
-      isCorrect,
-      " Last: ",
-      isLastSlide,
-    );
-
     // If the activity is not correctly answered
     if (!isCorrect) {
       // Move it to the end
@@ -117,6 +104,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
 
       // Re-render if it's last slide
       if (isLastSlide) {
+        setInitialIndex(index);
         setResetKey((prev) => prev + 1);
       }
       return;
