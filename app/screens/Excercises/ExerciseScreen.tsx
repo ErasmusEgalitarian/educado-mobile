@@ -29,9 +29,9 @@ Description:	This screen is displayed when the student is doing an exercise.
 				The student gets 0 points when the answer is incorrect or they have completed the exercise before.
 Dependencies:	CompSwipeScreen, the screen which contains all the components in the section
 Props:			- exerciseObject: The exercise object, which contains the question and the answers
-				•  sectionObject: The section object, which contains the section title
-				•  courseObject: The course object, which contains the course title
-				•  onContinue: A function that is called when the student presses the continue button,
+				-  sectionObject: The section object, which contains the section title
+				-  courseObject: The course object, which contains the course title
+				-  onContinue: A function that is called when the student presses the continue button,
 				when the exercise is completed and it is the last component in the section, the student is taken to the section complete screen
 */
 

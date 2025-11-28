@@ -7,7 +7,6 @@
 import renderer from "react-test-renderer";
 import LoginScreen from "../../../screens/Login/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScrollView } from "react-native";
 
 let navigated = false;
 

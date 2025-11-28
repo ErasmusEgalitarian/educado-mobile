@@ -1,4 +1,3 @@
-import * as React from "react";
 import { View, ViewProps } from "react-native";
 
 type ProgressBarProps = ViewProps & {
@@ -11,11 +10,11 @@ type ProgressBarProps = ViewProps & {
  * It renders a simple View and exposes the numeric `progress` value under
  * `accessibilityValue.now` so tests can make deterministic assertions.
  */
-export const ProgressBar: React.FC<ProgressBarProps> = ({
+export const ProgressBar = ({
   progress = 0,
   testID = "CustomProgressBar.ProgressBar",
   ...props
-}) => {
+}: ProgressBarProps) => {
   return (
     <View testID={testID} accessibilityValue={{ now: progress }} {...props} />
   );
