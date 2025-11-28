@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import CourseScreen from "@/screens/Courses/CourseScreen";
-import DownloadScreen from "@/screens/Download/DownloadScreen";
-import ExploreScreen from "@/screens/Explore/ExploreScreen";
-import EduScreen from "@/screens/EduChatbot/EduScreen";
-import Profile from "@/screens/Profile/Profile";
-import EditProfileScreen from "@/screens/Profile/EditProfileScreen";
-import CertificateScreen from "@/screens/Certificate/CertificateScreen";
-import { Icon } from "@rneui/themed";
+import CourseScreen from "@/app/screens/Courses/CourseScreen";
+import DownloadScreen from "@/app/screens/Download/DownloadScreen";
+import ExploreScreen from "@/app/screens/Explore/ExploreScreen";
+import EduScreen from "@/app/screens/EduChatbot/EduScreen";
+import Profile from "@/app/screens/Profile/Profile";
+import EditProfileScreen from "@/app/screens/Profile/EditProfileScreen";
+import CertificateScreen from "@/app/screens/Certificate/CertificateScreen";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Platform, Text } from "react-native";
 import { colors } from "@/theme/colors";
 
@@ -56,7 +56,7 @@ const ProfileStackScreen = () => {
 export const NavigationBar = () => {
   return (
     <Tab.Navigator
-      initialRouteName={"Central"}
+      initialRouteName={"Meus cursos"}
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: colors.surfaceDarker,
         tabBarInactiveTintColor: colors.surfaceDefaultGrayscale,
@@ -109,7 +109,7 @@ export const NavigationBar = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Icon
+            <MaterialCommunityIcons
               size={25}
               name="home-outline"
               type="material-community"
@@ -124,7 +124,7 @@ export const NavigationBar = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Icon
+            <MaterialCommunityIcons
               size={25}
               name="compass-outline"
               type="material-community"
@@ -139,7 +139,7 @@ export const NavigationBar = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Icon
+            <MaterialCommunityIcons
               size={25}
               name="robot-outline"
               type="material-community"
@@ -154,7 +154,7 @@ export const NavigationBar = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Icon
+            <MaterialCommunityIcons
               size={34}
               name="account-outline"
               type="material-community"
