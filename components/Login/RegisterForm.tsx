@@ -267,19 +267,19 @@ export const RegisterForm = () => {
               className={
                 "text-sm" +
                 (password === ""
-                  ? " text-projectGray"
+                  ? " text-footnote-regular-caps text-textCaptionGrayscale"
                   : passwordLengthValid
-                    ? " text-success"
-                    : " text-error")
+                    ? " text-footnote-regular-caps text-surfaceDefaultGreen"
+                    : " text-footnote-regular-caps text-textLabelRed")
               }
             >
               {/* Minimum 8 characters */}Mínimo 8 caracteres
             </Text>
-            <View className="-translate-y-1 flex-row items-center">
+            <View className="-translate-y-1 flex-row items-center pl-1">
               {passwordLengthValid ? (
                 <MaterialCommunityIcons
                   name="check"
-                  size={20}
+                  size={12}
                   color={colors.surfaceDefaultGreen}
                 />
               ) : null}
@@ -290,20 +290,20 @@ export const RegisterForm = () => {
               className={
                 "text-sm" +
                 (password === ""
-                  ? " text-projectGray"
+                  ? " text-footnote-regular-caps text-textCaptionGrayscale"
                   : passwordContainsLetter
-                    ? " text-success"
-                    : " text-error")
+                    ? " text-footnote-regular-caps text-surfaceDefaultGreen"
+                    : " text-footnote-regular-caps text-textLabelRed")
               }
             >
               {/* Must contain at least one letter */}Conter pelo menos uma
               letra
             </Text>
-            <View className="-translate-y-1 flex-row items-center">
+            <View className="-translate-y-1 flex-row items-center pl-1">
               {passwordContainsLetter ? (
                 <MaterialCommunityIcons
                   name="check"
-                  size={20}
+                  size={12}
                   color={colors.surfaceDefaultGreen}
                 />
               ) : null}

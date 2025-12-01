@@ -236,10 +236,10 @@ export const ResetPassword = ({
                   </View>
                   <View className="flex-column mx-10 items-center justify-center">
                     {/* Did not receieve the code? */}
-                    <Text>O código não chegou?</Text>
+                    <Text className="text-body-regular text-greyscaleTexticonSubtitle">O código não chegou?</Text>
                     {/* Resend code*/}
                     <Text
-                      className="underline"
+                      className="underline text-body-regular"
                       onPress={() => {
                         void sendEmail(email);
                       }}
