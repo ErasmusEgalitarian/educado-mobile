@@ -31,10 +31,6 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           manifest-file: .release-please-manifest.json
           config-file: release-please-config.json
-      - name: Log Outputs
-        run: |
-          echo "Upload URL: ${{ steps.release-please.outputs.upload_url }}"
-          echo "Releases Created: ${{ steps.release-please.outputs.releases_created }}"
 
   build-and-upload:
     if: needs.release-please.outputs.releases_created == 'true'
