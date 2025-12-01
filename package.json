@@ -1,6 +1,6 @@
 {
   "name": "educado-mobile",
-  "version": "2.1.5",
+  "version": "1.0.0",
   "private": true,
   "main": "expo-router/entry",
   "workspaces": [
