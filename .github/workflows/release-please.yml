@@ -2,10 +2,7 @@ name: Release Please
 on:
   push:
     branches:
-      - dev
-      # - main
-      # Disabled to avoid accidental releases from main should be enabled after moving to main as default branch
-      # Remember to disable dev when switching default branch
+      - main
   workflow_dispatch:
 
 permissions:
