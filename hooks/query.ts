@@ -12,6 +12,7 @@ import {
   getBucketImageByFilename,
   getBucketVideoByFilename,
   getCourseById,
+  getLeaderboardDataAndUserRank,
   getSectionById,
   getStudentById,
   loginUser,
@@ -54,6 +55,7 @@ export const queryKeys = {
   sectionComponents: (id: string) => ["sectionComponents", id] as const,
   feedbackOptions: ["feedbackOptions"] as const,
   bucketImage: (filename: string) => ["bucketImage", filename] as const,
+  leaderboard: (id: string, page: number) => ["leaderboard", id, page] as const,
 };
 
 /**
@@ -401,5 +403,18 @@ export const useBucketImage = (filename?: string | null) => {
     queryKey: queryKeys.bucketImage(filename ?? ""),
     queryFn: () => getBucketImageByFilename(filename ?? ""),
     enabled: !!filename,
+  });
+};
+
+export const useLeaderboard = (id: string, page: number) => {
+  return useQuery({
+    queryKey: queryKeys.leaderboard(id, page),
+    queryFn: () =>
+      getLeaderboardDataAndUserRank({
+        page: page,
+        timeInterval: "all",
+        limit: 12,
+        userId: id,
+      }),
   });
 };
