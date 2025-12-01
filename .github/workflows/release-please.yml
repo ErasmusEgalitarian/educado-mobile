@@ -14,7 +14,6 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      upload_url: ${{ steps.release-please.outputs.upload_url }}
       releases_created: ${{ steps.release-please.outputs.releases_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
     steps:
