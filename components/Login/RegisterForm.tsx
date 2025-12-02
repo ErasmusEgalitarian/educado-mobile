@@ -21,7 +21,7 @@ import { colors } from "@/theme/colors";
 import { setUserInfo, setJWT } from "@/services/storage-service";
 import { UserInfo } from "@/types/user";
 import { isAxiosError } from "axios";
-// import { useLoginStrapi, useSignUpStrapi } from "@/hooks/query";
+import { useLoginStrapi, useSignUpStrapi } from "@/hooks/query";
 
 interface BaseUserType {
   _id: string;
@@ -121,8 +121,8 @@ export const RegisterForm = () => {
     }
   };
 
-  // const signUpMutation = useSignUpStrapi();
-  // const loginStudentMutation = useLoginStrapi();
+  const signUpMutation = useSignUpStrapi();
+  const loginStudentMutation = useLoginStrapi();
 
   /**
    * Function for registering a new user in the database
@@ -150,19 +150,18 @@ export const RegisterForm = () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { baseUser }: { baseUser: BaseUserType } = await registerUser(obj);
 
-      // Temporarily disabled Strapi signup - using legacy backend only
-      // const response = await signUpMutation.mutateAsync({
-      //   name,
-      //   email,
-      //   password,
-      // });
+      const response = await signUpMutation.mutateAsync({
+        name,
+        email,
+        password,
+      });
 
-      // // TODO: Removie this console.log when migrating to use strapi fully.
-      // console.log(
-      //   response.accessToken
-      //     ? "Student signed up in strapi"
-      //     : "Failed to sign up student in strapi",
-      // );
+      // TODO: Removie this console.log when migrating to use strapi fully.
+      console.log(
+        response.accessToken
+          ? "Student signed up in strapi"
+          : "Failed to sign up student in strapi",
+      );
 
       const userInfo: UserInfo = {
         id: baseUser._id,
