@@ -90,6 +90,7 @@ export interface Lecture {
 
 export interface FeedbackOption {
   readonly name: string;
+  readonly rating?: number;
 }
 
 export interface StudentCourseSectionComponent {

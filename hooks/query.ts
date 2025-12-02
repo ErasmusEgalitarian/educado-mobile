@@ -2,7 +2,6 @@ import {
   addCourseToStudent,
   completeComponent,
   deleteUser,
-  getAllFeedbackOptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
   loginUser,
@@ -20,6 +19,7 @@ import {
   getAllSectionsByCourseIdStrapi,
   getAllComponentsBySectionIdStrapi,
   getStudentByIdStrapi,
+  getAllFeedbackOptionsStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
@@ -239,7 +239,7 @@ export const useDeleteUser = (id: string) => {
 export const useFeedbackOptions = () =>
   useQuery({
     queryKey: queryKeys.feedbackOptions,
-    queryFn: () => getAllFeedbackOptions(),
+    queryFn: () => getAllFeedbackOptionsStrapi(),
   });
 
 /**
