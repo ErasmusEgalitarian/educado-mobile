@@ -1,36 +1,50 @@
+// 1. React & hooks
 import { useEffect, useState } from "react";
+
+// 2. React Native core
 import {
   Alert,
   Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  ScrollView,
 } from "react-native";
-import { SectionCard } from "@/components/Section/SectionCard";
+
+// 3. Third-party libraries
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
-import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptionButton";
-import {
-  getCourseProgress,
-  getNumberOfCompletedComponents,
-  sanitizeStrapiImageUrl,
-} from "@/services/utils";
-import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
+
+// 4. Local components
+import { BaseScreen } from "@/components/General/BaseScreen";
+import { CourseInfoCard } from "@/components/Courses/CourseInfoCard";
+import { StartCourseButton } from "@/components/Courses/StartCourseButton";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
 import { Tooltip } from "@/components/Onboarding/Tooltip";
-import ImageNotFound from "@/assets/images/imageNotFound.png";
-import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
-import { Course, ProgressTuple, Section } from "@/types";
-import { Shadow } from "react-native-shadow-2";
-import { t } from "@/i18n";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SectionCard } from "@/components/Section/SectionCard";
+
+// 5. Hooks
 import {
   useLoginStudent,
   useSections,
   useUnsubscribeFromCourse,
 } from "@/hooks/query";
-import LoadingScreen from "@/components/Loading/LoadingScreen";
+
+// 6. Services & utilities
+import {
+  getCourseProgress,
+  getNumberOfCompletedComponents,
+  sanitizeStrapiImageUrl
+} from "@/services/utils";
+import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
+
+// 7. Types
+import { Course, ProgressTuple, Section } from "@/types";
+
+// 8. Assets
+import ImageNotFound from "@/assets/images/imageNotFound.png";
 
 export interface CourseOverviewScreenProps {
   route: {
@@ -40,12 +54,36 @@ export interface CourseOverviewScreenProps {
   };
 }
 
+const styles = StyleSheet.create({
+  scrollContent: {
+    paddingBottom: 80, // Space for cancel button
+  },
+  sectionListContainer: {
+    maxHeight: 328, // Approx 4 section cards (82px each)
+  },
+  headerContainer: {
+    marginBottom: 80,
+  },
+  cancelContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingVertical: 16,
+    paddingBottom: 20,
+    alignItems: "center",
+    backgroundColor: colors.surfaceSubtleCyan,
+  },
+});
+
 /**
  * Course overview screen.
  *
  * @param route - The route object containing the course data.
  */
-const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
+const CourseOverviewScreen = ({
+  route,
+}: CourseOverviewScreenProps): JSX.Element => {
   const { course } = route.params;
 
   const navigation = useNavigation();
@@ -121,7 +159,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
     });
   }, [navigation, course, student, sectionQuery.data]);
 
-  const unsubAlert = () => {
+  const unsubAlert = (): void => {
     Alert.alert(t("course.cancel-subscription"), t("general.confirmation"), [
       {
         text: t("general.no"),
@@ -181,111 +219,113 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
                 }}
               />
             ) : (
-              <Image source={ImageNotFound} />
+              <Image
+                source={ImageNotFound}
+                className="h-[208px] w-full"
+                resizeMode="cover"
+              />
             )}
-          </View>
-          <View className="mt-[-15%]">
-            <Shadow startColor="#28363E14" distance={6} offset={[0, 3]}>
-              <View className="flex w-[293px] rounded-2xl bg-surfaceSubtleGrayscale p-[16px]">
-                <View className="flex flex-row justify-between">
-                  <Text className="h3-sm-regular max-w-[80%]">
-                    {course.title}
-                  </Text>
-                  {/* TODO: Button to download course should be implemented */}
-                  <DownloadCourseButton course={course} disabled={true} />
-                </View>
-                <View className="flex h-6 justify-center rounded-sm border-y-[1px] border-surfaceDefaultGrayscale">
-                  <CustomProgressBar
-                    width={63}
-                    progress={studentProgress}
-                    height={1}
-                    displayLabel={false}
-                  />
-                </View>
-                <View className="flex w-full flex-row items-center justify-between">
-                  <View className="flex flex-row">
-                    <MaterialCommunityIcons
-                      name="crown-circle"
-                      size={20}
-                      color="orange"
-                    />
-                    {/* TODO: Points should be implemented */}
-                    <Text className="ml-1">{`0 ${t("course.points")}`}</Text>
-                  </View>
-                  <MaterialCommunityIcons
-                    name="circle-small"
-                    size={30}
-                    color="gray"
-                  />
-                  <View className="flex flex-row">
-                    <MaterialCommunityIcons
-                      name="lightning-bolt"
-                      size={20}
-                      color="orange"
-                    />
-                    <Text className="ml-1">
-                      {`${String(studentProgress[0])} ${t("course.completed-low")}`}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </Shadow>
-          </View>
-        </View>
-        <View className="my-6 flex items-center px-[25px]">
-          <ContinueSectionButton
-            onPress={() => {
-              if (currentSection) {
-                // @ts-expect-error The error will disappear when we migrate to Expo Router
-                navigation.navigate("Components", {
-                  section: currentSection,
-                  parsedCourse: course,
-                });
-              }
-            }}
-          />
-        </View>
-        {sections.length > 0 && (
-          <View className="flex-[1] flex-col">
-            <Tooltip
-              position={{
-                top: -30,
-                left: 70,
+
+            {/* Circular Back Button Overlay */}
+            <Pressable
+              className="absolute left-[27px] top-[57px] h-[30px] w-[30px] items-center justify-center rounded-full"
+              style={{ backgroundColor: colors.lightGray }}
+              onPress={() => {
+                navigation.goBack();
               }}
-              tooltipKey="Sections"
-              uniCodeIcon="🎓"
-              tailSide="right"
-              tailPosition={20}
             >
-              {t("course.tooltip")}
-            </Tooltip>
-            <View>
-              {sections.map((section, i) => {
-                const completedComponents =
-                  sectionProgress[section.sectionId] || 0;
-                return (
-                  <SectionCard
-                    numOfEntries={section.components.length}
-                    title={section.title}
-                    icon="chevron-right"
-                    key={i}
-                    progress={completedComponents}
-                    onPress={() => {
-                      // @ts-expect-error The error will disappear when we migrate to Expo Router
-                      navigation.navigate("Section", {
-                        course,
-                        section,
-                      });
-                    }}
-                  />
-                );
-              })}
+              <MaterialCommunityIcons
+                name="chevron-left"
+                size={24}
+                color={colors.textBodyGrayscale}
+              />
+            </Pressable>
+
+            {/* Course Info Card - OVERLAPPING */}
+            <View className="absolute left-12 right-12 top-[151px]">
+              <CourseInfoCard
+                course={course}
+                progress={studentProgress}
+                points={0}
+              />
             </View>
           </View>
-        )}
-        <SubscriptionCancelButton onPress={unsubAlert} />
-      </ScrollView>
-    </SafeAreaView>
+
+          {/* Começar Curso Button */}
+          <View className="mx-10 mb-10 mt-10">
+            <StartCourseButton
+              onPress={() => {
+                if (currentSection) {
+                  // @ts-expect-error The error will disappear when we migrate to Expo Router
+                  navigation.navigate("Components", {
+                    section: currentSection,
+                    parsedCourse: course,
+                  });
+                }
+              }}
+              disabled={!currentSection}
+            />
+          </View>
+
+          {/* Tooltip */}
+          {sections.length > 0 && (
+            <View className="relative">
+              <Tooltip
+                position={{ top: 16, left: 48 }}
+                tooltipKey="CourseOverview"
+                uniCodeIcon="🎓"
+                tailSide="bottom"
+                tailPosition={20}
+              >
+                <Text className="text-body-regular">{t("course.tooltip")}</Text>
+              </Tooltip>
+            </View>
+          )}
+
+          {/* Section List - Scrollable with max 4 visible */}
+          {sections.length > 0 && (
+            <ScrollView
+              style={styles.sectionListContainer}
+              className="mx-6 mb-6"
+              showsVerticalScrollIndicator={true}
+              nestedScrollEnabled={true}
+            >
+              <View className="gap-5">
+                {sections.map((section) => {
+                  const completedComponents =
+                    sectionProgress[section.sectionId] || 0;
+                  return (
+                    <SectionCard
+                      key={section.sectionId}
+                      numOfEntries={section.components.length}
+                      title={section.title}
+                      icon="chevron-right"
+                      progress={completedComponents}
+                      onPress={() => {
+                        // @ts-expect-error The error will disappear when we migrate to Expo Router
+                        navigation.navigate("Section", {
+                          course,
+                          section,
+                        });
+                      }}
+                    />
+                  );
+                })}
+              </View>
+            </ScrollView>
+          )}
+        </ScrollView>
+
+        {/* Cancel Subscription Link - Sticky at bottom above nav */}
+        <View style={styles.cancelContainer}>
+          <Pressable onPress={unsubAlert}>
+            <Text className="text-surfaceDefaultRed underline text-body-bold">
+              {t("course.withdraw")}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    </BaseScreen>
   );
 };
 
