@@ -119,7 +119,6 @@ const CompleteCourseScreen = () => {
               </Text>
               <MaterialCommunityIcons
                 name="chevron-right"
-                type="material"
                 size={24}
                 color="white"
                 className="ml-2"

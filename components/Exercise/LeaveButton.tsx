@@ -27,7 +27,6 @@ const LeaveButton = ({ navigationPlace }: LeaveButtonProps) => {
       <MaterialCommunityIcons
         size={25}
         name="chevron-left"
-        type="material-community"
         color={colors.textBodyGrayscale}
       />
     </Pressable>
