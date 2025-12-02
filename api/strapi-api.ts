@@ -6,6 +6,7 @@ import {
   postStudentSignup,
   studentGetStudentsById,
   courseSelectionGetCourseSelections,
+  feedbackGetFeedbacks,
 } from "@/api/backend/sdk.gen";
 import {
   CourseGetCoursesByIdResponse,
@@ -13,14 +14,22 @@ import {
   JwtResponse,
   StudentGetStudentsByIdResponse,
   CourseSelectionGetCourseSelectionsResponse,
+  FeedbackGetFeedbacksResponse,
 } from "@/api/backend/types.gen";
 import {
   mapToCourse,
   mapToLoginStudent,
   mapToSection,
   mapToStudent,
+  mapToFeedbackOption,
 } from "@/api/strapi-mappers";
-import { Course, LoginStudent, Section, Student } from "@/types";
+import {
+  Course,
+  LoginStudent,
+  Section,
+  Student,
+  FeedbackOption,
+} from "@/types";
 import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
@@ -246,4 +255,48 @@ export const getAllComponentsBySectionIdStrapi = async (
   return response.data.map((section) =>
     mapToSection(section as PopulatedSection),
   );
+};
+
+/**
+ * Gets all feedback options from Strapi.
+ * Extracts unique feedback text values from all feedbacks.
+ *
+ * @returns A list of feedback options.
+ * @throws Error if the request fails
+ */
+export const getAllFeedbackOptionsStrapi = async (): Promise<
+  FeedbackOption[]
+> => {
+  const response = (await feedbackGetFeedbacks({
+    query: {
+      fields: ["feedbackText", "rating"],
+      status: "published",
+    },
+  })) as FeedbackGetFeedbacksResponse;
+
+  if (!response.data || response.data.length === 0) {
+    return [];
+  }
+
+  // Extract unique feedback options with their ratings
+  const feedbackMap = new Map<string, number[]>();
+  response.data.forEach((feedback) => {
+    if (feedback.feedbackText) {
+      const ratings = feedbackMap.get(feedback.feedbackText) ?? [];
+      if (feedback.rating) {
+        ratings.push(feedback.rating);
+      }
+      feedbackMap.set(feedback.feedbackText, ratings);
+    }
+  });
+
+  return Array.from(feedbackMap.entries()).map(([text, ratings]) => {
+    // Calculate average rating for this feedback text
+    const avgRating =
+      ratings.length > 0
+        ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+        : undefined;
+
+    return mapToFeedbackOption({ name: text, rating: avgRating });
+  });
 };
