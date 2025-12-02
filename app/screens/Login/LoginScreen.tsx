@@ -15,6 +15,7 @@ import LogoBackButton from "@/components/Login/LogoBackButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import * as StorageService from "@/services/storage-service";
+import { t } from "@/i18n"
 
 /**
  * Login screen component containing a login form and possibilities of resetting password or registering a new user.
@@ -78,7 +79,7 @@ const Login = () => {
                   {/* Register button */}
                   <View className="flex-col items-center">
                     <Text className="mr-1 text-textSubtitleGrayscale text-h4-sm-regular">
-                      Ainda não tem conta?
+                      {t("login.no-existing-account")}
                     </Text>
                     <Text
                       className={
@@ -92,7 +93,7 @@ const Login = () => {
                         });
                       }}
                     >
-                      Cadastre-se agora
+                      {t("login.register-now")}
                     </Text>
                   </View>
                 </View>

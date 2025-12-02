@@ -13,6 +13,7 @@ import { RegisterForm } from "@/components/Login/RegisterForm";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LogoBackButton from "@/components/Login/LogoBackButton";
 import * as StorageService from "@/services/storage-service";
+import {t} from "@/i18n";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
@@ -61,7 +62,7 @@ const RegistrationScreen = () => {
                 </View>
                 <View className="flex-row items-end justify-center">
                   <Text className="text-textBodyGrayscale text-h4-sm-regular">
-                    Já possui conta?
+                    {t("login.existing-account")}
                   </Text>
                   <Text
                     className={
@@ -75,7 +76,7 @@ const RegistrationScreen = () => {
                       });
                     }}
                   >
-                    Entre agora
+                    {t("login.login-now")}
                   </Text>
                 </View>
               </View>

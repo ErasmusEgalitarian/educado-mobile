@@ -14,6 +14,7 @@ import { ToastNotification } from "@/components/General/ToastNotification";
 import ShowAlert from "@/components/General/ShowAlert";
 import { isAxiosError } from "axios";
 import { ApiError } from "@/api/legacy-api";
+import { t } from "@/i18n";
 
 interface ResetPasswordProps {
   modalVisible: boolean;
@@ -30,7 +31,7 @@ export const ResetPassword = ({
   modalVisible,
   onModalClose,
 }: ResetPasswordProps) => {
-  const emailAlertMessage = "Email não localizado";
+  const emailAlertMessage = t("login.mail-not-found");
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [emailSent, setEmailSent] = useState(false);
@@ -83,25 +84,22 @@ export const ResetPassword = ({
 
         case "E0406":
           // Too many resend attempts!
-          displayErrorAlert(
-            "Muitas tentativas de reenvio! Espere 5 minutos...",
-            false,
-          );
+          displayErrorAlert(t("login.many-attempts"), false);
           break;
 
         case "E0004":
           // User not found!
-          displayErrorAlert("Usuário não encontrado!", false);
+          displayErrorAlert(t("login.user-not-found"), false);
           break;
 
         // TODO: What error should we give here instead? Unknown error?
         default:
           // Errors not currently handled with specific alerts
-          displayErrorAlert("Erro desconhecido!", false);
+          displayErrorAlert(t("general.error-unknown"), false);
       }
     } finally {
       setEmailSent(true);
-      ToastNotification("success", "E-mail enviado!"); //email sent!
+      ToastNotification("success", t("login.email-sent"));
     }
     setButtonLoading(false);
   };
@@ -135,17 +133,17 @@ export const ResetPassword = ({
 
         case "E0404":
           // Code expired!
-          setTokenAlert("Código expirado!");
+          setTokenAlert(t("login.code-expired"));
           break;
 
         case "E0405":
           // Incorrect code!
-          setTokenAlert("Código inválido");
+          setTokenAlert(t("login.code-invalid"));
           break;
 
         default:
           // Errors not currently handled with specific alerts
-          ShowAlert("Erro desconhecido!");
+          ShowAlert(t("general.error-unknown"));
           console.log(error);
       }
     } finally {
@@ -171,7 +169,7 @@ export const ResetPassword = ({
     <EducadoModal
       modalVisible={modalVisible}
       closeModal={onModalClose}
-      title="Redefinição de senha"
+      title={t("login.reset-password")}
     >
       <View className="my-8 px-10">
         {!codeEntered ? (
@@ -180,8 +178,8 @@ export const ResetPassword = ({
               <View>
                 <FormTextField
                   bordered={true}
-                  placeholder="useremail@gmail.com"
-                  label="E-mail"
+                  placeholder={t("general.placeholder-email")}
+                  label={t("general.email")}
                   required={true}
                   onChangeText={(email) => {
                     setEmail(email);
@@ -203,10 +201,7 @@ export const ResetPassword = ({
               {emailSent ? (
                 <View>
                   <Text className="mb-[10px] text-center text-h4-sm-regular">
-                    {/* We have sent a code to your mail to reset your password,
-                     please enter the code you have received below: */}
-                    Enviamos um código para o seu email de redefinição de senha,
-                    por favor, insira o mesmo abaixo
+                    {t("login.code-sent")}
                   </Text>
                   <FormTextField
                     bordered={true}
@@ -230,13 +225,14 @@ export const ResetPassword = ({
                       disabled={!codeInputValid(token)}
                     >
                       {buttonLoading
-                        ? "Validando código..."
-                        : "Verificar Codigo"}
+                        ? t("login.code-validating")
+                        : t("login.code-check")}
                     </FormButton>
                   </View>
                   <View className="flex-column mx-10 items-center justify-center">
-                    {/* Did not receieve the code? */}
-                    <Text className="text-body-regular text-greyscaleTexticonSubtitle">O código não chegou?</Text>
+                    <Text className="text-textSubtitleGrayscale text-body-regular">
+                      {t("login.code-not-received")}
+                    </Text>
                     {/* Resend code*/}
                     <Text
                       className="underline text-body-regular"
@@ -244,7 +240,7 @@ export const ResetPassword = ({
                         void sendEmail(email);
                       }}
                     >
-                      Reenviar código
+                      {t("login.code-resend")}
                     </Text>
                   </View>
                 </View>
@@ -258,7 +254,9 @@ export const ResetPassword = ({
                     passwordResetAlert !== "" || email === "" || buttonLoading
                   }
                 >
-                  {buttonLoading ? "Enviando e-mail..." : "Entrar"}
+                  {buttonLoading
+                    ? t("login.email-sending")
+                    : t("general.enter")}
                 </FormButton>
               )}
             </View>
