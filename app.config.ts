@@ -1,4 +1,5 @@
-import { version } from "@/package.json";
+const version = process.env.APP_VERSION ?? "0.0.0";
+
 const strapiToken = process.env.STRAPI_TOKEN;
 
 export default {

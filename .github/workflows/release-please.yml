@@ -46,6 +46,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Export and Verify APP_VERSION
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "APP_VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "Extracted version: $VERSION"
+
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
