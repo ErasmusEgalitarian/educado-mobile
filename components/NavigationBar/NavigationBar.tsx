@@ -1,6 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CourseScreen from "@/screens/Courses/CourseScreen";
+import CourseOverviewScreen from "@/screens/Courses/CourseOverviewScreen";
+import SectionScreen from "@/screens/Section/SectionScreen";
+import CompleteSectionScreen from "@/screens/Section/CompleteSectionScreen";
+import ExerciseScreen from "@/screens/Excercises/ExerciseScreen";
 import DownloadScreen from "@/screens/Download/DownloadScreen";
 import ExploreScreen from "@/screens/Explore/ExploreScreen";
 import EduScreen from "@/screens/EduChatbot/EduScreen";
@@ -13,6 +17,52 @@ import { colors } from "@/theme/colors";
 
 const Tab = createBottomTabNavigator();
 const ProfileStack = createNativeStackNavigator();
+const CourseStackNav = createNativeStackNavigator();
+
+const CourseStackScreen = () => {
+  return (
+    <CourseStackNav.Navigator initialRouteName="Course">
+      <CourseStackNav.Screen
+        name="Course"
+        component={CourseScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CourseStackNav.Screen
+        name="CourseOverview"
+        // @ts-expect-error TODO: Will be fixed with Expo Router migration
+        component={CourseOverviewScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CourseStackNav.Screen
+        name="Section"
+        // @ts-expect-error TODO: Will be fixed with Expo Router migration
+        component={SectionScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CourseStackNav.Screen
+        name="CompleteSection"
+        component={CompleteSectionScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CourseStackNav.Screen
+        name="Exercise"
+        // @ts-expect-error TODO: Will be fixed with Expo Router migration
+        component={ExerciseScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </CourseStackNav.Navigator>
+  );
+};
 
 const ProfileStackScreen = () => {
   return (
@@ -105,7 +155,7 @@ export const NavigationBar = () => {
     >
       <Tab.Screen
         name="Meus cursos"
-        component={CourseScreen}
+        component={CourseStackScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
