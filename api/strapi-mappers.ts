@@ -4,7 +4,14 @@ import {
   CourseSelection as StrapiSection,
   Student as StrapiStudent,
 } from "@/api/backend/types.gen";
-import { Course, LoginStudent, Section, Component, Student } from "@/types";
+import {
+  Course,
+  LoginStudent,
+  Section,
+  Component,
+  Student,
+  FeedbackOption,
+} from "@/types";
 import {
   PopulatedCourse,
   PopulatedSection,
@@ -188,3 +195,17 @@ export const mapToStudent = (
     baseUser: studentStrapi.documentId ?? "", // Using documentId as baseUser identifier
   };
 };
+
+/**
+ * Maps a feedback option to the app FeedbackOption type.
+ *
+ * @param feedbackOption - The feedback option with name
+ * @returns A FeedbackOption object
+ */
+export const mapToFeedbackOption = (feedbackOption: {
+  name: string;
+  rating?: number;
+}): FeedbackOption => ({
+  name: feedbackOption.name,
+  rating: feedbackOption.rating,
+});
