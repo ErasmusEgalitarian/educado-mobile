@@ -33,6 +33,7 @@ import {
   FeedbackOption,
   SectionComponentExercise,
   SectionComponentLecture,
+  SectionComponent,
 } from "@/types";
 import {
   PopulatedCourse,
@@ -239,7 +240,7 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
 
 export const getAllComponentsBySectionIdStrapi = async (
   id: string,
-): Promise<(SectionComponentExercise | SectionComponentLecture)[]> => {
+): Promise<SectionComponent<SectionComponentExercise | SectionComponentLecture>[]> => {
   const response = (await courseSelectionGetCourseSelections({
     query: {
       /* @ts-expect-error: Strapi filter typing does not support nested filters */
@@ -264,8 +265,31 @@ export const getAllComponentsBySectionIdStrapi = async (
     (lecture) => mapToLectures(lecture as PopulatedLecture),
   );
 
+  console.log("Exercises:", exerciseList);
+  console.log("Lectures:", lectureList);
+
   // Combine both lists and return
-  return [...exerciseList, ...lectureList];
+
+  const finalList: SectionComponent<
+    SectionComponentExercise | SectionComponentLecture
+  >[] = [];
+
+  exerciseList.forEach((exercise) => {
+    finalList.push({
+      component: exercise,
+      type: "exercise",
+    });
+  });
+
+  lectureList.forEach((lecture) => {
+    finalList.push({
+      component: lecture,
+      type: "lecture",
+      lectureType: lecture.contentType,
+    });
+  });
+
+  return finalList;
 };
 
 /**

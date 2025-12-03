@@ -60,9 +60,9 @@ const ExploreScreen = () => {
   const subscriptions = subscriptionsQuery.data ?? [];
   const refreshing = courseQuery.isFetching || subscriptionsQuery.isFetching;
 
-  const kusse = useSectionComponents("gq75pw4k9aalai9694pywar5");
+  const stuff = useSectionComponents("gq75pw4k9aalai9694pywar5");
 
-  //console.log(kusse.data[0].components);
+  console.log(stuff.data);
   //console.log(courseQuery.data);
   //const components = useSectionComponents();
 
