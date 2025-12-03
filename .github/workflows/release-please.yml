@@ -75,7 +75,6 @@ jobs:
 
       - name: Test Project
         run: npm test
-        continue-on-error: true
 
       - name: Cache Gradle
         if: runner.os == 'Linux'
