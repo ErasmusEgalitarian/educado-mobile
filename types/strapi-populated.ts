@@ -114,6 +114,49 @@ export interface PopulatedSection
   course?: PopulatedCourse;
 }
 
+export interface PopulatedSectionComponent {
+  /** The concrete component payload for this section component (lecture or exercise) */
+  component?: PopulatedSectionComponentLecture | PopulatedSectionComponentExercise;
+  /** Type hint: 'lecture' | 'exercise' — mirrors `CompType` in app types */
+  type?: "lecture" | "exercise";
+  /** Optional lecture subtype — mirrors `LectureType` in app types */
+  lectureType?: "video" | "text";
+}
+
+export interface PopulatedSectionComponentLecture {
+  id?: number;
+  documentId?: string;
+  title?: string;
+  description?: string;
+  contentType?: "video" | "text";
+  content?: string | unknown[] | null;
+  parentSection?: number | string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
+export interface PopulatedSectionComponentExercise {
+  id?: number;
+  documentId?: string;
+  title?: string;
+  question?: string;
+  exercise_options?: {
+    id?: number;
+    documentId?: string;
+    text?: string;
+    explanation?: string;
+    isCorrect?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+    publishedAt?: string;
+  }[];
+  parentSection?: number | string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
 /**
  * Student with all relations populated
  */

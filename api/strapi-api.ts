@@ -6,6 +6,8 @@ import {
   postStudentSignup,
   studentGetStudentsById,
   courseSelectionGetCourseSelections,
+  exerciseGetExercises,
+  lectureGetLectures,
   feedbackGetFeedbacks,
 } from "@/api/backend/sdk.gen";
 import {
@@ -15,6 +17,8 @@ import {
   StudentGetStudentsByIdResponse,
   CourseSelectionGetCourseSelectionsResponse,
   FeedbackGetFeedbacksResponse,
+  ExerciseListResponse,
+  LectureListResponse,
 } from "@/api/backend/types.gen";
 import {
   mapToCourse,
@@ -22,6 +26,7 @@ import {
   mapToSection,
   mapToStudent,
   mapToFeedbackOption,
+  mapToSectionComponents,
 } from "@/api/strapi-mappers";
 import {
   Course,
@@ -29,8 +34,17 @@ import {
   Section,
   Student,
   FeedbackOption,
+  SectionComponent,
+  SectionComponentLecture,
+  SectionComponentExercise,
 } from "@/types";
-import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
+import {
+  PopulatedCourse,
+  PopulatedSection,
+  PopulatedSectionComponent,
+  PopulatedSectionComponentExercise,
+  PopulatedSectionComponentLecture,
+} from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -155,10 +169,8 @@ export const getAllSectionsByCourseIdStrapi = async (
 ): Promise<Section[]> => {
   const response = (await courseSelectionGetCourseSelections({
     query: {
-      filters: {
-        //TODO: wrong filter format - look at getAllStudentSubscriptionsStrapi
-        "course[id][$eq]": id,
-      },
+      /* @ts-expect-error: Strapi filter typing does not support nested filters */
+      "filters[course][documentId][$eq]": id,
       populate: ["exercises", "course", "lectures"],
       status: "published",
     },
@@ -237,24 +249,93 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
 
 export const getAllComponentsBySectionIdStrapi = async (
   id: string,
-): Promise<Section[]> => {
-  const response = (await courseSelectionGetCourseSelections({
-    query: {
-      filters: {
-        "id[$eq]": id,
+): Promise<
+  SectionComponent<SectionComponentLecture | SectionComponentExercise>[]
+> => {
+  // Fetch exercises and lectures in parallel and combine results
+  const [exerciseResponse, lectureResponse] = await Promise.all([
+    exerciseGetExercises({
+      query: {
+        /* @ts-expect-error: Strapi filter typing does not support nested filters */
+        "filters[course_section][documentId][$eq]": id,
+        populate: "*",
+        status: "published",
       },
-      populate: ["exercises", "course", "lectures"],
-      status: "published",
-    },
-  })) as CourseSelectionGetCourseSelectionsResponse;
+    }) as ExerciseListResponse,
+    lectureGetLectures({
+      query: {
+        /* @ts-expect-error: Strapi filter typing does not support nested filters */
+        "filters[course_section][documentId][$eq]": id,
+        populate: "*",
+        status: "published",
+      },
+    }) as LectureListResponse,
+  ]);
 
-  if (response.data == null) {
-    throw new Error("No section found");
+  const exercises = exerciseResponse.data ?? [];
+  const lectures = lectureResponse.data ?? [];
+
+  const combined = [...exercises, ...lectures];
+
+  if (!combined || combined.length === 0) {
+    throw new Error("No components found");
   }
 
-  return response.data.map((section) =>
-    mapToSection(section as PopulatedSection),
-  );
+  console.log("Combined components:", combined);
+
+  return combined.map((item) => {
+    // Heuristic: exercises have a `question` property and `exercise_options`
+    if (
+      item &&
+      typeof item === "object" &&
+      ("question" in item || "exercise_options" in item)
+    ) {
+      const e: any = item;
+      return {
+        component: {
+          id: e.documentId?.toString() ?? "",
+          parentSection: id,
+          title: e.title ?? "",
+          question: e.question ?? "",
+          answers: (e.exercise_options ?? []).map((a: any) => ({
+            text: a.text ?? "",
+            correct: !!a.isCorrect,
+            feedback: a.explanation ?? "",
+          })),
+        } as SectionComponentExercise,
+        type: "exercise" as const,
+      };
+    }
+
+    // Otherwise treat as lecture
+    const l: any = item;
+    let contentStr = "";
+    if (Array.isArray(l.content) && l.content.length > 0) {
+      try {
+        contentStr =
+          typeof l.content[0] === "string"
+            ? l.content[0]
+            : JSON.stringify(l.content[0]);
+      } catch {
+        contentStr = "";
+      }
+    } else if (typeof l.content === "string") {
+      contentStr = l.content;
+    }
+
+    return {
+      component: {
+        id: l.documentId?.toString() ?? "",
+        parentSection: id,
+        title: l.title ?? "",
+        description: l.description ?? "",
+        contentType: (l.contentType as any) ?? "video",
+        content: contentStr,
+      } as SectionComponentLecture,
+      type: "lecture" as const,
+      lectureType: (l.contentType as any) ?? "video",
+    };
+  });
 };
 
 /**

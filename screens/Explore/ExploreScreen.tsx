@@ -9,6 +9,7 @@ import { t } from "@/i18n";
 import {
   useCourses,
   useLoginStudent,
+  useSectionComponents,
   useSubscribedCourses,
 } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
@@ -78,7 +79,7 @@ const ExploreScreen = () => {
 
   useEffect(() => {
     const courses = courseQuery.data ?? [];
-
+    console.log(courses);
     if (courses.length === 0) {
       return;
     }
@@ -109,6 +110,14 @@ const ExploreScreen = () => {
   if (courseQuery.isLoading || subscriptionsQuery.isLoading) {
     return <LoadingScreen />;
   }
+
+  const sectionComponents = useSectionComponents("pl08o7v5jhljcx6iau7ib8sz");
+
+  useEffect(() => {
+    if (sectionComponents.data) {
+      console.log("ppp" + sectionComponents.data);
+    }
+  }, [sectionComponents.data]);
 
   return (
     <BaseScreen>

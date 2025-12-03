@@ -11,6 +11,9 @@ import {
   Component,
   Student,
   FeedbackOption,
+  SectionComponent,
+  SectionComponentLecture,
+  SectionComponentExercise,
 } from "@/types";
 import {
   PopulatedCourse,
@@ -160,6 +163,45 @@ export const mapToSection = (
     components: components,
   };
 };
+
+
+
+// export const mapToSectionComponents = (
+//   courseSectionStrapi: StrapiSection | PopulatedSection,
+// ): SectionComponent<SectionComponentLecture | SectionComponentExercise> =>  {
+//   const exercises = courseSectionStrapi.exercises ?? [];
+//   const lectures = courseSectionStrapi.lectures ?? [];
+//   const course = courseSectionStrapi.course;
+
+//   // Combine exercises and lectures into components
+//   const components: Component[] = [
+//     ...exercises.map((exercise) => ({
+//       compId: exercise.documentId?.toString() ?? "",
+//       compType: "exercise" as const,
+//     })),
+//     ...lectures.map((lecture) => ({
+//       compId: lecture.documentId?.toString() ?? "",
+//       compType: "lecture" as const,
+//     })),
+//   ];
+
+//   const sc: SectionComponent<SectionComponentLecture | SectionComponentExercise> = [
+//     {
+//       component: {
+//         id: "afa",
+//         parentSection: "fwfeew",
+//         title: "string",
+//         description: "description here",
+//         contentType: "video",
+//         content: "content here"
+//       },
+//       type: "lecture",
+//       lectureType: "video"
+//     }
+//   ];
+  
+//   return sc;
+// };
 
 /**
  * Maps a Strapi Student to the app Student type.
