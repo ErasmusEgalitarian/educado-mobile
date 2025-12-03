@@ -22,6 +22,8 @@ import {
   mapToSection,
   mapToStudent,
   mapToFeedbackOption,
+  mapToExercises,
+  mapToLectures,
 } from "@/api/strapi-mappers";
 import {
   Course,
@@ -32,7 +34,12 @@ import {
   SectionComponentExercise,
   SectionComponentLecture,
 } from "@/types";
-import { PopulatedCourse, PopulatedExercise, PopulatedLecture, PopulatedSection } from "@/types/strapi-populated";
+import {
+  PopulatedCourse,
+  PopulatedExercise,
+  PopulatedLecture,
+  PopulatedSection,
+} from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -104,8 +111,7 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
         "updatedAt",
         "publishedAt",
       ],
-      populate:
-        "*",
+      populate: "*",
       status: "published", // Only get published courses
     },
   })) as CourseGetCoursesResponse;
@@ -233,34 +239,33 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
 
 export const getAllComponentsBySectionIdStrapi = async (
   id: string,
-): Promise<SectionComponentExercise[]> => {
+): Promise<(SectionComponentExercise | SectionComponentLecture)[]> => {
   const response = (await courseSelectionGetCourseSelections({
     query: {
-        /* @ts-expect-error: Strapi filter typing does not support nested filters */
-        "filters[documentId][$eq]": id,
+      /* @ts-expect-error: Strapi filter typing does not support nested filters */
+      "filters[documentId][$eq]": id,
       populate: ["exercises", "course", "lectures"],
       status: "published",
     },
   })) as CourseSelectionGetCourseSelectionsResponse;
 
-  const exerciseComponents = response.data[0].exercises;
-  const lectureComponents = response.data[0].lectures;
-
-  if (response.data == null) {
+  if (!response.data || response.data.length === 0) {
     throw new Error("No section found");
   }
 
-  //console.log(response.data[0].exercises.exerise_options);
+  const exerciseComponents = response.data[0].exercises ?? [];
+  const lectureComponents = response.data[0].lectures ?? [];
 
-  const exerciseList : SectionComponentExercise[] = 
-  exerciseComponents.map((exercise) =>
-    mapToExercises(exercise as PopulatedExercise)
+  const exerciseList: SectionComponentExercise[] = exerciseComponents.map(
+    (exercise) => mapToExercises(exercise as PopulatedExercise),
   );
 
-  const lectureList : SectionComponentLecture[] = 
-  lectureComponents.map((lecture) =>
-    mapToLectures(lecture as PopulatedLecture)
+  const lectureList: SectionComponentLecture[] = lectureComponents.map(
+    (lecture) => mapToLectures(lecture as PopulatedLecture),
   );
+
+  // Combine both lists and return
+  return [...exerciseList, ...lectureList];
 };
 
 /**
