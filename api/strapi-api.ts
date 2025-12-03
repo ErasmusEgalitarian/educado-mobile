@@ -29,8 +29,10 @@ import {
   Section,
   Student,
   FeedbackOption,
+  SectionComponentExercise,
+  SectionComponentLecture,
 } from "@/types";
-import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
+import { PopulatedCourse, PopulatedExercise, PopulatedLecture, PopulatedSection } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -102,14 +104,8 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
         "updatedAt",
         "publishedAt",
       ],
-      populate: [
-        "course_categories",
-        "content_creators",
-        "image",
-        "feedbacks",
-        "course_sections",
-        "students",
-      ],
+      populate:
+        "*",
       status: "published", // Only get published courses
     },
   })) as CourseGetCoursesResponse;
@@ -237,23 +233,33 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
 
 export const getAllComponentsBySectionIdStrapi = async (
   id: string,
-): Promise<Section[]> => {
+): Promise<SectionComponentExercise[]> => {
   const response = (await courseSelectionGetCourseSelections({
     query: {
-      filters: {
-        "id[$eq]": id,
-      },
+        /* @ts-expect-error: Strapi filter typing does not support nested filters */
+        "filters[documentId][$eq]": id,
       populate: ["exercises", "course", "lectures"],
       status: "published",
     },
   })) as CourseSelectionGetCourseSelectionsResponse;
 
+  const exerciseComponents = response.data[0].exercises;
+  const lectureComponents = response.data[0].lectures;
+
   if (response.data == null) {
     throw new Error("No section found");
   }
 
-  return response.data.map((section) =>
-    mapToSection(section as PopulatedSection),
+  //console.log(response.data[0].exercises.exerise_options);
+
+  const exerciseList : SectionComponentExercise[] = 
+  exerciseComponents.map((exercise) =>
+    mapToExercises(exercise as PopulatedExercise)
+  );
+
+  const lectureList : SectionComponentLecture[] = 
+  lectureComponents.map((lecture) =>
+    mapToLectures(lecture as PopulatedLecture)
   );
 };
 

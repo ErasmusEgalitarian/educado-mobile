@@ -3,6 +3,8 @@ import {
   Course as StrapiCourse,
   CourseSelection as StrapiSection,
   Student as StrapiStudent,
+  Exercise as StrapiExercise,
+  Lecture as StrapiLecture,
 } from "@/api/backend/types.gen";
 import {
   Course,
@@ -11,9 +13,14 @@ import {
   Component,
   Student,
   FeedbackOption,
+  SectionComponentExercise,
+  SectionComponentLecture,
+  Answer,
 } from "@/types";
 import {
   PopulatedCourse,
+  PopulatedExercise,
+  PopulatedLecture,
   PopulatedSection,
   PopulatedStudent,
 } from "@/types/strapi-populated";
@@ -158,6 +165,40 @@ export const mapToSection = (
     description: courseSectionStrapi.description ?? "",
     total: 177, // TODO: Strapi model does not have points currently"
     components: components,
+  };
+};
+
+export const mapToExercises = (
+  sectionComponentExerciseStrapi: StrapiExercise | PopulatedExercise,
+): SectionComponentExercise => {
+  //const exercises = courseSectionStrapi.exercises ?? [];
+
+  const mappedExerciseOptions: Answer[] = (sectionComponentExerciseStrapi.exercise_options ?? []).map((option) => ({
+    text: option.text ?? "",
+    correct: option.isCorrect ?? false,
+    feedback: "TODO", // TODO: Add feedback field to Strapi ExerciseAnswer model
+  }));
+
+  return {
+    id: sectionComponentExerciseStrapi.documentId?.toString() ?? "",
+    parentSection: "TODO", // TODO: Add parentSection relation in Strapi model
+    title: sectionComponentExerciseStrapi.title ?? "",
+    question: sectionComponentExerciseStrapi.question ?? "",
+    answers: mappedExerciseOptions,
+  };
+};
+
+export const mapToLectures = (
+  sectionComponentLectureStrapi: StrapiLecture | PopulatedLecture,
+): SectionComponentLecture => {
+
+  return {
+    id: sectionComponentLectureStrapi.documentId?.toString() ?? "",
+    parentSection: "TODO", // TODO: Add parentSection relation in Strapi model
+    title: sectionComponentLectureStrapi.title ?? "",
+    description: "TODO", // TODO: Add description field to Strapi Lecture model
+    contentType: "video", // TODO: Map contentType from Strapi Lecture model
+    content: "TODO", // TODO: Map content from Strapi Lecture model
   };
 };
 
