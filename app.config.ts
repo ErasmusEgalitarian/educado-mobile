@@ -1,3 +1,5 @@
+const version = process.env.APP_VERSION ?? "0.0.0";
+
 const strapiToken = process.env.STRAPI_TOKEN;
 
 export default {
@@ -5,7 +7,7 @@ export default {
     name: "Educado",
     slug: "educado-mobile",
     scheme: "educado-mobile",
-    version: "2.1.5",
+    version: version,
     owner: "educado-mobile-25",
     orientation: "portrait",
     icon: "./assets/images/logo_black240.png",
