@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import BackButton from "../General/BackButton";
 import noCertificateImage from "../../assets/images/no-certificates.png";
-import { Image, Pressable, Text, View, SafeAreaView } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CertificateEmptyState() {
   const navigation = useNavigation();

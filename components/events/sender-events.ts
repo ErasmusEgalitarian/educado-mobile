@@ -1,5 +1,13 @@
-import { EventRegister } from "react-native-event-listeners";
+import { NativeModules } from "react-native";
 
-export const getPointsFromExerciseSender = (props) => {
-  EventRegister.emit("getPointsFromExercise", props);
+const { SenderEventsModule: nativeModule } = NativeModules;
+
+export const getPointsFromExerciseSender = (props: {
+  exerciseId: string;
+  attemptId: string;
+}) => {
+  return nativeModule.getPointsFromExerciseSender(
+    props.exerciseId,
+    props.attemptId,
+  );
 };
