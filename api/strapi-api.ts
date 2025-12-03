@@ -300,3 +300,43 @@ export const getAllFeedbackOptionsStrapi = async (): Promise<
     return mapToFeedbackOption({ name: text, rating: avgRating });
   });
 };
+
+/**
+ * Completes a component for a student in Strapi.
+ * Note: This is a placeholder implementation. A custom Strapi endpoint is needed.
+ *
+ * @param studentId - The student ID
+ * @param componentId - The component ID
+ * @param componentType - The type of component (lecture or exercise)
+ * @param isComplete - Whether the component is complete
+ * @param points - Points earned for completion
+ * @returns Updated student object
+ */
+export const completeComponentStrapi = async (
+  studentId: string,
+  componentId: string,
+  componentType: "lecture" | "exercise",
+  isComplete: boolean,
+  points: number,
+): Promise<Student> => {
+  // TODO: Implement custom Strapi endpoint for component completion
+  // For now, we'll fetch the student and return it
+  // In production, you would:
+  // 1. Create a StudentComponentProgress collection in Strapi
+  // 2. Create/update a record linking student, component, completion status, and points
+  // 3. Update student's total points
+
+  const student = await getStudentByIdStrapi(studentId);
+
+  // Log the fetched student data
+  console.log("Fetched student after completion:", {
+    studentId: student.id,
+    points: student.points,
+    coursesCount: student.courses.length,
+    student: JSON.stringify(student, null, 2),
+  });
+
+  // TODO: Make API call to custom Strapi endpoint when available
+
+  return student;
+};

@@ -1,6 +1,5 @@
 import {
   addCourseToStudent,
-  completeComponent,
   deleteUser,
   getBucketImageByFilename,
   getBucketVideoByFilename,
@@ -20,10 +19,11 @@ import {
   getAllComponentsBySectionIdStrapi,
   getStudentByIdStrapi,
   getAllFeedbackOptionsStrapi,
+  completeComponentStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
-import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
+import { isComponentCompleted } from "@/services/utils";
 import {
   LoginStudent,
   SectionComponentExercise,
@@ -364,9 +364,11 @@ export const useLogoutStrapi = () => {
 };
 
 /**
- * Complete a component.
+ * Complete a component using Strapi backend.
  */
 export const useCompleteComponent = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<
     Student,
     unknown,
@@ -376,30 +378,38 @@ export const useCompleteComponent = () => {
       isComplete: boolean;
     }
   >({
-    mutationFn: (variables) => {
+    mutationFn: async (variables) => {
       const { student, component, isComplete } = variables;
 
-      const isFirstAttempt = isFirstAttemptExercise(student, component.id);
+      // Calculate points based on completion status
+      // TODO: Implement isFirstAttemptExercise for Strapi when component progress tracking is added
       const isCompComplete = isComponentCompleted(student, component.id);
 
       let points = 0;
 
-      if (isFirstAttempt && !isCompComplete && isComplete) {
+      // If component is not already complete and user is completing it now
+      if (!isCompComplete && isComplete) {
+        // Give 10 points for first completion (simplified for now)
+        // TODO: Track first attempt vs retry when Strapi component progress is implemented
         points = 10;
       }
 
-      if (!isFirstAttempt && !isCompComplete && isComplete) {
-        points = 5;
-      }
+      // Determine component type based on the component structure
+      const componentType = "question" in component ? "exercise" : "lecture";
 
-      const requestComponent = { ...component, _id: component.id };
-
-      return completeComponent(
-        student.baseUser,
-        requestComponent,
+      return await completeComponentStrapi(
+        student.id,
+        component.id,
+        componentType,
         isComplete,
         points,
       );
+    },
+    onSuccess: async (data) => {
+      // Invalidate student queries to refetch updated data
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.student(data.id),
+      });
     },
   });
 };
