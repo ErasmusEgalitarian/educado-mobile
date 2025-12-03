@@ -328,15 +328,5 @@ export const completeComponentStrapi = async (
 
   const student = await getStudentByIdStrapi(studentId);
 
-  // Log the fetched student data
-  console.log("Fetched student after completion:", {
-    studentId: student.id,
-    points: student.points,
-    coursesCount: student.courses.length,
-    student: JSON.stringify(student, null, 2),
-  });
-
-  // TODO: Make API call to custom Strapi endpoint when available
-
   return student;
 };
