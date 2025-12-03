@@ -8,9 +8,9 @@ export default {
     version: "2.1.5",
     owner: "educado-mobile-25",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/images/logo_black240.png",
     splash: {
-      image: "./assets/images/icon.png",
+      image: "./assets/images/logo_black240.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff",
     },
@@ -24,7 +24,7 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/images/icon.png",
+        foregroundImage: "./assets/images/logo_black240.png",
         backgroundColor: "#FFFFFF",
       },
       package: "com.blackchakers.eml",
