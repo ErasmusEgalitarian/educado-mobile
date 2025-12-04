@@ -265,9 +265,6 @@ export const getAllComponentsBySectionIdStrapi = async (
     (lecture) => mapToLectures(lecture as PopulatedLecture),
   );
 
-  console.log("Exercises:", exerciseList);
-  console.log("Lectures:", lectureList);
-
   // Combine both lists and return
 
   const finalList: SectionComponent<
