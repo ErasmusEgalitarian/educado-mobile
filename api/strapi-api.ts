@@ -242,7 +242,9 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
 
 export const getAllComponentsBySectionIdStrapi = async (
   id: string,
-): Promise<SectionComponent<SectionComponentExercise | SectionComponentLecture>[]> => {
+): Promise<
+  SectionComponent<SectionComponentExercise | SectionComponentLecture>[]
+> => {
   const response = (await courseSelectionGetCourseSelections({
     query: {
       /* @ts-expect-error: Strapi filter typing does not support nested filters */

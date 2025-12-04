@@ -173,7 +173,9 @@ export const mapToExercises = (
 ): SectionComponentExercise => {
   //const exercises = courseSectionStrapi.exercises ?? [];
 
-  const mappedExerciseOptions: Answer[] = (sectionComponentExerciseStrapi.exercise_options ?? []).map((option) => ({
+  const mappedExerciseOptions: Answer[] = (
+    sectionComponentExerciseStrapi.exercise_options ?? []
+  ).map((option) => ({
     text: option.text ?? "",
     correct: option.isCorrect ?? false,
     feedback: "TODO", // TODO: Add feedback field to Strapi ExerciseAnswer model
@@ -191,7 +193,6 @@ export const mapToExercises = (
 export const mapToLectures = (
   sectionComponentLectureStrapi: StrapiLecture | PopulatedLecture,
 ): SectionComponentLecture => {
-
   return {
     id: sectionComponentLectureStrapi.documentId?.toString() ?? "",
     parentSection: "TODO", // TODO: Add parentSection relation in Strapi model
