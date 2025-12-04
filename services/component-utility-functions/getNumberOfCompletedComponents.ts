@@ -1,4 +1,4 @@
-import { LoginStudent, Section, Student } from "@/types";
+import type { LoginStudent, Section, Student } from "@/types";
 import { isComponentCompleted } from "@/services/component-utility-functions/isComponentCompleted";
 
 /**
