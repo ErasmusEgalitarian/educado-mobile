@@ -17,7 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "@/theme/colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tooltip } from "@/components/Onboarding/Tooltip";
-import { recommendCourse } from "@/services/component-utility-functions";
+import { recommendCourse } from "@/services/component-utility-functions/recommendCourse";
 
 const RecommendationBadge = ({ children }: PropsWithChildren) => {
   return (

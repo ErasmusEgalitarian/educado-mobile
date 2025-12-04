@@ -1,6 +1,6 @@
 import { describe, it, expect } from "@jest/globals";
 import type { Course, CourseFeedbackOption } from "@/types";
-import { recommendCourse } from "@/services/component-utility-functions";
+import { recommendCourse } from "@/services/component-utility-functions/recommendCourse";
 
 describe("recommendCourse", () => {
   it("returns the course with the highest rating", () => {

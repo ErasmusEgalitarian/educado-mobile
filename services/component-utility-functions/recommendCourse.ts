@@ -1,4 +1,4 @@
-import type { Course } from "@/types";
+import { Course } from "@/types";
 
 export const recommendCourse = (
   filteredCourses: Course[],

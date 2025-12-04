@@ -24,8 +24,10 @@ import {
   logoutStudentStrapi,
   signUpStudentStrapi,
 } from "@/api/strapi-api";
+import { isComponentCompleted } from "@/services/component-utility-functions/isComponentCompleted";
 import { setJWT, setUserInfo } from "@/services/storage-service";
-import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
+import { isFirstAttemptExercise } from "@/services/utils";
+
 import {
   LoginStudent,
   SectionComponentExercise,
