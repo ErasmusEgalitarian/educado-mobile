@@ -6,12 +6,10 @@ export const isComponentCompleted = (
 ) => {
   let courses: StudentCourse[] = [];
 
-  // Student
   if ("courses" in student) {
     courses = student.courses;
   }
 
-  // LoginStudent
   if ("userInfo" in student) {
     courses = student.userInfo.courses;
   }

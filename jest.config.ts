@@ -21,6 +21,7 @@ const config: Config = {
     "<rootDir>/__tests__/utilityFunctions/recommendation-test.ts",
     "<rootDir>/__tests__/utilityFunctions/getCourseProgress-test.ts",
     "<rootDir>/__tests__/utilityFunctions/getNumberOfCompletedComponents-test.ts",
+    "<rootDir>/__tests__/utilityFunctions/isComponentCompleted-test.ts",
   ],
 };
 
