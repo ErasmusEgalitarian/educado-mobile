@@ -18,6 +18,7 @@ const config: Config = {
     "<rootDir>/__tests__/components/exercise/Progressbar-test.tsx",
     "<rootDir>/__tests__/components/login/FormFieldAlert-test.tsx",
     "<rootDir>/__tests__/components/login/FormButton-test.tsx",
+    "<rootDir>/__tests__/utilityFunctions/recommendation-test.tsx",
   ],
 };
 
