@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { getNumberOfCompletedComponents } from "@/services/utils";
 import { SectionCard } from "@/components/Section/SectionCard";
 import {
   Section,
@@ -15,6 +14,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLoginStudent, useSectionComponents } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
+import { getNumberOfCompletedComponents } from "@/services/component-utility-functions/getNumberOfCompletedComponents";
 
 export interface SectionScreenProps {
   route: {

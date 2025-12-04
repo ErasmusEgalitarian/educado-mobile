@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Pressable, View, Text, Image } from "react-native";
 import { checkCourseStoredLocally } from "@/services/storage-service";
 import {
-  getCourseProgress,
   determineCategory,
   determineIcon,
   formatHours,
@@ -16,6 +15,7 @@ import { t } from "@/i18n";
 import { Course, ProgressTuple } from "@/types";
 import courseTitleIcon from "@/assets/images/course-title-icon.png";
 import { useLoginStudent, useSections } from "@/hooks/query";
+import { getCourseProgress } from "@/services/component-utility-functions/getCourseProgress";
 
 interface CourseCardProps {
   course: Course;
