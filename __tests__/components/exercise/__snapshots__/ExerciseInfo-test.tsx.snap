@@ -8,9 +8,12 @@ exports[`ExerciseInfo renders ExerciseInfo correctly 1`] = `
     className="text-caption-body text-center font-sans text-projectGray"
   >
     Course name: 
+    My Course
   </Text>
   <Text
     className="font-sans-bold text-center text-lg text-projectBlack"
-  />
+  >
+    Section 1
+  </Text>
 </View>
 `;

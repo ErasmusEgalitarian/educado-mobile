@@ -1,3 +1,5 @@
+const version = process.env.APP_VERSION ?? "0.0.0";
+
 const strapiToken = process.env.STRAPI_TOKEN;
 
 export default {
@@ -5,7 +7,7 @@ export default {
     name: "Educado",
     slug: "educado-mobile",
     scheme: "educado-mobile",
-    version: "2.1.5",
+    version: version,
     owner: "educado-mobile-25",
     orientation: "portrait",
     icon: "./assets/images/logo_black240.png",
@@ -38,25 +40,10 @@ export default {
         "expo-build-properties",
         {
           android: {
-            compileSdkVersion: 34,
-            targetSdkVersion: 34,
-            buildToolsVersion: "34.0.0",
+            compileSdkVersion: 36,
+            targetSdkVersion: 36,
+            buildToolsVersion: "36.0.0",
           },
-        },
-      ],
-      [
-        "expo-font",
-        {
-          fonts: [
-            "node_modules/@expo-google-fonts/montserrat/400Regular/Montserrat_400Regular.ttf",
-            "node_modules/@expo-google-fonts/montserrat/400Regular_Italic/Montserrat_400Regular_Italic.ttf",
-            "node_modules/@expo-google-fonts/montserrat/500Medium/Montserrat_500Medium.ttf",
-            "node_modules/@expo-google-fonts/montserrat/600SemiBold/Montserrat_600SemiBold.ttf",
-            "node_modules/@expo-google-fonts/montserrat/600SemiBold_Italic/Montserrat_600SemiBold_Italic.ttf",
-            "node_modules/@expo-google-fonts/montserrat/700Bold/Montserrat_700Bold.ttf",
-            "node_modules/@expo-google-fonts/montserrat/700Bold_Italic/Montserrat_700Bold_Italic.ttf",
-            "node_modules/@expo-google-fonts/montserrat/800ExtraBold/Montserrat_800ExtraBold.ttf",
-          ],
         },
       ],
       [
@@ -70,10 +57,12 @@ export default {
         "expo-localization",
         {
           supportedLocales: {
-            android: ["en-US", "pt-BR"],
+            android: ["en_US", "pt_BR"],
           },
         },
       ],
+      ["expo-video"],
+      ["expo-audio"],
     ],
     extra: {
       JWT_SECRET: "test",

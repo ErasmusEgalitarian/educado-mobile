@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { Alert, TouchableOpacity } from "react-native";
-import { Audio } from "expo-av";
+import {
+  useAudioRecorder,
+  RecordingPresets,
+  requestRecordingPermissionsAsync,
+  setAudioModeAsync,
+} from "expo-audio";
 import { sendAudioToChatbot } from "@/api/api";
-import { Icon } from "@rneui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AudioResponse } from "@/types/ai";
 import { Course } from "@/types/course";
 
@@ -17,89 +22,92 @@ export const RecordingButton = ({
   onLock,
   courses,
 }: RecordingButtonProps) => {
-  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  const [isRecording, setIsRecording] = useState(false);
 
   const startRecording = async () => {
-    try {
-      const { status } = await Audio.requestPermissionsAsync();
+    if (isRecording || audioRecorder.isRecording) {
+      return;
+    }
 
-      if (status !== "granted") {
+    try {
+      const { granted } = await requestRecordingPermissionsAsync();
+
+      if (!granted) {
         Alert.alert(
           "Permission Denied",
           "Audio recording permission is required.",
         );
-
         return;
       }
 
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
+      await setAudioModeAsync({
+        playsInSilentMode: true,
+        allowsRecording: true,
       });
 
-      const recordingInstance = new Audio.Recording();
+      await audioRecorder.prepareToRecordAsync();
 
-      await recordingInstance.prepareToRecordAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY,
-      );
-      await recordingInstance.startAsync();
+      audioRecorder.record();
 
-      setRecording(recordingInstance);
-
-      if (onLock) {
-        onLock(true); // Notify parent that recording has started
-      }
+      setIsRecording(true);
+      onLock?.(true); // Notify parent that recording has started
     } catch (error) {
       console.error("Failed to start recording", error);
 
-      if (onLock) {
-        onLock(false);
-      }
+      setIsRecording(false);
+      onLock?.(false);
     }
   };
 
   const stopRecording = async () => {
     try {
-      if (recording) {
-        await recording.stopAndUnloadAsync();
-        const uri = recording.getURI();
-
-        if (!uri) {
-          console.error("Recording URI is null");
-
-          return;
-        }
-
-        setRecording(null);
-
-        console.log("Recording saved at:", uri);
-
-        const result = await sendAudioToChatbot(uri, courses);
-
-        // Notify parent that recording has stopped
-        if (onLock) {
-          onLock(false);
-        }
-
-        onAudioResponse(result);
+      if (!audioRecorder.isRecording) {
+        setIsRecording(false);
+        onLock?.(false);
+        return;
       }
+
+      await audioRecorder.stop();
+      const uri = audioRecorder.uri;
+
+      if (!uri) {
+        console.error("Recording URI is null");
+        setIsRecording(false);
+        onLock?.(false);
+        return;
+      }
+
+      setIsRecording(false);
+      console.log("Recording saved at:", uri);
+
+      const result = await sendAudioToChatbot(uri, courses);
+
+      // Notify parent that recording has stopped
+      onLock?.(false);
+
+      onAudioResponse(result);
     } catch (error) {
       console.error("Failed to stop recording", error);
 
-      if (onLock) {
-        onLock(false);
-      }
+      setIsRecording(false);
+      onLock?.(false);
     }
   };
 
   return (
     <TouchableOpacity
-      className="ml-2 flex h-7 w-7 items-center justify-center rounded-full bg-primary_custom"
-      onPressIn={startRecording}
-      onPressOut={stopRecording}
+      className="ml-2 flex h-7 w-7 items-center justify-center rounded-full bg-surfaceDefaultCyan"
+      onPress={() => {
+        if (isRecording) {
+          void stopRecording();
+        } else {
+          void startRecording();
+        }
+      }}
     >
-      <Icon
-        name="microphone"
+      <MaterialCommunityIcons
+        name={isRecording ? "stop" : "microphone"}
         type="material-community"
         color="white"
         size={20}

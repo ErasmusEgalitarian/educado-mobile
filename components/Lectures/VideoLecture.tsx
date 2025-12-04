@@ -1,6 +1,6 @@
 import { Alert, Text, TouchableOpacity, View } from "react-native";
-import { ResizeMode, Video } from "expo-av";
-import { Icon } from "@rneui/themed";
+import { VideoPlayer, VideoView, useVideoPlayer } from "expo-video";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { handleLastComponent } from "@/services/utils";
 import { getVideoURL } from "@/services/storage-service";
@@ -91,6 +91,11 @@ export const VideoLecture = ({
 
   const student = studentQuery.data;
 
+  const player = useVideoPlayer({ uri: url }, (player: VideoPlayer) => {
+    player.loop = true;
+    player.play();
+  });
+
   const handleContinuePress = async () => {
     if (!isLastSlide) {
       onContinue();
@@ -149,11 +154,13 @@ export const VideoLecture = ({
           style={{ aspectRatio: 7 / 10 }}
         >
           {!isLoading ? (
-            <Video
+            <VideoView
               // @ts-expect-error At this point the URL is fully loaded and not `undefined`.
-              source={{ uri: url }}
-              shouldPlay={true}
-              resizeMode={ResizeMode.COVER}
+              source={url}
+              autoPlay={true}
+              loop={true}
+              player={player}
+              contentFit="cover"
               style={{ width: "100%", height: "100%" } as const}
             />
           ) : (
@@ -174,7 +181,7 @@ export const VideoLecture = ({
             <Text className="text-center text-surfaceSubtleGrayscale text-body-bold">
               {t("lesson.continue")}
             </Text>
-            <Icon
+            <MaterialCommunityIcons
               className="ml-8"
               name="chevron-right"
               type="material"
