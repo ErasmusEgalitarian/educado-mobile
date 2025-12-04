@@ -6,7 +6,6 @@ import {
   loginUser,
   subscribeCourse,
   unsubscribeCourse,
-  updateStudyStreak,
 } from "@/api/legacy-api";
 import {
   getAllCoursesStrapi,
@@ -20,6 +19,7 @@ import {
   getStudentByIdStrapi,
   getAllFeedbackOptionsStrapi,
   completeComponentStrapi,
+  updateStudyStreakStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { setJWT, setUserInfo } from "@/services/storage-service";
@@ -249,7 +249,7 @@ export const useUpdateStudyStreak = () => {
   const queryClient = useQueryClient();
 
   return useMutation<{ message: string }, unknown, { studentId: string }>({
-    mutationFn: (variables) => updateStudyStreak(variables.studentId),
+    mutationFn: (variables) => updateStudyStreakStrapi(variables.studentId),
     onSuccess: () => {
       queryClient.setQueryData(queryKeys.studyStreak, new Date());
     },

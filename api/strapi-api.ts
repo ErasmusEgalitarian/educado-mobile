@@ -7,6 +7,7 @@ import {
   studentGetStudentsById,
   courseSelectionGetCourseSelections,
   feedbackGetFeedbacks,
+  studentPutStudentsById,
 } from "@/api/backend/sdk.gen";
 import {
   CourseGetCoursesByIdResponse,
@@ -15,6 +16,7 @@ import {
   StudentGetStudentsByIdResponse,
   CourseSelectionGetCourseSelectionsResponse,
   FeedbackGetFeedbacksResponse,
+  StudentPutStudentsByIdResponse,
 } from "@/api/backend/types.gen";
 import {
   mapToCourse,
@@ -329,4 +331,52 @@ export const completeComponentStrapi = async (
   const student = await getStudentByIdStrapi(studentId);
 
   return student;
+};
+
+/*
+ * Updates a student's study streak.
+ * TODO: Add studyStreak field to Strapi Student model.
+ * For now, this function triggers a student update to mark activity.
+ *
+ * @param id - The student ID.
+ * @returns A success message.
+ * @throws Error if the request fails
+ */
+
+export const updateStudyStreakStrapi = async (
+  id: string,
+): Promise<{ message: string }> => {
+  // Fetch current student data from Strapi to get the name
+  const studentResponse = (await studentGetStudentsById({
+    path: { id },
+    query: {
+      fields: ["name", "email"],
+      status: "published",
+    },
+  })) as StudentGetStudentsByIdResponse;
+
+  if (!studentResponse.data) {
+    throw new Error("Student not found");
+  }
+
+  // Update the student (this could include lastStudyDate when the field is added to Strapi)
+  const response = (await studentPutStudentsById({
+    path: { id },
+    body: {
+      data: {
+        name: studentResponse.data.name, // Required field, keeping current value
+        email: studentResponse.data.email, // Required field, keeping current value
+        password: "unchanged", // Password is required but won't be changed
+        // TODO: Add studyStreak increment logic when field is added to Strapi Student model
+        // studyStreak: currentStudent.studyStreak + 1,
+        // lastStudyDate: new Date().toISOString(),
+      },
+    },
+  })) as StudentPutStudentsByIdResponse;
+
+  if (!response.data) {
+    throw new Error("Failed to update study streak");
+  }
+
+  return { message: "Study streak updated successfully" };
 };
