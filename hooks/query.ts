@@ -35,11 +35,8 @@ import {
 } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  documentDirectory,
-  EncodingType,
-  writeAsStringAsync,
-} from "expo-file-system";
+import { File, Paths } from "expo-file-system";
+import { EncodingType } from "expo-file-system/src/ExpoFileSystem.types";
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -216,17 +213,11 @@ export const useLectureVideo = (filename: string) =>
     queryFn: async () => {
       const video = await getBucketVideoByFilename(filename);
 
-      if (!documentDirectory) {
-        throw new Error("Document directory is not available");
-      }
+      const file = new File(Paths.document, "lectureVideos", `${filename}.mp4`);
 
-      const filePath = `${documentDirectory}lectureVideos/${filename}.mp4`;
+      file.write(video, { encoding: EncodingType.Base64 });
 
-      await writeAsStringAsync(filePath, video, {
-        encoding: EncodingType.Base64,
-      });
-
-      return filePath;
+      return file.uri;
     },
   });
 
