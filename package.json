@@ -51,6 +51,7 @@
     "@tanstack/react-query-persist-client": "^5.90.7",
     "axios": "^1.12.2",
     "clsx": "^2.1.1",
+<<<<<<< HEAD
     "expo": "~54.0.27",
     "expo-asset": "~12.0.11",
     "expo-audio": "~1.0.16",
@@ -59,9 +60,20 @@
     "expo-constants": "~18.0.11",
     "expo-dev-client": "~6.0.20",
     "expo-file-system": "~19.0.20",
+=======
+    "expo": "^54.0.26",
+    "expo-asset": "~12.0.10",
+    "expo-audio": "~1.0.16",
+    "expo-build-properties": "~1.0.9",
+    "expo-camera": "~17.0.9",
+    "expo-constants": "~18.0.10",
+    "expo-dev-client": "~6.0.19",
+    "expo-file-system": "~19.0.19",
+>>>>>>> 506b0d64 (Upgraded packages to make CI pass dependency check)
     "expo-font": "~14.0.9",
     "expo-image-picker": "~17.0.9",
     "expo-jwt": "^1.6.5",
+<<<<<<< HEAD
     "expo-linear-gradient": "~15.0.8",
     "expo-linking": "~8.0.10",
     "expo-localization": "~17.0.8",
@@ -70,6 +82,16 @@
     "expo-splash-screen": "~31.0.12",
     "expo-status-bar": "~3.0.9",
     "expo-video": "~3.0.15",
+=======
+    "expo-linear-gradient": "~15.0.7",
+    "expo-linking": "~8.0.9",
+    "expo-localization": "~17.0.7",
+    "expo-router": "~6.0.16",
+    "expo-sharing": "~14.0.7",
+    "expo-splash-screen": "~31.0.11",
+    "expo-status-bar": "~3.0.8",
+    "expo-video": "~3.0.14",
+>>>>>>> 506b0d64 (Upgraded packages to make CI pass dependency check)
     "i18n-js": "^4.5.1",
     "intl": "^1.2.5",
     "lottie-react-native": "~7.3.1",
