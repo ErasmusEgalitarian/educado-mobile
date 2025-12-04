@@ -12,6 +12,7 @@ import LeaveButton from "@/components/Exercise/LeaveButton";
 import { LeaderboardUser } from "@/types";
 import { cn } from "@/services/utils";
 import { useLeaderboard, useLoginStudent } from "@/hooks/query";
+import ErrorScreen from "@/app/screens/Errors/ErrorScreen";
 
 const capitalize = (str: string) =>
   str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
@@ -294,15 +295,13 @@ const LeaderboardScreen = () => {
     }
   }, [leaderboardQuery.data]);
 
-  const handleScroll = async (
-    event: NativeSyntheticEvent<NativeScrollEvent>,
-  ) => {
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const isCloseToBottom =
       layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
 
     if (isCloseToBottom && !leaderboardQuery.isLoading) {
-      await leaderboardQuery.refetch();
+      void leaderboardQuery.refetch();
     }
   };
 
@@ -311,11 +310,7 @@ const LeaderboardScreen = () => {
   }
 
   if (leaderboardQuery.isError) {
-    return (
-      <View className="flex-1 items-center justify-center bg-surfaceSubtleCyan pt-[40px]">
-        <Text className="text-center text-h2-sm-bold">Error</Text>
-      </View>
-    );
+    return <ErrorScreen />;
   }
 
   const leaderboardData = leaderboardQuery.data;
@@ -332,7 +327,7 @@ const LeaderboardScreen = () => {
       <ScrollView
         ref={scrollViewRef}
         contentInsetAdjustmentBehavior="never"
-        onScroll={void handleScroll}
+        onScroll={handleScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
         bounces={false}
