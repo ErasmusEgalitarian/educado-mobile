@@ -14,7 +14,7 @@ import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptionButton";
 import { getCourseProgress } from "@/services/component-utility-functions/getCourseProgress";
 import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
-import Tooltip from "@/components/Onboarding/Tooltip";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
 import { Course, ProgressTuple, Section } from "@/types";
