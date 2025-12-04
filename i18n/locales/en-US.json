@@ -1,6 +1,14 @@
 {
   "welcome": {
-    "title": "Welcome"
+    "title": "Welcome",
+    "enter": "Enter",
+    "register": "Register",
+    "slide-1-title": "WELCOME!",
+    "slide-1-description": "Here, we make learning accessible and fun for everyone. Explore our content and begin your journey.",
+    "slide-2-title": "DOWNLOAD AND ACCESS OFFLINE",
+    "slide-2-description": "This is your space to learn in an interactive and engaging way. Download the content and access it offline whenever you want!",
+    "slide-3-title": "REGISTER AND EXPLORE",
+    "slide-3-description": "Join our community and discover a world of learning at your fingertips, regardless of your academic background."
   },
   "courses": "Courses",
   "explore": "Explore",
@@ -14,6 +22,7 @@
   "general": {
     "yes": "Yes",
     "no": "No",
+    "close": "Close",
     "confirmation": "Are you sure?",
     "hour": "Hour",
     "hours": "Hours",
@@ -79,6 +88,17 @@
     "placeholder": "Pesquise aqui",
     "unknown-error": "Error: Unknown error"
   },
+  "welcome-page": {
+    "header": "Start Now!",
+    "description": "You haven't signed up for any courses yet. Go to the Explore page and use the search to find courses that interest you.",
+    "tutorial-heading": "Welcome to Educado!\n",
+    "tutorial-body": "Here you will see all the courses you are enrolled in. To discover new courses, access ",
+    "tutorial-body-bold": "“Explore Courses”"
+  },
+  "explore-drawer": {
+    "tooltip": "Here you will find all the information about the course, such as its duration. To begin, simply click on register now ",
+    "tooltip-bold": "“Register Now”"
+  },
   "profile": {
     "edit-profile": "Edit profile",
     "change-password": "Change password",
@@ -86,6 +106,16 @@
     "certificates": "Certificates",
     "leaderboard": "Leaderboard",
     "change-password-success": "Password changed successfully",
-    "tooltip": "You are on your profile page, where you can access your information, view certificates, and perform other activities."
+    "tooltip": "You are on your profile page, where you can access your information, view certificates, and perform other activities.",
+    "level_message": "Only {{points}} pts. left for you to level up, keep studying to get there",
+    "level": "Level",
+    "position": "position",
+    "points": "points",
+    "day_streak": "day streak"
+  },
+  "explore-page": {
+    "tutorial-body-first": "On this page, you will find all available courses. Click on ",
+    "tutorial-body-bold": "“Find out more” ",
+    "tutorial-body-second": "To see the details and register."
   }
 }
