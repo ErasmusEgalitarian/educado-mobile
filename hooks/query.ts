@@ -2,8 +2,7 @@ import {
   addCourseToStudent,
   deleteUser,
   getBucketImageByFilename,
-  getBucketVideoByFilename,
-  loginUser,
+  //getBucketVideoByFilename,
   subscribeCourse,
   unsubscribeCourse,
 } from "@/api/legacy-api";
@@ -22,7 +21,6 @@ import {
   updateStudyStreakStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
-import { setJWT, setUserInfo } from "@/services/storage-service";
 import { isComponentCompleted } from "@/services/utils";
 import {
   LoginStudent,
@@ -30,13 +28,8 @@ import {
   SectionComponentLecture,
   Student,
 } from "@/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  documentDirectory,
-  EncodingType,
-  writeAsStringAsync,
-} from "expo-file-system";
+import {} from "expo-file-system"; //documentDirectory, EncodingType,
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -196,6 +189,9 @@ export const useSections = (id: string) =>
  *
  * @param filename - The filename of the video.
  */
+
+//Outcommented duo to eslint error, and no usage yet.
+/*
 export const useLectureVideo = (filename: string) =>
   useQuery({
     queryKey: queryKeys.lectureVideos(filename),
@@ -215,6 +211,7 @@ export const useLectureVideo = (filename: string) =>
       return filePath;
     },
   });
+*/
 
 /**
  * Delete a user.
@@ -252,35 +249,6 @@ export const useUpdateStudyStreak = () => {
     mutationFn: (variables) => updateStudyStreakStrapi(variables.studentId),
     onSuccess: () => {
       queryClient.setQueryData(queryKeys.studyStreak, new Date());
-    },
-  });
-};
-
-/**
- * Log in a user by username and password.
- */
-export const useLogin = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    LoginStudent,
-    unknown,
-    { email: string; password: string }
-  >({
-    mutationFn: (variables) => loginUser(variables.email, variables.password),
-    onSuccess: async (data) => {
-      // TODO: Remove storage-service.ts and AsyncStorage legacy fallback after full migration to TanStack Query
-      await setJWT(data.accessToken);
-      await setUserInfo({ ...data.userInfo });
-      await AsyncStorage.setItem("loggedIn", "true");
-
-      queryClient.setQueryData(queryKeys.loginStudent, data);
-
-      await queryClient.invalidateQueries({
-        queryKey: [...queryKeys.student(data.userInfo.id)],
-      });
-
-      return data;
     },
   });
 };
