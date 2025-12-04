@@ -62,24 +62,19 @@ const Profile = () => {
           points={studentQuery.data?.points ?? 0}
           leaderboardPosition={0}
           level={studentQuery.data?.level ?? 0}
-          drawProgressBarOnly={false}
         />
         <Tooltip
-          // TODO: The Tooltip component doesn't have isVisible and setIsVisible props.
-          // isVisible={isTooltipVisible}
-          // setIsVisible={setIsTooltipVisible}
           position={{
-            top: -300,
-            left: 70,
-            right: 30,
-            bottom: 24,
+            top: 190,
+            left: 100,
           }}
-          text={t("profile.tooltip")}
           tailSide="right"
-          tailPosition="20%"
-          uniqueKey="Profile"
-          uniCodeChar="👩‍🏫"
-        />
+          tailPosition={12}
+          tooltipKey="Profile"
+          uniCodeIcon="👩‍🏫"
+        >
+          {t("profile.tooltip")}
+        </Tooltip>
         <ProfileNavigationButton
           label={t("profile.edit-profile")}
           testId={"editProfileNav"}

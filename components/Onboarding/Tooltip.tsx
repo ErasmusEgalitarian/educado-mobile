@@ -1,29 +1,50 @@
-import { useRef, useEffect, useState, useMemo } from "react";
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Animated,
-  Easing,
-} from "react-native";
+import { useEffect, useState, PropsWithChildren } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "react-native-paper";
-import PropTypes from "prop-types";
+import { View, ViewStyle, Text, Pressable, StyleSheet } from "react-native";
+import { Shadow } from "react-native-shadow-2";
+import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
 
-const Tooltip = ({
-  text,
-  tailPosition = "50%",
-  tailSide = "bottom",
+/**
+ •  Tooltip component displays a highly customizable tooltip window which is shown to a user only once
+ •  @param children - The textual contents of the tooltip
+ •  @param uniCodeIcon - The unicode icon shown at by the text
+ •  @param position - The absolute position of the tooltip, aligned by top and left
+ •  @param tailSide - The side on which the tail of the tooltip is shown (top, bottom, left or right)
+ •  @param tailPosition - The position of the tail on the given side, number of pixels relative to the tooltip component on an axis
+ •  @returns The rendered component
+ */
+
+type TailSide = "top" | "bottom" | "left" | "right";
+
+const styles = StyleSheet.create({
+  tooltipContainer: {
+    borderRadius: 10,
+  },
+});
+
+interface TooltipProps {
+  tooltipKey: string;
+  uniCodeIcon: string;
+  position: {
+    top: number;
+    left: number;
+  };
+  tailSide: TailSide;
+  tailPosition: number;
+}
+
+export const Tooltip = ({
+  children,
+  tooltipKey,
+  uniCodeIcon,
   position,
-  uniqueKey,
-  uniCodeChar,
-}) => {
+  tailSide,
+  tailPosition,
+}: PropsWithChildren<TooltipProps>) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  const storageKey = useMemo(() => `tooltip_shown_${uniqueKey}`, [uniqueKey]);
-
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const storageKey = `tooltip_shown_${tooltipKey}`;
 
   useEffect(() => {
     const initializeTooltip = async () => {
@@ -41,221 +62,100 @@ const Tooltip = ({
       }
     };
 
-    initializeTooltip();
+    void initializeTooltip();
   }, [storageKey]);
-
-  useEffect(() => {
-    if (isVisible) {
-      Animated.sequence([
-        Animated.timing(scaleAnim, {
-          toValue: 1.2,
-          duration: 300,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.timing(rotateAnim, {
-          toValue: -20,
-          duration: 100,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.timing(rotateAnim, {
-          toValue: 20,
-          duration: 100,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.timing(rotateAnim, {
-          toValue: 0,
-          duration: 100,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 1,
-          duration: 300,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  }, [scaleAnim, rotateAnim, isVisible]);
-
-  const tailStyles = useMemo(
-    () => getTailStyles(tailSide, tailPosition),
-    [tailSide, tailPosition],
-  );
 
   if (!isVisible) {
     return null;
   }
 
-  const animatedStyle = {
-    transform: [
-      { scale: scaleAnim },
-      {
-        rotate: rotateAnim.interpolate({
-          inputRange: [-20, 20],
-          outputRange: ["-20deg", "20deg"],
-        }),
-      },
-    ],
-  };
-
   return (
-    <TouchableOpacity
-      onPress={() => setIsVisible(false)}
-      style={[styles.overlay, position]}
+    <View
+      className={`absolute z-40 overflow-visible ${tailFlexDirection(tailSide)}`}
+      style={[position]}
     >
-      <Animated.View
-        style={[styles.tooltip, tailStyles.tooltip, animatedStyle]}
-      >
-        <Text style={styles.unicodeCharacter}>{uniCodeChar}</Text>
-        <Text style={styles.tooltipText}>{text}</Text>
-        <Button
-          onPress={() => setIsVisible(false)}
-          style={styles.tooltipFooter}
+      <Shadow distance={3} offset={[0, 1]}>
+        <View
+          className="w-80 flex-col bg-surfaceSubtlePurple p-3"
+          style={styles.tooltipContainer}
         >
-          <Text style={styles.tooltipFooterText}>fechar</Text>
-        </Button>
-        <Animated.View
-          style={[styles.tooltipTail, tailStyles.tooltipTail, animatedStyle]}
-        />
-      </Animated.View>
-    </TouchableOpacity>
+          <View className="mb-3 flex-row">
+            <Text className="items-start">{uniCodeIcon}</Text>
+            <Text className="px-3 text-body-regular">{children}</Text>
+          </View>
+
+          <View className="flex-row justify-between">
+            <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
+              1/1
+            </Text>
+            <Pressable
+              onPress={() => {
+                setIsVisible(false);
+              }}
+            >
+              <Text className="text-textSubtitleGrayscale text-caption-lg-semibold">
+                {t("general.close")}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Shadow>
+      <View style={tail(tailSide, tailPosition)} />
+    </View>
   );
 };
 
-Tooltip.propTypes = {
-  text: PropTypes.string.isRequired,
-  tailPosition: PropTypes.string,
-  tailSide: PropTypes.string,
-  position: PropTypes.object.isRequired,
-  uniqueKey: PropTypes.string.isRequired,
-  uniCodeChar: PropTypes.string.isRequired,
-};
-
-Tooltip.defaultProps = {
-  tailPosition: "50%",
-  tailSide: "bottom",
-};
-
-const getTailStyles = (side, position) => {
-  const baseSize = 25;
-  const heightSize = 15;
-
-  const commonStyles = {
-    borderLeftWidth: baseSize / 2,
-    borderRightWidth: baseSize / 2,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-  };
-
-  switch (side) {
-    case "top":
-      return {
-        tooltip: { marginBottom: heightSize },
-        tooltipTail: {
-          ...commonStyles,
-          top: -heightSize,
-          left: position,
-          borderTopWidth: 0,
-          borderBottomWidth: heightSize,
-          borderBottomColor: "#166276",
-        },
-      };
-    case "right":
-      return {
-        tooltip: { marginLeft: heightSize },
-        tooltipTail: {
-          right: -heightSize,
-          top: position,
-          borderRightWidth: 0,
-          borderLeftWidth: heightSize,
-          borderLeftColor: "#166276",
-          borderTopWidth: baseSize / 2,
-          borderBottomWidth: baseSize / 2,
-          borderTopColor: "transparent",
-          borderBottomColor: "transparent",
-        },
-      };
-    case "left":
-      return {
-        tooltip: { marginRight: heightSize },
-        tooltipTail: {
-          left: -heightSize,
-          top: position,
-          borderLeftWidth: 0,
-          borderRightWidth: heightSize,
-          borderRightColor: "#166276",
-          borderTopWidth: baseSize / 2,
-          borderBottomWidth: baseSize / 2,
-          borderTopColor: "transparent",
-          borderBottomColor: "transparent",
-        },
-      };
-    case "bottom":
-    default:
-      return {
-        tooltip: { marginTop: heightSize },
-        tooltipTail: {
-          ...commonStyles,
-          bottom: -heightSize,
-          left: position,
-          borderBottomWidth: 0,
-          borderTopWidth: heightSize,
-          borderTopColor: "#166276",
-        },
-      };
-  }
-};
-
-const styles = StyleSheet.create({
-  overlay: {
-    position: "absolute",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  tooltip: {
-    backgroundColor: "#166276",
-    padding: 10,
-    borderRadius: 10,
-    position: "relative",
-    zIndex: 1001,
-    width: 265,
-    height: 155,
-  },
-  tooltipText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    marginBottom: 5,
-    marginTop: 0,
-    marginLeft: 25,
-    marginRight: 1,
-  },
-  tooltipFooter: {
-    position: "absolute",
-    bottom: 5,
-    right: 10,
-  },
-  tooltipFooterText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    textDecorationLine: "underline",
-  },
-  tooltipTail: {
-    position: "absolute",
+const tail = (side: TailSide, position: number): ViewStyle => {
+  const baseTail: ViewStyle = {
     width: 0,
     height: 0,
-    zIndex: 1000,
-  },
-  unicodeCharacter: {
-    position: "absolute",
-    top: 5,
-    left: 5,
-    fontSize: 20,
-  },
-});
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderLeftWidth: 9,
+    borderRightWidth: 9,
+    borderBottomWidth: 9,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: colors.surfaceSubtlePurple,
+  };
+
+  const alignment: Record<TailSide, ViewStyle> = {
+    top: {
+      ...baseTail,
+      marginLeft: position,
+    },
+    right: {
+      ...baseTail,
+      marginTop: position,
+      marginLeft: -4,
+      transform: [{ rotate: "90deg" }],
+    },
+    bottom: {
+      ...baseTail,
+      marginLeft: position,
+      marginTop: -1,
+      transform: [{ rotate: "180deg" }],
+    },
+    left: {
+      ...baseTail,
+      marginTop: position,
+      marginRight: -4,
+      transform: [{ rotate: "-90deg" }],
+    },
+  };
+
+  return alignment[side];
+};
+
+const tailFlexDirection = (side: TailSide): string => {
+  const flexDirection = {
+    top: "flex-col-reverse",
+    bottom: "flex-col",
+    left: "flex-row-reverse",
+    right: "flex-row",
+  };
+
+  return flexDirection[side];
+};
 
 export default Tooltip;

@@ -1,61 +1,43 @@
-import { useRef } from "react";
-import { View } from "react-native";
-import Svg, { Path } from "react-native-svg";
-import Sections from "../../constants/preview-sections";
+import { View, Text, StyleSheet } from "react-native";
+import Sections from "@/constants/preview-sections";
 import Slick from "react-native-slick";
-import Text from "../General/Text";
-import tailwindConfig from "@/tailwind.config";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { colors } from "@/theme/colors";
 
-export default function WelcomeSlider() {
-  const slick = useRef(null);
-  const projectColors = tailwindConfig.theme.colors;
-
+export const WelcomeSlider = () => {
   return (
     <Slick
-      ref={slick}
       scrollEnabled={true}
-      loop={false}
+      loop={true}
       index={0}
-      dotColor={projectColors.projectWhite}
-      dotStyle={{ width: 10, height: 10 }}
-      activeDotColor={projectColors.primary_custom}
-      activeDotStyle={{ width: 10, height: 10 }}
-      height={265}
+      dotColor={colors.surfaceSubtleGrayscale}
+      dotStyle={styles.dot}
+      activeDotColor={colors.textLabelCyan}
+      activeDotStyle={styles.dot}
+      height={310}
       showsButtons={true}
       autoplayTimeout={10}
       autoplay={true}
-      nextButton={
-        <Svg className="mr-4 h-[25px] w-[25px]">
-          <Path
-            d="M8.59003 17.1239L13.17 12.5439L8.59003 7.95385L10 6.54385L16 12.5439L10 18.5439L8.59003 17.1239Z"
-            fill={projectColors.projectBlack}
-          />
-        </Svg>
-      }
-      prevButton={
-        <Svg className="ml-4 h-[25px] w-[25px]">
-          <Path
-            d="M15.41 17.1239L10.83 12.5439L15.41 7.95385L14 6.54385L8 12.5439L14 18.5439L15.41 17.1239Z"
-            fill={projectColors.projectBlack}
-          />
-        </Svg>
-      }
+      nextButton={<MaterialCommunityIcons name="chevron-right" size={24} />}
+      prevButton={<MaterialCommunityIcons name="chevron-left" size={24} />}
     >
       {Sections.map((sections, index) => (
-        <View key={index} className="relative h-full items-center px-10">
-          <View className="top-0 px-4">
-            <Text className="font-sans-bold text-center text-subheading">
-              {sections.title}
-            </Text>
-          </View>
-
-          <View className="absolute bottom-0 px-6 pb-[27.5%]">
-            <Text className="text-center text-body">
-              {sections.description}
-            </Text>
-          </View>
+        <View key={index} className="px-10">
+          <Text className="px-8 text-center text-h2-sm-regular">
+            {sections.title}
+          </Text>
+          <Text className="px-12 pt-8 text-center text-body-regular">
+            {sections.description}
+          </Text>
         </View>
       ))}
     </Slick>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  dot: {
+    width: 10,
+    height: 10,
+  },
+});

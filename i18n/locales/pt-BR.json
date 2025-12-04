@@ -1,6 +1,14 @@
 {
   "welcome": {
-    "title": "Bem vindo"
+    "title": "Bem vindo",
+    "enter": "Entrar",
+    "register": "Cadastrar",
+    "slide-1-title": "SEJA BEM-VINDO!",
+    "slide-1-description": "Aqui, tornamos o aprendizado acessível e divertido para todos. Explore nossos conteúdos e comece sua jornada de desenvolvimento.",
+    "slide-2-title": "FAÇA DOWNLOAD E ACESSE OFFLINE",
+    "slide-2-description": "Este é o seu espaço para aprender de forma interativa e envolvente. Faça o download dos conteúdos e acesse offline quando quiser!",
+    "slide-3-title": "CADASTRE-SE E EXPLORE",
+    "slide-3-description": "Faça parte de nossa comunidade e descubra um mundo de aprendizado ao seu alcance, não importa sua formação acadêmica."
   },
   "courses": "Cursos",
   "explore": "Explorar",
@@ -14,6 +22,7 @@
   "general": {
     "yes": "Sim",
     "no": "Não",
+    "close": "Fechar",
     "confirmation": "Tem certeza?",
     "hour": "Hora",
     "hours": "Horas",
@@ -79,6 +88,17 @@
     "placeholder": "Pesquise aqui",
     "unknown-error": "Erro: Erro desconhecido"
   },
+  "welcome-page": {
+    "header": "Comece agora!",
+    "description": "Você ainda não se increveu em nenhum curso. Acesse a página Explore e use a busca para encontrar cursos do seu interesse.",
+    "tutorial-heading": "Bem-vindo ao Educado!\n",
+    "tutorial-body": "Aqui você verá todos os cursos em que está inscrito. Para descobrir novos cursos, acesse ",
+    "tutorial-body-bold": "“Explorar Cursos”"
+  },
+  "explore-drawer": {
+    "tooltip": "Aqui você encontra todas as informações do curso, como a duração. Para começar, é só clicar \nem ",
+    "tooltip-bold": "“Inscreva-se agora”"
+  },
   "profile": {
     "edit-profile": "Editar perfil",
     "change-password": "Alterar senha",
@@ -86,6 +106,16 @@
     "certificates": "Certificados",
     "leaderboard": "Tabela de classificação",
     "change-password-success": "Senha alterada com sucesso",
-    "tooltip": "Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades."
+    "tooltip": "Você está no seu perfil, onde pode acessar suas informações, visualizar certificados e realizar outras atividades.",
+    "level_message": "Faltam apenas {{points}} pts. para você mudar de nível, continue estudando para chegar lá",
+    "level": "Nível",
+    "position": "posição",
+    "points": "pontos",
+    "day_streak": "dia seguido"
+  },
+  "explore-page": {
+    "tutorial-body-first": "Nessa página, você encontra todos os cursos disponíveis. Clique em ",
+    "tutorial-body-bold": "“Saiba mais” ",
+    "tutorial-body-second": "para ver os detalhes e se inscrever."
   }
 }
