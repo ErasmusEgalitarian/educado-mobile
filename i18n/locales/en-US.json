@@ -95,7 +95,9 @@
     "continue": "Continue Course",
     "signup": "Sign up now",
     "fail": "Failed to complete the course. Please try again later.",
-    "tooltip": "This is your course page. This is where you will access the lessons and track your progress."
+    "tooltip": "This is your course page. This is where you will access the lessons and track your progress.",
+    "congratulations": "Congratulations!",
+    "begin-journey": "Shall we start your journey?"
   },
   "search-course": "Search for a course",
   "learn-more": "learn more",
