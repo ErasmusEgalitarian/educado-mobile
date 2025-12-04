@@ -1,11 +1,18 @@
 import { colors } from "@/theme/colors";
-import { Modal, View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import {
+  Modal,
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CardLabel } from "@/components/Explore/CardLabel";
 import { CustomRating } from "@/components/Explore/CustomRating";
 import { CourseButton } from "@/components/Explore/CourseButton";
 import * as Utility from "@/services/utils";
-import { ScrollView } from "react-native-gesture-handler";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 import { useNavigation } from "@react-navigation/native";
 import { InfoBox } from "@/components/Explore/InfoBox";
 import { Course } from "@/types";
@@ -61,6 +68,22 @@ export const BottomDrawer = ({
         toggleModal();
       }}
     >
+      <Tooltip
+        position={{
+          top: 570,
+          left: 90,
+        }}
+        tailSide="bottom"
+        tailPosition={12}
+        tooltipKey="Drawer"
+        uniCodeIcon="📖"
+      >
+        <Text className="text-body-regular">{t("explore-drawer.tooltip")}</Text>
+        <Text className="text-body-bold">
+          {t("explore-drawer.tooltip-bold")}
+        </Text>
+        <Text className="text-body-regular">.</Text>
+      </Tooltip>
       <View className="flex-1 bg-surfaceSubtleCyan opacity-50" />
 
       <View

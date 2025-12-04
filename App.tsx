@@ -1,26 +1,38 @@
 import { useState } from "react";
-import LoginScreen from "@/screens/Login/LoginScreen";
-import RegisterScreen from "@/screens/Registration/RegistrationScreen";
+import LoginScreen from "@/app/screens/Login/LoginScreen";
+import RegisterScreen from "@/app/screens/Registration/RegistrationScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ExerciseScreen from "@/screens/Excercises/ExerciseScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CourseOverviewScreen from "@/screens/Courses/CourseOverviewScreen";
-import SectionScreen from "@/screens/Section/SectionScreen";
+import ExerciseScreen from "@/app/screens/Excercises/ExerciseScreen";
+import CourseOverviewScreen from "@/app/screens/Courses/CourseOverviewScreen";
+import SectionScreen from "@/app/screens/Section/SectionScreen";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
-import WelcomeScreen from "@/screens/Welcome/WelcomeScreen";
-import CompleteSectionScreen from "@/screens/Section/CompleteSectionScreen";
+import WelcomeScreen from "@/app/screens/Welcome/WelcomeScreen";
+import CompleteSectionScreen from "@/app/screens/Section/CompleteSectionScreen";
 import { NavigationBar } from "@/components/NavigationBar/NavigationBar";
-import ComponentSwipeScreen from "@/screens/Lectures/ComponentSwipeScreen";
-import ErrorScreen from "@/screens/Errors/ErrorScreen";
-import CourseScreen from "@/screens/Courses/CourseScreen";
-import EditProfileScreen from "@/screens/Profile/EditProfileScreen";
-import EditPasswordScreen from "@/screens/Profile/EditPasswordScreen";
-import DownloadScreen from "@/screens/Download/DownloadScreen";
-import CertificateScreen from "@/screens/Certificate/CertificateScreen";
-import CompleteCourseScreen from "@/screens/Courses/CompleteCourseScreen";
-import CameraScreen from "@/screens/Camera/CameraScreen";
-import LeaderboardScreen from "@/screens/Leaderboard/LeaderboardScreen";
-import SubscribedToCourseScreen from "@/screens/Courses/SubscribedToCourseScreen";
+import ComponentSwipeScreen from "@/app/screens/Lectures/ComponentSwipeScreen";
+import ErrorScreen from "@/app/screens/Errors/ErrorScreen";
+import CourseScreen from "@/app/screens/Courses/CourseScreen";
+import EditProfileScreen from "@/app/screens/Profile/EditProfileScreen";
+import EditPasswordScreen from "@/app/screens/Profile/EditPasswordScreen";
+import DownloadScreen from "@/app/screens/Download/DownloadScreen";
+import CertificateScreen from "@/app/screens/Certificate/CertificateScreen";
+import CompleteCourseScreen from "@/app/screens/Courses/CompleteCourseScreen";
+import CameraScreen from "@/app/screens/Camera/CameraScreen";
+import LeaderboardScreen from "@/app/screens/Leaderboard/LeaderboardScreen";
+import SubscribedToCourseScreen from "@/app/screens/Courses/SubscribedToCourseScreen";
+
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_400Regular_Italic,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Montserrat_600SemiBold_Italic,
+  Montserrat_700Bold,
+  Montserrat_700Bold_Italic,
+  Montserrat_800ExtraBold,
+} from "@expo-google-fonts/montserrat";
 
 const Stack = createNativeStackNavigator();
 
@@ -162,6 +174,17 @@ export const App = () => {
   const [initialRoute, setInitialRoute] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  const [fontsLoaded] = useFonts({
+    Montserrat_400Regular,
+    Montserrat_400Regular_Italic,
+    Montserrat_500Medium,
+    Montserrat_600SemiBold,
+    Montserrat_600SemiBold_Italic,
+    Montserrat_700Bold,
+    Montserrat_700Bold_Italic,
+    Montserrat_800ExtraBold,
+  });
+
   // Callback function to handle the results
   const handleResult = (route: string, loading: boolean) => {
     setInitialRoute(route);
@@ -170,7 +193,7 @@ export const App = () => {
 
   useWelcomeScreenLogic(3000, handleResult);
 
-  if (isLoading) {
+  if (isLoading || !fontsLoaded) {
     return <LoadingScreen />;
   }
 

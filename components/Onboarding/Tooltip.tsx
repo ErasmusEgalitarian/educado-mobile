@@ -34,7 +34,7 @@ interface TooltipProps {
   tailPosition: number;
 }
 
-const Tooltip = ({
+export const Tooltip = ({
   children,
   tooltipKey,
   uniCodeIcon,
