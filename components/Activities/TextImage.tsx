@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { View, TouchableOpacity, Dimensions, Text } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Dimensions,
+  Text,
+  ScrollView,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { cn } from "@/services/utils";
 import RenderHtml from "react-native-render-html";

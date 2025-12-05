@@ -14,11 +14,7 @@ import Animation from "@/assets/animations/completeSection.json";
 /*
 Description: 	This screen is displayed when the student completes a section.
 				It displays the points earned in the section, an animation, and a button to continue.
-/*
-Description: 	This screen is displayed when the student completes a section.
-				It displays the points earned in the section, an animation, and a button to continue.
 				The button will take the student to the section overview.
-				The points earned are retrieved from the student model (in the field courses.sections) in the database,
 				The points earned are retrieved from the student model (in the field courses.sections) in the database,
 				which are stored in async storage when logging in.
 Dependencies: 	Routes which in this case are the whole course object and the sectionId
