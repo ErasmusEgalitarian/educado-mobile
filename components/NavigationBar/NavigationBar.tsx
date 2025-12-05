@@ -3,12 +3,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CourseScreen from "@/app/screens/Courses/CourseScreen";
 import DownloadScreen from "@/app/screens/Download/DownloadScreen";
 import ExploreScreen from "@/app/screens/Explore/ExploreScreen";
-import EduScreen from "@/app/screens/EduChatbot/EduScreen";
 import Profile from "@/app/screens/Profile/Profile";
 import EditProfileScreen from "@/app/screens/Profile/EditProfileScreen";
 import CertificateScreen from "@/app/screens/Certificate/CertificateScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Platform, Text } from "react-native";
+import { Text } from "react-native";
 import { colors } from "@/theme/colors";
 
 const Tab = createBottomTabNavigator();
@@ -58,12 +57,12 @@ export const NavigationBar = () => {
     <Tab.Navigator
       initialRouteName={"Meus cursos"}
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: colors.surfaceDarker,
-        tabBarInactiveTintColor: colors.surfaceDefaultGrayscale,
+        tabBarActiveTintColor: colors.textLabelCyan,
+        tabBarInactiveTintColor: colors.projectGray,
         tabBarLabel: ({ focused, color }) => (
           <Text
             className={
-              focused ? "text-caption-lg-bold" : "text-caption-lg-regular"
+              focused ? "text-caption-lg-semibold" : "text-caption-lg-regular"
             }
             style={{ color }}
           >
@@ -74,26 +73,9 @@ export const NavigationBar = () => {
           backgroundColor: "white",
           height: "10%",
           paddingBottom: "2%",
-          ...Platform.select({
-            ios: {
-              paddingVertical: "2%",
-              paddingHorizontal: "4%",
-              paddingBottom: "6%",
-              shadowColor: "rgba(0, 0, 0, 0.2)",
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
-              shadowOpacity: 0.8,
-              shadowRadius: 8,
-            },
-            android: {
-              paddingVertical: "4%",
-              paddingHorizontal: "4%",
-              paddingBottom: "2%",
-              elevation: 4,
-            },
-          }),
+          paddingVertical: "4%",
+          paddingHorizontal: "4%",
+          elevation: 4,
         },
         tabBarItemStyle: {
           borderRadius: 15,
@@ -110,7 +92,7 @@ export const NavigationBar = () => {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              size={25}
+              size={20}
               name="home-outline"
               type="material-community"
               color={color}
@@ -125,23 +107,8 @@ export const NavigationBar = () => {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              size={25}
+              size={20}
               name="compass-outline"
-              type="material-community"
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Edu"
-        component={EduScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              size={25}
-              name="robot-outline"
               type="material-community"
               color={color}
             />
@@ -155,7 +122,7 @@ export const NavigationBar = () => {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              size={34}
+              size={20}
               name="account-outline"
               type="material-community"
               color={color}
