@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
-import Text from "@/components/General/Text";
 import StandardButton from "@/components/General/StandardButton";
 import AnimatedNumbers from "@/components/Gamification/AnimatedNumber";
 import { generateSectionCompletePhrases } from "@/constants/phrases";
 import { getStudentInfo } from "@/services/storage-service";
-import { findCompletedSection, isCourseCompleted } from "@/services/utils";
-import PropTypes from "prop-types";
+import { cn, findCompletedSection, isCourseCompleted } from "@/services/utils";
+import { Course } from "@/types";
+import Animation from "@/assets/animations/completeSection.json";
 
 /*
 Description: 	This screen is displayed when the student completes a section.
@@ -20,29 +20,39 @@ Description: 	This screen is displayed when the student completes a section.
 Dependencies: 	Routes which in this case are the whole course object and the sectionId
 */
 
-export default function CompleteSectionScreen() {
-  CompleteSectionScreen.propsTypes = {
-    parsedCourse: PropTypes.object.isRequired,
-    sectionId: PropTypes.string.isRequired,
+interface Props {
+  route: {
+    params: {
+      parsedCourse: Course;
+      sectionId: string;
+    };
   };
+}
 
-  const route = useRoute();
-  const { parsedCourse, sectionId } = route.params;
+export default function CompleteSectionScreen({ route }: Props) {
+  const parsedCourse = route.params.parsedCourse;
+  const sectionId = route.params.sectionId;
   const [points, setPoints] = useState(0);
   const [extraPoints, setExtraPoints] = useState(0);
   const navigation = useNavigation();
   const [randomPhrase, setRandomPhrase] = useState("");
 
   const getRandomPhrase = () => {
-    let randomIndex = 0;
     const phrases = generateSectionCompletePhrases();
 
-    randomIndex = Math.floor(Math.random() * phrases.length);
+    const randomIndex = Math.floor(Math.random() * phrases.length);
 
     return phrases[randomIndex];
   };
+  useEffect(() => {
+    setRandomPhrase(getRandomPhrase());
+  }, []);
 
-  function animation(state, setState, finalValue) {
+  const animation = (
+    state: number,
+    setState: Dispatch<SetStateAction<number>>,
+    finalValue: number,
+  ) => {
     return new Promise((resolve) => {
       if (state < finalValue) {
         const interval = setInterval(() => {
@@ -60,87 +70,124 @@ export default function CompleteSectionScreen() {
         resolve(finalValue);
       }
     });
-  }
+  };
 
-  function pointBox(text, pointsText, color, duration) {
+  const pointBox = (
+    text: string,
+    pointsText: number,
+    color: string,
+    duration: number,
+  ) => {
     return (
       <View
-        className={`h-24 w-40 ${color === "green" ? "bg-success" : "bg-yellow"} items-center justify-between rounded-lg px-2 pb-2 shadow shadow-projectGray`}
+        className={cn(
+          "h-24 w-40 items-center justify-between rounded-lg px-2 pb-2 shadow shadow-projectGray",
+          color === "green" ? "bg-success" : "bg-yellow",
+        )}
       >
         <View className="h-2/5 w-full justify-center">
-          <Text className="font-sans-bold text-center text-lg capitalize text-projectWhite">
+          <Text className="text-center text-textNegativeGrayscale text-body-bold">
             {text}
           </Text>
         </View>
-        <View className="h-3/5 w-full items-center justify-center rounded bg-projectWhite">
+        <View className="h-3/5 w-full items-center justify-center rounded bg-surfaceLighterCyan">
           <AnimatedNumbers
             animateToNumber={pointsText}
             animationDuration={duration}
-            fontStyle={`text-2xl font-sans-bold ${color === "green" ? "text-success" : "text-yellow"} text-center`}
+            fontStyle={`text-body-bold ${color === "green" ? "text-success" : "text-yellow"} text-center`}
           />
         </View>
       </View>
     );
-  }
+  };
 
-  async function getPointsFromSection() {
-    const studentInfo = await getStudentInfo();
-    const completedSection = findCompletedSection(
-      studentInfo,
-      parsedCourse.courseId,
-      sectionId,
-    );
-    if (completedSection === null) {
-      return 0;
-    }
-    return {
-      totalPoints: completedSection.totalPoints,
-      extraPoints: completedSection.extraPoints,
-    };
-  }
-
-  async function handleAllSectionsCompleted() {
+  const handleAllSectionsCompleted = async () => {
     const studentInfo = await getStudentInfo();
 
-    if (!isCourseCompleted(studentInfo, parsedCourse.courseId)) {
+    if (isCourseCompleted(studentInfo)) {
       navigation.reset({
         index: 1,
         routes: [
+          // @ts-expect-error will be fixed after expo upgrade
           { name: "HomeStack" },
           {
+            // @ts-expect-error will be fixed after expo upgrade
             name: "CourseOverview",
             params: { course: parsedCourse },
           },
         ],
       });
     }
-  }
+  };
 
   useEffect(() => {
-    async function animations() {
+    const getPointsFromSection = async () => {
+      try {
+        const studentInfo = await getStudentInfo();
+
+        const completedSection = findCompletedSection(
+          studentInfo,
+          parsedCourse.courseId,
+          sectionId,
+        );
+        if (completedSection === undefined) {
+          return 0;
+        }
+        return {
+          totalPoints: completedSection.totalPoints,
+          extraPoints: completedSection.extraPoints,
+        };
+      } catch (error) {
+        console.log(error);
+        return 0;
+      }
+    };
+    const animations = async () => {
       const obj = await getPointsFromSection();
-      await animation(points, setPoints, obj.totalPoints);
+      await animation(points, setPoints, obj === 0 ? obj : obj.totalPoints);
 
-      setTimeout(async () => {
-        await animation(extraPoints, setExtraPoints, obj.extraPoints);
+      const id = setTimeout(() => {
+        animation(
+          extraPoints,
+          setExtraPoints,
+          obj === 0 ? obj : obj.extraPoints,
+        ).catch(() => {
+          console.error("Could not play animations");
+        });
       }, 750);
-    }
+      return () => {
+        clearInterval(id);
+      };
+    };
 
-    setRandomPhrase(getRandomPhrase());
-    animations();
-  }, []);
+    let clearTimer: (() => void) | undefined;
+
+    // Call the async function without 'await'
+    animations()
+      .then((clear) => {
+        clearTimer = clear;
+      })
+      .catch(() => {
+        console.error("Could not play animations");
+      });
+
+    // Return the cleanup function for useEffect
+    return () => {
+      if (clearTimer) {
+        clearTimer();
+      }
+    };
+  }, [points, extraPoints, sectionId, parsedCourse.courseId]);
 
   return (
-    <SafeAreaView className="flex h-screen w-screen flex-col items-center justify-center bg-secondary">
-      <LottieView
-        className="absolute top-0 z-10 w-full"
-        source={require("@/assets/animations/completeSection.json")}
-        autoPlay
-      />
+    <SafeAreaView className="flex h-screen w-screen flex-col items-center justify-center bg-surfaceLighterCyan">
+      <View className="absolute top-0 z-10 w-full">
+        <LottieView source={Animation} autoPlay />
+      </View>
 
       <View className="absolute bottom-0 z-20 h-3/4 w-full items-center justify-end px-6">
         <View className="mb-8 h-40 w-fit justify-center">
-          <Text className="font-sans-bold bg-secondary text-center text-3xl text-primary_custom">
+          <Text className="bg-surfaceLighterCyan text-center text-textLabelCyan text-body-bold">
             {randomPhrase}
           </Text>
         </View>
@@ -156,8 +203,8 @@ export default function CompleteSectionScreen() {
           <StandardButton
             props={{
               buttonText: "Continuar",
-              onPress: () => {
-                handleAllSectionsCompleted();
+              onPress: async () => {
+                await handleAllSectionsCompleted();
               },
             }}
           />

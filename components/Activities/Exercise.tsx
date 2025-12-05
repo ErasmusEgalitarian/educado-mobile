@@ -1,16 +1,24 @@
 import { useState } from "react";
-import { ScrollView, View, TouchableOpacity } from "react-native";
-import Text from "@/components/General/Text";
+import { ScrollView, View, TouchableOpacity, Text } from "react-native";
 import { RadioButton } from "react-native-paper";
 import ExerciseInfo from "@/components/Exercise/ExerciseInfo";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PopUp from "@/components/Gamification/PopUp";
 import { StatusBar } from "expo-status-bar";
-import PropTypes from "prop-types";
-import { completeComponent, handleLastComponent } from "@/services/utils";
+import { cn } from "@/services/utils";
 import { useNavigation } from "@react-navigation/native";
-import tailwindConfig from "@/tailwind.config";
+import {
+  Course,
+  Section,
+  SectionComponent,
+  SectionComponentExercise,
+  SectionComponentLecture,
+} from "@/types";
+import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
+import { useLoginStudent, useStudent } from "@/hooks/query";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
 
 /*
 Description:	This screen is displayed when the student is doing an exercise.
@@ -29,66 +37,68 @@ Props:			- exerciseObject: The exercise object, which contains the question and 
 				when the exercise is completed and it is the last component in the section, the student is taken to the section complete screen
 */
 
+interface ExerciseScreenProps {
+  componentList: SectionComponent<
+    SectionComponentLecture | SectionComponentExercise
+  >[];
+  exerciseObject: SectionComponentExercise;
+  sectionObject: Section;
+  courseObject: Course;
+  onContinue: (isCorrect: boolean) => Promise<void>;
+}
+
 const ExerciseScreen = ({
   componentList,
   exerciseObject,
   sectionObject,
   courseObject,
   onContinue,
-  handleStudyStreak,
-}) => {
-  const projectColors = tailwindConfig.theme.colors;
+}: ExerciseScreenProps) => {
   const navigation = useNavigation();
 
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [buttonText, setButtonText] = useState(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [isPopUpVisible, setIsPopUpVisible] = useState(false);
-  const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
-  const [points, setPoints] = useState(10);
-  const [attempts, setAttempts] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [hasAnswered, setHasAnswered] = useState<boolean>(false);
+  const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(false);
+  const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean>(false);
+  const [points, setPoints] = useState<number>(10);
+  const [attempts, setAttempts] = useState<number>(0);
+  const loginStudent = useLoginStudent();
+  const studentQuery = useStudent(loginStudent.data.userInfo.id);
 
-  const handleReviewAnswer = async (isAnswerCorrect, answerIndex) => {
+  if (studentQuery.isLoading) {
+    return (
+      <SafeAreaView>
+        <LoadingScreen />
+      </SafeAreaView>
+    );
+  }
+
+  if (studentQuery.isError || !studentQuery.data) {
+    console.error(
+      `Error occured in ExerciseScreen while fetching the studentQuery: ${studentQuery.error ?? "unknown error"}`,
+    );
+    navigation.goBack();
+    return;
+  }
+
+  const handleReviewAnswer = (
+    isAnswerCorrect: boolean,
+    answerIndex: number,
+  ) => {
     setSelectedAnswer(answerIndex);
-    if (buttonText === null) {
-      setButtonText("Continuar");
-      setShowFeedback(true);
-      if (isAnswerCorrect) {
-        setIsCorrectAnswer(true);
-        setPoints(attempts === 0 ? 10 : 5);
-        setIsPopUpVisible(true);
-        try {
-          await completeComponent(exerciseObject, courseObject.courseId, true);
-        } catch (error) {
-          console.error("Error completing the exercise:", error);
-        }
-      } else {
-        setIsCorrectAnswer(false);
-        setAttempts((prevAttempts) => prevAttempts + 1);
-      }
-    }
-    if (buttonText === "Continuar") {
-      setIsPopUpVisible(false);
-
-      const currentLastComponent = componentList[componentList.length - 1];
-      const isLastComponent =
-        currentLastComponent.component._id === exerciseObject._id;
-
-      if (isAnswerCorrect && isLastComponent) {
-        try {
-          handleStudyStreak();
-          await handleLastComponent(exerciseObject, courseObject, navigation);
-        } catch (error) {
-          console.error("Error handling last component:", error);
-        }
-      } else {
-        onContinue(isAnswerCorrect);
-      }
+    setHasAnswered(true);
+    if (isAnswerCorrect) {
+      setIsCorrectAnswer(true);
+      setPoints(attempts === 0 ? 10 : 5);
+      setIsPopUpVisible(true);
+    } else {
+      setIsCorrectAnswer(false);
+      setAttempts((prevAttempts) => prevAttempts + 1);
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-secondary">
+    <SafeAreaView className="flex-1 bg-surfaceSubtleCyan">
       <View className="flex-1 items-center">
         {/* Exercise Information */}
         <View className="text-center">
@@ -104,7 +114,7 @@ const ExerciseScreen = ({
           <View className="mb-4">
             <Text
               testID="exerciseQuestion"
-              className="font-sans-bold text-center text-lg text-projectBlack"
+              className="text-center text-borderDarkerGrayscale text-body-regular"
             >
               {exerciseObject.question}
             </Text>
@@ -116,49 +126,51 @@ const ExerciseScreen = ({
               <View key={index} className="flex-row items-start pb-6">
                 {/* Radio Button */}
                 <RadioButton.Android
-                  disabled={buttonText === "Continuar"}
-                  value={index}
+                  disabled={hasAnswered}
+                  value={String(index)}
                   status={selectedAnswer === index ? "checked" : "unchecked"}
-                  onPress={() => handleReviewAnswer(answer.correct, index)}
-                  color={projectColors.primary_custom}
-                  uncheckedColor={projectColors.primary_custom}
+                  onPress={() => {
+                    handleReviewAnswer(answer.correct, index);
+                  }}
+                  color={colors.primary_custom}
+                  uncheckedColor={colors.primary_custom}
                 />
 
                 {/* Answer Text and Feedback */}
-                <View style={{ flex: 1 }}>
+                <View className="flex-1">
                   <TouchableOpacity
-                    disabled={buttonText === "Continuar"}
-                    onPress={() => handleReviewAnswer(answer.correct, index)}
+                    disabled={hasAnswered}
+                    onPress={() => {
+                      handleReviewAnswer(answer.correct, index);
+                    }}
                     className="flex-1"
                   >
-                    <Text className="font-montserrat pb-1 pt-2 text-body text-projectBlack">
+                    <Text className="font-body-regular pb-1 pt-2 text-borderDarkerGrayscale">
                       {answer.text}
                     </Text>
                   </TouchableOpacity>
 
                   {/* Feedback */}
-                  {showFeedback && selectedAnswer === index && (
+                  {hasAnswered && selectedAnswer === index && (
                     <View
-                      className={`w-fit flex-row items-center rounded-medium pb-2 ${
-                        answer.correct ? "bg-projectGreen" : "bg-projectRed"
-                      }`}
+                      className={cn(
+                        "w-fit flex-row items-center rounded-medium pb-2",
+                        answer.correct ? "bg-projectGreen" : "bg-projectRed",
+                      )}
                     >
                       <View className="pl-2 pt-1">
                         <MaterialCommunityIcons
                           size={10}
                           name={answer.correct ? "check" : "close"}
                           type="material"
-                          color={
-                            answer.correct
-                              ? projectColors.success
-                              : projectColors.error
-                          }
+                          color={answer.correct ? colors.success : colors.error}
                         />
                       </View>
                       <Text
-                        className={`pl-1 pr-2 pt-2 text-caption-medium ${
-                          answer.correct ? "text-success" : "text-error"
-                        }`}
+                        className={cn(
+                          "pl-1 pr-2 pt-2 text-caption-medium",
+                          answer.correct ? "text-success" : "text-error",
+                        )}
                       >
                         {answer.feedback}
                       </Text>
@@ -174,24 +186,22 @@ const ExerciseScreen = ({
       {/* Continue Button */}
       <View className="mb-8 w-full px-6">
         <TouchableOpacity
-          className={`flex-row items-center justify-center rounded-medium px-10 py-4 ${
+          className={cn(
+            "flex-row items-center justify-center rounded-medium px-10 py-4",
             selectedAnswer === null
               ? "bg-primary_custom opacity-60"
-              : "bg-primary_custom opacity-100"
-          }`}
+              : "bg-primary_custom opacity-100",
+          )}
           onPress={() => {
             if (selectedAnswer !== null) {
-              handleReviewAnswer(
-                exerciseObject.answers[selectedAnswer]?.correct,
-                selectedAnswer,
-              );
+              void onContinue(exerciseObject.answers[selectedAnswer]?.correct);
             }
           }}
           disabled={selectedAnswer === null} // Prevents interaction when no answer is selected
         >
           <View className="flex-row items-center">
-            <Text className="font-sans-bold text-center text-body text-projectWhite">
-              {buttonText || "Continuar"}
+            <Text className="text-center text-surfaceSubtleGrayscale text-body-regular">
+              {t("course.continue-button-text")}
             </Text>
             <MaterialCommunityIcons
               name="chevron-right"
@@ -212,15 +222,6 @@ const ExerciseScreen = ({
       <StatusBar style="auto" />
     </SafeAreaView>
   );
-};
-
-ExerciseScreen.propTypes = {
-  exerciseObject: PropTypes.object.isRequired,
-  sectionObject: PropTypes.object.isRequired,
-  courseObject: PropTypes.object.isRequired,
-  onContinue: PropTypes.func.isRequired,
-  componentList: PropTypes.array.isRequired,
-  handleStudyStreak: PropTypes.func.isRequired,
 };
 
 export default ExerciseScreen;

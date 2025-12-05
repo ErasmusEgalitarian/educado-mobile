@@ -765,7 +765,8 @@ export const createCertificate = async (
     dateOfCompletion: new Date().toISOString().split("T")[0],
     courseCategory: course.category,
   };
-
+  //TODO: Implement createCertificate. "/student-certificates" does not exist yet.
+  return;
   const response = await putRequest("/student-certificates", body);
 
   return response.data;
