@@ -1,8 +1,8 @@
 import * as StorageService from "@/services/storage-service";
 import {
   completeComponent as apiCompleteComponent,
-  getCourseById,
   createCertificate,
+  getCourseById,
 } from "@/api/legacy-api";
 import "intl";
 import "intl/locale-data/jsonp/en-GB";
@@ -21,6 +21,7 @@ import {
   StudentCourse,
 } from "@/types";
 import { ClassValue, clsx } from "clsx";
+import { getBaseApiUrl } from "@/api/openapi/api-config";
 
 /**
  * Converts a numeric difficulty level to a human-readable label.
@@ -518,3 +519,42 @@ export const resetOnboarding = async (uniqueKeys: string[]) => {
 };
 
 export const cn = (...inputs: ClassValue[]): string => clsx(...inputs);
+
+/**
+ * Sanitizes and constructs a full image URL from a Strapi image path.
+ * Handles relative paths, removes /api prefix, and constructs full URLs.
+ *
+ * @param imagePath - The image path from Strapi (can be relative like "/uploads/..." or full URL)
+ * @returns The full image URL, or null if imagePath is null/undefined
+ */
+export const sanitizeStrapiImageUrl = (
+  imagePath: string | null | undefined,
+): string | null => {
+  if (!imagePath) {
+    return null;
+  }
+
+  // If it's already a full URL (starts with http:// or https://), use it as is
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    return imagePath;
+  }
+
+  // Normalize the image path - remove /api prefix if present (Strapi serves uploads directly from /uploads)
+  let normalizedPath = imagePath;
+  if (normalizedPath.startsWith("/api/uploads")) {
+    normalizedPath = normalizedPath.replace("/api/uploads", "/uploads");
+  }
+
+  // Get base URL and remove /api suffix if present (Strapi serves uploads from root, not /api)
+  let baseUrl = getBaseApiUrl().replace(/\/$/, ""); // Remove trailing slash if present
+  baseUrl = baseUrl.replace(/\/api$/, ""); // Remove /api suffix if present
+
+  // If the image URL is a relative path (starts with /), prepend the Strapi base URL
+  if (normalizedPath.startsWith("/")) {
+    return `${baseUrl}${normalizedPath}`;
+  }
+
+  // If it doesn't start with /, it might be missing the leading slash
+  // Prepend base URL with a slash
+  return `${baseUrl}/${normalizedPath}`;
+};

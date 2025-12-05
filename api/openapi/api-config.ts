@@ -1,5 +1,27 @@
 import { client } from "@/api/backend/client.gen";
-import Constants from "expo-constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const AUTH_TOKEN_KEY = "@authToken";
+
+/**
+ * Gets the auth token from AsyncStorage.
+ * @returns The access token if available, null otherwise
+ */
+const getAuthToken = async (): Promise<string | null> => {
+  return await AsyncStorage.getItem(AUTH_TOKEN_KEY);
+};
+
+/**
+ * Sets the auth token in AsyncStorage.
+ * @param token - The token to store, or null to remove it
+ */
+export const setAuthToken = async (token: string | null): Promise<void> => {
+  if (token) {
+    await AsyncStorage.setItem(AUTH_TOKEN_KEY, token);
+  } else {
+    await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
+  }
+};
 
 export const getBaseApiUrl = (): string => {
   const strapiUrl = process.env.EXPO_PUBLIC_STRAPI_BACKEND;
@@ -19,8 +41,16 @@ export const configureApiClient = () => {
     throwOnError: true,
   });
 
-  // Request interceptor for logging in development
-  client.interceptors.request.use((request) => {
+  // Request interceptor to add auth token and logging
+  client.interceptors.request.use(async (request) => {
+    // Get token from AsyncStorage
+    const token = await getAuthToken();
+
+    // Add Authorization header if token is available
+    if (token) {
+      request.headers.set("Authorization", `Bearer ${token}`);
+    }
+
     if (__DEV__) {
       console.log(`Request 📤 ${request.method} ${request.url}`);
     }
@@ -32,31 +62,20 @@ export const configureApiClient = () => {
     if (__DEV__) {
       console.log(`Response 📥 ${response.url}`, { status: response.status });
     }
+
+    // Handle 401/403 errors - token might be invalid
+    if (response.status === 401 || response.status === 403) {
+      if (__DEV__) {
+        const status = String(response.status);
+        console.log(`Response 📥 ${response.url} [${status}] - Auth failed`);
+      }
+      // TODO: Request new token from backend
+    }
+
     return response;
   });
 
   console.log("API Client configured:", {
     baseUrl,
   });
-};
-
-/**
- * Generates headers for API requests, including Authorization if token is set.
- * Used when making fetch calls outside the generated API client.
- * @returns {Record<string, string>} Headers object for fetch requests
- */
-export const fetchHeaders = (): Record<string, string> => {
-  const apiToken = Constants.expoConfig?.extra?.STRAPI_TOKEN as
-    | string
-    | undefined;
-
-  const headers: Record<string, string> = {
-    Accept: "application/json",
-  };
-
-  if (apiToken !== undefined && apiToken !== "") {
-    headers.Authorization = `Bearer ${apiToken}`;
-  }
-
-  return headers;
 };

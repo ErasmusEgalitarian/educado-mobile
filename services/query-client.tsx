@@ -1,15 +1,15 @@
-import { PropsWithChildren, useEffect } from "react";
+import { configureApiClient } from "@/api/openapi/api-config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import {
   QueryClient,
-  onlineManager,
   focusManager,
+  onlineManager,
 } from "@tanstack/react-query";
-import NetInfo from "@react-native-community/netinfo";
-import { AppState, AppStateStatus } from "react-native";
-import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { configureApiClient } from "@/api/openapi/api-config";
+import { PropsWithChildren, useEffect } from "react";
+import { AppState, AppStateStatus } from "react-native";
 
 const queryClient = new QueryClient({
   defaultOptions: {
