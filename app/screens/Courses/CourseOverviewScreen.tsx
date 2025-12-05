@@ -12,12 +12,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptionButton";
-import {
-  getCourseProgress,
-  getNumberOfCompletedComponents,
-} from "@/services/utils";
+import { getCourseProgress } from "@/services/component-utility-functions/getCourseProgress";
 import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
-import Tooltip from "@/components/Onboarding/Tooltip";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
 import { Course, ProgressTuple, Section } from "@/types";
@@ -32,6 +29,7 @@ import {
   useUnsubscribeFromCourse,
 } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
+import { getNumberOfCompletedComponents } from "@/services/component-utility-functions/getNumberOfCompletedComponents";
 
 export interface CourseOverviewScreenProps {
   route: {
@@ -74,7 +72,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
 
     const newProgress: Record<string, number> = {};
 
-    sectionQuery.data.forEach((section) => {
+    sectionQuery.data.forEach((section: Section) => {
       newProgress[section.sectionId] = getNumberOfCompletedComponents(
         student,
         section,
@@ -89,7 +87,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
       return;
     }
 
-    const incompleteSection = sectionQuery.data.find((section) => {
+    const incompleteSection = sectionQuery.data.find((section: Section) => {
       const completedComponents = sectionProgress[section.sectionId] || 0;
 
       return completedComponents < section.components.length;
@@ -238,17 +236,16 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
           <View className="flex-[1] flex-col">
             <Tooltip
               position={{
-                top: -30,
-                left: 70,
-                right: 30,
-                bottom: 24,
+                top: 190,
+                left: 100,
               }}
-              text={t("course.tooltip")}
               tailSide="right"
-              tailPosition="20%"
-              uniqueKey="Sections"
-              uniCodeChar="🎓"
-            />
+              tailPosition={12}
+              tooltipKey="Sections"
+              uniCodeIcon="🎓"
+            >
+              {t("course.tooltip")}
+            </Tooltip>
             <View>
               {sections.map((section, i) => {
                 const completedComponents =
