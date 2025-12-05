@@ -1,15 +1,17 @@
 import { Alert, Text, TouchableOpacity, View } from "react-native";
-import { ResizeMode, Video } from "expo-av";
-import { Icon } from "@rneui/themed";
+import { VideoPlayer, VideoView, useVideoPlayer } from "expo-video";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getVideoURL } from "@/services/storage-service";
 import { Course, Lecture, SectionComponentLecture } from "@/types";
 import axios from "axios";
 import { t } from "@/i18n";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export interface VideoLectureProps {
   lecture: SectionComponentLecture;
   course: Course;
+  isActive: boolean;
   onContinue: () => Promise<void>;
 }
 
@@ -23,6 +25,10 @@ export interface VideoLectureProps {
  * If the video URL is invalid.
  */
 const fetchVideoUrl = async (lecture: Lecture, currentResolution: string) => {
+  // TODO: The if-statement below is for testing purposes only because the API is not working properly. Remove it when the API is fixed.
+  if (__DEV__) {
+    return "https://cloud.kristiyan.cc/api/public/dl/KM6xDJyF?inline=true";
+  }
   const url = await getVideoURL(lecture.content, currentResolution);
   const response = await axios.get(url, { method: "HEAD" });
   const contentType = response.headers["content-type"] as string | null;
@@ -46,6 +52,7 @@ const fetchVideoUrl = async (lecture: Lecture, currentResolution: string) => {
 export const VideoLecture = ({
   lecture,
   course,
+  isActive,
   onContinue,
 }: VideoLectureProps) => {
   const currentResolution = "1080";
@@ -59,9 +66,20 @@ export const VideoLecture = ({
     queryFn: () => fetchVideoUrl(lecture, currentResolution),
   });
 
+  const player = useVideoPlayer({ uri: url }, (player: VideoPlayer) => {
+    player.loop = true;
+  });
+
+  useEffect(() => {
+    if (isActive) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  }, [isActive, player]);
+
   if (error) {
     Alert.alert(t("general.error"), t("lesson.video-error"), [{ text: "OK" }]);
-
     return;
   }
 
@@ -85,12 +103,9 @@ export const VideoLecture = ({
         >
           {!isLoading ? (
             <VideoView
-              // @ts-expect-error At this point the URL is fully loaded and not `undefined`.
-              source={url}
-              autoPlay={true}
-              loop={true}
               player={player}
               contentFit="cover"
+              nativeControls={false}
               style={{ width: "100%", height: "100%" } as const}
             />
           ) : (

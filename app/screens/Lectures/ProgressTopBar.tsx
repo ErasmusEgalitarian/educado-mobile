@@ -5,7 +5,6 @@ import CoursePoints from "@/components/Exercise/CoursePoints";
 import { colors } from "@/theme/colors";
 import {
   Course,
-  LectureType,
   SectionComponent,
   SectionComponentExercise,
   SectionComponentLecture,
@@ -13,7 +12,6 @@ import {
 
 interface Props {
   courseObject: Course;
-  lectureType: LectureType;
   components: SectionComponent<
     SectionComponentLecture | SectionComponentExercise
   >[];
@@ -22,15 +20,10 @@ interface Props {
 
 export const ProgressTopBar = ({
   courseObject,
-  lectureType,
   components,
   currentIndex,
 }: Props) => {
   const navigator = useNavigation();
-  const chevronColor =
-    lectureType === "video"
-      ? colors.surfaceLighterCyan
-      : colors.textTitleGrayscale;
 
   const createCorrectIcon = (index: number, currentIndex: number) => {
     //if lecture is completed show check
@@ -126,7 +119,7 @@ export const ProgressTopBar = ({
           <MaterialCommunityIcons
             name="chevron-left"
             size={28}
-            color={chevronColor}
+            color={colors.surfaceLighterCyan}
           />
         </Pressable>
         <View className="flex-grow flex-row items-center justify-center py-2">
@@ -135,9 +128,8 @@ export const ProgressTopBar = ({
             createCorrectIcon(index, currentIndex),
           )}
         </View>
-        {"text" === lectureType && (
-          <CoursePoints courseId={courseObject.courseId} />
-        )}
+
+        <CoursePoints courseId={courseObject.courseId} />
       </View>
     </View>
   );
