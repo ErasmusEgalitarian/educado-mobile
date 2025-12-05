@@ -19,8 +19,8 @@ const ProfileStatsBox = ({
   const levelProgressPercentage = points % 100;
 
   return (
-    <View className="rounded-xl border border-surfaceDefaultGrayscale">
-      <View className="flex-row items-center justify-between p-4">
+    <View className="rounded-xl border border-surfaceDisabledGrayscale">
+      <View className="flex-row items-center justify-around p-4">
         <Badge
           className="bg-surfaceDefaultGreen"
           icon={{ name: "fire", color: "orange" }}
@@ -40,7 +40,7 @@ const ProfileStatsBox = ({
           {leaderboardPosition}º {t("profile.position")}
         </Badge>
       </View>
-      <View className="h-px bg-surfaceDefaultGrayscale" />
+      <View className="h-px bg-surfaceDisabledGrayscale" />
       <View className="p-4">
         <LevelProgress
           levelProgressPercentage={levelProgressPercentage}

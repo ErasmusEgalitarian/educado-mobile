@@ -1,7 +1,6 @@
-import { View, TouchableOpacity } from "react-native";
-import Text from "../General/Text";
+import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import tailwindConfig from "@/tailwind.config";
+import { colors } from "@/theme/colors";
 import PropTypes from "prop-types";
 
 /**
@@ -12,8 +11,6 @@ import PropTypes from "prop-types";
  * @returns {React.Element} JSX element
  */
 export default function ProfileNavigationButton(props) {
-  const tailwindColors = tailwindConfig.theme.colors;
-
   ProfileNavigationButton.propTypes = {
     label: PropTypes.string,
     onPress: PropTypes.func,
@@ -23,19 +20,18 @@ export default function ProfileNavigationButton(props) {
   return (
     <View>
       <TouchableOpacity
-        className="w-full border-b border-lightGray py-5"
+        className="w-full border-b border-textDisabledGrayscale py-7"
         onPress={props.onPress}
       >
         <View className="flex flex-row">
-          <Text className="mt-0.5 flex-1 items-start text-lg">
+          <Text className="mt-0.5 flex-1 items-start text-body-regular">
             {props.label}
           </Text>
           <View className="items-end">
             <MaterialCommunityIcons
               size={25}
               name="chevron-right"
-              type="material-community"
-              color={tailwindColors.projectGray}
+              color={colors.textTitleGrayscale}
             />
           </View>
         </View>

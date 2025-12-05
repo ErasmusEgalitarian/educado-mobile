@@ -16,12 +16,14 @@ export const Badge = ({ icon, children, className }: BadgeProps) => {
   return (
     <View
       className={cn(
-        "flex h-16 w-28 items-center justify-center rounded-md p-3",
+        "flex h-16 w-28 items-center justify-center rounded-xl",
         className,
       )}
     >
       <MaterialCommunityIcons name={icon.name} size={25} color={icon.color} />
-      <Text className="text-center text-surfaceSubtleCyan">{children}</Text>
+      <Text className="text-center text-surfaceSubtleCyan text-caption-sm-regular">
+        {children}
+      </Text>
     </View>
   );
 };
