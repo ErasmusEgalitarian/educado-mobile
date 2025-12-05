@@ -97,14 +97,15 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
                 </Text>
               </View>
             </View>
-            <View className="flex-col items-start justify-start">
-              <View className="flex-row items-center">
+            <View className="h-1 w-full border-b-[1px] border-surfaceDisabledGrayscale pt-2 opacity-50" />
+            <View className="my-2 flex-col items-start justify-start">
+              <View className="mb-1 flex-row items-center">
                 <MaterialCommunityIcons
                   size={18}
                   name={determineIcon(course.category)}
                   color={colors.textCaptionGrayscale}
                 />
-                <Text className="mx-[2.5%] my-[3%] text-textCaptionGrayscale text-caption-sm-regular">
+                <Text className="pl-1 text-textCaptionGrayscale text-caption-sm-regular">
                   {determineCategory(course.category)}
                 </Text>
               </View>
@@ -114,16 +115,16 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
                   name="clock"
                   color={colors.textCaptionGrayscale}
                 />
-                <Text className="mx-[2.5%] my-[3%] text-textCaptionGrayscale text-caption-sm-regular">
+                <Text className="pl-1 text-textCaptionGrayscale text-caption-sm-regular">
                   {course.estimatedHours
                     ? formatHours(course.estimatedHours)
                     : t("course.duration")}
                 </Text>
               </View>
             </View>
-            <View className="flex-row items-center">
+            <View className="flex-row items-center justify-between">
               <CustomProgressBar
-                width={56}
+                width={60}
                 progress={studentProgress}
                 height={1}
               />
