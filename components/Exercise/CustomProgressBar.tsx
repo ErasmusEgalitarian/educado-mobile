@@ -1,11 +1,10 @@
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, type DimensionValue } from "react-native";
 import { ProgressBar } from "react-native-paper";
 import { colors } from "@/theme/colors";
 
 interface CustomProgressBarProps {
   progress: number[];
   width: number;
-  height: number;
   displayLabel?: boolean;
 }
 
@@ -21,16 +20,17 @@ interface CustomProgressBarProps {
 export const CustomProgressBar = ({
   progress,
   width,
-  height,
   displayLabel = true,
 }: CustomProgressBarProps) => {
-  const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
+  const { width: ScreenWidth } = Dimensions.get("window");
 
   // Ensure progress is between 0 and 100
   progress[0] = Math.min(100, Math.max(0, progress[0]));
   if (isNaN(progress[0])) {
     progress[0] = 0;
   }
+
+  const barWidth = ScreenWidth * (width / 100);
 
   return (
     <View className="flex-row items-center">
@@ -45,16 +45,13 @@ export const CustomProgressBar = ({
             The border radius can't be passed by className either, as it will be overlooked because of the style={}
           */
           backgroundColor: colors.surfaceLighterCyan,
-          width: ScreenWidth * (width / 100),
-          height: ScreenHeight * (height / 100),
+          width: barWidth,
+          height: 9,
           borderRadius: 10,
         }}
       />
       {displayLabel && (
-        <Text
-          className="px-6 text-center text-textBodyGrayscale text-caption-sm-regular"
-          style={{ color: colors.greyscaleTexticonCaption }}
-        >
+        <Text className="px-6 text-center text-textBodyGrayscale text-caption-sm-regular">
           {progress[1]}/{progress[2]}
         </Text>
       )}

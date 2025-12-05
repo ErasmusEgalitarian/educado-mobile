@@ -24,7 +24,6 @@ export const LevelProgress = ({
       <CustomProgressBar
         progress={[levelProgressPercentage, 0, 0]}
         width={65}
-        height={1}
         displayLabel={false}
       />
     </View>

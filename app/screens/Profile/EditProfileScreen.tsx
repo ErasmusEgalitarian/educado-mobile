@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ProfileNameCircle } from "@/components/Profile/ProfileNameCircle";
-import FormButton from "@/components/General/Forms/FormButton";
+import { FormButton } from "@/components/General/Forms/FormButton";
 import {
   deletePhoto,
   deleteUser,
@@ -20,7 +20,7 @@ import {
   updateUserFields,
 } from "@/api/user-api";
 import BackButton from "@/components/General/BackButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { validateEmail, validateName } from "@/components/General/validation";
 import {
   getUserInfo,
@@ -34,7 +34,7 @@ import {
 import ShowAlert from "@/components/General/ShowAlert";
 import errorSwitch from "@/components/General/error-switch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { colors } from "@/theme/colors";
 
 interface ProfileInputProps extends TextInputProps {
   label: string;
@@ -254,6 +254,10 @@ const EditProfileScreen = () => {
     await deletePhoto(userId, await getLoginToken());
   };
 
+  const isValid = validateInput();
+
+  const buttonOpacity = { opacity: isValid ? 1 : 1 };
+
   return (
     <SafeAreaView className="bg-secondary">
       <View className="h-full">
@@ -351,15 +355,11 @@ const EditProfileScreen = () => {
             error={emailAlert}
           />
         </View>
-
-        <View className="pt-12">
+        <View className="mt-auto flex-none px-12">
           <FormButton
-            className={`h-[50px] w-[326px] items-center justify-center self-center rounded-[8px] ${
-              !validateInput() ? "bg-[#A0C1C7]" : "bg-primary_custom"
-            }`}
-            onPress={saveUserInfo}
+            onPress={() => void saveUserInfo()}
             disabled={!validateInput()}
-            style={{ opacity: 1 }}
+            style={[[buttonOpacity]]}
           >
             Salvar alterações
           </FormButton>
