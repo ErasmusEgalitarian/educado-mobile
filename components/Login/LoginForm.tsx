@@ -101,11 +101,9 @@ const LoginForm = () => {
         <FormFieldAlert success={passwordAlert === ""} label={passwordAlert} />
       </View>
 
-      <View>
+      <View className="mb-20 flex-row justify-end">
         <Text
-          className={
-            "mb-20 text-right text-textSubtitleGrayscale underline text-h4-sm-regular"
-          }
+          className="text-textSubtitleGrayscale underline text-h4-sm-regular"
           onPress={() => {
             setModalVisible(true);
           }}

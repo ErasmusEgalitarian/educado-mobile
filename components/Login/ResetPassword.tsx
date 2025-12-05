@@ -172,103 +172,111 @@ export const ResetPassword = ({
       title={t("login.reset-password")}
     >
       <View className="my-8 px-10">
-        {!codeEntered ? (
-          <View>
-            {!emailSent && (
-              <View>
-                <FormTextField
-                  bordered={true}
-                  placeholder={t("general.placeholder-email")}
-                  label={t("general.email")}
-                  required={true}
-                  onChangeText={(email) => {
-                    setEmail(email);
-                    setEmailError(false);
-                    displayErrorAlert("", false);
-                  }}
-                  keyboardType="email-address"
-                  value={email}
-                  error={emailError}
-                />
-                <FormFieldAlert
-                  label={passwordResetAlert}
-                  success={isSuccess}
-                />
-              </View>
-            )}
-
-            <View className="mt-[40px]">
-              {emailSent ? (
-                <View>
-                  <Text className="mb-[10px] text-center text-h4-sm-regular">
-                    {t("login.code-sent")}
-                  </Text>
-                  <FormTextField
-                    bordered={true}
-                    placeholder="XXXX"
-                    onChangeText={(token) => {
-                      setToken(token);
-                    }}
-                    value={token}
-                    error={tokenAlert !== ""}
-                  />
-                  <FormFieldAlert
-                    success={tokenAlert === ""}
-                    label={tokenAlert}
-                  />
-                  {/* Continue button */}
-                  <View className="mb-[24px] mt-[40px]">
-                    <FormButton
-                      onPress={() => {
-                        void validateCode(email, token);
+        <>
+          {!codeEntered ? (
+            <View>
+              <>
+                {!emailSent && (
+                  <View>
+                    <FormTextField
+                      bordered={true}
+                      placeholder={t("general.placeholder-email")}
+                      label={t("general.email")}
+                      required={true}
+                      onChangeText={(email) => {
+                        setEmail(email);
+                        setEmailError(false);
+                        displayErrorAlert("", false);
                       }}
-                      disabled={!codeInputValid(token)}
-                    >
-                      {buttonLoading
-                        ? t("login.code-validating")
-                        : t("login.code-check")}
-                    </FormButton>
+                      keyboardType="email-address"
+                      value={email}
+                      error={emailError}
+                    />
+                    <FormFieldAlert
+                      label={passwordResetAlert}
+                      success={isSuccess}
+                    />
                   </View>
-                  <View className="flex-column mx-10 items-center justify-center">
-                    <Text className="text-textSubtitleGrayscale text-body-regular">
-                      {t("login.code-not-received")}
-                    </Text>
-                    {/* Resend code*/}
-                    <Text
-                      className="underline text-body-regular"
+                )}
+              </>
+
+              <View className="mt-[40px]">
+                <>
+                  {emailSent ? (
+                    <View>
+                      <Text className="mb-[10px] text-center text-h4-sm-regular">
+                        {t("login.code-sent")}
+                      </Text>
+                      <FormTextField
+                        bordered={true}
+                        placeholder="XXXX"
+                        onChangeText={(token) => {
+                          setToken(token);
+                        }}
+                        value={token}
+                        error={tokenAlert !== ""}
+                      />
+                      <FormFieldAlert
+                        success={tokenAlert === ""}
+                        label={tokenAlert}
+                      />
+                      {/* Continue button */}
+                      <View className="mb-[24px] mt-[40px]">
+                        <FormButton
+                          onPress={() => {
+                            void validateCode(email, token);
+                          }}
+                          disabled={!codeInputValid(token)}
+                        >
+                          {buttonLoading
+                            ? t("login.code-validating")
+                            : t("login.code-check")}
+                        </FormButton>
+                      </View>
+                      <View className="flex-column mx-10 items-center justify-center">
+                        <Text className="text-textSubtitleGrayscale text-body-regular">
+                          {t("login.code-not-received")}
+                        </Text>
+                        {/* Resend code*/}
+                        <Text
+                          className="underline text-body-regular"
+                          onPress={() => {
+                            void sendEmail(email);
+                          }}
+                        >
+                          {t("login.code-resend")}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <FormButton
+                      // Send code
                       onPress={() => {
                         void sendEmail(email);
                       }}
+                      disabled={
+                        passwordResetAlert !== "" ||
+                        email === "" ||
+                        buttonLoading
+                      }
                     >
-                      {t("login.code-resend")}
-                    </Text>
-                  </View>
-                </View>
-              ) : (
-                <FormButton
-                  // Send code
-                  onPress={() => {
-                    void sendEmail(email);
-                  }}
-                  disabled={
-                    passwordResetAlert !== "" || email === "" || buttonLoading
-                  }
-                >
-                  {buttonLoading
-                    ? t("login.email-sending")
-                    : t("general.enter")}
-                </FormButton>
-              )}
+                      {buttonLoading
+                        ? t("login.email-sending")
+                        : t("general.enter")}
+                    </FormButton>
+                  )}
+                </>
+              </View>
             </View>
-          </View>
-        ) : (
-          <EnterNewPasswordScreen
-            email={email}
-            token={token}
-            hideModal={onModalClose}
-            resetState={resetState}
-          />
-        )}
+          ) : (
+            <EnterNewPasswordScreen
+              email={email}
+              token={token}
+              hideModal={onModalClose}
+              resetState={resetState}
+            />
+          )}
+        </>
       </View>
     </EducadoModal>
   );

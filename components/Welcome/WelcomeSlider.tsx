@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useRef } from "react";
 import { Dimensions, Pressable, Text, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, {
@@ -11,8 +11,14 @@ import { colors } from "@/theme/colors";
 
 const width = Dimensions.get("window").width;
 
+const styles = {
+  container: { gap: 5, marginTop: 10 },
+  dot: { backgroundColor: colors.surfaceSubtleGrayscale, borderRadius: 50 },
+  activeDot: { backgroundColor: colors.textLabelCyan, borderRadius: 50 },
+};
+
 export const WelcomeSlider = () => {
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
 
   const onPressPagination = (index: number) => {
@@ -65,15 +71,9 @@ export const WelcomeSlider = () => {
         <Pagination.Basic
           progress={progress}
           data={sections}
-          activeDotStyle={{
-            backgroundColor: colors.textLabelCyan,
-            borderRadius: 50,
-          }}
-          dotStyle={{
-            backgroundColor: colors.surfaceSubtleGrayscale,
-            borderRadius: 50,
-          }}
-          containerStyle={{ gap: 5, marginTop: 10 }}
+          activeDotStyle={styles.activeDot}
+          dotStyle={styles.dot}
+          containerStyle={styles.container}
           onPress={onPressPagination}
         />
       </View>
