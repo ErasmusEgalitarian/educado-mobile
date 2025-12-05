@@ -1,87 +1,13 @@
-import type { Course, CourseSelection, Student } from "@/api/backend/types.gen";
-
-/**
- * Course Category with populated data
- */
-export interface PopulatedCourseCategory {
-  id?: number;
-  documentId?: string;
-  name?: string;
-  courses?: PopulatedCourse[];
-  createdAt?: string;
-  updatedAt?: string;
-  publishedAt?: string;
-}
-
-/**
- * Content Creator with populated data
- */
-export interface PopulatedContentCreator {
-  id?: number;
-  documentId?: string;
-  firstName?: string;
-  lastName?: string;
-  verifiedAt?: string;
-  biography?: string;
-  email?: string;
-  courses?: PopulatedCourse[];
-  createdAt?: string;
-  updatedAt?: string;
-  publishedAt?: string;
-}
-
-/**
- * Feedback with populated data
- */
-export interface PopulatedFeedback {
-  id?: number;
-  documentId?: string;
-  rating?: number;
-  feedbackText?: string;
-  dateCreated?: string;
-  course?: PopulatedCourse;
-  student?: PopulatedStudent;
-  createdAt?: string;
-  updatedAt?: string;
-  publishedAt?: string;
-}
-
-/**
- * Exercise with populated data
- */
-export interface PopulatedExercise {
-  id?: number;
-  documentId?: string;
-  title?: string;
-  question?: string;
-  exercise_options?: {
-    id?: number;
-    documentId?: string;
-    text?: string;
-    explanation?: string;
-    isCorrect?: boolean;
-    createdAt?: string;
-    updatedAt?: string;
-    publishedAt?: string;
-  }[];
-  createdAt?: string;
-  updatedAt?: string;
-  publishedAt?: string;
-}
-
-/**
- * Lecture with populated data
- */
-export interface PopulatedLecture {
-  id?: number;
-  documentId?: string;
-  title?: string;
-  completed?: boolean;
-  content?: unknown[];
-  createdAt?: string;
-  updatedAt?: string;
-  publishedAt?: string;
-}
+import type {
+  ContentCreator,
+  Course,
+  CourseCategory,
+  CourseSelection,
+  Exercise,
+  Feedback,
+  Student,
+} from "@/api/backend/types.gen";
+import { Lecture } from ".";
 
 /**
  * Course with all relations populated
@@ -95,9 +21,9 @@ export interface PopulatedCourse
     | "course_sections"
     | "students"
   > {
-  course_categories?: PopulatedCourseCategory[];
-  content_creators?: PopulatedContentCreator[];
-  feedbacks?: PopulatedFeedback[];
+  course_categories?: CourseCategory[];
+  content_creators?: ContentCreator[];
+  feedbacks?: Feedback[];
   course_sections?: PopulatedSection[];
   students?: PopulatedStudent[];
 }
@@ -109,8 +35,8 @@ export interface PopulatedSection
   extends Omit<CourseSelection, "exercises" | "lectures" | "course"> {
   title: string;
   description: string;
-  exercises?: PopulatedExercise[];
-  lectures?: PopulatedLecture[];
+  exercises?: Exercise[];
+  lectures?: Lecture[];
   course?: PopulatedCourse;
 }
 
@@ -122,7 +48,7 @@ export interface PopulatedStudent
     Student,
     "feedbacks" | "courses" | "certificates" | "user_logs"
   > {
-  feedbacks?: PopulatedFeedback[];
+  feedbacks?: Feedback[];
   courses?: PopulatedCourse[];
   certificates?: {
     id?: number;
@@ -145,18 +71,4 @@ export interface PopulatedStudent
     updatedAt?: string;
     publishedAt?: string;
   }[];
-}
-
-/**
- * Login response with populated user courses
- */
-export interface PopulatedLoginResponse {
-  accessToken?: string;
-  userInfo?: {
-    documentId?: string;
-    name?: string;
-    email?: string;
-    verifiedAt?: string;
-  };
-  courses?: PopulatedCourse[];
 }

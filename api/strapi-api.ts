@@ -17,6 +17,8 @@ import {
   CourseSelectionGetCourseSelectionsResponse,
   FeedbackGetFeedbacksResponse,
   StudentPutStudentsByIdResponse,
+  Exercise,
+  Lecture,
 } from "@/api/backend/types.gen";
 import {
   mapToCourse,
@@ -37,12 +39,7 @@ import {
   SectionComponentLecture,
   SectionComponent,
 } from "@/types";
-import {
-  PopulatedCourse,
-  PopulatedExercise,
-  PopulatedLecture,
-  PopulatedSection,
-} from "@/types/strapi-populated";
+import { PopulatedCourse, PopulatedSection } from "@/types/strapi-populated";
 
 export const loginStudentStrapi = async (
   email: string,
@@ -262,11 +259,11 @@ export const getAllComponentsBySectionIdStrapi = async (
   const lectureComponents = response.data[0].lectures ?? [];
 
   const exerciseList: SectionComponentExercise[] = exerciseComponents.map(
-    (exercise) => mapToExercises(exercise as PopulatedExercise),
+    (exercise) => mapToExercises(exercise as Exercise),
   );
 
   const lectureList: SectionComponentLecture[] = lectureComponents.map(
-    (lecture) => mapToLectures(lecture as PopulatedLecture),
+    (lecture) => mapToLectures(lecture as Lecture),
   );
 
   // Combine both lists and return

@@ -29,7 +29,6 @@ import {
   Student,
 } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {} from "expo-file-system"; //documentDirectory, EncodingType,
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -183,35 +182,6 @@ export const useSections = (id: string) =>
     queryFn: () => getAllSectionsByCourseIdStrapi(id),
     enabled: !!id,
   });
-
-/**
- * Get the video file path for a lecture video.
- *
- * @param filename - The filename of the video.
- */
-
-//Outcommented duo to eslint error, and no usage yet.
-/*
-export const useLectureVideo = (filename: string) =>
-  useQuery({
-    queryKey: queryKeys.lectureVideos(filename),
-    queryFn: async () => {
-      const video = await getBucketVideoByFilename(filename);
-
-      if (!documentDirectory) {
-        throw new Error("Document directory is not available");
-      }
-
-      const filePath = `${documentDirectory}lectureVideos/${filename}.mp4`;
-
-      await writeAsStringAsync(filePath, video, {
-        encoding: EncodingType.Base64,
-      });
-
-      return filePath;
-    },
-  });
-*/
 
 /**
  * Delete a user.
