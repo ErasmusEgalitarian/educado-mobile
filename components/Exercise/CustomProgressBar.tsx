@@ -33,21 +33,26 @@ export const CustomProgressBar = ({
   }
 
   return (
-    <View className="flex-row items-center justify-around">
+    <View className="flex-row items-center">
       <ProgressBar
-        className="rounded-lg bg-surfaceLighter"
         progress={progress[0] / 100}
-        /* The ProgressBar component will pick a wrong color itself unless directly specified like this  */
-        color={colors.surfaceLighter}
-        /* Since the height and width are calculated dynamically, it can't be rendered by passing it to className */
+        color={colors.surfaceDarker}
+        // eslint-disable-next-line
         style={{
+          /*
+            It is not good practice to use eslint-disable, but it is required here, because of the ProgressBar from react-native-paper
+            Since the height and width are calculated dynamically, it can't be rendered by passing it to className
+            The border radius can't be passed by className either, as it will be overlooked because of the style={}
+          */
+          backgroundColor: colors.surfaceLighterCyan,
           width: ScreenWidth * (width / 100),
           height: ScreenHeight * (height / 100),
+          borderRadius: 10,
         }}
       />
       {displayLabel && (
         <Text
-          className="caption-sm-regular px-5 text-center text-projectBlack"
+          className="px-6 text-center text-textBodyGrayscale text-caption-sm-regular"
           style={{ color: colors.greyscaleTexticonCaption }}
         >
           {progress[1]}/{progress[2]}

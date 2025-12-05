@@ -50,12 +50,14 @@ const CourseScreen = () => {
   const pointsToNextLevel = 100 - levelProgressPercentage;
 
   return courses.length > 0 ? (
-    <SafeAreaView className="h-full">
-      <IconHeader
-        title={t("course.welcome-title")}
-        description={t("course.welcome-description")}
-      />
-      <View className="p-7">
+    <SafeAreaView className="h-full bg-surfaceSubtleCyan">
+      <View className="px-7 pt-14">
+        <IconHeader
+          title={t("course.welcome-title")}
+          description={t("course.welcome-description")}
+        />
+      </View>
+      <View className="px-7 py-4">
         <View className="rounded-xl border border-borderDefaultGrayscale p-4">
           <LevelProgress
             levelProgressPercentage={levelProgressPercentage}
