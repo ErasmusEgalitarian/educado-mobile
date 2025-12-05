@@ -14,6 +14,8 @@ import DialogNotification from "@/components/General/DialogNotification";
 import { isAxiosError } from "axios";
 import ShowAlert from "@/components/General/ShowAlert";
 import { ApiError } from "@/api/legacy-api";
+import { colors } from "@/theme/colors";
+import { t } from "@/i18n";
 
 interface EnterNewPasswordScreenProps {
   hideModal: () => void;
@@ -47,15 +49,12 @@ const EnterNewPasswordScreen = ({
   const [confirmPasswordAlert, setConfirmPasswordAlert] = useState("");
   const [passwordAlert, setPasswordAlert] = useState("");
 
-  let isPasswordsEmpty;
-  let passwordRequirements;
-
   const checkIfPasswordsMatch = (password: string, confirmPassword: string) => {
     if (password === confirmPassword) {
       setConfirmPasswordAlert("");
     } else {
       // The passwords do not match
-      setConfirmPasswordAlert("Senhas não coincidem");
+      setConfirmPasswordAlert(t("login.no-match"));
     }
   };
 
@@ -65,11 +64,6 @@ const EnterNewPasswordScreen = ({
     setPasswordContainsLetter(containsLetter);
     const lengthValid = validatePasswordLength(newPassword);
     setPasswordLengthValid(lengthValid);
-    checkIfPasswordsMatch(newPassword, confirmPassword);
-  }, [confirmPassword, newPassword]);
-
-  // password input alerts
-  useEffect(() => {
     checkIfPasswordsMatch(newPassword, confirmPassword);
   }, [confirmPassword, newPassword]);
 
@@ -97,7 +91,7 @@ const EnterNewPasswordScreen = ({
 
     try {
       await enterNewPassword(obj);
-      DialogNotification("success", "A senha foi alterada.");
+      DialogNotification("success", t("login.password-changed"));
       setTimeout(() => {
         hideModal();
         resetState();
@@ -111,22 +105,22 @@ const EnterNewPasswordScreen = ({
       switch (apiError.code) {
         case "E0401":
           // No user exists with this email!
-          setPasswordAlert("Não existe nenhum usuário com este email!");
+          setPasswordAlert(t("login.no-user"));
           break;
 
         case "E0404":
           // Code expired!
-          setPasswordAlert("Código expirado!");
+          setPasswordAlert(t("login.code-expired"));
           break;
 
         case "E0405":
           // Incorrect code!
-          setPasswordAlert("Código incorreto!");
+          setPasswordAlert(t("login.code-incorrect"));
           break;
 
         default:
           // Errors not currently handled with specific alerts
-          ShowAlert("Erro desconhecido!");
+          ShowAlert(t("general.error-unknown"));
           console.log(error);
           break;
       }
@@ -136,9 +130,9 @@ const EnterNewPasswordScreen = ({
   // Function to validate the input
   const validateInput = () => {
     // Check if passwords are empty
-    isPasswordsEmpty = newPassword === "" && confirmPassword === "";
+    const isPasswordsEmpty = newPassword === "" && confirmPassword === "";
     // Check if password contains a letter and is at least 8 characters long
-    passwordRequirements = passwordContainsLetter && passwordLengthValid;
+    const passwordRequirements = passwordContainsLetter && passwordLengthValid;
     // Check if passwords match
     return (
       !isPasswordsEmpty && passwordRequirements && confirmPasswordAlert === ""
@@ -153,7 +147,7 @@ const EnterNewPasswordScreen = ({
           onChangeText={(password) => {
             setNewPassword(removeEmojis(password));
           }}
-          label="Nova senha"
+          label={t("login.new-password")}
           required={true}
           bordered={true}
           value={newPassword}
@@ -169,19 +163,22 @@ const EnterNewPasswordScreen = ({
           className={
             "text-sm" +
             (newPassword === ""
-              ? " text-projectGray"
+              ? " text-textCaptionGrayscale text-footnote-regular-caps"
               : passwordLengthValid
-                ? " text-success"
-                : " text-error")
+                ? " text-surfaceDefaultGreen text-footnote-regular-caps"
+                : " text-textLabelRed text-footnote-regular-caps")
           }
         >
-          {/** Minimum 8 characters */}
-          Mínimo 8 caracteres
+          {t("login.requirement-length")}
         </Text>
 
-        <View className="-translate-y-1 flex-row items-center">
+        <View className="-translate-y-1 flex-row items-center pl-1">
           {passwordLengthValid ? (
-            <MaterialCommunityIcons name="check" size={20} color="#4AA04A" />
+            <MaterialCommunityIcons
+              name="check"
+              size={12}
+              color={colors.surfaceDefaultGreen}
+            />
           ) : null}
         </View>
       </View>
@@ -190,30 +187,33 @@ const EnterNewPasswordScreen = ({
           className={
             "text-sm" +
             (newPassword === ""
-              ? " text-projectGray"
+              ? " text-textCaptionGrayscale text-footnote-regular-caps"
               : passwordContainsLetter
-                ? " text-success"
-                : " text-error")
+                ? " text-surfaceDefaultGreen text-footnote-regular-caps"
+                : " text-textLabelRed text-footnote-regular-caps")
           }
         >
-          {/* Must contain at least one letter */}
-          Conter pelo menos uma letra
+          {t("login.requirement-letter")}
         </Text>
-        <View className="-translate-y-1 flex-row items-center">
+        <View className="-translate-y-1 flex-row items-center pl-1">
           {passwordContainsLetter ? (
-            <MaterialCommunityIcons name="check" size={20} color="#4AA04A" />
+            <MaterialCommunityIcons
+              name="check"
+              size={12}
+              color={colors.surfaceDefaultGreen}
+            />
           ) : null}
         </View>
       </View>
       <FormFieldAlert label={passwordAlert} success={passwordAlert === ""} />
       <View className="mt-[24px]">
         <FormTextField
-          placeholder="••••••••" // Confirm your password
+          placeholder="••••••••"
           bordered={true}
           onChangeText={(confirmPassword) => {
             setConfirmPassword(removeEmojis(confirmPassword));
           }}
-          label="Confirmar nova senha" // Confirm new password
+          label={t("login.confirm-new-password")}
           required={true}
           value={confirmPassword}
           error={confirmPasswordAlert !== ""}
@@ -227,14 +227,13 @@ const EnterNewPasswordScreen = ({
         />
       </View>
 
-      {/* Enter button */}
       <FormButton
         onPress={() => {
           void changePassword(email, token, newPassword);
         }}
         disabled={!validateInput()}
       >
-        Entrar
+        {t("general.enter")}
       </FormButton>
     </View>
   );

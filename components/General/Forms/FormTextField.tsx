@@ -32,7 +32,7 @@ export const FormTextField = ({
           {required ? "*" : ""}
         </Text>
         {(showPasswordEye ?? false) ? (
-          <View className={"absolute right-[15] top-12 z-10 ml-auto"}>
+          <View className={"absolute right-[15] top-11 z-10 ml-auto"}>
             <PasswordEye
               showPasswordIcon={showPassword}
               toggleShowPassword={() => {

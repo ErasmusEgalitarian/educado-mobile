@@ -36,7 +36,7 @@ const WelcomeScreen = () => {
                 );
               }}
             >
-              {t("welcome.enter")}
+              {t("general.enter")}
             </FormButton>
 
             <Text
@@ -52,7 +52,7 @@ const WelcomeScreen = () => {
                 );
               }}
             >
-              {t("welcome.register")}
+              {t("general.register")}
             </Text>
           </View>
         </View>
