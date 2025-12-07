@@ -1,6 +1,6 @@
 import { t } from "@/i18n";
 
-export default [
+export const sections = [
   {
     id: 1,
     title: t("welcome.slide-1-title"),

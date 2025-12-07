@@ -10,6 +10,7 @@ import ShowAlert from "@/components/General/ShowAlert";
 import { isAxiosError } from "axios";
 import { toApiError } from "@/api/legacy-api";
 import { useLogin, useLoginStrapi } from "@/hooks/query";
+import { t } from "@/i18n";
 
 /**
  * Login form component for the login screen containing email and password input fields and a login button.
@@ -41,20 +42,18 @@ const LoginForm = () => {
 
       switch (apiError.code) {
         case "E0004":
-          // No user exists with this email
-          setEmailAlert("Insira um E-mail válido");
+          setEmailAlert(t("login.enter-valid-email"));
           break;
         case "E0105":
-          // Password is incorrect
-          setPasswordAlert("Senha incorreta. Por favor, tente novamente");
+          setPasswordAlert(t("login.incorrect-password"));
           break;
         case "E0003":
           // Error connecting to server
-          ShowAlert("Erro de conexão com o servidor!");
+          ShowAlert(t("general.error-server"));
           break;
         default:
           // TODO: What error should we give here instead? Unknown error?
-          ShowAlert("Erro desconhecido!");
+          ShowAlert(t("general.error-unknown"));
       }
 
       return;
@@ -73,11 +72,11 @@ const LoginForm = () => {
     <View>
       <View className="mb-1">
         <FormTextField
-          placeholder="Insira sua e-mail"
+          placeholder={t("login.enter-email")}
           onChangeText={(email: string) => {
             setEmail(email);
           }}
-          label="E-mail"
+          label={t("general.email")}
           required={false}
           keyboardType="email-address"
           bordered={true}
@@ -88,12 +87,12 @@ const LoginForm = () => {
 
       <View className="relative mb-5">
         <FormTextField
-          placeholder="Insira sua senha" // Type your password
+          placeholder={t("login.enter-password")}
           value={password}
           onChangeText={(inputPassword) => {
             setPassword(removeEmojis(inputPassword));
           }}
-          label="Senha" // Password
+          label={t("general.password")}
           required={false}
           bordered={true}
           error={passwordAlert !== ""}
@@ -102,27 +101,23 @@ const LoginForm = () => {
         <FormFieldAlert success={passwordAlert === ""} label={passwordAlert} />
       </View>
 
-      <View>
+      <View className="mb-20 flex-row justify-end">
         <Text
-          className={
-            "mb-20 text-right text-textSubtitleGrayscale underline text-h4-sm-regular"
-          }
+          className="text-textSubtitleGrayscale underline text-h4-sm-regular"
           onPress={() => {
             setModalVisible(true);
           }}
         >
-          {/* reset your password? */}
-          Esqueceu a senha?
+          {t("login.reset-password")}
         </Text>
       </View>
-      {/* Enter */}
       <FormButton
         onPress={() => {
           void login();
         }}
         disabled={!(password.length > 0 && email.length > 0)}
       >
-        Entrar
+        {t("general.enter")}
       </FormButton>
       <View className="">
         <ResetPassword modalVisible={modalVisible} onModalClose={closeModal} />
