@@ -160,10 +160,8 @@ export const getAllSectionsByCourseIdStrapi = async (
 ): Promise<Section[]> => {
   const response = (await courseSelectionGetCourseSelections({
     query: {
-      filters: {
-        //TODO: wrong filter format - look at getAllStudentSubscriptionsStrapi
-        "course[id][$eq]": id,
-      },
+      /* @ts-expect-error: Strapi filter typing does not support nested filters */
+      "filters[course][documentId][$eq]": id,
       populate: ["exercises", "course", "lectures"],
       status: "published",
     },
