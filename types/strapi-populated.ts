@@ -10,7 +10,6 @@ import type {
   Lecture,
 } from "@/api/backend/types.gen";
 
-
 /**
  * Course with all relations populated
  */
@@ -43,8 +42,7 @@ export interface PopulatedSection
 /**
  * Exercise with all relations populated
  */
-export interface PopulatedExercise
-  extends Omit<Exercise, "exercise_options"> {
+export interface PopulatedExercise extends Omit<Exercise, "exercise_options"> {
   exercise_options?: ExerciseOption[];
 }
 
