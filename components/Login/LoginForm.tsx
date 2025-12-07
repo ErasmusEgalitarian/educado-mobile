@@ -9,7 +9,7 @@ import { removeEmojis } from "@/components/General/validation";
 import ShowAlert from "@/components/General/ShowAlert";
 import { isAxiosError } from "axios";
 import { toApiError } from "@/api/legacy-api";
-import { useLogin, useLoginStrapi } from "@/hooks/query";
+import { useLoginStrapi } from "@/hooks/query";
 import { t } from "@/i18n";
 
 /**

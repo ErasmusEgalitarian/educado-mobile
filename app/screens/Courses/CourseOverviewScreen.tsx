@@ -18,7 +18,7 @@ import {
   sanitizeStrapiImageUrl,
 } from "@/services/utils";
 import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
-import Tooltip from "@/components/Onboarding/Tooltip";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
 import { Course, ProgressTuple, Section } from "@/types";
@@ -251,15 +251,14 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
               position={{
                 top: -30,
                 left: 70,
-                right: 30,
-                bottom: 24,
               }}
-              text={t("course.tooltip")}
+              tooltipKey="Sections"
+              uniCodeIcon="🎓"
               tailSide="right"
-              tailPosition="20%"
-              uniqueKey="Sections"
-              uniCodeChar="🎓"
-            />
+              tailPosition={20}
+            >
+              {t("course.tooltip")}
+            </Tooltip>
             <View>
               {sections.map((section, i) => {
                 const completedComponents =

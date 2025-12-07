@@ -184,19 +184,19 @@ export const mapToExercises = (
   return {
     id: sectionComponentExerciseStrapi.documentId?.toString() ?? "",
     parentSection: "TODO", // TODO: Add parentSection relation in Strapi model
-    title: sectionComponentExerciseStrapi.title ?? "",
-    question: sectionComponentExerciseStrapi.question ?? "",
+    title: sectionComponentExerciseStrapi.title,
+    question: sectionComponentExerciseStrapi.question,
     answers: mappedExerciseOptions,
   };
 };
 
 export const mapToLectures = (
-  sectionComponentLectureStrapi: StrapiLecture | PopulatedLecture,
+  sectionComponentLectureStrapi: StrapiLecture,
 ): SectionComponentLecture => {
   return {
     id: sectionComponentLectureStrapi.documentId?.toString() ?? "",
     parentSection: "TODO", // TODO: Add parentSection relation in Strapi model
-    title: sectionComponentLectureStrapi.title ?? "",
+    title: sectionComponentLectureStrapi.title,
     description: "TODO", // TODO: Add description field to Strapi Lecture model
     contentType: "video", // TODO: Map contentType from Strapi Lecture model
     content: "TODO", // TODO: Map content from Strapi Lecture model
