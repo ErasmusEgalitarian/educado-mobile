@@ -42,30 +42,6 @@ const TextImageLectureScreen = ({
   const loginStudent = useLoginStudent();
   const studentQuery = useStudent(loginStudent.data.userInfo.id);
 
-  useEffect(() => {
-    if (isHtml(lectureObject.content)) {
-      setHtmlContent(lectureObject.content);
-    } else {
-      splitText(lectureObject.content);
-    }
-  }, [lectureObject.id, lectureObject.content]);
-
-  if (studentQuery.isLoading) {
-    return (
-      <SafeAreaView>
-        <LoadingScreen />
-      </SafeAreaView>
-    );
-  }
-
-  if (studentQuery.isError || !studentQuery.data) {
-    console.error(
-      `Error occured in ExerciseScreen while fetching the studentQuery: ${studentQuery.error ?? "unknown error"}`,
-    );
-    navigation.goBack();
-    return;
-  }
-
   const isHtml = (content: string) => {
     const htmlRegex = /<\/?[a-z][\s\S]*>/i;
     return htmlRegex.test(content);
@@ -108,6 +84,30 @@ const TextImageLectureScreen = ({
 
     setParagraphs(tempParagraphs);
   };
+
+  useEffect(() => {
+    if (isHtml(lectureObject.content)) {
+      setHtmlContent(lectureObject.content);
+    } else {
+      splitText(lectureObject.content);
+    }
+  }, [lectureObject.id, lectureObject.content]);
+
+  if (studentQuery.isLoading) {
+    return (
+      <SafeAreaView>
+        <LoadingScreen />
+      </SafeAreaView>
+    );
+  }
+
+  if (studentQuery.isError || !studentQuery.data) {
+    console.error(
+      `Error occured in TextImage.tsx while fetching the studentQuery: ${studentQuery.error ?? "unknown error"}`,
+    );
+    navigation.goBack();
+    return;
+  }
 
   return (
     <View className="flex-1 bg-surfaceSubtleCyan pt-20">
@@ -157,7 +157,7 @@ const TextImageLectureScreen = ({
         </ScrollView>
       </View>
 
-      <View className="w-100 mb-8 px-6">
+      <View className="w-100 mb-[80px] px-6">
         <TouchableOpacity
           className="flex-row items-center justify-center rounded-medium bg-surfaceDefaultCyan px-10 py-4"
           onPress={() => void onContinue()}

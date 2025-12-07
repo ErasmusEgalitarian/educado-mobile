@@ -18,7 +18,6 @@ import {
   SectionComponent,
   SectionComponentLecture,
   SectionComponentExercise,
-  LectureType,
 } from "@/types";
 import {
   useCompleteComponent,
@@ -59,7 +58,6 @@ const styles = StyleSheet.create({
  */
 const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const { section, parsedCourse, parsedComponentIndex } = route.params;
-  useState<LectureType>("text");
   const [index, setIndex] = useState(0);
   const initialIndexSetRef = useRef(false);
   const [resetKey, setResetKey] = useState(0);
@@ -155,7 +153,7 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
     // Set the componenets
     setSectionComponents(fetchedSectionComponents);
 
-    // Sett the index
+    // Set the index
     const initialIndex =
       parsedComponentIndex ??
       findIndexOfUncompletedComp(

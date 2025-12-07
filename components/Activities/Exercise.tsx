@@ -75,7 +75,7 @@ const ExerciseScreen = ({
 
   if (studentQuery.isError || !studentQuery.data) {
     console.error(
-      `Error occured in ExerciseScreen while fetching the studentQuery: ${studentQuery.error ?? "unknown error"}`,
+      `Error occured in Exercise.tsx while fetching the studentQuery: ${studentQuery.error ?? "unknown error"}`,
     );
     navigation.goBack();
     return;
@@ -98,7 +98,7 @@ const ExerciseScreen = ({
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-surfaceSubtleCyan">
+    <View className="flex-1 bg-surfaceSubtleCyan pt-5">
       <View className="flex-1 items-center">
         {/* Exercise Information */}
         <View className="text-center">
@@ -184,13 +184,13 @@ const ExerciseScreen = ({
       </View>
 
       {/* Continue Button */}
-      <View className="mb-8 w-full px-6">
+      <View className="mb-[80px] w-full px-6">
         <TouchableOpacity
           className={cn(
             "flex-row items-center justify-center rounded-medium px-10 py-4",
             selectedAnswer === null
-              ? "bg-primary_custom opacity-60"
-              : "bg-primary_custom opacity-100",
+              ? "bg-surfaceDisabledGrayscale"
+              : "bg-surfaceDefaultCyan",
           )}
           onPress={() => {
             if (selectedAnswer !== null) {
@@ -220,7 +220,7 @@ const ExerciseScreen = ({
       )}
 
       <StatusBar style="auto" />
-    </SafeAreaView>
+    </View>
   );
 };
 

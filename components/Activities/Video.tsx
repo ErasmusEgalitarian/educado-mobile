@@ -117,21 +117,21 @@ export const VideoLecture = ({
       </View>
 
       {/* Continue button */}
-      <View className="w-100 mb-8 bg-surfaceSubtleCyan px-6">
+      <View className="w-100 mb-[80px] px-6">
         <TouchableOpacity
           className="flex-row items-center justify-center rounded-medium bg-surfaceDefaultCyan px-10 py-4"
           onPress={() => void onContinue()}
         >
           <View className="flex-row items-center">
             <Text className="text-center text-surfaceSubtleGrayscale text-body-bold">
-              {t("lesson.continue")}
+              {t("course.continue-button-text")}
             </Text>
             <MaterialCommunityIcons
-              className="ml-8"
               name="chevron-right"
               type="material"
               size={24}
               color="white"
+              className="ml-2"
             />
           </View>
         </TouchableOpacity>
