@@ -11,8 +11,9 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { RegisterForm } from "@/components/Login/RegisterForm";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LogoBackButton from "@/components/Login/LogoBackButton";
+import { LogoBackButton } from "@/components/Login/LogoBackButton";
 import * as StorageService from "@/services/storage-service";
+import { t } from "@/i18n";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
@@ -21,8 +22,7 @@ const RegistrationScreen = () => {
     try {
       const isValid = await StorageService.isLoginTokenValid();
       if (isValid) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
+        // @ts-expect-error incorrect type 'never'
         navigation.navigate("Login");
       }
     } catch (error: unknown) {
@@ -43,13 +43,9 @@ const RegistrationScreen = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-        style={{ flex: 1 }}
+        className="flex-1"
       >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-          className="flex-1"
-        >
+        <ScrollView keyboardShouldPersistTaps="handled" className="flex-1">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
               <View className="mt-10">
@@ -59,23 +55,22 @@ const RegistrationScreen = () => {
                 <View className="mt-8">
                   <RegisterForm />
                 </View>
-                <View className="flex-row items-end justify-center">
+                <View className="mt-2 flex-row items-end justify-center">
                   <Text className="text-textBodyGrayscale text-h4-sm-regular">
-                    Já possui conta?
+                    {t("login.existing-account")}
                   </Text>
                   <Text
                     className={
                       "left-1 text-textCaptionGrayscale underline text-h4-sm-regular"
                     }
                     onPress={() => {
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-expect-error
+                      // @ts-expect-error incorrect type 'never'
                       navigation.navigate("Login", {
                         previousScreen: "Register",
                       });
                     }}
                   >
-                    Entre agora
+                    {t("login.login-now")}
                   </Text>
                 </View>
               </View>

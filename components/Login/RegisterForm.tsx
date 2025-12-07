@@ -22,6 +22,7 @@ import { setUserInfo, setJWT } from "@/services/storage-service";
 import { UserInfo } from "@/types/user";
 import { isAxiosError } from "axios";
 import { useLoginStrapi, useSignUpStrapi } from "@/hooks/query";
+import { t } from "@/i18n";
 
 interface BaseUserType {
   _id: string;
@@ -117,7 +118,7 @@ export const RegisterForm = () => {
     if (password === confirmPassword) {
       setConfirmPasswordAlert("");
     } else {
-      setConfirmPasswordAlert("Os campos de senha precisam ser iguais");
+      setConfirmPasswordAlert(t("login.no-match-2"));
     }
   };
 
@@ -191,10 +192,9 @@ export const RegisterForm = () => {
       await loginUser(obj)
         .then(async (response: { accessToken: string }) => {
           await setJWT(response.accessToken);
-          DialogNotification("success", "Usuário cadastrado! Cantando em...");
+          DialogNotification("success", t("login.user-registered"));
           setTimeout(() => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
+            // @ts-expect-error incorrect type 'never'
             navigation.navigate("HomeStack");
           }, 2500);
         })
@@ -211,9 +211,9 @@ export const RegisterForm = () => {
       <AlertNotificationRoot>
         <View className="mb-6 flex-none">
           <FormTextField
-            label="Nome" // name
+            label={t("general.name")}
             value={name}
-            placeholder="Nome Sobrenome"
+            placeholder={t("general.full-name")}
             required={true}
             bordered={true}
             onChangeText={(firstName) => {
@@ -224,9 +224,9 @@ export const RegisterForm = () => {
         </View>
         <View className="mb-6 flex-none">
           <FormTextField
-            label="Email"
+            label={t("general.email")}
             value={email}
-            placeholder="useremail@gmail.com"
+            placeholder={t("general.placeholder-email")}
             keyboardType="email-address"
             required={true}
             bordered={true}
@@ -246,9 +246,9 @@ export const RegisterForm = () => {
         <View className="flex-none">
           <View>
             <FormTextField
-              label="Senha" //Password
+              label={t("general.password")}
               value={password}
-              placeholder="********"
+              placeholder="∗∗∗∗∗∗∗∗"
               required={true}
               bordered={true}
               onChangeText={(inputPassword: string) => {
@@ -267,19 +267,19 @@ export const RegisterForm = () => {
               className={
                 "text-sm" +
                 (password === ""
-                  ? " text-projectGray"
+                  ? " text-textCaptionGrayscale text-footnote-regular-caps"
                   : passwordLengthValid
-                    ? " text-success"
-                    : " text-error")
+                    ? " text-surfaceDefaultGreen text-footnote-regular-caps"
+                    : " text-textLabelRed text-footnote-regular-caps")
               }
             >
-              {/* Minimum 8 characters */}Mínimo 8 caracteres
+              {t("login.requirement-length")}
             </Text>
-            <View className="-translate-y-1 flex-row items-center">
+            <View className="-translate-y-1 flex-row items-center pl-1">
               {passwordLengthValid ? (
                 <MaterialCommunityIcons
                   name="check"
-                  size={20}
+                  size={12}
                   color={colors.surfaceDefaultGreen}
                 />
               ) : null}
@@ -290,20 +290,19 @@ export const RegisterForm = () => {
               className={
                 "text-sm" +
                 (password === ""
-                  ? " text-projectGray"
+                  ? " text-textCaptionGrayscale text-footnote-regular-caps"
                   : passwordContainsLetter
-                    ? " text-success"
-                    : " text-error")
+                    ? " text-surfaceDefaultGreen text-footnote-regular-caps"
+                    : " text-textLabelRed text-footnote-regular-caps")
               }
             >
-              {/* Must contain at least one letter */}Conter pelo menos uma
-              letra
+              {t("login.requirement-letter")}
             </Text>
-            <View className="-translate-y-1 flex-row items-center">
+            <View className="-translate-y-1 flex-row items-center pl-1">
               {passwordContainsLetter ? (
                 <MaterialCommunityIcons
                   name="check"
-                  size={20}
+                  size={12}
                   color={colors.surfaceDefaultGreen}
                 />
               ) : null}
@@ -313,12 +312,12 @@ export const RegisterForm = () => {
         <View className="mb-2 flex-none">
           <View className="relative">
             <FormTextField
-              label="Confirmar senha" // Confirm password
+              label={t("login.confirm-password")}
               value={confirmPassword}
               onChangeText={(inputConfirmPassword: string) => {
                 setConfirmPassword(removeEmojis(inputConfirmPassword));
               }}
-              placeholder="********" // Confirm your password
+              placeholder="∗∗∗∗∗∗∗∗"
               required={true}
               bordered={true}
               error={confirmPasswordAlert !== ""}
@@ -343,7 +342,7 @@ export const RegisterForm = () => {
             }}
             disabled={!isAllInputValid}
           >
-            Entrar
+            {t("general.enter")}
           </FormButton>
         </View>
       </AlertNotificationRoot>
