@@ -20,7 +20,6 @@ import {
 import {
   PopulatedCourse,
   PopulatedExercise,
-  PopulatedLecture,
   PopulatedSection,
   PopulatedStudent,
 } from "@/types/strapi-populated";
