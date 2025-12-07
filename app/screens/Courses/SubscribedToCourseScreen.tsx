@@ -1,40 +1,44 @@
-import { View } from "react-native";
+import { View, Text, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LottieView from "lottie-react-native";
-import Text from "@/components/General/Text";
-import PropTypes from "prop-types";
-import StartNowButton from "@/components/Courses/CourseSubsription/StartNowButton";
-import StartLaterButton from "@/components/Courses/CourseSubsription/StartLaterButton";
+import { StartNowButton } from "@/components/Courses/CourseSubsription/StartNowButton";
+import { Course } from "@/types";
+import { t } from "@/i18n";
+import SubscribedImage from "@/assets/images/subscribe.png";
 
-export default function SubscribedToCourseScreen({ route }) {
-  SubscribedToCourseScreen.propTypes = {
-    route: PropTypes.object,
+export interface SubscribedToCourseScreenProps {
+  route: {
+    params: {
+      course: Course;
+    };
   };
+}
 
-  const { course } = route.params;
+const SubscribedToCourseScreen = ({ route }: SubscribedToCourseScreenProps) => {
+  const course = route.params.course;
 
   return (
-    <SafeAreaView className="flex h-screen w-screen flex-col items-center justify-center bg-secondary">
-      <LottieView
-        className="absolute top-8 z-10 w-full"
-        source={require("@/assets/animations/subscribedToCourse.json")}
-        autoPlay
-      />
+    <SafeAreaView className="flex h-screen w-screen flex-col items-center justify-center bg-surfaceSubtleCyan">
+      <View className="fixed -right-2 -top-24 h-[400] w-[430] rounded-r-[500] bg-surfaceDarkerCyan" />
 
-      <View className="z-20 flex h-3/4 w-full items-center justify-end px-6">
-        <View className="mb-8 h-40 w-fit justify-center">
-          <Text className="font-montserrat-bold bg-secondary text-center text-3xl text-heading text-primary_custom">
-            Parabéns! Você está inscrito no curso &quot;{course.title}&quot;
+      <View className="flex h-1/2 w-full items-center justify-end">
+        <Image
+          className="h-4/6 w-2/5 object-scale-down"
+          source={SubscribedImage}
+        />
+        <View className="flex items-center py-4">
+          <Text className="text-textLabelCyan text-h1-sm-bold">
+            {t("course.congratulations")}
+          </Text>
+          <Text className="text-textLabelCyan text-h2-sm-bold">
+            {t("course.begin-journey")}
           </Text>
         </View>
-      </View>
-
-      <View className="mt-10">
         <StartNowButton course={course} />
       </View>
-      <View>
-        <StartLaterButton />
-      </View>
+
+      <View className="fixed -bottom-14 -left-2 h-[400] w-[430] rounded-l-[500] bg-surfaceLighterCyan" />
     </SafeAreaView>
   );
-}
+};
+
+export default SubscribedToCourseScreen;
