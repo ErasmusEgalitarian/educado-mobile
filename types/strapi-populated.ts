@@ -1,13 +1,12 @@
 import type {
-  Certificate,
   ContentCreator,
   Course,
   CourseCategory,
   CourseSelection,
   Exercise,
+  ExerciseOption,
   Feedback,
   Student,
-  UserLog,
   Lecture,
 } from "@/api/backend/types.gen";
 
@@ -36,21 +35,29 @@ export interface PopulatedCourse
  */
 export interface PopulatedSection
   extends Omit<CourseSelection, "exercises" | "lectures" | "course"> {
-  exercises?: Exercise[];
-  lectures?: Lecture[];
+  exercises?: PopulatedExercise[];
+  lectures?: PopulatedLecture[];
   course?: PopulatedCourse;
 }
+
+/**
+ * Exercise with all relations populated
+ */
+export interface PopulatedExercise
+  extends Omit<Exercise, "exercise_options"> {
+  exercise_options?: ExerciseOption[];
+}
+
+/**
+ * Lecture with all relations populated
+ */
+export type PopulatedLecture = Lecture;
 
 /**
  * Student with all relations populated
  */
 export interface PopulatedStudent
-  extends Omit<
-    Student,
-    "feedbacks" | "courses" | "certificates" | "user_logs"
-  > {
+  extends Omit<Student, "feedbacks" | "courses"> {
   feedbacks?: Feedback[];
   courses?: PopulatedCourse[];
-  certificates?: Certificate[];
-  user_logs?: UserLog[];
 }
