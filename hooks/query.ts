@@ -12,6 +12,7 @@ import {
   getBucketImageByFilename,
   getBucketVideoByFilename,
   getCourseById,
+  getLeaderboardDataAndUserRank,
   getSectionById,
   getStudentById,
   loginUser,
@@ -34,11 +35,8 @@ import {
 } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  documentDirectory,
-  EncodingType,
-  writeAsStringAsync,
-} from "expo-file-system";
+import { File, Paths } from "expo-file-system";
+import { EncodingType } from "expo-file-system/src/ExpoFileSystem.types";
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -54,6 +52,7 @@ export const queryKeys = {
   sectionComponents: (id: string) => ["sectionComponents", id] as const,
   feedbackOptions: ["feedbackOptions"] as const,
   bucketImage: (filename: string) => ["bucketImage", filename] as const,
+  leaderboard: (id: string, page: number) => ["leaderboard", id, page] as const,
 };
 
 /**
@@ -214,17 +213,11 @@ export const useLectureVideo = (filename: string) =>
     queryFn: async () => {
       const video = await getBucketVideoByFilename(filename);
 
-      if (!documentDirectory) {
-        throw new Error("Document directory is not available");
-      }
+      const file = new File(Paths.document, "lectureVideos", `${filename}.mp4`);
 
-      const filePath = `${documentDirectory}lectureVideos/${filename}.mp4`;
+      file.write(video, { encoding: EncodingType.Base64 });
 
-      await writeAsStringAsync(filePath, video, {
-        encoding: EncodingType.Base64,
-      });
-
-      return filePath;
+      return file.uri;
     },
   });
 
@@ -354,6 +347,8 @@ export const useLogoutStrapi = () => {
  * Complete a component.
  */
 export const useCompleteComponent = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<
     Student,
     unknown,
@@ -388,6 +383,24 @@ export const useCompleteComponent = () => {
         points,
       );
     },
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKeys.student(data.baseUser), data);
+
+      const local = queryClient.getQueryData<LoginStudent>(
+        queryKeys.loginStudent,
+      );
+
+      if (local) {
+        queryClient.setQueryData<LoginStudent>(queryKeys.loginStudent, {
+          ...local,
+          userInfo: {
+            ...local.userInfo,
+            courses: data.courses,
+            points: data.points,
+          },
+        });
+      }
+    },
   });
 };
 
@@ -401,5 +414,18 @@ export const useBucketImage = (filename?: string | null) => {
     queryKey: queryKeys.bucketImage(filename ?? ""),
     queryFn: () => getBucketImageByFilename(filename ?? ""),
     enabled: !!filename,
+  });
+};
+
+export const useLeaderboard = (id: string, page: number) => {
+  return useQuery({
+    queryKey: queryKeys.leaderboard(id, page),
+    queryFn: () =>
+      getLeaderboardDataAndUserRank({
+        page: page,
+        timeInterval: "all",
+        limit: 12,
+        userId: id,
+      }),
   });
 };
