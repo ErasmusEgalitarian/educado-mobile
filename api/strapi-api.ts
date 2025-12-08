@@ -238,6 +238,133 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
   return mapToStudent(response.data);
 };
 
+/**
+ * Subscribes a student to a course in Strapi.
+ *
+ * @param studentId - The student ID
+ * @param courseId - The course ID to subscribe to
+ * @returns Updated student object
+ */
+export const subscribeToCourseStrapi = async (
+  studentId: string,
+  courseId: string,
+): Promise<Student> => {
+  // Fetch current student data with courses
+  const studentResponse = (await studentGetStudentsById({
+    path: { id: studentId },
+    query: {
+      populate: ["courses"],
+      status: "published",
+    },
+  })) as StudentGetStudentsByIdResponse;
+
+  if (!studentResponse.data) {
+    throw new Error("Student not found");
+  }
+
+  // Get current courses
+  const currentCourses =
+    studentResponse.data.courses && Array.isArray(studentResponse.data.courses)
+      ? studentResponse.data.courses
+      : [];
+
+  // Check if already subscribed
+  const isAlreadySubscribed = currentCourses.some(
+    (course) => course.documentId === courseId,
+  );
+
+  if (isAlreadySubscribed) {
+    // Already subscribed, return current student
+    return mapToStudent(studentResponse.data);
+  }
+
+  // Add the new course to the courses array
+  const updatedCourses = [
+    ...currentCourses.map((course) => course.documentId ?? ""),
+    courseId,
+  ];
+
+  // Update the student with the new courses
+  const updateResponse = (await studentPutStudentsById({
+    path: { id: studentId },
+    body: {
+      data: {
+        name: studentResponse.data.name ?? "",
+        email: studentResponse.data.email ?? "",
+        password: "unchanged", // Password is required but won't be changed
+        courses: updatedCourses,
+      },
+    },
+    query: {
+      populate: ["courses"],
+    },
+  })) as StudentPutStudentsByIdResponse;
+
+  if (!updateResponse.data) {
+    throw new Error("Failed to subscribe to course");
+  }
+
+  return mapToStudent(updateResponse.data);
+};
+
+/**
+ * Unsubscribes a student from a course in Strapi.
+ *
+ * @param studentId - The student ID
+ * @param courseId - The course ID to unsubscribe from
+ * @returns Updated student object
+ */
+export const unsubscribeFromCourseStrapi = async (
+  studentId: string,
+  courseId: string,
+): Promise<Student> => {
+  // Fetch current student data with courses
+  const studentResponse = (await studentGetStudentsById({
+    path: { id: studentId },
+    query: {
+      populate: ["courses"],
+      status: "published",
+    },
+  })) as StudentGetStudentsByIdResponse;
+
+  if (!studentResponse.data) {
+    throw new Error("Student not found");
+  }
+
+  // Get current courses
+  const currentCourses =
+    studentResponse.data.courses && Array.isArray(studentResponse.data.courses)
+      ? studentResponse.data.courses
+      : [];
+
+  // Remove the course from the courses array
+  const updatedCourses = currentCourses
+    .map((course) => course.documentId ?? "")
+    .filter((id) => id !== courseId);
+
+  // Update the student with the updated courses
+  const updateResponse = (await studentPutStudentsById({
+    path: { id: studentId },
+    body: {
+      data: {
+        name: studentResponse.data.name ?? "",
+        email: studentResponse.data.email ?? "",
+        password: "unchanged", // Password is required but won't be changed
+        courses: updatedCourses,
+      },
+    },
+    query: {
+      populate: ["courses"],
+    },
+  })) as StudentPutStudentsByIdResponse;
+
+  if (!updateResponse.data) {
+    throw new Error("Failed to unsubscribe from course");
+  }
+
+  return mapToStudent(updateResponse.data);
+};
+
 export const getAllComponentsBySectionIdStrapi = async (
   id: string,
 ): Promise<

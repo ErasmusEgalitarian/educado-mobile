@@ -1,10 +1,7 @@
 import {
-  addCourseToStudent,
   deleteUser,
   getBucketImageByFilename,
   //getBucketVideoByFilename,
-  subscribeCourse,
-  unsubscribeCourse,
 } from "@/api/legacy-api";
 import {
   getAllCoursesStrapi,
@@ -19,6 +16,8 @@ import {
   getAllFeedbackOptionsStrapi,
   completeComponentStrapi,
   updateStudyStreakStrapi,
+  subscribeToCourseStrapi,
+  unsubscribeFromCourseStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
 import { isComponentCompleted } from "@/services/utils";
@@ -88,9 +87,7 @@ export const useSubscribeToCourse = () => {
     mutationFn: async (variables) => {
       const { userId, courseId } = variables;
 
-      await subscribeCourse(userId, courseId);
-
-      return await addCourseToStudent(userId, courseId);
+      return await subscribeToCourseStrapi(userId, courseId);
     },
     onSuccess: (data) =>
       queryClient.invalidateQueries({
@@ -109,7 +106,7 @@ export const useUnsubscribeFromCourse = () => {
     mutationFn: async (variables) => {
       const { userId, courseId } = variables;
 
-      return await unsubscribeCourse(userId, courseId);
+      return await unsubscribeFromCourseStrapi(userId, courseId);
     },
     onSuccess: (data) =>
       queryClient.invalidateQueries({

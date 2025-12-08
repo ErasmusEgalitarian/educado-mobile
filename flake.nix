@@ -3,13 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-node18.url = "github:NixOS/nixpkgs/c5dd43934613ae0f8ff37c59f61c507c2e8f980d";
     devshell.url = "github:numtide/devshell";
     flake-utils.url = "github:numtide/flake-utils";
     android-nixpkgs.url = "github:tadfisher/android-nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-node18, devshell, flake-utils, android-nixpkgs }:
+  outputs = { self, nixpkgs, devshell, flake-utils, android-nixpkgs }:
     {
       overlay = final: prev: {
         inherit (self.packages.${final.system}) android-sdk;
@@ -26,10 +25,6 @@
             devshell.overlays.default
             self.overlay
           ];
-        };
-        pkgs-node18 = import nixpkgs-node18 {
-          inherit system;
-          config.allowUnfree = true;
         };
       in
       {
@@ -60,8 +55,8 @@
           name = "educado-mobile";
           
           packages = with pkgs; [
-            # Node.js and npm from specific nixpkgs commit that has Node.js 18
-            pkgs-node18.nodejs_18            
+            # Node.js 20 (>= 20.19.4 required by @react-native/assets-registry@0.81.5)
+            nodejs_20            
             # Java for Android development
             jdk17
             
