@@ -371,17 +371,36 @@ jobs:
           fi
 
           echo "need=$need" >>"$GITHUB_OUTPUT"
-      - name: Build
+
+      - name: Set Up Expo
         if: ${{ steps.build_gate.outputs.need == 'true' }}
-        uses: ./.github/actions/build
-# Commented out because we won't be using EAS for now, but build on GitHub
-# EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-# - name: Set Up Expo
-#   uses: expo/expo-github-action@v8
-#   with:
-#     token: ${{ env.EXPO_TOKEN }}
-#     packager: npm
-#     expo-version: latest
-#     eas-version: latest
-# - name: Build Android Preview
-#   run: eas build -p android -e preview --non-interactive --wait
+        uses: expo/expo-github-action@v8
+        with:
+          token: ${{ secrets.EXPO_TOKEN }}
+          packager: npm
+          expo-version: latest
+          eas-version: latest
+
+      - name: Setup EAS local builds
+        if: ${{ steps.build_gate.outputs.need == 'true' }}
+        run: npm install -g eas-cli-local-build-plugin
+
+      - name: Run EAS Build
+        if: ${{ steps.build_gate.outputs.need == 'true' }}
+        run: |
+          eas build \
+          --platform android \
+          --non-interactive \
+          --profile preview \
+          --local \
+          --output="./builds/preview.apk"
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Upload APK Artifact
+        if: ${{ steps.build_gate.outputs.need == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: "./builds/preview.apk"
+          if-no-files-found: warn
