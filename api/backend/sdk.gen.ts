@@ -63,6 +63,21 @@ import type {
   CourseDeleteCoursesByIdErrors,
   CourseDeleteCoursesByIdRequest,
   CourseDeleteCoursesByIdResponses,
+  CourseEnrollmentRelationDeleteCourseEnrollmentRelationsByIdErrors,
+  CourseEnrollmentRelationDeleteCourseEnrollmentRelationsByIdRequest,
+  CourseEnrollmentRelationDeleteCourseEnrollmentRelationsByIdResponses,
+  CourseEnrollmentRelationGetCourseEnrollmentRelationsByIdErrors,
+  CourseEnrollmentRelationGetCourseEnrollmentRelationsByIdRequest,
+  CourseEnrollmentRelationGetCourseEnrollmentRelationsByIdResponses,
+  CourseEnrollmentRelationGetCourseEnrollmentRelationsErrors,
+  CourseEnrollmentRelationGetCourseEnrollmentRelationsRequest,
+  CourseEnrollmentRelationGetCourseEnrollmentRelationsResponses,
+  CourseEnrollmentRelationPostCourseEnrollmentRelationsErrors,
+  CourseEnrollmentRelationPostCourseEnrollmentRelationsRequest,
+  CourseEnrollmentRelationPostCourseEnrollmentRelationsResponses,
+  CourseEnrollmentRelationPutCourseEnrollmentRelationsByIdErrors,
+  CourseEnrollmentRelationPutCourseEnrollmentRelationsByIdRequest,
+  CourseEnrollmentRelationPutCourseEnrollmentRelationsByIdResponses,
   CourseGetCoursesByIdErrors,
   CourseGetCoursesByIdRequest,
   CourseGetCoursesByIdResponses,
@@ -90,6 +105,21 @@ import type {
   CourseSelectionPutCourseSelectionsByIdErrors,
   CourseSelectionPutCourseSelectionsByIdRequest,
   CourseSelectionPutCourseSelectionsByIdResponses,
+  DashboardActivityDeleteDashboardActivitiesByIdErrors,
+  DashboardActivityDeleteDashboardActivitiesByIdRequest,
+  DashboardActivityDeleteDashboardActivitiesByIdResponses,
+  DashboardActivityGetDashboardActivitiesByIdErrors,
+  DashboardActivityGetDashboardActivitiesByIdRequest,
+  DashboardActivityGetDashboardActivitiesByIdResponses,
+  DashboardActivityGetDashboardActivitiesErrors,
+  DashboardActivityGetDashboardActivitiesRequest,
+  DashboardActivityGetDashboardActivitiesResponses,
+  DashboardActivityPostDashboardActivitiesErrors,
+  DashboardActivityPostDashboardActivitiesRequest,
+  DashboardActivityPostDashboardActivitiesResponses,
+  DashboardActivityPutDashboardActivitiesByIdErrors,
+  DashboardActivityPutDashboardActivitiesByIdRequest,
+  DashboardActivityPutDashboardActivitiesByIdResponses,
   ExerciseDeleteExercisesByIdErrors,
   ExerciseDeleteExercisesByIdRequest,
   ExerciseDeleteExercisesByIdResponses,
@@ -135,6 +165,8 @@ import type {
   FeedbackPutFeedbacksByIdErrors,
   FeedbackPutFeedbacksByIdRequest,
   FeedbackPutFeedbacksByIdResponses,
+  GetCcDashboardActivityRequest,
+  GetCcDashboardActivityResponses,
   I18nGetLocalesErrors,
   I18nGetLocalesRequest,
   I18nGetLocalesResponses,
@@ -170,6 +202,11 @@ import type {
   PasswordResetTokenPutPasswordResetTokensByIdResponses,
   PatchStudentResetPasswordUpdateRequest,
   PatchStudentResetPasswordUpdateResponses,
+  PostContentCreatorLoginRequest,
+  PostContentCreatorLoginResponses,
+  PostCourseStatisticsErrors,
+  PostCourseStatisticsRequest,
+  PostCourseStatisticsResponses,
   PostStudentLoginRequest,
   PostStudentLoginResponses,
   PostStudentResetPasswordCodeRequest,
@@ -330,6 +367,11 @@ import {
   zCourseCategoryPostCourseCategoriesRequest,
   zCourseCategoryPutCourseCategoriesByIdRequest,
   zCourseDeleteCoursesByIdRequest,
+  zCourseEnrollmentRelationDeleteCourseEnrollmentRelationsByIdRequest,
+  zCourseEnrollmentRelationGetCourseEnrollmentRelationsByIdRequest,
+  zCourseEnrollmentRelationGetCourseEnrollmentRelationsRequest,
+  zCourseEnrollmentRelationPostCourseEnrollmentRelationsRequest,
+  zCourseEnrollmentRelationPutCourseEnrollmentRelationsByIdRequest,
   zCourseGetCoursesByIdRequest,
   zCourseGetCoursesRequest,
   zCoursePostCoursesRequest,
@@ -339,6 +381,11 @@ import {
   zCourseSelectionGetCourseSelectionsRequest,
   zCourseSelectionPostCourseSelectionsRequest,
   zCourseSelectionPutCourseSelectionsByIdRequest,
+  zDashboardActivityDeleteDashboardActivitiesByIdRequest,
+  zDashboardActivityGetDashboardActivitiesByIdRequest,
+  zDashboardActivityGetDashboardActivitiesRequest,
+  zDashboardActivityPostDashboardActivitiesRequest,
+  zDashboardActivityPutDashboardActivitiesByIdRequest,
   zExerciseDeleteExercisesByIdRequest,
   zExerciseGetExercisesByIdRequest,
   zExerciseGetExercisesRequest,
@@ -354,6 +401,7 @@ import {
   zFeedbackGetFeedbacksRequest,
   zFeedbackPostFeedbacksRequest,
   zFeedbackPutFeedbacksByIdRequest,
+  zGetCcDashboardActivityRequest,
   zI18nGetLocalesRequest,
   zLectureDeleteLecturesByIdRequest,
   zLectureGetLecturesByIdRequest,
@@ -366,6 +414,8 @@ import {
   zPasswordResetTokenPostPasswordResetTokensRequest,
   zPasswordResetTokenPutPasswordResetTokensByIdRequest,
   zPatchStudentResetPasswordUpdateRequest,
+  zPostContentCreatorLoginRequest,
+  zPostCourseStatisticsRequest,
   zPostStudentLoginRequest,
   zPostStudentResetPasswordCodeRequest,
   zPostStudentResetPasswordRequestRequest,
@@ -659,6 +709,28 @@ export const contentCreatorPutContentCreatorsById = <
   });
 };
 
+export const postContentCreatorLogin = <ThrowOnError extends boolean = false>(
+  options: Options<PostContentCreatorLoginRequest, ThrowOnError>,
+) => {
+  return (options.client ?? client).post<
+    PostContentCreatorLoginResponses,
+    unknown,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zPostContentCreatorLoginRequest.parseAsync(data);
+    },
+    responseStyle: "data",
+    url: "/content-creator/login",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
 export const courseGetCourses = <ThrowOnError extends boolean = false>(
   options?: Options<CourseGetCoursesRequest, ThrowOnError>,
 ) => {
@@ -874,6 +946,139 @@ export const courseCategoryPutCourseCategoriesById = <
   });
 };
 
+export const courseEnrollmentRelationGetCourseEnrollmentRelations = <
+  ThrowOnError extends boolean = false,
+>(
+  options?: Options<
+    CourseEnrollmentRelationGetCourseEnrollmentRelationsRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options?.client ?? client).get<
+    CourseEnrollmentRelationGetCourseEnrollmentRelationsResponses,
+    CourseEnrollmentRelationGetCourseEnrollmentRelationsErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zCourseEnrollmentRelationGetCourseEnrollmentRelationsRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/course-enrollment-relations",
+    ...options,
+  });
+};
+
+export const courseEnrollmentRelationPostCourseEnrollmentRelations = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    CourseEnrollmentRelationPostCourseEnrollmentRelationsRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options.client ?? client).post<
+    CourseEnrollmentRelationPostCourseEnrollmentRelationsResponses,
+    CourseEnrollmentRelationPostCourseEnrollmentRelationsErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zCourseEnrollmentRelationPostCourseEnrollmentRelationsRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/course-enrollment-relations",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
+export const courseEnrollmentRelationDeleteCourseEnrollmentRelationsById = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    CourseEnrollmentRelationDeleteCourseEnrollmentRelationsByIdRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options.client ?? client).delete<
+    CourseEnrollmentRelationDeleteCourseEnrollmentRelationsByIdResponses,
+    CourseEnrollmentRelationDeleteCourseEnrollmentRelationsByIdErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zCourseEnrollmentRelationDeleteCourseEnrollmentRelationsByIdRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/course-enrollment-relations/{id}",
+    ...options,
+  });
+};
+
+export const courseEnrollmentRelationGetCourseEnrollmentRelationsById = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    CourseEnrollmentRelationGetCourseEnrollmentRelationsByIdRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options.client ?? client).get<
+    CourseEnrollmentRelationGetCourseEnrollmentRelationsByIdResponses,
+    CourseEnrollmentRelationGetCourseEnrollmentRelationsByIdErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zCourseEnrollmentRelationGetCourseEnrollmentRelationsByIdRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/course-enrollment-relations/{id}",
+    ...options,
+  });
+};
+
+export const courseEnrollmentRelationPutCourseEnrollmentRelationsById = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    CourseEnrollmentRelationPutCourseEnrollmentRelationsByIdRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options.client ?? client).put<
+    CourseEnrollmentRelationPutCourseEnrollmentRelationsByIdResponses,
+    CourseEnrollmentRelationPutCourseEnrollmentRelationsByIdErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zCourseEnrollmentRelationPutCourseEnrollmentRelationsByIdRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/course-enrollment-relations/{id}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
 export const courseSelectionGetCourseSelections = <
   ThrowOnError extends boolean = false,
 >(
@@ -983,6 +1188,184 @@ export const courseSelectionPutCourseSelectionsById = <
     },
     responseStyle: "data",
     url: "/course-selections/{id}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Get aggregated statistics for a content creator's selected courses
+ *
+ * Returns aggregated statistics for courses, students, certificates and evaluation (ratings) for the authenticated content creator.
+ */
+export const postCourseStatistics = <ThrowOnError extends boolean = false>(
+  options: Options<PostCourseStatisticsRequest, ThrowOnError>,
+) => {
+  return (options.client ?? client).post<
+    PostCourseStatisticsResponses,
+    PostCourseStatisticsErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zPostCourseStatisticsRequest.parseAsync(data);
+    },
+    responseStyle: "data",
+    url: "/course-statistics",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
+export const getCcDashboardActivity = <ThrowOnError extends boolean = false>(
+  options?: Options<GetCcDashboardActivityRequest, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetCcDashboardActivityResponses,
+    unknown,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zGetCcDashboardActivityRequest.parseAsync(data);
+    },
+    responseStyle: "data",
+    url: "/CC-dashboard-activity",
+    ...options,
+  });
+};
+
+export const dashboardActivityGetDashboardActivities = <
+  ThrowOnError extends boolean = false,
+>(
+  options?: Options<
+    DashboardActivityGetDashboardActivitiesRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options?.client ?? client).get<
+    DashboardActivityGetDashboardActivitiesResponses,
+    DashboardActivityGetDashboardActivitiesErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zDashboardActivityGetDashboardActivitiesRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/dashboard-activities",
+    ...options,
+  });
+};
+
+export const dashboardActivityPostDashboardActivities = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    DashboardActivityPostDashboardActivitiesRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options.client ?? client).post<
+    DashboardActivityPostDashboardActivitiesResponses,
+    DashboardActivityPostDashboardActivitiesErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zDashboardActivityPostDashboardActivitiesRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/dashboard-activities",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
+export const dashboardActivityDeleteDashboardActivitiesById = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    DashboardActivityDeleteDashboardActivitiesByIdRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options.client ?? client).delete<
+    DashboardActivityDeleteDashboardActivitiesByIdResponses,
+    DashboardActivityDeleteDashboardActivitiesByIdErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zDashboardActivityDeleteDashboardActivitiesByIdRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/dashboard-activities/{id}",
+    ...options,
+  });
+};
+
+export const dashboardActivityGetDashboardActivitiesById = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    DashboardActivityGetDashboardActivitiesByIdRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options.client ?? client).get<
+    DashboardActivityGetDashboardActivitiesByIdResponses,
+    DashboardActivityGetDashboardActivitiesByIdErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zDashboardActivityGetDashboardActivitiesByIdRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/dashboard-activities/{id}",
+    ...options,
+  });
+};
+
+export const dashboardActivityPutDashboardActivitiesById = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    DashboardActivityPutDashboardActivitiesByIdRequest,
+    ThrowOnError
+  >,
+) => {
+  return (options.client ?? client).put<
+    DashboardActivityPutDashboardActivitiesByIdResponses,
+    DashboardActivityPutDashboardActivitiesByIdErrors,
+    ThrowOnError,
+    "data"
+  >({
+    requestValidator: async (data) => {
+      return await zDashboardActivityPutDashboardActivitiesByIdRequest.parseAsync(
+        data,
+      );
+    },
+    responseStyle: "data",
+    url: "/dashboard-activities/{id}",
     ...options,
     headers: {
       "Content-Type": "application/json",

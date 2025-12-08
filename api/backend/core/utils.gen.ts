@@ -113,11 +113,11 @@ export const getUrl = ({
   return url;
 };
 
-export const getValidRequestBody = (options: {
+export function getValidRequestBody(options: {
   body?: unknown;
   bodySerializer?: BodySerializer | null;
   serializedBody?: unknown;
-}) => {
+}) {
   const hasBody = options.body !== undefined;
   const isSerializedBody = hasBody && options.bodySerializer;
 
@@ -140,4 +140,4 @@ export const getValidRequestBody = (options: {
 
   // no body was provided
   return undefined;
-};
+}
