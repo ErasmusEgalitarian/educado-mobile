@@ -25,7 +25,7 @@ export const ProfileNameCircle = ({
     <View
       className={`items-center justify-center rounded-[100] bg-surfaceLighterCyan ${className ?? ""}`}
     >
-      <Text className={`text-body-bold ${textClassName ?? ""}`}>
+      <Text className={textClassName}>
         {firstName.charAt(0).toUpperCase()}
         {lastName.charAt(0).toUpperCase()}
       </Text>

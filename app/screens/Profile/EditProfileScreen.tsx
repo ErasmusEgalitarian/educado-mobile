@@ -288,7 +288,7 @@ const EditProfileScreen = () => {
                 <ProfileNameCircle
                   firstName={fetchedFirstName}
                   lastName={fetchedLastName}
-                  className="border-[3px] border-surfaceSubtleGrayscale bg-surfaceLighterCyan"
+                  textClassName="text-h1-sm-bold text-textNegativeGrayscale"
                 />
               </View>
             )}

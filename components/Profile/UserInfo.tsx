@@ -20,7 +20,8 @@ export default function UserInfo(props: UserInfoProps) {
     <View className="flex flex-row items-center py-8">
       <View className="pr-6">
         <ProfileNameCircle
-          className="h-14 w-14"
+          className="h-20 w-20"
+          textClassName="text-h2-sm-bold"
           firstName={props.firstName}
           lastName={props.lastName}
         />
