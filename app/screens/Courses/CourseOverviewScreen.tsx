@@ -15,9 +15,10 @@ import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptio
 import {
   getCourseProgress,
   getNumberOfCompletedComponents,
+  sanitizeStrapiImageUrl,
 } from "@/services/utils";
 import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
-import Tooltip from "@/components/Onboarding/Tooltip";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
 import { Course, ProgressTuple, Section } from "@/types";
@@ -25,8 +26,6 @@ import { Shadow } from "react-native-shadow-2";
 import { t } from "@/i18n";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  useBucketImage,
-  useCourse,
   useLoginStudent,
   useSections,
   useUnsubscribeFromCourse,
@@ -58,14 +57,20 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
     Record<string, number>
   >({});
   const [currentSection, setCurrentSection] = useState<Section | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   const loginStudentQuery = useLoginStudent();
   const unsubscribeFromCourseQuery = useUnsubscribeFromCourse();
-  const courseQuery = useCourse(course.courseId);
   const sectionQuery = useSections(course.courseId);
-  const bucketImageQuery = useBucketImage(courseQuery.data?.image);
 
   const student = loginStudentQuery.data;
+
+  const imageUrl = sanitizeStrapiImageUrl(course.image);
+
+  // Reset image error state when course changes
+  useEffect(() => {
+    setImageError(false);
+  }, [course.courseId]);
 
   useEffect(() => {
     if (!sectionQuery.data) {
@@ -164,10 +169,16 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
       >
         <View className="flex w-full items-center">
           <View className="flex w-full items-center justify-between">
-            {bucketImageQuery.isSuccess ? (
+            {imageUrl &&
+            !imageError &&
+            (imageUrl.startsWith("http://") ||
+              imageUrl.startsWith("https://")) ? (
               <Image
-                source={{ uri: bucketImageQuery.data }}
+                source={{ uri: imageUrl }}
                 className="h-[296px] w-full object-cover"
+                onError={() => {
+                  setImageError(true);
+                }}
               />
             ) : (
               <Image source={ImageNotFound} />
@@ -240,15 +251,14 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
               position={{
                 top: -30,
                 left: 70,
-                right: 30,
-                bottom: 24,
               }}
-              text={t("course.tooltip")}
+              tooltipKey="Sections"
+              uniCodeIcon="🎓"
               tailSide="right"
-              tailPosition="20%"
-              uniqueKey="Sections"
-              uniCodeChar="🎓"
-            />
+              tailPosition={20}
+            >
+              {t("course.tooltip")}
+            </Tooltip>
             <View>
               {sections.map((section, i) => {
                 const completedComponents =

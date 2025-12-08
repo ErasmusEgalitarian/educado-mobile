@@ -1,39 +1,34 @@
-import { client } from "@/api/backend/client.gen";
-import { JwtResponse } from "@/api/backend/types.gen";
 import {
   addCourseToStudent,
-  completeComponent,
   deleteUser,
-  getAllComponentsBySectionId,
-  getAllCourses,
-  getAllFeedbackOptions,
-  getAllSectionsByCourseId,
-  getAllStudentSubscriptions,
   getBucketImageByFilename,
   getBucketVideoByFilename,
-  getCourseById,
   getLeaderboardDataAndUserRank,
-  getSectionById,
-  getStudentById,
-  loginUser,
   subscribeCourse,
   unsubscribeCourse,
-  updateStudyStreak,
 } from "@/api/legacy-api";
 import {
+  getAllCoursesStrapi,
+  getCourseByIdStrapi,
+  getAllStudentSubscriptionsStrapi,
   loginStudentStrapi,
   logoutStudentStrapi,
   signUpStudentStrapi,
+  getAllSectionsByCourseIdStrapi,
+  getAllComponentsBySectionIdStrapi,
+  getStudentByIdStrapi,
+  getAllFeedbackOptionsStrapi,
+  completeComponentStrapi,
+  updateStudyStreakStrapi,
 } from "@/api/strapi-api";
-import { setJWT, setUserInfo } from "@/services/storage-service";
-import { isComponentCompleted, isFirstAttemptExercise } from "@/services/utils";
+import { setAuthToken } from "@/api/openapi/api-config";
+import { isComponentCompleted } from "@/services/utils";
 import {
   LoginStudent,
   SectionComponentExercise,
   SectionComponentLecture,
   Student,
 } from "@/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { File, Paths } from "expo-file-system";
 import { EncodingType } from "expo-file-system/src/ExpoFileSystem.types";
@@ -61,7 +56,7 @@ export const queryKeys = {
 export const useCourses = () =>
   useQuery({
     queryKey: queryKeys.courses,
-    queryFn: () => getAllCourses(),
+    queryFn: () => getAllCoursesStrapi(),
   });
 
 /**
@@ -72,7 +67,7 @@ export const useCourses = () =>
 export const useCourse = (id: string) =>
   useQuery({
     queryKey: queryKeys.course(id),
-    queryFn: () => getCourseById(id),
+    queryFn: () => getCourseByIdStrapi(id),
     enabled: !!id,
   });
 
@@ -83,8 +78,8 @@ export const useCourse = (id: string) =>
  */
 export const useSectionComponents = (id: string) =>
   useQuery({
-    queryKey: queryKeys.sectionComponents(id),
-    queryFn: () => getAllComponentsBySectionId(id),
+    queryKey: queryKeys.section(id),
+    queryFn: () => getAllComponentsBySectionIdStrapi(id),
   });
 
 /**
@@ -135,7 +130,7 @@ export const useUnsubscribeFromCourse = () => {
 export const useSubscribedCourses = (id: string) =>
   useQuery({
     queryKey: queryKeys.subscriptions(id),
-    queryFn: () => getAllStudentSubscriptions(id),
+    queryFn: () => getAllStudentSubscriptionsStrapi(id),
   });
 
 /**
@@ -147,7 +142,7 @@ export const useStudent = (id: string) =>
   useQuery({
     queryKey: queryKeys.student(id),
     queryFn: async () => {
-      const student = await getStudentById(id);
+      const student = await getStudentByIdStrapi(id);
 
       if (student.profilePhoto) {
         try {
@@ -181,24 +176,14 @@ export const useLoginStudent = () => {
 };
 
 /**
- *
- * @param id - The section ID.
- */
-export const useSection = (id: string) =>
-  useQuery({
-    queryKey: queryKeys.section(id),
-    queryFn: () => getSectionById(id),
-  });
-
-/**
  * Get all sections for a course.
  *
  * @param id - The course ID.
  */
 export const useSections = (id: string) =>
   useQuery({
-    queryKey: queryKeys.sections(id),
-    queryFn: () => getAllSectionsByCourseId(id),
+    queryKey: queryKeys.course(id),
+    queryFn: () => getAllSectionsByCourseIdStrapi(id),
     enabled: !!id,
   });
 
@@ -244,7 +229,7 @@ export const useDeleteUser = (id: string) => {
 export const useFeedbackOptions = () =>
   useQuery({
     queryKey: queryKeys.feedbackOptions,
-    queryFn: () => getAllFeedbackOptions(),
+    queryFn: () => getAllFeedbackOptionsStrapi(),
   });
 
 /**
@@ -254,7 +239,7 @@ export const useUpdateStudyStreak = () => {
   const queryClient = useQueryClient();
 
   return useMutation<{ message: string }, unknown, { studentId: string }>({
-    mutationFn: (variables) => updateStudyStreak(variables.studentId),
+    mutationFn: (variables) => updateStudyStreakStrapi(variables.studentId),
     onSuccess: () => {
       queryClient.setQueryData(queryKeys.studyStreak, new Date());
     },
@@ -262,9 +247,10 @@ export const useUpdateStudyStreak = () => {
 };
 
 /**
- * Log in a user by username and password.
+ * Log in a user by email and password in strapi.
+ *
  */
-export const useLogin = () => {
+export const useLoginStrapi = () => {
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -272,15 +258,17 @@ export const useLogin = () => {
     unknown,
     { email: string; password: string }
   >({
-    mutationFn: (variables) => loginUser(variables.email, variables.password),
+    mutationFn: async (variables) => {
+      return await loginStudentStrapi(variables.email, variables.password);
+    },
     onSuccess: async (data) => {
-      // TODO: Remove storage-service.ts and AsyncStorage legacy fallback after full migration to TanStack Query
-      await setJWT(data.accessToken);
-      await setUserInfo({ ...data.userInfo });
-      await AsyncStorage.setItem("loggedIn", "true");
+      // Store token in AsyncStorage for HTTP interceptor
+      await setAuthToken(data.accessToken);
 
+      // Store full login data in TanStack Query cache for UI
       queryClient.setQueryData(queryKeys.loginStudent, data);
 
+      // Invalidate student queries to refetch with new data
       await queryClient.invalidateQueries({
         queryKey: [...queryKeys.student(data.userInfo.id)],
       });
@@ -291,60 +279,53 @@ export const useLogin = () => {
 };
 
 /**
- * Log in a user by email and password in strapi.
- *
- */
-export const useLoginStrapi = () => {
-  return useMutation<JwtResponse, unknown, { email: string; password: string }>(
-    {
-      mutationFn: (variables) =>
-        loginStudentStrapi(variables.email, variables.password),
-      onSuccess: (data) => {
-        client.setConfig({
-          ...client.getConfig(),
-          headers: {
-            Authorization: `Bearer ${data.accessToken ?? ""}`,
-          },
-        });
-      },
-    },
-  );
-};
-
-/**
  * Sign up a user by email and password in strapi.
  */
 export const useSignUpStrapi = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<
-    JwtResponse,
+    LoginStudent,
     unknown,
     { name: string; email: string; password: string }
   >({
     mutationFn: (variables) =>
       signUpStudentStrapi(variables.name, variables.email, variables.password),
-    onSuccess: (data) => {
-      client.setConfig({
-        ...client.getConfig(),
-        headers: {
-          Authorization: `Bearer ${data.accessToken ?? ""}`,
-        },
+    onSuccess: async (data) => {
+      // Store token in AsyncStorage for HTTP interceptor
+      await setAuthToken(data.accessToken);
+
+      // Store full login data in TanStack Query cache for UI
+      queryClient.setQueryData(queryKeys.loginStudent, data);
+
+      // Invalidate student queries to refetch with new data
+      await queryClient.invalidateQueries({
+        queryKey: [...queryKeys.student(data.userInfo.id)],
       });
     },
   });
 };
 
 /**
- * Log out a user by clearing the authorization header.
- * Even thought the logout function is not async we do it this way to stay consistent
+ * Log out a user by clearing the authorization header and cache.
  */
 export const useLogoutStrapi = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: logoutStudentStrapi,
+    onSuccess: async () => {
+      // Clear token from AsyncStorage so interceptor stops adding it
+      await setAuthToken(null);
+
+      // Clear login data from query cache
+      queryClient.removeQueries({ queryKey: queryKeys.loginStudent });
+    },
   });
 };
 
 /**
- * Complete a component.
+ * Complete a component using Strapi backend.
  */
 export const useCompleteComponent = () => {
   const queryClient = useQueryClient();
@@ -358,27 +339,29 @@ export const useCompleteComponent = () => {
       isComplete: boolean;
     }
   >({
-    mutationFn: (variables) => {
+    mutationFn: async (variables) => {
       const { student, component, isComplete } = variables;
 
-      const isFirstAttempt = isFirstAttemptExercise(student, component.id);
+      // Calculate points based on completion status
+      // TODO: Implement isFirstAttemptExercise for Strapi when component progress tracking is added
       const isCompComplete = isComponentCompleted(student, component.id);
 
       let points = 0;
 
-      if (isFirstAttempt && !isCompComplete && isComplete) {
+      // If component is not already complete and user is completing it now
+      if (!isCompComplete && isComplete) {
+        // Give 10 points for first completion (simplified for now)
+        // TODO: Track first attempt vs retry when Strapi component progress is implemented
         points = 10;
       }
 
-      if (!isFirstAttempt && !isCompComplete && isComplete) {
-        points = 5;
-      }
+      // Determine component type based on the component structure
+      const componentType = "question" in component ? "exercise" : "lecture";
 
-      const requestComponent = { ...component, _id: component.id };
-
-      return completeComponent(
-        student.baseUser,
-        requestComponent,
+      return await completeComponentStrapi(
+        student.id,
+        component.id,
+        componentType,
         isComplete,
         points,
       );
