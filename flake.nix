@@ -31,23 +31,26 @@
         packages = {
           android-sdk = android-nixpkgs.sdk.${system} (sdkPkgs: with sdkPkgs; [
             # Essential packages for building and testing
-            build-tools-34-0-0
+            build-tools-36-0-0
+            build-tools-35-0-0
             build-tools-33-0-1
             cmdline-tools-latest
             emulator
             platform-tools
-            platforms-android-34
-            sources-android-34
-            ndk-25-1-8937393
+            platforms-android-36
+            platforms-android-35
+            sources-android-36
+            sources-android-35
+            ndk-27-1-12297006
             cmake-3-22-1
           ]
           ++ lib.optionals (system == "aarch64-darwin") [
             # ARM64 system images for Apple Silicon Macs
-            system-images-android-34-google-apis-playstore-arm64-v8a
+            system-images-android-36-google-apis-playstore-arm64-v8a
           ]
           ++ lib.optionals (system == "x86_64-darwin" || system == "x86_64-linux") [
             # x86_64 system images for Intel Macs and Linux
-            system-images-android-34-google-apis-playstore-x86-64
+            system-images-android-36-google-apis-playstore-x86-64
           ]);
         };
 
@@ -127,7 +130,7 @@
                 echo "📁 AVD Directory: $AVD_DIR"
                 echo "🔧 Android SDK: $ANDROID_HOME"
                 echo "📱 Creating AVD with configuration:"
-                echo "   Platform: Android 34"
+                echo "   Platform: Android 36"
                 echo "   ABI: $ABI"
                 echo "   System Image: google_apis_playstore"
                 echo "   Hardware: pixel_6"
@@ -135,7 +138,7 @@
                 
                 avdmanager create avd \
                   --name "$AVD_NAME" \
-                  --package "system-images;android-34;google_apis_playstore;$ABI" \
+                  --package "system-images;android-36;google_apis_playstore;$ABI" \
                   --device "pixel_6" \
                   --force
                 
