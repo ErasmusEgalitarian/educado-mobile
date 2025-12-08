@@ -51,7 +51,7 @@ const Login = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 justify-start bg-surfaceSubtleCyan">
+    <SafeAreaView className="flex-1 justify-start bg-surfaceSubtleCyan px-3">
       <>
         {loading ? (
           <LoadingScreen />

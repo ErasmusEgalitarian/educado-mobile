@@ -25,7 +25,7 @@ const WelcomeScreen = () => {
             <WelcomeSlider />
           </View>
 
-          <View className="w-screen px-6 pt-12">
+          <View className="w-screen px-8 pt-12">
             <FormButton
               onPress={() => {
                 navigation.navigate(
