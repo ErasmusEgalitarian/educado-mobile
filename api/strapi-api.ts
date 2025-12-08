@@ -492,10 +492,7 @@ export const unsubscribeCourseStrapi = async (
       },
     });
 
-  if (
-    !enrollmentResponse?.data ||
-    enrollmentResponse.data.length === 0
-  ) {
+  if (!enrollmentResponse?.data || enrollmentResponse.data.length === 0) {
     throw new Error("Enrollment relation not found");
   }
 
