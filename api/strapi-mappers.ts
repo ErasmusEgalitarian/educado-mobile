@@ -36,12 +36,12 @@ export const mapToCourse = (
 ): Course => {
   const categories =
     "course_categories" in courseStrapi &&
-      Array.isArray(courseStrapi.course_categories)
+    Array.isArray(courseStrapi.course_categories)
       ? courseStrapi.course_categories
       : [];
   const contentCreators =
     "content_creators" in courseStrapi &&
-      Array.isArray(courseStrapi.content_creators)
+    Array.isArray(courseStrapi.content_creators)
       ? courseStrapi.content_creators
       : [];
   const feedbacks =
@@ -50,7 +50,7 @@ export const mapToCourse = (
       : [];
   const sections =
     "course_sections" in courseStrapi &&
-      Array.isArray(courseStrapi.course_sections)
+    Array.isArray(courseStrapi.course_sections)
       ? courseStrapi.course_sections
       : [];
 
@@ -58,7 +58,7 @@ export const mapToCourse = (
   const rating =
     feedbacks.length > 0
       ? feedbacks.reduce((acc, feedback) => acc + (feedback.rating ?? 0), 0) /
-      feedbacks.length
+        feedbacks.length
       : 0;
 
   // Get image URL if available
@@ -67,8 +67,8 @@ export const mapToCourse = (
   // Get category name
   const categoryName =
     categories.length > 0 &&
-      typeof categories[0] === "object" &&
-      "name" in categories[0]
+    typeof categories[0] === "object" &&
+    "name" in categories[0]
       ? ((categories[0] as { name?: string }).name ?? "")
       : "";
 
@@ -93,7 +93,7 @@ export const mapToCourse = (
     topFeedbackOptions:
       feedbacks.length > 0
         ? (feedbacks.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))[0]
-          ?.feedbackText ?? "")
+            ?.feedbackText ?? "")
         : "",
     dateOfDownload: courseStrapi.createdAt,
     sections: sections.map((section) => section.documentId ?? ""),
@@ -214,7 +214,7 @@ export const mapToStudent = (
 ): Student => {
   const enrollmentRelations =
     "course_enrollment_relations" in studentStrapi &&
-      Array.isArray(studentStrapi.course_enrollment_relations)
+    Array.isArray(studentStrapi.course_enrollment_relations)
       ? studentStrapi.course_enrollment_relations
       : [];
 
@@ -230,7 +230,6 @@ export const mapToStudent = (
   }[] = [];
 
   for (const enrollment of enrollmentRelations) {
-
     // Check if course is populated with full data
     if (
       "course" in enrollment &&
@@ -239,7 +238,7 @@ export const mapToStudent = (
     ) {
       const courseId =
         "documentId" in enrollment.course &&
-          typeof enrollment.course.documentId === "string"
+        typeof enrollment.course.documentId === "string"
           ? enrollment.course.documentId
           : "";
 
