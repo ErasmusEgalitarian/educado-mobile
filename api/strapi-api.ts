@@ -10,15 +10,6 @@ import {
   studentPutStudentsById,
 } from "@/api/backend/sdk.gen";
 import {
-  CourseGetCoursesByIdResponse,
-  CourseGetCoursesResponse,
-  JwtResponse,
-  StudentGetStudentsByIdResponse,
-  CourseSelectionGetCourseSelectionsResponse,
-  FeedbackGetFeedbacksResponse,
-  StudentPutStudentsByIdResponse,
-} from "@/api/backend/types.gen";
-import {
   mapToCourse,
   mapToLoginStudent,
   mapToSection,
@@ -58,7 +49,7 @@ export const loginStudentStrapi = async (
     throw new Error("Failed to login user in strapi");
   }
 
-  return mapToLoginStudent(response as JwtResponse);
+  return mapToLoginStudent(response);
 };
 
 export const signUpStudentStrapi = async (
@@ -78,7 +69,7 @@ export const signUpStudentStrapi = async (
     throw new Error("Failed to signup user in strapi");
   }
 
-  return mapToLoginStudent(response as JwtResponse);
+  return mapToLoginStudent(response);
 };
 
 export const logoutStudentStrapi = () => {
@@ -102,7 +93,7 @@ export const logoutStudentStrapi = () => {
  * @throws Error if the request fails
  */
 export const getAllCoursesStrapi = async (): Promise<Course[]> => {
-  const response = (await courseGetCourses({
+  const response = await courseGetCourses({
     query: {
       fields: [
         "title",
@@ -117,9 +108,9 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
       populate: "*",
       status: "published", // Only get published courses
     },
-  })) as CourseGetCoursesResponse;
+  });
 
-  if (!response.data || response.data.length === 0) {
+  if (!response?.data || response.data.length === 0) {
     return [];
   }
 
@@ -127,7 +118,7 @@ export const getAllCoursesStrapi = async (): Promise<Course[]> => {
 };
 
 export const getCourseByIdStrapi = async (courseId: string) => {
-  const response = (await courseGetCoursesById({
+  const response = await courseGetCoursesById({
     path: { id: courseId },
     query: {
       fields: [
@@ -150,24 +141,24 @@ export const getCourseByIdStrapi = async (courseId: string) => {
         "students",
       ],
     },
-  })) as CourseGetCoursesByIdResponse;
+  });
 
-  return mapToCourse(response.data as PopulatedCourse);
+  return mapToCourse(response?.data as PopulatedCourse);
 };
 
 export const getAllSectionsByCourseIdStrapi = async (
   id: string,
 ): Promise<Section[]> => {
-  const response = (await courseSelectionGetCourseSelections({
+  const response = await courseSelectionGetCourseSelections({
     query: {
       /* @ts-expect-error: Strapi filter typing does not support nested filters */
       "filters[course][documentId][$eq]": id,
       populate: ["exercises", "course", "lectures"],
       status: "published",
     },
-  })) as CourseSelectionGetCourseSelectionsResponse;
+  });
 
-  if (response.data == null) {
+  if (response?.data == null) {
     throw new Error("No sections found");
   }
 
@@ -179,9 +170,8 @@ export const getAllSectionsByCourseIdStrapi = async (
 export const getAllStudentSubscriptionsStrapi = async (
   id: string,
 ): Promise<Course[]> => {
-  const response = (await courseGetCourses({
+  const response = await courseGetCourses({
     query: {
-      /* @ts-expect-error: Strapi filter typing does not support nested filters */
       "filters[students][documentId][$eq]": id,
       fields: [
         "title",
@@ -202,9 +192,9 @@ export const getAllStudentSubscriptionsStrapi = async (
         "students",
       ],
     },
-  })) as CourseGetCoursesResponse;
+  });
 
-  if (!response.data || response.data.length === 0) {
+  if (!response?.data || response.data.length === 0) {
     return [];
   }
 
@@ -215,7 +205,7 @@ export const getAllStudentSubscriptionsStrapi = async (
  * Gets the student info for a specific student.
  */
 export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
-  const response = (await studentGetStudentsById({
+  const response = await studentGetStudentsById({
     path: { id },
     query: {
       populate: [
@@ -229,9 +219,9 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
       ],
       status: "published", // Only get published students
     },
-  })) as StudentGetStudentsByIdResponse;
+  });
 
-  if (!response.data) {
+  if (!response?.data) {
     throw new Error("Student not found");
   }
 
@@ -243,16 +233,16 @@ export const getAllComponentsBySectionIdStrapi = async (
 ): Promise<
   SectionComponent<SectionComponentExercise | SectionComponentLecture>[]
 > => {
-  const response = (await courseSelectionGetCourseSelections({
+  const response = await courseSelectionGetCourseSelections({
     query: {
       /* @ts-expect-error: Strapi filter typing does not support nested filters */
       "filters[documentId][$eq]": id,
       populate: ["exercises", "course", "lectures"],
       status: "published",
     },
-  })) as CourseSelectionGetCourseSelectionsResponse;
+  });
 
-  if (!response.data || response.data.length === 0) {
+  if (!response?.data || response.data.length === 0) {
     throw new Error("No section found");
   }
 
@@ -301,14 +291,14 @@ export const getAllComponentsBySectionIdStrapi = async (
 export const getAllFeedbackOptionsStrapi = async (): Promise<
   FeedbackOption[]
 > => {
-  const response = (await feedbackGetFeedbacks({
+  const response = await feedbackGetFeedbacks({
     query: {
       fields: ["feedbackText", "rating"],
       status: "published",
     },
-  })) as FeedbackGetFeedbacksResponse;
+  });
 
-  if (!response.data || response.data.length === 0) {
+  if (!response?.data || response.data.length === 0) {
     return [];
   }
 
@@ -379,20 +369,20 @@ export const updateStudyStreakStrapi = async (
   id: string,
 ): Promise<{ message: string }> => {
   // Fetch current student data from Strapi to get the name
-  const studentResponse = (await studentGetStudentsById({
+  const studentResponse = await studentGetStudentsById({
     path: { id },
     query: {
       fields: ["name", "email"],
       status: "published",
     },
-  })) as StudentGetStudentsByIdResponse;
+  });
 
-  if (!studentResponse.data) {
+  if (!studentResponse?.data) {
     throw new Error("Student not found");
   }
 
   // Update the student (this could include lastStudyDate when the field is added to Strapi)
-  const response = (await studentPutStudentsById({
+  const response = await studentPutStudentsById({
     path: { id },
     body: {
       data: {
@@ -404,9 +394,9 @@ export const updateStudyStreakStrapi = async (
         // lastStudyDate: new Date().toISOString(),
       },
     },
-  })) as StudentPutStudentsByIdResponse;
+  });
 
-  if (!response.data) {
+  if (!response?.data) {
     throw new Error("Failed to update study streak");
   }
 
