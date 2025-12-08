@@ -1,5 +1,4 @@
 import { View, Text, Dimensions, type DimensionValue } from "react-native";
-import { ProgressBar } from "react-native-paper";
 import { colors } from "@/theme/colors";
 
 interface CustomProgressBarProps {
@@ -23,6 +22,7 @@ export const CustomProgressBar = ({
   displayLabel = true,
 }: CustomProgressBarProps) => {
   const { width: ScreenWidth } = Dimensions.get("window");
+  const barWidth = ScreenWidth * (width / 100);
 
   // Ensure progress is between 0 and 100
   progress[0] = Math.min(100, Math.max(0, progress[0]));
@@ -30,28 +30,21 @@ export const CustomProgressBar = ({
     progress[0] = 0;
   }
 
-  const barWidth = ScreenWidth * (width / 100);
+  const progressBarStyle = {
+    width: `${String(progress[0])}%` as DimensionValue,
+    backgroundColor: colors.surfaceDefaultCyan,
+  };
 
   return (
     <View className="flex-row items-center">
-      <ProgressBar
-        progress={progress[0] / 100}
-        color={colors.surfaceDarker}
-        // eslint-disable-next-line
-        style={{
-          /*
-            It is not good practice to use eslint-disable, but it is required here, because of the ProgressBar from react-native-paper
-            Since the height and width are calculated dynamically, it can't be rendered by passing it to className
-            The border radius can't be passed by className either, as it will be overlooked because of the style={}
-          */
-          backgroundColor: colors.surfaceLighterCyan,
-          width: barWidth,
-          height: 9,
-          borderRadius: 10,
-        }}
-      />
+      <View
+        className="h-[9] overflow-hidden rounded-full bg-surfaceLighterCyan"
+        style={{ width: barWidth }}
+      >
+        <View className="h-full rounded-full" style={progressBarStyle} />
+      </View>
       {displayLabel && (
-        <Text className="px-6 text-center text-textBodyGrayscale text-caption-sm-regular">
+        <Text className="px-2 text-center text-textBodyGrayscale text-caption-sm-regular">
           {progress[1]}/{progress[2]}
         </Text>
       )}

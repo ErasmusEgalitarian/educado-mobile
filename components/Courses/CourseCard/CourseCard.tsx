@@ -122,8 +122,8 @@ const CourseCard = ({ course, isOnline }: CourseCardProps) => {
                 </Text>
               </View>
             </View>
-            <View className="flex-row items-center justify-between">
-              <CustomProgressBar width={60} progress={studentProgress} />
+            <View className="flex-row">
+              <CustomProgressBar width={68} progress={studentProgress} />
               <Pressable
                 className="z-[1]"
                 onPress={() => {
