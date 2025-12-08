@@ -12,6 +12,7 @@ import {
   Section,
   Component,
   Student,
+  StudentCourseSection,
   FeedbackOption,
   SectionComponentExercise,
   SectionComponentLecture,
@@ -35,12 +36,12 @@ export const mapToCourse = (
 ): Course => {
   const categories =
     "course_categories" in courseStrapi &&
-    Array.isArray(courseStrapi.course_categories)
+      Array.isArray(courseStrapi.course_categories)
       ? courseStrapi.course_categories
       : [];
   const contentCreators =
     "content_creators" in courseStrapi &&
-    Array.isArray(courseStrapi.content_creators)
+      Array.isArray(courseStrapi.content_creators)
       ? courseStrapi.content_creators
       : [];
   const feedbacks =
@@ -49,7 +50,7 @@ export const mapToCourse = (
       : [];
   const sections =
     "course_sections" in courseStrapi &&
-    Array.isArray(courseStrapi.course_sections)
+      Array.isArray(courseStrapi.course_sections)
       ? courseStrapi.course_sections
       : [];
 
@@ -57,7 +58,7 @@ export const mapToCourse = (
   const rating =
     feedbacks.length > 0
       ? feedbacks.reduce((acc, feedback) => acc + (feedback.rating ?? 0), 0) /
-        feedbacks.length
+      feedbacks.length
       : 0;
 
   // Get image URL if available
@@ -66,8 +67,8 @@ export const mapToCourse = (
   // Get category name
   const categoryName =
     categories.length > 0 &&
-    typeof categories[0] === "object" &&
-    "name" in categories[0]
+      typeof categories[0] === "object" &&
+      "name" in categories[0]
       ? ((categories[0] as { name?: string }).name ?? "")
       : "";
 
@@ -92,7 +93,7 @@ export const mapToCourse = (
     topFeedbackOptions:
       feedbacks.length > 0
         ? (feedbacks.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))[0]
-            ?.feedbackText ?? "")
+          ?.feedbackText ?? "")
         : "",
     dateOfDownload: courseStrapi.createdAt,
     sections: sections.map((section) => section.documentId ?? ""),
@@ -211,10 +212,57 @@ export const mapToLectures = (
 export const mapToStudent = (
   studentStrapi: StrapiStudent | PopulatedStudent,
 ): Student => {
-  const courses =
-    "courses" in studentStrapi && Array.isArray(studentStrapi.courses)
-      ? studentStrapi.courses
+  const enrollmentRelations =
+    "course_enrollment_relations" in studentStrapi &&
+      Array.isArray(studentStrapi.course_enrollment_relations)
+      ? studentStrapi.course_enrollment_relations
       : [];
+
+  // Extract course IDs from enrollment relations
+  // Handle both populated and non-populated enrollment relations
+  const courseIds: string[] = [];
+  const coursesData: {
+    courseId: string;
+    totalPoints: number;
+    isComplete: boolean;
+    sections: StudentCourseSection[];
+    completionDate: Date;
+  }[] = [];
+
+  for (const enrollment of enrollmentRelations) {
+
+    // Check if course is populated with full data
+    if (
+      "course" in enrollment &&
+      enrollment.course &&
+      typeof enrollment.course === "object"
+    ) {
+      const courseId =
+        "documentId" in enrollment.course &&
+          typeof enrollment.course.documentId === "string"
+          ? enrollment.course.documentId
+          : "";
+
+      if (courseId) {
+        courseIds.push(courseId);
+        coursesData.push({
+          courseId,
+          totalPoints: 123321, // TODO: Calculate from course data
+          isComplete: false, // TODO: Determine completion status
+          sections: [], // TODO: Fetch and map course sections
+          completionDate: new Date(),
+        });
+      }
+    } else if (
+      "documentId" in enrollment &&
+      typeof enrollment.documentId === "string" &&
+      enrollment.documentId
+    ) {
+      // If only the enrollment relation ID is available, use it
+      // This happens when course_enrollment_relations is not fully populated
+      courseIds.push(enrollment.documentId);
+    }
+  }
 
   return {
     id: studentStrapi.documentId ?? "",
@@ -223,16 +271,10 @@ export const mapToStudent = (
     level: 123, // TODO: Add level field to Strapi Student model
     studyStreak: 123, // TODO: Might need to calculate from user_log
     lastStudyDate: new Date(), // TODO: Add lastStudyDate field to Strapi Student model
-    subscriptions: courses.map((course) => course.documentId ?? ""), // Using course IDs as subscriptions
+    subscriptions: courseIds, // Using course IDs from enrollment relations
     profilePhoto: "", // TODO: Add profilePhoto field to Strapi Student model
     photo: null,
-    courses: courses.map((course) => ({
-      courseId: course.documentId ?? "",
-      totalPoints: 123321, // TODO: Calculate from course data
-      isComplete: false, // TODO: Determine completion status
-      sections: [], // TODO: Fetch and map course sections
-      completionDate: new Date(),
-    })),
+    courses: coursesData,
     baseUser: studentStrapi.documentId ?? "", // Using documentId as baseUser identifier
   };
 };

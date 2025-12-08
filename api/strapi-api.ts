@@ -8,6 +8,7 @@ import {
   courseSelectionGetCourseSelections,
   feedbackGetFeedbacks,
   studentPutStudentsById,
+  courseEnrollmentRelationGetCourseEnrollmentRelations,
 } from "@/api/backend/sdk.gen";
 import {
   mapToCourse,
@@ -138,7 +139,7 @@ export const getCourseByIdStrapi = async (courseId: string) => {
         "image",
         "feedbacks",
         "course_sections",
-        "students",
+        "course_enrollment_relations",
       ],
     },
   });
@@ -170,9 +171,41 @@ export const getAllSectionsByCourseIdStrapi = async (
 export const getAllStudentSubscriptionsStrapi = async (
   id: string,
 ): Promise<Course[]> => {
-  const response = await courseGetCourses({
+  // First, get the course enrollment relations for this student
+  const enrollmentResponse =
+    await courseEnrollmentRelationGetCourseEnrollmentRelations({
+      query: {
+        /* @ts-expect-error: Strapi filter typing does not support nested filters */
+        "filters[student][documentId][$eq]": id,
+        populate: ["course"],
+        status: "published",
+      },
+    });
+
+  if (!enrollmentResponse?.data || enrollmentResponse.data.length === 0) {
+    return [];
+  }
+
+  // Extract course IDs from enrollment relations
+  const courseIds = enrollmentResponse.data
+    .map((enrollment) => {
+      const course = enrollment.course;
+      if (course && typeof course === "object" && "documentId" in course) {
+        return course.documentId;
+      }
+      return null;
+    })
+    .filter((id): id is string => id !== null && id !== "");
+
+  if (courseIds.length === 0) {
+    return [];
+  }
+
+  // Second, fetch full course details for those course IDs
+  const coursesResponse = await courseGetCourses({
     query: {
-      "filters[students][documentId][$eq]": id,
+      /* @ts-expect-error: Strapi filter typing does not support $in operator */
+      "filters[documentId][$in]": courseIds,
       fields: [
         "title",
         "description",
@@ -189,16 +222,16 @@ export const getAllStudentSubscriptionsStrapi = async (
         "image",
         "feedbacks",
         "course_sections",
-        "students",
       ],
+      status: "published",
     },
   });
 
-  if (!response?.data || response.data.length === 0) {
+  if (!coursesResponse?.data || coursesResponse.data.length === 0) {
     return [];
   }
 
-  return response.data.map((course) => mapToCourse(course));
+  return coursesResponse.data.map((course) => mapToCourse(course));
 };
 
 /**
@@ -209,7 +242,7 @@ export const getStudentByIdStrapi = async (id: string): Promise<Student> => {
     path: { id },
     query: {
       populate: [
-        "courses",
+        "course_enrollment_relations",
         /*
           This is probably not needed right now
         "feedbacks",

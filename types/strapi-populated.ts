@@ -2,6 +2,7 @@ import type {
   ContentCreator,
   Course,
   CourseCategory,
+  CourseEnrollmentRelation,
   CourseSelection,
   Exercise,
   ExerciseOption,
@@ -58,4 +59,13 @@ export interface PopulatedStudent
   extends Omit<Student, "feedbacks" | "courses"> {
   feedbacks?: Feedback[];
   courses?: PopulatedCourse[];
+}
+
+/**
+ * CourseEnrollmentRelation with all relations populated
+ */
+export interface PopulatedCourseEnrollmentRelation
+  extends Omit<CourseEnrollmentRelation, "course" | "student"> {
+  course?: PopulatedCourse;
+  student?: PopulatedStudent;
 }
