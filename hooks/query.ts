@@ -2,7 +2,8 @@ import {
   addCourseToStudent,
   deleteUser,
   getBucketImageByFilename,
-  //getBucketVideoByFilename,
+  getBucketVideoByFilename,
+  getLeaderboardDataAndUserRank,
   subscribeCourse,
   unsubscribeCourse,
 } from "@/api/legacy-api";
@@ -29,6 +30,8 @@ import {
   Student,
 } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { File, Paths } from "expo-file-system";
+import { EncodingType } from "expo-file-system/src/ExpoFileSystem.types";
 
 export const queryKeys = {
   courses: ["courses"] as const,
@@ -44,6 +47,7 @@ export const queryKeys = {
   sectionComponents: (id: string) => ["sectionComponents", id] as const,
   feedbackOptions: ["feedbackOptions"] as const,
   bucketImage: (filename: string) => ["bucketImage", filename] as const,
+  leaderboard: (id: string, page: number) => ["leaderboard", id, page] as const,
 };
 
 /**
@@ -181,6 +185,25 @@ export const useSections = (id: string) =>
     queryKey: queryKeys.course(id),
     queryFn: () => getAllSectionsByCourseIdStrapi(id),
     enabled: !!id,
+  });
+
+/**
+ * Get the video file path for a lecture video.
+ *
+ * @param filename - The filename of the video.
+ */
+export const useLectureVideo = (filename: string) =>
+  useQuery({
+    queryKey: queryKeys.lectureVideos(filename),
+    queryFn: async () => {
+      const video = await getBucketVideoByFilename(filename);
+
+      const file = new File(Paths.document, "lectureVideos", `${filename}.mp4`);
+
+      file.write(video, { encoding: EncodingType.Base64 });
+
+      return file.uri;
+    },
   });
 
 /**
@@ -343,11 +366,23 @@ export const useCompleteComponent = () => {
         points,
       );
     },
-    onSuccess: async (data) => {
-      // Invalidate student queries to refetch updated data
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.student(data.id),
-      });
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKeys.student(data.baseUser), data);
+
+      const local = queryClient.getQueryData<LoginStudent>(
+        queryKeys.loginStudent,
+      );
+
+      if (local) {
+        queryClient.setQueryData<LoginStudent>(queryKeys.loginStudent, {
+          ...local,
+          userInfo: {
+            ...local.userInfo,
+            courses: data.courses,
+            points: data.points,
+          },
+        });
+      }
     },
   });
 };
@@ -362,5 +397,18 @@ export const useBucketImage = (filename?: string | null) => {
     queryKey: queryKeys.bucketImage(filename ?? ""),
     queryFn: () => getBucketImageByFilename(filename ?? ""),
     enabled: !!filename,
+  });
+};
+
+export const useLeaderboard = (id: string, page: number) => {
+  return useQuery({
+    queryKey: queryKeys.leaderboard(id, page),
+    queryFn: () =>
+      getLeaderboardDataAndUserRank({
+        page: page,
+        timeInterval: "all",
+        limit: 12,
+        userId: id,
+      }),
   });
 };

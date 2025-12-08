@@ -1,4 +1,4 @@
-export function generateSectionCompletePhrases() {
+export const generateSectionCompletePhrases = () => {
   const sectionPhrases = [
     "Parabéns por concluir a seção!",
     "Seção concluída com sucesso!",
@@ -12,4 +12,4 @@ export function generateSectionCompletePhrases() {
   ];
 
   return sectionPhrases;
-}
+};

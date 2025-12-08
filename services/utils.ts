@@ -22,6 +22,7 @@ import {
 } from "@/types";
 import { ClassValue, clsx } from "clsx";
 import { getBaseApiUrl } from "@/api/openapi/api-config";
+import { NavigationProp } from "@react-navigation/native";
 
 /**
  * Converts a numeric difficulty level to a human-readable label.
@@ -453,12 +454,7 @@ export const findIndexOfUncompletedComp = (
 export const handleLastComponent = async (
   comp: SectionComponent<SectionComponentLecture | SectionComponentExercise>,
   course: Course,
-  navigation: {
-    reset: (opts: {
-      index: number;
-      routes: { name: string; params?: Record<string, unknown> }[];
-    }) => void;
-  },
+  navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState">,
 ) => {
   // Generate certificate
   const loginStudent = await StorageService.getUserInfo();
@@ -483,6 +479,7 @@ export const handleLastComponent = async (
       index: 0,
       routes: [
         {
+          // @ts-expect-error Will be fixed whe upgrading expo
           name: "CompleteCourse",
           params: {
             course: course,
@@ -495,6 +492,7 @@ export const handleLastComponent = async (
       index: 0,
       routes: [
         {
+          // @ts-expect-error Will be fixed whe upgrading expo
           name: "CompleteSection",
           params: {
             parsedCourse: course,

@@ -1,11 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import { View, ActivityIndicator, Text } from "react-native";
+import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
 import PagerView from "react-native-pager-view";
-import ProgressTopBar from "@/app/screens/Lectures/ProgressTopBar";
-import { Lecture } from "@/components/Lectures/Lecture";
-import ExerciseScreen from "@/app/screens/Excercises/ExerciseScreen";
+import { useNavigation } from "@react-navigation/native";
+import { ProgressTopBar } from "@/app/screens/Lectures/ProgressTopBar";
+import ExerciseScreen from "@/components/Activities/Exercise";
 import { colors } from "@/theme/colors";
-import { findIndexOfUncompletedComp, differenceInDays } from "@/services/utils";
+import {
+  findIndexOfUncompletedComp,
+  differenceInDays,
+  handleLastComponent,
+} from "@/services/utils";
+import { VideoLecture } from "@/components/Activities/Video";
+import TextImageLectureScreen from "@/components/Activities/TextImage";
 import {
   Section,
   Course,
@@ -31,6 +37,12 @@ interface ComponentSwipeScreenProps {
   };
 }
 
+const styles = StyleSheet.create({
+  pager: {
+    flex: 1,
+  },
+});
+
 /**
  * Screen that displays a single section component (lecture or exercise) and
  * lets the student navigate between components using react-native-pager-view.
@@ -46,166 +58,118 @@ interface ComponentSwipeScreenProps {
  */
 const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
   const { section, parsedCourse, parsedComponentIndex } = route.params;
-
-  const [currentLectureType, setCurrentLectureType] = useState("text");
   const [index, setIndex] = useState(0);
-  const [scrollEnabled, setScrollEnabled] = useState(true);
+  const initialIndexSetRef = useRef(false);
+  const [resetKey, setResetKey] = useState(0);
   const [sectionComponents, setSectionComponents] = useState<
     SectionComponent<SectionComponentLecture | SectionComponentExercise>[]
   >([]);
-  const pagerRef = useRef<null | PagerView>(null);
-  const [resetKey, setResetKey] = useState(0);
-
+  const pagerRef = useRef<PagerView>(null);
   const { data: loginStudent } = useLoginStudent();
-
   const studentId = loginStudent.userInfo.id;
-
   const studentQuery = useStudent(studentId);
   const student = studentQuery.data;
-
   const {
     data: fetchedSectionComponents = [],
     isLoading: areSectionComponentsLoading,
   } = useSectionComponents(section.sectionId);
-
   const completeComponentQuery = useCompleteComponent();
   const updateStudyStreakQuery = useUpdateStudyStreak();
-
   const studentLastStudyDate = student?.lastStudyDate ?? new Date();
   const isLoading = studentQuery.isLoading || areSectionComponentsLoading;
+  const navigation = useNavigation();
 
-  const safeScrollBy = (offset: number, animated: true) => {
-    const target = Math.max(
-      0,
-      Math.min(index + offset, sectionComponents.length - 1),
-    );
-
-    if (animated) {
-      pagerRef.current?.setPage(target);
-    } else {
-      pagerRef.current?.setPageWithoutAnimation(target);
-    }
-  };
-
-  /**
-   * Handles student study streak update process. Checks the difference in days between lastStudyDate and today. If the
-   * difference is greater than 0, it updates `studyStreak` and `lastStudyDate` both in the database, local storage and
-   * this local state.
-   */
   const handleStudyStreak = async () => {
-    if (!student) {
-      return;
-    }
-
     const today = new Date();
     const dayDifference = differenceInDays(studentLastStudyDate, today);
-
-    if (dayDifference === 0) {
+    if (!student || dayDifference === 0) {
       return;
     }
 
+    // Update the database
     updateStudyStreakQuery.mutate({
       studentId: student.id,
     });
-
     await studentQuery.refetch();
   };
 
-  const handleExerciseContinue = (isCorrect: boolean) => {
-    if (!isCorrect) {
-      // Update the section component list to move the incorrect exercise to the end
-      const currentComp = sectionComponents[index];
-      const updatedCombinedLecturesAndExercises = [
-        ...sectionComponents.slice(0, index), // Elements before the current index
-        ...sectionComponents.slice(index + 1), // Elements after the current index
-        currentComp, // Add the current component to the end
-      ];
-
-      setSectionComponents(updatedCombinedLecturesAndExercises);
-
-      // Force re-render by updating the resetKey
-      setResetKey((prevKey) => prevKey + 1);
-    } else {
-      safeScrollBy(1, true);
-      setScrollEnabled(true);
-    }
-
-    // True if this is the last lecture/exercise
-    return index === sectionComponents.length - 1;
-  };
-
-  const handleIndexChange = async (index: number) => {
+  const handleContinue = async (isCorrect: boolean) => {
+    const currentComp = sectionComponents[index];
+    const isLastSlide = index >= sectionComponents.length - 1;
     if (!student) {
       return;
     }
 
-    await handleStudyStreak();
+    // If the activity is not correctly answered
+    if (!isCorrect) {
+      // Move it to the end
+      setSectionComponents((prev) => {
+        const comp = prev[index];
+        return [...prev.slice(0, index), ...prev.slice(index + 1), comp];
+      });
 
-    const currentSlide = sectionComponents[index];
-
-    if (currentSlide.type === "exercise") {
-      setScrollEnabled(false);
-    } else {
-      const currentLectureType =
-        currentSlide.lectureType === "video" ? "video" : "text";
-      setCurrentLectureType(currentLectureType);
-      setScrollEnabled(true);
+      // Re-render the page
+      setResetKey((prev) => prev + 1);
+      requestAnimationFrame(() => {
+        pagerRef.current?.setPage(index);
+      });
+      return;
     }
 
-    if (index > 0) {
-      const lastSlide = sectionComponents[index - 1];
-
+    // Update the database
+    try {
       await completeComponentQuery.mutateAsync({
         student,
-        component: lastSlide.component,
+        component: currentComp.component,
         isComplete: true,
       });
+    } catch (error) {
+      console.error("Unable to complete component: ", error);
     }
 
-    setIndex(index);
+    // Update study streak
+    await handleStudyStreak();
+
+    // Complete lesson if it's last slide
+    if (isLastSlide) {
+      await handleLastComponent(currentComp, parsedCourse, navigation);
+      return;
+    }
+
+    // Otherwise go to the next slide
+    pagerRef.current?.setPage(index + 1);
+    setIndex(index + 1);
   };
 
   useEffect(() => {
-    if (fetchedSectionComponents.length === 0) {
+    if (
+      !student ||
+      initialIndexSetRef.current ||
+      fetchedSectionComponents.length === 0
+    ) {
       return;
     }
 
+    // Set the componenets
     setSectionComponents(fetchedSectionComponents);
-  }, [fetchedSectionComponents]);
 
-  useEffect(() => {
-    if (isLoading || !student || sectionComponents.length === 0) {
-      return;
-    }
-
-    let initialIndex =
+    // Set the index
+    const initialIndex =
       parsedComponentIndex ??
       findIndexOfUncompletedComp(
         student,
         parsedCourse.courseId,
         section.sectionId,
       );
-
-    if (initialIndex === -1) {
-      initialIndex = 0;
-    }
-
-    const firstSectionComponent = sectionComponents[initialIndex];
-
-    if (firstSectionComponent.type === "exercise") {
-      setScrollEnabled(false);
-    }
-
-    setCurrentLectureType(firstSectionComponent.lectureType ?? "text");
     setIndex(initialIndex);
 
-    pagerRef.current?.setPageWithoutAnimation(initialIndex);
+    // Lock the effect (runs only once)
+    initialIndexSetRef.current = true;
   }, [
-    isLoading,
+    fetchedSectionComponents,
     parsedComponentIndex,
     parsedCourse.courseId,
     section.sectionId,
-    sectionComponents,
     student,
   ]);
 
@@ -224,7 +188,6 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
         <View className="absolute top-0 z-10 w-full">
           <ProgressTopBar
             courseObject={parsedCourse}
-            lectureType={currentLectureType}
             components={sectionComponents}
             currentIndex={index}
           />
@@ -235,45 +198,46 @@ const ComponentSwipeScreen = ({ route }: ComponentSwipeScreenProps) => {
         <PagerView
           key={resetKey}
           ref={pagerRef}
-          style={{ flex: 1 }}
+          style={styles.pager}
           initialPage={index}
-          onPageSelected={(e) => {
-            void handleIndexChange(e.nativeEvent.position);
-          }}
-          scrollEnabled={scrollEnabled}
+          scrollEnabled={false}
         >
-          {sectionComponents.map((component, index) =>
-            component.type === "lecture" ? (
-              <Lecture
-                key={component.component.id || index}
-                lecture={component.component as SectionComponentLecture}
-                course={parsedCourse}
-                isLastSlide={index === sectionComponents.length - 1}
-                onContinue={() => {
-                  safeScrollBy(1, true);
-                }}
-                handleStudyStreak={() => {
-                  void handleStudyStreak();
-                }}
-              />
-            ) : (
+          {sectionComponents.map((component, idx) => {
+            const key = component.component.id || idx;
+
+            if (component.type === "lecture") {
+              const lecture = component.component as SectionComponentLecture;
+              return lecture.contentType === "video" ? (
+                <VideoLecture
+                  key={key}
+                  lecture={lecture}
+                  course={parsedCourse}
+                  isActive={index === idx}
+                  onContinue={() => handleContinue(true)}
+                />
+              ) : (
+                <TextImageLectureScreen
+                  key={key}
+                  componentList={sectionComponents}
+                  lectureObject={lecture}
+                  courseObject={parsedCourse}
+                  onContinue={() => handleContinue(true)}
+                />
+              );
+            }
+
+            const exercise = component.component as SectionComponentExercise;
+            return (
               <ExerciseScreen
-                key={component.component.id || index}
-                componentList={
-                  sectionComponents as unknown as SectionComponentExercise[]
-                }
-                exerciseObject={component.component as SectionComponentExercise}
+                key={key}
+                componentList={sectionComponents}
+                exerciseObject={exercise}
                 sectionObject={section}
                 courseObject={parsedCourse}
-                onContinue={(isCorrect: boolean) =>
-                  handleExerciseContinue(isCorrect)
-                }
-                handleStudyStreak={() => {
-                  void handleStudyStreak();
-                }}
+                onContinue={handleContinue}
               />
-            ),
-          )}
+            );
+          })}
         </PagerView>
       )}
     </View>
