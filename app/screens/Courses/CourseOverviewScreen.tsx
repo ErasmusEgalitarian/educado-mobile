@@ -1,5 +1,6 @@
 // 1. React & hooks
 import { useEffect, useState } from "react";
+import type { JSX } from "react";
 
 // 2. React Native core
 import {
@@ -11,6 +12,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // 3. Third-party libraries
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -35,7 +37,7 @@ import {
 import {
   getCourseProgress,
   getNumberOfCompletedComponents,
-  sanitizeStrapiImageUrl
+  sanitizeStrapiImageUrl,
 } from "@/services/utils";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80, // Space for cancel button
   },
   sectionListContainer: {
-    maxHeight: 328, // Approx 4 section cards (82px each)
+    maxHeight: 500, // Increased to show more sections
   },
   headerContainer: {
     marginBottom: 80,
@@ -187,26 +189,14 @@ const CourseOverviewScreen = ({
   const sections = sectionQuery.data ?? [];
 
   return (
-    <SafeAreaView>
-      <TouchableOpacity
-        className="absolute left-5 top-28 z-10 pr-3"
-        onPress={() => {
-          // @ts-expect-error The error will disappear when we migrate to Expo Router
-          navigation.navigate("HomeStack", { screen: "Meus cursos" });
-        }}
-      >
-        <MaterialCommunityIcons
-          name="chevron-left"
-          className="rounded-[50px] bg-surfaceDefaultGrayscale text-surfaceDarker"
-          size={30}
-        />
-      </TouchableOpacity>
-      <ScrollView
-        className="bg-surfaceSubtleGrayscale"
-        showsVerticalScrollIndicator={false}
-      >
-        <View className="flex w-full items-center">
-          <View className="flex w-full items-center justify-between">
+    <BaseScreen>
+      <SafeAreaView className="flex-1">
+        <ScrollView
+          className="bg-surfaceSubtleGrayscale"
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="flex w-full items-center">
+            <View className="flex w-full items-center justify-between">
             {imageUrl &&
             !imageError &&
             (imageUrl.startsWith("http://") ||
@@ -251,8 +241,11 @@ const CourseOverviewScreen = ({
             </View>
           </View>
 
+          {/* Spacing to account for overlapping card */}
+          <View className="h-[130px]" />
+
           {/* Começar Curso Button */}
-          <View className="mx-10 mb-10 mt-10">
+          <View className="px-12 mb-4">
             <StartCourseButton
               onPress={() => {
                 if (currentSection) {
@@ -269,7 +262,7 @@ const CourseOverviewScreen = ({
 
           {/* Tooltip */}
           {sections.length > 0 && (
-            <View className="relative">
+            <View className="relative mb-2">
               <Tooltip
                 position={{ top: 16, left: 48 }}
                 tooltipKey="CourseOverview"
@@ -314,7 +307,7 @@ const CourseOverviewScreen = ({
               </View>
             </ScrollView>
           )}
-        </ScrollView>
+        </View>
 
         {/* Cancel Subscription Link - Sticky at bottom above nav */}
         <View style={styles.cancelContainer}>
@@ -324,7 +317,8 @@ const CourseOverviewScreen = ({
             </Text>
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
+      </SafeAreaView>
     </BaseScreen>
   );
 };
