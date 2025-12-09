@@ -41,7 +41,12 @@ export const CustomProgressBar = ({
         className="h-[9] overflow-hidden rounded-full bg-surfaceLighterCyan"
         style={{ width: barWidth }}
       >
-        <View className="h-full rounded-full" style={progressBarStyle} />
+        <View
+          className="h-full rounded-full"
+          style={progressBarStyle}
+          testID="CustomProgressBar.ProgressBar"
+          accessibilityValue={{ now: progress[0] / 100 }}
+        />
       </View>
       {displayLabel && (
         <Text className="px-2 text-center text-textBodyGrayscale text-caption-sm-regular">
