@@ -17,6 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "@/theme/colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tooltip } from "@/components/Onboarding/Tooltip";
+import { recommendCourse } from "@/services/component-utility-functions/recommendCourse";
 
 const RecommendationBadge = ({ children }: PropsWithChildren) => {
   return (
@@ -45,6 +46,7 @@ const RecommendationBadge = ({ children }: PropsWithChildren) => {
 /**
  * Explore screen displays all courses and allows the user to filter them by category or search text.
  */
+
 const ExploreScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -102,9 +104,8 @@ const ExploreScreen = () => {
   }, [selectedCategory, searchText, courseQuery.data]);
 
   useEffect(() => {
-    const ratingsList = filteredCourses.map((course) => course.rating);
-    const recommendedCourseId = ratingsList.indexOf(Math.max(...ratingsList));
-    setRecommendedCourse(filteredCourses[recommendedCourseId]);
+    const recommendedCourse = recommendCourse(filteredCourses);
+    setRecommendedCourse(recommendedCourse);
   }, [filteredCourses]);
 
   if (courseQuery.isLoading || subscriptionsQuery.isLoading) {

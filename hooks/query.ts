@@ -22,7 +22,6 @@ import {
   updateStudyStreakStrapi,
 } from "@/api/strapi-api";
 import { setAuthToken } from "@/api/openapi/api-config";
-import { isComponentCompleted } from "@/services/utils";
 import {
   LoginStudent,
   SectionComponentExercise,
@@ -32,6 +31,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { File, Paths } from "expo-file-system";
 import { EncodingType } from "expo-file-system/src/ExpoFileSystem.types";
+import { isComponentCompleted } from "@/services/component-utility-functions/isComponentCompleted";
 
 export const queryKeys = {
   courses: ["courses"] as const,

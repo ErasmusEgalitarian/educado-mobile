@@ -23,6 +23,10 @@ import { BaseScreen } from "@/components/General/BaseScreen";
 import { CourseInfoCard } from "@/components/Courses/CourseInfoCard";
 import { StartCourseButton } from "@/components/Courses/StartCourseButton";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
+import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
+import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptionButton";
+import { sanitizeStrapiImageUrl } from "@/services/utils";
+import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
 import { Tooltip } from "@/components/Onboarding/Tooltip";
 import { SectionCard } from "@/components/Section/SectionCard";
 
@@ -47,6 +51,9 @@ import { Course, ProgressTuple, Section } from "@/types";
 
 // 8. Assets
 import ImageNotFound from "@/assets/images/imageNotFound.png";
+import LoadingScreen from "@/components/Loading/LoadingScreen";
+import { getNumberOfCompletedComponents } from "@/services/component-utility-functions/getNumberOfCompletedComponents";
+import { getCourseProgress } from "@/services/component-utility-functions/getCourseProgress";
 
 export interface CourseOverviewScreenProps {
   route: {
