@@ -73,8 +73,8 @@ export const BottomDrawer = ({
     >
       <Tooltip
         position={{
-          top: 570,
-          left: 90,
+          top: 620,
+          left: 100,
         }}
         tailSide="bottom"
         tailPosition={12}

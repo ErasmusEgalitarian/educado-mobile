@@ -237,8 +237,8 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
           <View className="flex-1 flex-col">
             <Tooltip
               position={{
-                top: -30,
-                left: 70,
+                top: 15,
+                left: 50,
               }}
               tooltipKey="Sections"
               uniCodeIcon="🎓"
