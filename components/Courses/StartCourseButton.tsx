@@ -2,6 +2,7 @@ import { Pressable, Text, StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/theme/colors";
 import { t } from "@/i18n";
+import { JSX } from "react";
 
 interface StartCourseButtonProps {
   onPress: () => void;

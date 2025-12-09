@@ -197,127 +197,129 @@ const CourseOverviewScreen = ({
         >
           <View className="flex w-full items-center">
             <View className="flex w-full items-center justify-between">
-            {imageUrl &&
-            !imageError &&
-            (imageUrl.startsWith("http://") ||
-              imageUrl.startsWith("https://")) ? (
-              <Image
-                source={{ uri: imageUrl }}
-                className="h-[296px] w-full object-cover"
-                onError={() => {
-                  setImageError(true);
+              {imageUrl &&
+              !imageError &&
+              (imageUrl.startsWith("http://") ||
+                imageUrl.startsWith("https://")) ? (
+                <Image
+                  source={{ uri: imageUrl }}
+                  className="h-[296px] w-full object-cover"
+                  onError={() => {
+                    setImageError(true);
+                  }}
+                />
+              ) : (
+                <Image
+                  source={ImageNotFound}
+                  className="h-[208px] w-full"
+                  resizeMode="cover"
+                />
+              )}
+
+              {/* Circular Back Button Overlay */}
+              <Pressable
+                className="absolute left-[27px] top-[57px] h-[30px] w-[30px] items-center justify-center rounded-full"
+                style={{ backgroundColor: colors.lightGray }}
+                onPress={() => {
+                  navigation.goBack();
                 }}
+              >
+                <MaterialCommunityIcons
+                  name="chevron-left"
+                  size={24}
+                  color={colors.textBodyGrayscale}
+                />
+              </Pressable>
+
+              {/* Course Info Card - OVERLAPPING */}
+              <View className="absolute left-12 right-12 top-[151px]">
+                <CourseInfoCard
+                  course={course}
+                  progress={studentProgress}
+                  points={0}
+                />
+              </View>
+            </View>
+
+            {/* Spacing to account for overlapping card */}
+            <View className="h-[130px]" />
+
+            {/* Começar Curso Button */}
+            <View className="mb-4 px-12">
+              <StartCourseButton
+                onPress={() => {
+                  if (currentSection) {
+                    // @ts-expect-error The error will disappear when we migrate to Expo Router
+                    navigation.navigate("Components", {
+                      section: currentSection,
+                      parsedCourse: course,
+                    });
+                  }
+                }}
+                disabled={!currentSection}
               />
-            ) : (
-              <Image
-                source={ImageNotFound}
-                className="h-[208px] w-full"
-                resizeMode="cover"
-              />
+            </View>
+
+            {/* Tooltip */}
+            {sections.length > 0 && (
+              <View className="relative mb-2">
+                <Tooltip
+                  position={{ top: 16, left: 48 }}
+                  tooltipKey="CourseOverview"
+                  uniCodeIcon="🎓"
+                  tailSide="bottom"
+                  tailPosition={20}
+                >
+                  <Text className="text-body-regular">
+                    {t("course.tooltip")}
+                  </Text>
+                </Tooltip>
+              </View>
             )}
 
-            {/* Circular Back Button Overlay */}
-            <Pressable
-              className="absolute left-[27px] top-[57px] h-[30px] w-[30px] items-center justify-center rounded-full"
-              style={{ backgroundColor: colors.lightGray }}
-              onPress={() => {
-                navigation.goBack();
-              }}
-            >
-              <MaterialCommunityIcons
-                name="chevron-left"
-                size={24}
-                color={colors.textBodyGrayscale}
-              />
-            </Pressable>
-
-            {/* Course Info Card - OVERLAPPING */}
-            <View className="absolute left-12 right-12 top-[151px]">
-              <CourseInfoCard
-                course={course}
-                progress={studentProgress}
-                points={0}
-              />
-            </View>
-          </View>
-
-          {/* Spacing to account for overlapping card */}
-          <View className="h-[130px]" />
-
-          {/* Começar Curso Button */}
-          <View className="px-12 mb-4">
-            <StartCourseButton
-              onPress={() => {
-                if (currentSection) {
-                  // @ts-expect-error The error will disappear when we migrate to Expo Router
-                  navigation.navigate("Components", {
-                    section: currentSection,
-                    parsedCourse: course,
-                  });
-                }
-              }}
-              disabled={!currentSection}
-            />
-          </View>
-
-          {/* Tooltip */}
-          {sections.length > 0 && (
-            <View className="relative mb-2">
-              <Tooltip
-                position={{ top: 16, left: 48 }}
-                tooltipKey="CourseOverview"
-                uniCodeIcon="🎓"
-                tailSide="bottom"
-                tailPosition={20}
+            {/* Section List - Scrollable with max 4 visible */}
+            {sections.length > 0 && (
+              <ScrollView
+                style={styles.sectionListContainer}
+                className="mx-6 mb-6"
+                showsVerticalScrollIndicator={true}
+                nestedScrollEnabled={true}
               >
-                <Text className="text-body-regular">{t("course.tooltip")}</Text>
-              </Tooltip>
-            </View>
-          )}
+                <View className="gap-5">
+                  {sections.map((section) => {
+                    const completedComponents =
+                      sectionProgress[section.sectionId] || 0;
+                    return (
+                      <SectionCard
+                        key={section.sectionId}
+                        numOfEntries={section.components.length}
+                        title={section.title}
+                        icon="chevron-right"
+                        progress={completedComponents}
+                        onPress={() => {
+                          // @ts-expect-error The error will disappear when we migrate to Expo Router
+                          navigation.navigate("Section", {
+                            course,
+                            section,
+                          });
+                        }}
+                      />
+                    );
+                  })}
+                </View>
+              </ScrollView>
+            )}
+          </View>
 
-          {/* Section List - Scrollable with max 4 visible */}
-          {sections.length > 0 && (
-            <ScrollView
-              style={styles.sectionListContainer}
-              className="mx-6 mb-6"
-              showsVerticalScrollIndicator={true}
-              nestedScrollEnabled={true}
-            >
-              <View className="gap-5">
-                {sections.map((section) => {
-                  const completedComponents =
-                    sectionProgress[section.sectionId] || 0;
-                  return (
-                    <SectionCard
-                      key={section.sectionId}
-                      numOfEntries={section.components.length}
-                      title={section.title}
-                      icon="chevron-right"
-                      progress={completedComponents}
-                      onPress={() => {
-                        // @ts-expect-error The error will disappear when we migrate to Expo Router
-                        navigation.navigate("Section", {
-                          course,
-                          section,
-                        });
-                      }}
-                    />
-                  );
-                })}
-              </View>
-            </ScrollView>
-          )}
-        </View>
-
-        {/* Cancel Subscription Link - Sticky at bottom above nav */}
-        <View style={styles.cancelContainer}>
-          <Pressable onPress={unsubAlert}>
-            <Text className="text-surfaceDefaultRed underline text-body-bold">
-              {t("course.withdraw")}
-            </Text>
-          </Pressable>
-        </View>
-      </ScrollView>
+          {/* Cancel Subscription Link - Sticky at bottom above nav */}
+          <View style={styles.cancelContainer}>
+            <Pressable onPress={unsubAlert}>
+              <Text className="text-surfaceDefaultRed underline text-body-bold">
+                {t("course.withdraw")}
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </BaseScreen>
   );
