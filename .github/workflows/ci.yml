@@ -372,6 +372,23 @@ jobs:
 
           echo "need=$need" >>"$GITHUB_OUTPUT"
 
+      - name: Inject env variables into eas.json
+        if: ${{ steps.build_gate.outputs.need == 'true' }}
+        env:
+          PROD_URL: ${{ vars.EXPO_PUBLIC_STRAPI_BACKEND_PROD }}
+          DEV_URL: ${{ vars.EXPO_PUBLIC_STRAPI_BACKEND_DEV }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            const eas = JSON.parse(fs.readFileSync('eas.json'));
+
+            eas.build.production.env.EXPO_PUBLIC_STRAPI_BACKEND = process.env.PROD_URL;
+
+            eas.build.preview.env.EXPO_PUBLIC_STRAPI_BACKEND = process.env.DEV_URL;
+
+            fs.writeFileSync('eas.json', JSON.stringify(eas, null, 2));
+          "
+
       - name: Set Up Expo
         if: ${{ steps.build_gate.outputs.need == 'true' }}
         uses: expo/expo-github-action@v8

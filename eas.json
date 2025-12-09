@@ -3,12 +3,18 @@
     "preview": {
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_STRAPI_BACKEND": "www.exampleDev.com/api/"
       }
     },
     "production": {
       "node": "18.20.8",
       "android": {
         "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_STRAPI_BACKEND": "www.exampleProd.com/api/"
       }
     },
     "dev": {
