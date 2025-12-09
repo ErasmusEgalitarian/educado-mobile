@@ -452,23 +452,31 @@ export const subscribeCourseStrapi = async (
   // Create a new course enrollment relation
   const enrollmentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
-  const enrollmentResponse =
-    await courseEnrollmentRelationPostCourseEnrollmentRelations({
-      body: {
-        data: {
-          student: userId,
-          course: courseId,
-          enrollmentDate,
+  try {
+    const enrollmentResponse =
+      await courseEnrollmentRelationPostCourseEnrollmentRelations({
+        body: {
+          data: {
+            student: userId,
+            course: courseId,
+            enrollmentDate,
+          },
         },
-      },
+      });
+
+    if (!enrollmentResponse?.data) {
+      throw new Error("Course enrollment succeeded but returned invalid data");
+    }
+
+    return await getStudentByIdStrapi(userId);
+  } catch (error) {
+    console.error("Failed to enroll user in course:", {
+      userId,
+      courseId,
+      error,
     });
-
-  if (!enrollmentResponse?.data) {
-    throw new Error("Failed to subscribe to course");
+    throw new Error("Failed to subscribe to course", { cause: error });
   }
-
-  // Return the updated student with the new enrollment
-  return await getStudentByIdStrapi(userId);
 };
 
 /**
@@ -482,37 +490,45 @@ export const unsubscribeCourseStrapi = async (
   userId: string,
   courseId: string,
 ): Promise<Student> => {
-  // First, find the enrollment relation for this student and course
-  const enrollmentResponse =
-    await courseEnrollmentRelationGetCourseEnrollmentRelations({
-      query: {
-        /* @ts-expect-error: Strapi filter typing does not support nested filters */
-        "filters[student][documentId][$eq]": userId,
-        "filters[course][documentId][$eq]": courseId,
-      },
+  try {
+    // First, find the enrollment relation for this student and course
+    const enrollmentResponse =
+      await courseEnrollmentRelationGetCourseEnrollmentRelations({
+        query: {
+          /* @ts-expect-error: Strapi filter typing does not support nested filters */
+          "filters[student][documentId][$eq]": userId,
+          "filters[course][documentId][$eq]": courseId,
+        },
+      });
+
+    if (!enrollmentResponse?.data || enrollmentResponse.data.length === 0) {
+      throw new Error("Enrollment relation not found");
+    }
+
+    // Delete the enrollment relation
+    const enrollment = enrollmentResponse.data[0];
+    const enrollmentId =
+      typeof enrollment === "object" &&
+      "documentId" in enrollment &&
+      typeof enrollment.documentId === "string"
+        ? enrollment.documentId
+        : null;
+
+    if (!enrollmentId) {
+      throw new Error("Enrollment relation ID not found");
+    }
+
+    await courseEnrollmentRelationDeleteCourseEnrollmentRelationsById({
+      path: { id: enrollmentId },
     });
 
-  if (!enrollmentResponse?.data || enrollmentResponse.data.length === 0) {
-    throw new Error("Enrollment relation not found");
+    return await getStudentByIdStrapi(userId);
+  } catch (error) {
+    console.error("Failed to unsubscribe user from course:", {
+      userId,
+      courseId,
+      error,
+    });
+    throw new Error("Failed to unsubscribe from course", { cause: error });
   }
-
-  // Delete the enrollment relation
-  const enrollment = enrollmentResponse.data[0];
-  const enrollmentId =
-    typeof enrollment === "object" &&
-    "documentId" in enrollment &&
-    typeof enrollment.documentId === "string"
-      ? enrollment.documentId
-      : null;
-
-  if (!enrollmentId) {
-    throw new Error("Enrollment relation ID not found");
-  }
-
-  await courseEnrollmentRelationDeleteCourseEnrollmentRelationsById({
-    path: { id: enrollmentId },
-  });
-
-  // Return the updated student without the enrollment
-  return await getStudentByIdStrapi(userId);
 };
