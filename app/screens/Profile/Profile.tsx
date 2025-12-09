@@ -11,7 +11,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import errorSwitch from "@/components/General/error-switch";
 import ShowAlert from "@/components/General/ShowAlert";
 import ProfileStatsBox from "@/components/Profile/ProfileStatsBox";
-import Tooltip from "@/components/Onboarding/Tooltip";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 import { useLoginStudent, useStudent } from "@/hooks/query";
 import { t } from "@/i18n";
 import { AlertNotificationRoot } from "react-native-alert-notification";
@@ -78,7 +78,6 @@ const Profile = () => {
           </Tooltip>
           <ProfileNavigationButton
             label={t("profile.edit-profile")}
-            testId={"editProfileNav"}
             onPress={() => {
               // @ts-expect-error The error will disappear when we migrate to Expo Router
               navigation.navigate("EditProfile");
@@ -108,7 +107,6 @@ const Profile = () => {
           />
           <ProfileNavigationButton
             label={t("profile.change-password")}
-            testId={"editPasswordNav"}
             onPress={() => {
               // @ts-expect-error The error will disappear when we migrate to Expo Router
               navigation.navigate("EditPassword");

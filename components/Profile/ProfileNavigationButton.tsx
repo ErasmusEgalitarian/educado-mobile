@@ -1,7 +1,11 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/theme/colors";
-import PropTypes from "prop-types";
+
+export interface Props {
+  label: string;
+  onPress: () => void;
+}
 
 /**
  * Component for profile navigation buttons on profile page
@@ -10,13 +14,7 @@ import PropTypes from "prop-types";
  * - onPress: Function
  * @returns {React.Element} JSX element
  */
-export default function ProfileNavigationButton(props) {
-  ProfileNavigationButton.propTypes = {
-    label: PropTypes.string,
-    onPress: PropTypes.func,
-    onClose: PropTypes.func,
-  };
-
+export default function ProfileNavigationButton(props: Props) {
   return (
     <View>
       <TouchableOpacity
