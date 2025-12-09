@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, type DimensionValue } from "react-native";
+import { JSX } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Shadow } from "react-native-shadow-2";
 import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourseButton";
