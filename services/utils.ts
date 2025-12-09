@@ -11,18 +11,15 @@ import { t } from "@/i18n";
 import {
   Course,
   Icon,
-  LoginStudent,
-  ProgressTuple,
-  Section,
   SectionComponent,
   SectionComponentExercise,
   SectionComponentLecture,
   Student,
-  StudentCourse,
 } from "@/types";
 import { ClassValue, clsx } from "clsx";
 import { getBaseApiUrl } from "@/api/openapi/api-config";
 import { NavigationProp } from "@react-navigation/native";
+import { isComponentCompleted } from "@/services/component-utility-functions/isComponentCompleted";
 
 /**
  * Converts a numeric difficulty level to a human-readable label.
@@ -288,31 +285,6 @@ export const isSectionCompleted = (student: Student, sectionId: string) => {
   );
 };
 
-export const isComponentCompleted = (
-  student: Student | LoginStudent,
-  compId: string,
-) => {
-  let courses: StudentCourse[] = [];
-
-  // Student
-  if ("courses" in student) {
-    courses = student.courses;
-  }
-
-  // LoginStudent
-  if ("userInfo" in student) {
-    courses = student.userInfo.courses;
-  }
-
-  return courses.some((course) =>
-    course.sections.some((section) =>
-      section.components.some(
-        (component) => component.compId === compId && component.isComplete,
-      ),
-    ),
-  );
-};
-
 export const isFirstAttemptExercise = (student: Student, compId: string) => {
   return student.courses.some((course) =>
     course.sections.some((section) =>
@@ -321,71 +293,6 @@ export const isFirstAttemptExercise = (student: Student, compId: string) => {
       ),
     ),
   );
-};
-
-/**
- * Get the student's progress of a course.
- *
- * @param student - The student to check.
- * @param sections - The sections of the course to check.
- * @returns The students progress of a course as a tuple: [percentage completed, number of completed components, number
- * of total components].
- */
-export const getCourseProgress = (
-  student: Student | LoginStudent,
-  sections: Section[],
-): ProgressTuple => {
-  let totalNumberOfComponents = 0;
-  let numberOfCompletedComponents = 0;
-
-  for (const section of sections) {
-    totalNumberOfComponents += section.components.length;
-
-    numberOfCompletedComponents += getNumberOfCompletedComponents(
-      student,
-      section,
-    );
-  }
-
-  if (totalNumberOfComponents === 0) {
-    return [0, 0, 0];
-  }
-
-  const progressPercentage = Math.floor(
-    (numberOfCompletedComponents / totalNumberOfComponents) * 100,
-  );
-
-  return [
-    progressPercentage,
-    numberOfCompletedComponents,
-    totalNumberOfComponents,
-  ];
-};
-
-/**
- * Get the student's number of completed components in a section.
- *
- * @param student
- * @param section
- * @returns The number of completed components in the section.
- */
-export const getNumberOfCompletedComponents = (
-  student: Student | LoginStudent,
-  section: Section,
-) => {
-  if (section.components.length === 0) {
-    return 0;
-  }
-
-  let completedComponents = 0;
-
-  for (const component of section.components) {
-    if (component.compId && isComponentCompleted(student, component.compId)) {
-      completedComponents++;
-    }
-  }
-
-  return completedComponents;
 };
 
 export const findCompletedCourse = (student: Student, courseId: string) => {

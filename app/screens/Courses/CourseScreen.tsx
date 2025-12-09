@@ -10,7 +10,7 @@ import {
 import CourseCard from "@/components/Courses/CourseCard/CourseCard";
 import IconHeader from "@/components/General/IconHeader";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
-import Tooltip from "@/components/Onboarding/Tooltip";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 import { t } from "@/i18n";
 import { BaseScreen } from "@/components/General/BaseScreen";
 import {

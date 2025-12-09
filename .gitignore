@@ -56,3 +56,6 @@ var/
 .mise.local.toml
 mise.local.toml
 http-client.private.env.json
+metrics/
+clone/
+ci_metrics.py

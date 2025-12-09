@@ -12,11 +12,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { CustomProgressBar } from "@/components/Exercise/CustomProgressBar";
 import { SubscriptionCancelButton } from "@/components/Section/CancelSubscriptionButton";
-import {
-  getCourseProgress,
-  getNumberOfCompletedComponents,
-  sanitizeStrapiImageUrl,
-} from "@/services/utils";
+import { sanitizeStrapiImageUrl } from "@/services/utils";
 import { ContinueSectionButton } from "@/components/Section/ContinueSectionButton";
 import { Tooltip } from "@/components/Onboarding/Tooltip";
 import ImageNotFound from "@/assets/images/imageNotFound.png";
@@ -31,6 +27,8 @@ import {
   useUnsubscribeFromCourse,
 } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
+import { getNumberOfCompletedComponents } from "@/services/component-utility-functions/getNumberOfCompletedComponents";
+import { getCourseProgress } from "@/services/component-utility-functions/getCourseProgress";
 
 export interface CourseOverviewScreenProps {
   route: {
