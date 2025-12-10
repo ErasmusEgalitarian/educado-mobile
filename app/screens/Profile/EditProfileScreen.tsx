@@ -224,7 +224,7 @@ const EditProfileScreen = () => {
           text: "Não",
           style: "cancel",
         },
-        { text: "Sim", onPress: () => deleteAccount },
+        { text: "Sim", onPress: () => void deleteAccount() },
       ],
     );
   };
@@ -261,10 +261,6 @@ const EditProfileScreen = () => {
 
     await deletePhoto(userId, await getLoginToken());
   };
-
-  const isValid = validateInput();
-
-  const buttonOpacity = { opacity: isValid ? 1 : 1 };
 
   return (
     <SafeAreaView className="bg-surfaceSubtleCyan">
@@ -312,7 +308,7 @@ const EditProfileScreen = () => {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => removeImage}>
+              <TouchableOpacity onPress={() => void removeImage()}>
                 <Text className="text-center leading-[22px] text-textLabelCyan underline text-body-regular">
                   Remover imagem
                 </Text>
@@ -367,7 +363,6 @@ const EditProfileScreen = () => {
           <FormButton
             onPress={() => void saveUserInfo()}
             disabled={!validateInput()}
-            style={[[buttonOpacity]]}
           >
             Salvar alterações
           </FormButton>
