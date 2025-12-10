@@ -9,6 +9,8 @@ import {
   feedbackGetFeedbacks,
   studentPutStudentsById,
   courseEnrollmentRelationGetCourseEnrollmentRelations,
+  courseEnrollmentRelationPostCourseEnrollmentRelations,
+  courseEnrollmentRelationDeleteCourseEnrollmentRelationsById,
 } from "@/api/backend/sdk.gen";
 import {
   mapToCourse,
@@ -434,4 +436,99 @@ export const updateStudyStreakStrapi = async (
   }
 
   return { message: "Study streak updated successfully" };
+};
+
+/**
+ * Subscribes a student to a course by creating a course enrollment relation.
+ *
+ * @param userId - The student ID
+ * @param courseId - The course ID
+ * @returns Updated student object
+ */
+export const subscribeCourseStrapi = async (
+  userId: string,
+  courseId: string,
+): Promise<Student> => {
+  // Create a new course enrollment relation
+  const enrollmentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+
+  try {
+    const enrollmentResponse =
+      await courseEnrollmentRelationPostCourseEnrollmentRelations({
+        body: {
+          data: {
+            student: userId,
+            course: courseId,
+            enrollmentDate,
+          },
+        },
+      });
+
+    if (!enrollmentResponse?.data) {
+      throw new Error("Course enrollment succeeded but returned invalid data");
+    }
+
+    return await getStudentByIdStrapi(userId);
+  } catch (error) {
+    console.error("Failed to enroll user in course:", {
+      userId,
+      courseId,
+      error,
+    });
+    throw new Error("Failed to subscribe to course", { cause: error });
+  }
+};
+
+/**
+ * Unsubscribes a student from a course by deleting the course enrollment relation.
+ *
+ * @param userId - The student ID
+ * @param courseId - The course ID
+ * @returns Updated student object
+ */
+export const unsubscribeCourseStrapi = async (
+  userId: string,
+  courseId: string,
+): Promise<Student> => {
+  try {
+    // First, find the enrollment relation for this student and course
+    const enrollmentResponse =
+      await courseEnrollmentRelationGetCourseEnrollmentRelations({
+        query: {
+          /* @ts-expect-error: Strapi filter typing does not support nested filters */
+          "filters[student][documentId][$eq]": userId,
+          "filters[course][documentId][$eq]": courseId,
+        },
+      });
+
+    if (!enrollmentResponse?.data || enrollmentResponse.data.length === 0) {
+      throw new Error("Enrollment relation not found");
+    }
+
+    // Delete the enrollment relation
+    const enrollment = enrollmentResponse.data[0];
+    const enrollmentId =
+      typeof enrollment === "object" &&
+      "documentId" in enrollment &&
+      typeof enrollment.documentId === "string"
+        ? enrollment.documentId
+        : null;
+
+    if (!enrollmentId) {
+      throw new Error("Enrollment relation ID not found");
+    }
+
+    await courseEnrollmentRelationDeleteCourseEnrollmentRelationsById({
+      path: { id: enrollmentId },
+    });
+
+    return await getStudentByIdStrapi(userId);
+  } catch (error) {
+    console.error("Failed to unsubscribe user from course:", {
+      userId,
+      courseId,
+      error,
+    });
+    throw new Error("Failed to unsubscribe from course", { cause: error });
+  }
 };
