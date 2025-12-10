@@ -61,6 +61,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
+      - name: Inject env variables into eas.json
+        env:
+          PROD_URL: ${{ vars.EXPO_PUBLIC_STRAPI_BACKEND_PROD }}
+          DEV_URL: ${{ vars.EXPO_PUBLIC_STRAPI_BACKEND_DEV }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            const eas = JSON.parse(fs.readFileSync('eas.json'));
+
+            eas.build.production.env.EXPO_PUBLIC_STRAPI_BACKEND = process.env.PROD_URL;
+
+            eas.build.preview.env.EXPO_PUBLIC_STRAPI_BACKEND = process.env.DEV_URL;
+
+            fs.writeFileSync('eas.json', JSON.stringify(eas, null, 2));
+          "
+
       - name: Setup for EAS Build
         uses: expo/expo-github-action@v7
         with:
