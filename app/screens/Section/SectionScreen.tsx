@@ -15,6 +15,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLoginStudent, useSectionComponents } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import { getNumberOfCompletedComponents } from "@/services/component-utility-functions/getNumberOfCompletedComponents";
+import Tooltip from "@/components/Onboarding/Tooltip";
+import { t } from "@/i18n";
 
 export interface SectionScreenProps {
   route: {
@@ -83,6 +85,23 @@ const SectionScreen = ({ route }: SectionScreenProps) => {
 
   return (
     <SafeAreaView>
+      <Tooltip
+        position={{
+          top: 315,
+          left: 95,
+        }}
+        tailSide="top"
+        tailPosition={255}
+        tooltipKey="Section"
+        uniCodeIcon="🧠"
+      >
+        <Text className="text-body-regular">
+          {t("section-screen.tutorial-body-regular")}
+        </Text>
+        <Text className="text-body-bold">
+          {t("section-screen.tutorial-body-bold")}
+        </Text>
+      </Tooltip>
       <ScrollView className="h-full bg-surfaceSubtleCyan">
         <View className="mx-10 mt-10 flex-col">
           <View className="flex-row">

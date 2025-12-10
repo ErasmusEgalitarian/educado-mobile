@@ -164,5 +164,9 @@
     "tutorial-body-first": "Nessa página, você encontra todos os cursos disponíveis. Clique em ",
     "tutorial-body-bold": "“Saiba mais” ",
     "tutorial-body-second": "para ver os detalhes e se inscrever."
+  },
+  "section-screen": {
+    "tutorial-body-regular": "Agora você pode ver o cronograma da seção. Para começar, acesse a primeira lição. ",
+    "tutorial-body-bold": "Vamos lá?"
   }
 }
