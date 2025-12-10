@@ -47,10 +47,10 @@ export default function LogOutButton(props: { testID: string }) {
           <MaterialCommunityIcons
             name="logout"
             size={30}
-            color={colors.error}
+            color={colors.surfaceDefaultRed}
             testID={props.testID}
           />
-          <Text className="text-center text-surfaceDefaultRed underline text-body-regular">
+          <Text className="text-center text-surfaceDefaultRed underline text-body-bold">
             Sair
           </Text>
         </View>

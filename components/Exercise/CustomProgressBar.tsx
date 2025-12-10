@@ -1,11 +1,9 @@
-import { View, Text, Dimensions } from "react-native";
-import { ProgressBar } from "react-native-paper";
+import { View, Text, Dimensions, type DimensionValue } from "react-native";
 import { colors } from "@/theme/colors";
 
 interface CustomProgressBarProps {
   progress: number[];
   width: number;
-  height: number;
   displayLabel?: boolean;
 }
 
@@ -21,10 +19,10 @@ interface CustomProgressBarProps {
 export const CustomProgressBar = ({
   progress,
   width,
-  height,
   displayLabel = true,
 }: CustomProgressBarProps) => {
-  const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
+  const { width: ScreenWidth } = Dimensions.get("window");
+  const barWidth = ScreenWidth * (width / 100);
 
   // Ensure progress is between 0 and 100
   progress[0] = Math.min(100, Math.max(0, progress[0]));
@@ -32,24 +30,26 @@ export const CustomProgressBar = ({
     progress[0] = 0;
   }
 
+  const progressBarStyle = {
+    width: `${String(progress[0])}%` as DimensionValue,
+    backgroundColor: colors.surfaceDefaultCyan,
+  };
+
   return (
-    <View className="flex-row items-center justify-around">
-      <ProgressBar
-        className="rounded-lg bg-surfaceLighter"
-        progress={progress[0] / 100}
-        /* The ProgressBar component will pick a wrong color itself unless directly specified like this  */
-        color={colors.surfaceLighter}
-        /* Since the height and width are calculated dynamically, it can't be rendered by passing it to className */
-        style={{
-          width: ScreenWidth * (width / 100),
-          height: ScreenHeight * (height / 100),
-        }}
-      />
+    <View className="flex-row items-center">
+      <View
+        className="h-[9] overflow-hidden rounded-full bg-surfaceLighterCyan"
+        style={{ width: barWidth }}
+      >
+        <View
+          className="h-full rounded-full"
+          style={progressBarStyle}
+          testID="CustomProgressBar.ProgressBar"
+          accessibilityValue={{ now: progress[0] / 100 }}
+        />
+      </View>
       {displayLabel && (
-        <Text
-          className="caption-sm-regular px-5 text-center text-projectBlack"
-          style={{ color: colors.greyscaleTexticonCaption }}
-        >
+        <Text className="px-2 text-center text-textBodyGrayscale text-caption-sm-regular">
           {progress[1]}/{progress[2]}
         </Text>
       )}

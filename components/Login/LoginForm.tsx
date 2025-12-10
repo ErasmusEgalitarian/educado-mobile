@@ -106,7 +106,7 @@ const LoginForm = () => {
             setModalVisible(true);
           }}
         >
-          {t("login.reset-password")}
+          {t("login.forgot-password")}
         </Text>
       </View>
       <FormButton

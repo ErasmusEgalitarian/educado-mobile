@@ -52,7 +52,7 @@ export const WelcomeSlider = () => {
               <Text className="px-8 text-center text-h2-sm-regular">
                 {item.title}
               </Text>
-              <Text className="px-12 pt-8 text-center text-body-regular">
+              <Text className="px-10 pt-8 text-center text-body-regular">
                 {item.description}
               </Text>
             </View>

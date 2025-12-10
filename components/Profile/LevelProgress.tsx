@@ -14,17 +14,16 @@ export const LevelProgress = ({
   return (
     <View className="flex flex-row justify-between">
       <View className="flex flex-row items-center">
-        <Text className="caption-lg-semibold text-textLabelCyan">
+        <Text className="text-textLabelDefault text-caption-lg-semibold">
           {t("profile.level")}
         </Text>
-        <Text className="caption-lg-semibold pl-1 text-textLabelCyan">
+        <Text className="pl-1 text-textLabelDefault text-caption-lg-semibold">
           {level}
         </Text>
       </View>
       <CustomProgressBar
         progress={[levelProgressPercentage, 0, 0]}
         width={65}
-        height={1}
         displayLabel={false}
       />
     </View>

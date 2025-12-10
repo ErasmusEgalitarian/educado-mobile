@@ -1,5 +1,4 @@
-import { View } from "react-native";
-import { Text } from "react-native";
+import { View, Text } from "react-native";
 
 export interface ProfileNameCircleProps {
   firstName: string;
@@ -24,11 +23,9 @@ export const ProfileNameCircle = ({
 }: ProfileNameCircleProps) => {
   return (
     <View
-      className={`aspect-square h-24 w-24 items-center justify-center rounded-full ${className ?? ""}`}
+      className={`items-center justify-center rounded-[100] bg-surfaceLighterCyan ${className ?? ""}`}
     >
-      <Text
-        className={`mt-2 text-center text-5xl font-bold text-projectWhite ${textClassName ?? ""}`}
-      >
+      <Text className={textClassName}>
         {firstName.charAt(0).toUpperCase()}
         {lastName.charAt(0).toUpperCase()}
       </Text>

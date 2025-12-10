@@ -39,7 +39,7 @@ const RegistrationScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 justify-start bg-surfaceSubtleCyan">
+    <SafeAreaView className="flex-1 justify-start bg-surfaceSubtleCyan px-3">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}

@@ -196,7 +196,6 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
                   <CustomProgressBar
                     width={63}
                     progress={studentProgress}
-                    height={1}
                     displayLabel={false}
                   />
                 </View>
