@@ -15,7 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLoginStudent, useSectionComponents } from "@/hooks/query";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import { getNumberOfCompletedComponents } from "@/services/component-utility-functions/getNumberOfCompletedComponents";
-import Tooltip from "@/components/Onboarding/Tooltip";
+import { Tooltip } from "@/components/Onboarding/Tooltip";
 import { t } from "@/i18n";
 
 export interface SectionScreenProps {
