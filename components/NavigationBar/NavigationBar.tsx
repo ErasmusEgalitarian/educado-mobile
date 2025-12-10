@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CourseScreen from "@/app/screens/Courses/CourseScreen";
+import CourseOverviewScreen from "@/app/screens/Courses/CourseOverviewScreen";
 import DownloadScreen from "@/app/screens/Download/DownloadScreen";
 import ExploreScreen from "@/app/screens/Explore/ExploreScreen";
 import Profile from "@/app/screens/Profile/Profile";
@@ -12,6 +13,7 @@ import { colors } from "@/theme/colors";
 
 const Tab = createBottomTabNavigator();
 const ProfileStack = createNativeStackNavigator();
+const CourseStack = createNativeStackNavigator();
 
 const ProfileStackScreen = () => {
   return (
@@ -45,6 +47,29 @@ const ProfileStackScreen = () => {
         }}
       />
     </ProfileStack.Navigator>
+  );
+};
+
+const CourseStackScreen = () => {
+  return (
+    <CourseStack.Navigator initialRouteName="Courses">
+      <CourseStack.Screen
+        name="Courses"
+        component={CourseScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CourseStack.Screen
+        name="CourseOverview"
+        // @ts-expect-error TODO It's bad practice to suppress the error here, but it's necessary for now.
+        // We will migrate the screens to Expo Router shortly anyway, which makes fixing it now redundant.
+        component={CourseOverviewScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </CourseStack.Navigator>
   );
 };
 
@@ -87,7 +112,7 @@ export const NavigationBar = () => {
     >
       <Tab.Screen
         name="Meus cursos"
-        component={CourseScreen}
+        component={CourseStackScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (

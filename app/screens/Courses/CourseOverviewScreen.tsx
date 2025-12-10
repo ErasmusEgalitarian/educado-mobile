@@ -20,7 +20,7 @@ import DownloadCourseButton from "@/components/Courses/CourseCard/DownloadCourse
 import { Course, ProgressTuple, Section } from "@/types";
 import { Shadow } from "react-native-shadow-2";
 import { t } from "@/i18n";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { BaseScreen } from "@/components/General/BaseScreen";
 import {
   useLoginStudent,
   useSections,
@@ -29,6 +29,8 @@ import {
 import LoadingScreen from "@/components/Loading/LoadingScreen";
 import { getNumberOfCompletedComponents } from "@/services/component-utility-functions/getNumberOfCompletedComponents";
 import { getCourseProgress } from "@/services/component-utility-functions/getCourseProgress";
+import profileCoin from "@/assets/images/profileCoin.png";
+import profileLightning from "@/assets/images/profileLightning.png";
 
 export interface CourseOverviewScreenProps {
   route: {
@@ -147,9 +149,9 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
   const sections = sectionQuery.data ?? [];
 
   return (
-    <SafeAreaView>
+    <BaseScreen>
       <TouchableOpacity
-        className="absolute left-5 top-28 z-10 pr-3"
+        className="absolute left-5 top-20 z-10 pr-3"
         onPress={() => {
           // @ts-expect-error The error will disappear when we migrate to Expo Router
           navigation.navigate("HomeStack", { screen: "Meus cursos" });
@@ -173,7 +175,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
               imageUrl.startsWith("https://")) ? (
               <Image
                 source={{ uri: imageUrl }}
-                className="h-[296px] w-full object-cover"
+                className="h-[208px] w-full object-cover"
                 onError={() => {
                   setImageError(true);
                 }}
@@ -182,17 +184,17 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
               <Image source={ImageNotFound} />
             )}
           </View>
-          <View className="mt-[-15%]">
+          <View className="mt-[-12%]">
             <Shadow startColor="#28363E14" distance={6} offset={[0, 3]}>
-              <View className="flex w-[293px] rounded-2xl bg-surfaceSubtleGrayscale p-[16px]">
+              <View className="flex w-[293px] rounded-2xl bg-surfaceSubtleGrayscale p-4">
                 <View className="flex flex-row justify-between">
-                  <Text className="h3-sm-regular max-w-[80%]">
+                  <Text className="max-w-[80%] text-h3-sm-regular">
                     {course.title}
                   </Text>
                   {/* TODO: Button to download course should be implemented */}
                   <DownloadCourseButton course={course} disabled={true} />
                 </View>
-                <View className="flex h-6 justify-center rounded-sm border-y-[1px] border-surfaceDefaultGrayscale">
+                <View className="my-2 flex justify-center rounded-sm border-y-[1px] border-surfaceDefaultGrayscale py-2">
                   <CustomProgressBar
                     width={63}
                     progress={studentProgress}
@@ -200,28 +202,17 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
                   />
                 </View>
                 <View className="flex w-full flex-row items-center justify-between">
-                  <View className="flex flex-row">
-                    <MaterialCommunityIcons
-                      name="crown-circle"
-                      size={20}
-                      color="orange"
-                    />
+                  <View className="flex flex-row items-center">
+                    <Image source={profileCoin} className="h-4 w-4" />
                     {/* TODO: Points should be implemented */}
-                    <Text className="ml-1">{`0 ${t("course.points")}`}</Text>
+                    <Text className="ml-1 text-caption-lg-regular">
+                      {`0 ${t("course.points")}`}
+                    </Text>
                   </View>
-                  <MaterialCommunityIcons
-                    name="circle-small"
-                    size={30}
-                    color="gray"
-                  />
-                  <View className="flex flex-row">
-                    <MaterialCommunityIcons
-                      name="lightning-bolt"
-                      size={20}
-                      color="orange"
-                    />
-                    <Text className="ml-1">
-                      {`${String(studentProgress[0])} ${t("course.completed-low")}`}
+                  <View className="flex flex-row items-center">
+                    <Image source={profileLightning} className="h-5 w-3" />
+                    <Text className="ml-1 text-caption-lg-regular">
+                      {`${String(studentProgress[0])}% ${t("course.completed-low")}`}
                     </Text>
                   </View>
                 </View>
@@ -243,7 +234,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
           />
         </View>
         {sections.length > 0 && (
-          <View className="flex-[1] flex-col">
+          <View className="flex-1 flex-col">
             <Tooltip
               position={{
                 top: -30,
@@ -282,7 +273,7 @@ const CourseOverviewScreen = ({ route }: CourseOverviewScreenProps) => {
         )}
         <SubscriptionCancelButton onPress={unsubAlert} />
       </ScrollView>
-    </SafeAreaView>
+    </BaseScreen>
   );
 };
 

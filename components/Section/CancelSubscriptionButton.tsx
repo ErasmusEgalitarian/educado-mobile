@@ -16,17 +16,15 @@ export const SubscriptionCancelButton = ({
   onPress,
 }: SubscriptionCancelButtonProps) => {
   return (
-    <View className="w-1/2 justify-end self-center py-4">
+    <View className="justify-end self-center py-4">
       <Button
         mode={"text"}
-        color={colors.error}
+        color={colors.surfaceDefaultRed}
         testID="subscriptionCancelButton"
         onPress={onPress}
         uppercase={false}
       >
-        <Text className="underline text-subtitle-semibold">
-          {t("course.withdraw")}
-        </Text>
+        <Text className="underline text-body-bold">{t("course.withdraw")}</Text>
       </Button>
     </View>
   );
