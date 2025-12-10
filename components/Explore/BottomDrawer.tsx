@@ -56,7 +56,10 @@ export const BottomDrawer = ({
   const navigateCourse = () => {
     toggleModal();
     // @ts-expect-error Will be refactored when we move to Expo Router
-    navigation.navigate("CourseOverview", { course: course });
+    navigation.navigate("Meus cursos", {
+      screen: "CourseOverview",
+      params: { course },
+    });
   };
 
   return (
