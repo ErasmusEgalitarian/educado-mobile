@@ -164,5 +164,9 @@
     "tutorial-body-first": "On this page, you will find all available courses. Click on ",
     "tutorial-body-bold": "“Find out more” ",
     "tutorial-body-second": "To see the details and register."
+  },
+  "section-screen": {
+    "tutorial-body-regular": "Now you can see the section’s schedule. To get started, access the first lesson. ",
+    "tutorial-body-bold": "Shall we go?"
   }
 }
