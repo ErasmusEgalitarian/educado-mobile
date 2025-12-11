@@ -66,8 +66,8 @@ const Profile = () => {
           />
           <Tooltip
             position={{
-              top: 190,
-              left: 100,
+              top: 220,
+              left: 90,
             }}
             tailSide="right"
             tailPosition={12}
