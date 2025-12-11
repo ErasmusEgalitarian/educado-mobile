@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -9,19 +8,22 @@ import {
   Text,
   View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getLeaderboardDataAndUserRank } from "@/api/legacy-api";
-import { getUserInfo } from "@/services/storage-service";
 import LeaveButton from "@/components/Exercise/LeaveButton";
 import { LeaderboardUser } from "@/types";
 import { cn } from "@/services/utils";
+import { useLeaderboard, useLoginStudent } from "@/hooks/query";
+import ErrorScreen from "@/app/screens/Errors/ErrorScreen";
 
 const capitalize = (str: string) =>
   str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
 
 const getInitials = (name: string) => {
-  if (!name) return "";
+  if (!name) {
+    return "";
+  }
+
   const nameParts = name.split(" ");
+
   return nameParts.length >= 2
     ? `${capitalize(nameParts[0][0])}${capitalize(nameParts[1][0])}`
     : capitalize(name[0]);
@@ -33,6 +35,7 @@ const getSizeClasses = (rank: number): string => {
     2: "w-[70px] h-[70px]",
     3: "w-[60px] h-[60px]",
   };
+
   return map[rank];
 };
 
@@ -42,6 +45,7 @@ const getFontSizeClasses = (rank: number): string => {
     2: "text-h2-sm-bold",
     3: "text-subtitle-semibold",
   };
+
   return map[rank];
 };
 
@@ -50,11 +54,15 @@ const truncateName = (
   containerWidth: number,
   fontSize: number,
 ) => {
-  if (!name) return "";
+  if (!name) {
+    return "";
+  }
+
   const capitalized = name.split(" ").map(capitalize).join(" ");
   const maxWidth = containerWidth - 60;
   const charWidth = fontSize * 0.5;
   const maxChars = Math.floor(maxWidth / charWidth);
+
   return capitalized.length > maxChars
     ? `${capitalized.substring(0, maxChars)}...`
     : capitalized;
@@ -68,7 +76,6 @@ const TopLeaderboardUsers = ({
 }: LeaderboardUser) => (
   <View className="w-[120px] items-center rounded-lg py-2.5">
     <Text className="text-subtitle-semibold">{score} pts</Text>
-
     <View className="mb-2">
       <View
         className={cn(
@@ -173,9 +180,10 @@ interface LeaderboardRestProps {
 }
 
 const LeaderboardRest = ({ users, rank }: LeaderboardRestProps) => {
-  if (rank === null) {
+  if (!rank) {
     return null;
   }
+
   if (rank <= 30) {
     return users
       .slice(0, 27)
@@ -190,7 +198,7 @@ const LeaderboardRest = ({ users, rank }: LeaderboardRestProps) => {
         />
       ));
   } else {
-    const topTenUsers = users.slice(0, 7); /// How many users to show before skipping, Remember to -3 cuz we skip the first 3
+    const topTenUsers = users.slice(0, 7);
     const currentUserIndex = users.findIndex((user) => user.rank === rank);
     const adjacentUsers = users.slice(
       Math.max(currentUserIndex - 1, 0),
@@ -212,7 +220,7 @@ const LeaderboardRest = ({ users, rank }: LeaderboardRestProps) => {
         <Text className="my-2.5 text-center text-h2-sm-regular">⋮</Text>
         {adjacentUsers.map((user) => (
           <LeaderboardList
-            key={`${String(user.rank)}-${user.username}`} // Ensure unique keys
+            key={`${String(user.rank)}-${user.username}`}
             rank={user.rank}
             score={user.score}
             profilePicture={user.profilePicture}
@@ -261,123 +269,51 @@ const LeaderboardTopThree = ({ users }: LeaderboardTopThreeProps) => {
 };
 
 const LeaderboardScreen = () => {
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
-  const [currentUserRank, setCurrentUserRank] = useState<null | number>(null);
   const scrollViewRef = useRef<ScrollView | null>(null);
 
-  const loadMoreData = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const token = await AsyncStorage.getItem("@loginToken");
-      if (!token) throw new Error("User not authenticated");
-      const userInfo = await getUserInfo(); // Get user info
-      const { leaderboard } = await getLeaderboardDataAndUserRank({
-        page,
-        timeInterval: "all",
-        limit: 12,
-        userId: userInfo.id,
-      }); // Pass user ID
-      if (leaderboard.length === 0) return;
-      setLeaderboardData((prevData) => {
-        const newData = leaderboard.filter(
-          (item) => !prevData.some((prevItem) => prevItem.rank === item.rank),
-        );
-        return [...prevData, ...newData];
-      });
-      setPage((prevPage) => prevPage + 1);
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : typeof error === "string"
-            ? error
-            : "Server could not be reached";
+  const loginStudent = useLoginStudent();
 
-      Alert.alert("Error", message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const refreshLeaderboard = async () => {
-    try {
-      const token = await AsyncStorage.getItem("@loginToken");
-      if (!token) throw new Error("User not authenticated");
-      const userInfo = await getUserInfo(); // Get user info
-      const response = await getLeaderboardDataAndUserRank({
-        page: 1,
-        timeInterval: "all",
-        limit: 12,
-        userId: userInfo.id,
-      }); // Pass user ID
-      setLeaderboardData(response.leaderboard);
-      setCurrentUserRank(response.currentUserRank);
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : typeof error === "string"
-            ? error
-            : "Server could not be reached";
-
-      Alert.alert("Error", message);
-    }
-  };
-
-  const initializeLeaderboard = async () => {
-    try {
-      const token = await AsyncStorage.getItem("@loginToken");
-      if (!token) throw new Error("User not authenticated");
-      const userInfo = await getUserInfo(); // Get user info
-      const response = await getLeaderboardDataAndUserRank({
-        page: 1,
-        timeInterval: "all",
-        limit: 12,
-        userId: userInfo.id,
-      }); // Pass user ID
-      setLeaderboardData(response.leaderboard);
-      setCurrentUserRank(response.currentUserRank);
-      setLoading(false);
-
-      if (scrollViewRef.current && response.currentUserRank) {
-        const pageToScroll = Math.ceil(response.currentUserRank / 30);
-        setPage(pageToScroll);
-        scrollViewRef.current.scrollTo({
-          y: (response.currentUserRank - 1) * 50,
-          animated: true,
-        });
-      }
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : typeof error === "string"
-            ? error
-            : "Server could not be reached";
-
-      Alert.alert("Error", message);
-      setLoading(false);
-    }
-  };
+  const leaderboardQuery = useLeaderboard(loginStudent.data.userInfo.id, page);
 
   useEffect(() => {
-    void initializeLeaderboard();
-  }, []);
+    if (!leaderboardQuery.data) {
+      return;
+    }
+
+    if (scrollViewRef.current && leaderboardQuery.data.currentUserRank) {
+      const pageToScroll = Math.ceil(
+        leaderboardQuery.data.currentUserRank / 30,
+      );
+
+      setPage(pageToScroll);
+
+      scrollViewRef.current.scrollTo({
+        y: (leaderboardQuery.data.currentUserRank - 1) * 50,
+        animated: true,
+      });
+    }
+  }, [leaderboardQuery.data]);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const isCloseToBottom =
       layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
-    if (isCloseToBottom && !loading) {
-      void (async () => {
-        await loadMoreData();
-        await refreshLeaderboard();
-      })();
+
+    if (isCloseToBottom && !leaderboardQuery.isLoading) {
+      void leaderboardQuery.refetch();
     }
   };
+
+  if (leaderboardQuery.isLoading) {
+    return <ActivityIndicator size="large" color="#87CEEB" />;
+  }
+
+  if (leaderboardQuery.isError) {
+    return <ErrorScreen />;
+  }
+
+  const leaderboardData = leaderboardQuery.data;
 
   return (
     <View className="flex-1 items-center justify-center bg-surfaceSubtleCyan pt-[40px]">
@@ -398,12 +334,17 @@ const LeaderboardScreen = () => {
         alwaysBounceVertical={false}
         overScrollMode="never"
       >
-        <LeaderboardTopThree users={leaderboardData.slice(0, 3)} />
-        <LeaderboardRest
-          users={leaderboardData.slice(3)}
-          rank={currentUserRank}
-        />
-        {loading && <ActivityIndicator size="large" color="#87CEEB" />}
+        {leaderboardData && (
+          <>
+            <LeaderboardTopThree
+              users={leaderboardData.leaderboard.slice(0, 3)}
+            />
+            <LeaderboardRest
+              users={leaderboardData.leaderboard.slice(3)}
+              rank={leaderboardData.currentUserRank}
+            />
+          </>
+        )}
       </ScrollView>
     </View>
   );
